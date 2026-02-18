@@ -1,0 +1,76 @@
+.content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  container-type: inline-size;
+}
+
+.userInfo {
+  width: 100%;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-areas: "mainInfo role status";
+  grid-template-columns: minmax(100px, 240px) minmax(100px, 200px) minmax(
+      120px,
+      300px
+    );
+}
+
+.userMainInfo {
+  grid-area: mainInfo;
+  margin: auto 0;
+}
+
+.userRole {
+  grid-area: role;
+  margin: auto 0;
+}
+
+.userStatus {
+  grid-area: status;
+  margin: auto 0;
+}
+
+.userTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.avatar {
+  margin-right: 10px;
+}
+
+.modalContent {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  margin-top: 16px;
+}
+
+@container (max-width: 576px) {
+  .userInfo {
+    grid-gap: 10px 20px;
+    grid-template-areas:
+      "mainInfo mainInfo"
+      "role status";
+    grid-template-columns: 100px 1fr;
+  }
+}
+
+@container (max-width: 408px) {
+  .userInfo {
+    display: block;
+  }
+
+  .userMainInfo {
+    display: grid;
+  }
+
+  .userRole,
+  .userStatus {
+    margin-top: 10px;
+  }
+}

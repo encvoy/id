@@ -1,0 +1,25 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.buttonWrapper {
+  margin-left: auto;
+  width: fit-content;
+  margin-top: 24px;
+}
+
+.switchWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectWrapper {
+  margin-bottom: 16px;
+}
+
+.select {
+  margin: 4px 0;
+}

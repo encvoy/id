@@ -1,0 +1,43 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: scroll;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.item {
+  border: 1px solid var(--mui-palette-divider);
+  padding: 12px 20px 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.4s ease-out;
+}
+
+.item:hover {
+  background-color: var(--mui-palette-background-hover);
+}
+
+.inputLabel {
+  margin-bottom: 8px;
+}
+
+.inputDescription {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+.button {
+  margin-left: 8px;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

@@ -1,0 +1,65 @@
+.container {
+  width: 100%;
+  border: 1px solid var(--mui-palette-divider);
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+}
+
+.description {
+  margin-top: 12px;
+}
+
+.providerList {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.provider {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--mui-palette-divider);
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.4s ease-in-out;
+}
+
+.provider:hover {
+  background-color: var(--mui-palette-action-hover);
+}
+
+.icon {
+  border-radius: 8px;
+  margin-right: 12px;
+  background-color: transparent;
+}
+
+.modalHeader {
+  background-color: var(--mui-palette-divider);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.modalIcon {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: transparent;
+}
+
+.modalContent {
+  margin-top: 12px;
+  border: 1px solid var(--mui-palette-divider);
+  padding: 8px;
+}
+
+.modalTitle {
+  text-align: center;
+  margin-bottom: 12px;
+}

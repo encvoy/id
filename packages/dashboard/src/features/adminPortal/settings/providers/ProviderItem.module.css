@@ -1,0 +1,76 @@
+.provider {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background-color: var(--mui-palette-background-default);
+  align-items: center;
+  border: 1px solid var(--mui-palette-divider);
+  padding: 12px 12px 12px 38px;
+  transition: background-color 0.2s;
+}
+
+.providerHover:hover {
+  cursor: pointer;
+  background-color: var(--mui-palette-action-hover);
+}
+
+.provider + .provider {
+  margin-top: 16px;
+}
+
+.providerHeader {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.dragHandle {
+  position: absolute;
+  top: 36%;
+  left: 4px;
+  cursor: grab;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.nameWrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.providerIcon {
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--hover-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--mui-palette-divider);
+  object-fit: cover;
+  object-position: center;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+@media screen and (max-width: 512px) {
+  .providerHeader {
+    flex-wrap: wrap;
+  }
+}

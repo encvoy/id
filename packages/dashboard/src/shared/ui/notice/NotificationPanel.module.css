@@ -1,0 +1,36 @@
+.drawerPaper {
+  width: 100%;
+  max-width: 460px;
+  padding: 32px 20px 24px;
+}
+
+.wrapper {
+  height: calc(100vh - 118px);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--mui-palette-divider);
+  padding-bottom: 12px;
+}
+
+.topBarText {
+  display: flex;
+}
+
+.topBarCount {
+  margin: 0 6px;
+}
+
+.topBarButtons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+
+.notices {
+  overflow: scroll;
+  height: calc(100vh - 172px);
+}

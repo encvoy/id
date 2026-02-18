@@ -1,0 +1,33 @@
+.chip {
+  background: var(--background-disabled-color);
+  height: 32px;
+  padding: 0 10px 0 12px;
+  border-radius: 30px;
+  margin: 4px 8px 4px 0;
+  border: none;
+  color: #000;
+}
+
+.errorChip {
+  color: #FFFFFF;
+  background-color: #FC545C;
+}
+
+.label {
+  margin-bottom: 8px;
+}
+
+.description {
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
+.textFieldRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.errorBlock {
+  margin: 12px 0;
+}

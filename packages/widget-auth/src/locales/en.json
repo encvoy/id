@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "login": {
+      "toggleLogin": "Sign-in methods",
+      "otherProvider": "Other providers",
+      "toggleSessions": "Sessions",
+      "noSessions": "No active sessions"
+    },
+    "phone": {
+      "codeNumber": "A free call will be made to the specified number. Enter the last {{length}} digits of the incoming number",
+      "codeVoice": "A free call with a voice message containing the authorization code will be made to the specified number",
+      "codeTimer": "You can request again in {{minutes}}:{{seconds}}"
+    },
+    "scopes": {
+      "profile": "View name, photo, and date of birth",
+      "email": "View email address",
+      "phone": "View phone number",
+      "offlineAccess": "The application will be able to access your data at any time",
+      "accounts": "View social media accounts linked to your profile",
+      "openid": "View your identifier",
+      "lk": "View brief account information",
+      "locale": "View language information",
+      "title": "Requested scopes",
+      "catalog": "View information about applications added to the catalog"
+    },
+    "bind": {
+      "title": "No account",
+      "createAccount": "Create a new account",
+      "bindToAccount": "Link identifier to an existing account"
+    },
+    "changePassword": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password"
+    },
+    "identifiers": {
+      "title": "Confirm account",
+      "second-title": "Adding required identifiers"
+    },
+    "recover": {
+      "account": "Account recovery",
+      "password": "Password recovery",
+      "sendMessage": "Code sent to email {{ value }}",
+      "new": "New password"
+    },
+    "changeStatusFields": {
+      "title": "Increase public visibility"
+    },
+    "steps": {
+      "title": "Provide required information",
+      "selectImage": "Please select an image",
+      "notExceed": "Image must not exceed 5MB",
+      "uploadImage": "Upload image",
+      "requiredImage": "Image is required",
+      "selectFile": "Selected file: {{value}}"
+    }
+  },
+  "helperText": {
+    "password": "Password",
+    "enter": "Enter",
+    "email": "Email",
+    "phone": "Phone",
+    "login": "Username",
+    "code": "Code",
+    "or": "or",
+    "serviceInstructions": "Follow the instructions of the service {{ value }}",
+    "rulesValidation": "Validation rules",
+    "success": "Success",
+    "operationSuccess": "Operation completed successfully"
+  },
+  "actionButtons": {
+    "home": "Home",
+    "logIn": "Log in",
+    "save": "Save",
+    "create": "Create",
+    "createAccount": "Create account",
+    "bind": "Link",
+    "change": "Change",
+    "get": "Get",
+    "repeat": "Retry",
+    "confirm": "Confirm",
+    "recover": "Recover",
+    "next": "Continue",
+    "select": "Select",
+    "recoverPassword": "Recover password"
+  },
+  "errors": {
+    "error": "Error",
+    "errorOccurred": "An error occurred",
+    "requiredField": "This field is required",
+    "invalidEmailFormat": "Invalid email address format",
+    "passwordsMatch": "The new password must not match the old one"
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/node_modules/oidc-provider/lib/helpers/client_schema.js b/node_modules/oidc-provider/lib/helpers/client_schema.js
+index db84e45..e441fd9 100644
+--- a/node_modules/oidc-provider/lib/helpers/client_schema.js
++++ b/node_modules/oidc-provider/lib/helpers/client_schema.js
+@@ -560,7 +560,7 @@ export default function getSchema(provider) {
+                 break;
+               default: // Private-use URI Scheme Redirection
+                 if (!protocol.includes('.')) {
+-                  this.invalidate(`${label} for native clients using Custom URI scheme should use reverse domain name based scheme`);
++                  // this.invalidate(`${label} for native clients using Custom URI scheme should use reverse domain name based scheme`);
+                 }
+             }
+             break;

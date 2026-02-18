@@ -1,0 +1,44 @@
+.inputTitle {
+  margin-bottom: 8px;
+}
+
+.fieldItem {
+  display: flex;
+}
+
+.textField {
+  flex-grow: 1;
+  margin-right: 30px;
+}
+
+.deleteButton {
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.description {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+.asterisk::after {
+  content: '*';
+  color: red;
+}
+
+.inputFields {
+  width: 100%;
+}
+
+.inputFieldsMin {
+  width: 100%;
+  max-width: 70%;
+  margin-bottom: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .inputFieldsMin {
+    max-width: 100%;
+  }
+}

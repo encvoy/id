@@ -1,0 +1,31 @@
+.title {
+  margin-top: 32px;
+  margin-left: 32px;
+}
+
+.container {
+  padding: 32px;
+  border: 1px solid var(--mui-palette-divider);
+}
+
+.fieldTitle {
+  margin-bottom: 8px;
+}
+
+.asterisk::after {
+  content: "*";
+  color: red;
+  padding-left: 6px;
+}
+
+.saveModal {
+  background: var(--mui-palette-background-default);
+  padding: 24px 24px 32px 32px;
+  border-radius: 2px;
+  border: none;
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

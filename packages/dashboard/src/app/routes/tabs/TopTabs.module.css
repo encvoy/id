@@ -1,0 +1,40 @@
+.tabContainer {
+  position: sticky;
+  top: 64px;
+  left: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.tabIndicator {
+  height: 1px;
+}
+
+.tabs {
+  padding: 0 24px;
+}
+
+.tab {
+  padding: 0;
+  min-width: 0;
+  text-transform: none;
+}
+
+@media screen and (max-height: 500px) {
+  .container {
+    overflow: scroll;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .container {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tabs {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+}

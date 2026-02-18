@@ -1,0 +1,139 @@
+.contentWrapper {
+  display: flex;
+  width: 100%;
+  container-type: inline-size;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+}
+
+.clientMainInfo {
+  margin: auto;
+  width: 200px;
+  margin-right: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clientAddInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 200px;
+  margin-right: 20px;
+}
+
+.clientDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+.clientScopesInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.clientInfo {
+  display: flex;
+}
+
+.clientTitle {
+  display: inline;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.1s ease-in-out;
+}
+
+.clientTitle:hover {
+  cursor: pointer;
+}
+
+.scopesList {
+  display: flex;
+  grid-gap: 10px;
+  margin-top: 10px;
+}
+
+.moreButtonWrapper {
+  align-content: center;
+  margin-left: 20px;
+}
+
+.moreButton {
+  padding: 8px;
+}
+
+.scopeIconButton {
+  padding: 6px;
+  border-radius: 50%;
+}
+
+@container (max-width: 800px) {
+  .clientMainInfo {
+    width: 160px;
+  }
+
+  .clientAddInfo {
+    width: 160px;
+  }
+
+  .clientDescription {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
+
+  .scopesList {
+    flex-wrap: wrap;
+  }
+}
+
+@container (max-width: 704px) {
+  .clientAddInfo {
+    display: none;
+  }
+
+  .clientDescription {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
+
+  .clientScopesInfo {
+    margin-top: 14px;
+  }
+}
+
+@container (max-width: 399px) {
+  .contentWrapper {
+    display: block;
+  }
+
+  .content {
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .clientMainInfo {
+    width: 100%;
+    display: grid;
+    max-width: unset;
+    margin-right: 40px;
+    justify-content: flex-start;
+  }
+
+  .clientTitle {
+    width: 100%;
+  }
+}

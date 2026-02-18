@@ -1,0 +1,51 @@
+.authWidget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 24px;
+  background-color: #d7d6d6;
+  transition: background-color 0.4s ease;
+}
+
+.authWidget_padding {
+  padding: 0px 0px 0px 12px;
+}
+
+.button {
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.buttonImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.text {
+  margin: 0;
+}
+
+@media screen and (max-width: 560px) {
+  .authWidget {
+    padding: 0px;
+  }
+
+  .text {
+    display: none;
+  }
+}

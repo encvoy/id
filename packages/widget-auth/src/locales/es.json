@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "login": {
+      "toggleLogin": "Métodos de inicio de sesión",
+      "otherProvider": "Otros métodos",
+      "toggleSessions": "Sesiones",
+      "noSessions": "No hay sesiones activas"
+    },
+    "phone": {
+      "codeNumber": "Se realizará una llamada gratuita al número indicado. Indique las últimas {{length}} cifras del número entrante",
+      "codeVoice": "Se realizará una llamada gratuita al número indicado con un mensaje de voz con el código de autorización",
+      "codeTimer": "Se puede solicitar de nuevo en {{minutes}}:{{seconds}}"
+    },
+    "scopes": {
+      "profile": "Ver nombre, foto y fecha de nacimiento",
+      "email": "Ver la dirección de correo electrónico",
+      "phone": "Ver el número de teléfono",
+      "offlineAccess": "La aplicación podrá acceder a sus datos en cualquier momento",
+      "accounts": "Ver las cuentas de redes sociales añadidas al perfil",
+      "openid": "Ver su identificador",
+      "lk": "Ver información breve de los perfiles de usuario",
+      "locale": "Ver información sobre el idioma",
+      "title": "Accesos solicitados",
+      "catalog": "Ver información sobre las aplicaciones añadidas al catálogo"
+    },
+    "bind": {
+      "title": "Sin cuenta",
+      "createAccount": "Crear una nueva cuenta",
+      "bindToAccount": "Vincular el identificador a una cuenta existente"
+    },
+    "changePassword": {
+      "title": "Cambio de contraseña",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña"
+    },
+    "identifiers": {
+      "title": "Confirme la cuenta",
+      "second-title": "Agregar identificadores necesarios"
+    },
+    "recover": {
+      "account": "Recuperación de cuenta",
+      "password": "Recuperación de contraseña",
+      "sendMessage": "Código enviado a {{ value }}",
+      "new": "Nueva contraseña"
+    },
+    "changeStatusFields": {
+      "title": "Aumento del nivel de visibilidad"
+    },
+    "steps": {
+      "title": "Completar los datos necesarios",
+      "selectImage": "Por favor, seleccione una imagen",
+      "notExceed": "La imagen no debe exceder 5 MB",
+      "uploadImage": "Subir imagen",
+      "requiredImage": "La imagen es obligatoria",
+      "selectFile": "Archivo seleccionado: {{value}}"
+    }
+  },
+  "helperText": {
+    "password": "Contraseña",
+    "enter": "Ingrese",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "login": "Usuario",
+    "code": "Código",
+    "or": "o",
+    "serviceInstructions": "Siga las instrucciones del servicio {{ value }}",
+    "rulesValidation": "Reglas de validación",
+    "success": "Éxito",
+    "operationSuccess": "Operación realizada con éxito"
+  },
+  "actionButtons": {
+    "home": "Inicio",
+    "logIn": "Iniciar sesión",
+    "save": "Guardar",
+    "create": "Crear",
+    "createAccount": "Crear cuenta",
+    "bind": "Vincular",
+    "change": "Cambiar",
+    "get": "Obtener",
+    "repeat": "Repetir",
+    "confirm": "Confirmar",
+    "recover": "Recuperar",
+    "next": "Continuar",
+    "select": "Seleccionar",
+    "recoverPassword": "Recuperar contraseña"
+  },
+  "errors": {
+    "error": "Error",
+    "errorOccurred": "Se produjo un error",
+    "requiredField": "Campo obligatorio",
+    "invalidEmailFormat": "Formato de correo electrónico no válido",
+    "passwordsMatch": "La nueva contraseña no debe coincidir con la anterior"
+  }
+}

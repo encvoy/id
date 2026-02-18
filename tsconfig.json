@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "skipLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@oidc/*": ["packages/oidc/src/*"],
+      "@auth/*": ["packages/auth/src/*"],
+      "@dashboard/*": ["packages/dashboard/src/*"],
+      "@backend/*": ["packages/backend/src/*"],
+      "@miniWidget/*": ["packages/miniWidget/src/*"],
+      "@widget-auth/*": ["packages/widget-auth/src/*"]
+    },
+    "outDir": "dist"
+  },
+  "include": [
+    "packages/dashboard/src/**/*.ts",
+    "packages/dashboard/src/**/*.tsx",
+    "packages/backend/src/**/*.ts",
+    "packages/oidc/src/**/*.ts",
+    "packages/auth/src/**/*.ts",
+    "packages/miniWidget/src/**/*.ts",
+    "packages/miniWidget/src/**/*.tsx",
+    "packages/widget-auth/src/**/*.ts",
+    "packages/widget-auth/src/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}

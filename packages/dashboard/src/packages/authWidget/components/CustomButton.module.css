@@ -1,0 +1,42 @@
+.button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: none;
+  justify-content: flex-start;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s, filter 0.2s ease-in-out;
+}
+
+.logoutButton {
+  opacity: 0.5;
+}
+
+.buttonCenter {
+  justify-content: center;
+}
+
+.buttonHover:hover {
+  filter: brightness(90%);
+}
+
+.buttonIcon {
+  display: flex;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+}
+
+.addIconWrapper {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 2px dashed #666;
+}

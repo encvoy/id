@@ -1,0 +1,187 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subTitleWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.providers {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.provider {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.icon-button-wrapper {
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.icon-button:hover path {
+  stroke: var(--main-color);
+}
+
+.divider {
+  width: calc(100% + 64px);
+  height: 1px;
+  margin-left: -32px;
+  margin-bottom: 32px;
+  background: var(--button-background-color);
+}
+
+.submit-buttons {
+  margin-left: auto;
+  width: fit-content;
+  margin-top: 24px;
+}
+
+.connect-buttons {
+  margin-left: auto;
+  width: fit-content;
+}
+
+.create-button {
+  margin-left: 16px;
+}
+
+.switch-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+}
+
+.token-input {
+  position: relative;
+}
+
+.token-textfield {
+  margin-bottom: 32px;
+}
+
+.token-input::after {
+  content: "секунд";
+  display: block;
+  left: auto;
+  border: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) !important;
+  right: 32px;
+  margin: 0;
+  color: #b6bac6;
+  font-family: "Inter";
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.input-error {
+  margin-bottom: 8px;
+}
+
+.custom-checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.custom-checkbox-wrapper + .custom-checkbox-wrapper {
+  margin-top: 16px;
+}
+
+.provider-name-wrapper {
+  flex: 1 1 auto;
+  overflow: hidden;
+  margin-right: 24px;
+}
+
+.provider-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.provider-icon-wrapper {
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--hover-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18px;
+  border: 1px solid var(--button-background-color);
+  object-fit: cover;
+  object-position: center;
+}
+
+.create-button {
+  margin-left: 16px;
+}
+
+.input-subtitle {
+  margin: 8px 0;
+}
+
+.input-title {
+  margin-bottom: 8px;
+}
+
+.password-item {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--button-background-color);
+  border-radius: 4px;
+  padding: 12px 20px 12px 24px;
+  cursor: pointer;
+}
+
+.password-item:hover {
+  background: var(--background-darkened-color);
+}
+
+.password-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.password-title {
+  margin-bottom: 4px;
+}
+
+.password-head {
+  display: flex;
+  flex-direction: column;
+}
+
+.providerIcon {
+  width: 32px;
+  height: 32px;
+}
+
+@media screen and (max-width: 767px) {
+  .provider-name-wrapper {
+    margin-right: 12px;
+  }
+}
+
+.requiredIcon {
+  color: var(--accent-color);
+}

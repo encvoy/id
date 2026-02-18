@@ -1,0 +1,979 @@
+{
+  "pages": {
+    "experimental": {
+      "title": "Experimental Features",
+      "description": "Section for experimental service settings",
+      "features": {
+        "cards": {
+          "name": "Business Cards",
+          "description": "Enables business cards in the application. A corresponding section appears in each user's profile. The user's card is available at api/cards/{userId}."
+        },
+        "catalog": {
+          "name": "Catalog",
+          "description": "Enables the public application catalog. Each application can be added to the catalog for easier and faster access."
+        }
+      }
+    },
+    "profile": {
+      "description": "You can manage access to your account. Configure which data will be provided to applications after your consent.",
+      "sections": {
+        "contacts": "Contacts",
+        "identifiers": "Identifiers",
+        "security": "Security",
+        "privacy": "Profile Privacy",
+        "businessCard": "Business Card",
+        "otherActions": "Other Actions"
+      },
+      "actions": {
+        "logoutAllDevices": "Log out from all devices",
+        "privacyPolicy": "Personal Data Processing Policy",
+        "downloadData": "Download Data"
+      },
+      "fields": {
+        "userId": "User ID",
+        "publicName": "Public Name",
+        "profilePhoto": "Profile Photo",
+        "fullName": "Full Name",
+        "givenName": "First Name",
+        "familyName": "Last Name",
+        "login": "Login",
+        "birthDate": "Date of Birth",
+        "email": "Email",
+        "phone": "Phone Number"
+      },
+      "notices": {
+        "publicDataRequireEmail": "Public data is available if an email address is provided"
+      },
+      "modals": {
+        "confirmDeletion": {
+          "title": "Confirm Deletion",
+          "message": "Are you sure you want to delete the contact?"
+        },
+        "logoutAllDevices": {
+          "title": "Log out from all devices",
+          "message": "You will be logged out on all devices. You will need to re-authenticate. Continue?"
+        },
+        "searchAvatars": {
+          "title": "Available Avatars",
+          "description": "Select the avatar you want to save:",
+          "searchPlaceholder": "Search"
+        }
+      },
+      "businessCard": {
+        "activity": {
+          "title": "Activity",
+          "description": "If disabled, the business card will not be available for viewing"
+        },
+        "fields": {
+          "cardUrl": {
+            "label": "Business Card Identifier (slug)",
+            "description": "https://example.com/slug"
+          }
+        },
+        "tooltips": {
+          "openPreview": "Open card preview",
+          "openQrCode": "Open QR code",
+          "copyLink": "Copy link"
+        }
+      },
+      "publicProfile": {
+        "panelTitle": "Public Profile Data",
+        "mainInfo": "Main Information",
+        "externalAccounts": "External Accounts",
+        "title": "Private Profile",
+        "description": "Prohibit sharing the public profile even if the field privacy level is \"Available to everyone\"",
+        "button": "Public Data",
+        "togglePrivacy": "Toggle Profile Privacy"
+      }
+    },
+    "addLoginMethod": {
+      "title": "Add Login Method",
+      "description": "Select the login method you want to add to your profile:",
+      "noMethods": "No login methods available",
+      "errors": {
+        "noAvailableMethods": "No available login methods",
+        "bindingError": "Binding error",
+        "operationCancelled": "Operation cancelled by user",
+        "installMetamask": "Please install Metamask",
+        "certificateBindingError": "Certificate binding error",
+        "webauthnBindingError": "Error binding WebAuthn device"
+      },
+      "modals": {
+        "loginToAccount": "Log in to {{providerName}} account",
+        "confirmAddition": "In the new window (tab) that opens, complete the authorization procedure on the corresponding platform. Upon successful authorization, this login method will be automatically added to the list of available account identifiers and will become a possible authentication method for the service"
+      },
+      "ethereumSignMessage": "To authorize in the {{projectName}} service, sign the randomly generated text: {{nonce}}"
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "description": "When an account is deleted, associated data will be permanently removed. You will lose access to applications where you used this account to log in.",
+      "passwordConfirmation": "Password for confirmation",
+      "errors": {
+        "deletionError": "Error deleting account"
+      }
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "description": "After changing the password, you will be logged out on all devices where you are logged in with the current password.",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "validationRules": "Specified password validation rules:",
+      "noRules": "No password rules",
+      "errors": {
+        "currentPasswordRequired": "Current password is required",
+        "newPasswordRequired": "New password is required",
+        "passwordsMustDiffer": "New password must be different from the current one",
+        "changeError": "Error changing user password"
+      }
+    },
+    "confirmEmail": {
+      "titles": {
+        "change": "Change Email",
+        "add": "Add Email"
+      },
+      "emailLabel": "Enter email address",
+      "emailDescription": "A confirmation code will be sent to this address",
+      "codeLabel": "Enter the code sent to the specified address",
+      "codeDescriptionTimer": "You can resend the code in {{minutes}}:{{seconds}}",
+      "errors": {
+        "emailRequired": "Email address is required",
+        "emailTooLong": "Email address cannot exceed {{maxLength}} characters",
+        "emailInvalid": "Invalid email address format",
+        "emailAlreadyExists": "Failed to register this email. Please try another address.",
+        "codeRequired": "Enter the email confirmation code"
+      }
+    },
+    "confirmPhone": {
+      "titles": {
+        "change": "Change Phone",
+        "add": "Add Phone"
+      },
+      "phoneLabel": "Enter phone number",
+      "phoneDescription": "You will receive a call with a confirmation code at this number",
+      "codeLabel": "Enter the code received by phone",
+      "codeDescriptionTimer": "You can request another call in {{minutes}}:{{seconds}}",
+      "codeMessages": {
+        "lastDigits": "Last {{count}} digits",
+        "lastDigitsFour": "Last 4 digits",
+        "number": "A free call will be made to the specified number. Enter the {{digits}} of the incoming number",
+        "voice": "A free call with a voice message containing the authorization code will be made to the specified number",
+        "sms": "An SMS message with the authorization code has been sent to the specified number"
+      },
+      "errors": {
+        "phoneRequired": "Phone number is required",
+        "phoneDigits": "Number must contain 10 digits",
+        "phoneMobileFormat": "Enter a valid mobile number",
+        "phoneAlreadyExists": "Phone number is already taken. Use another number",
+        "codeRequired": "Enter the phone confirmation code"
+      }
+    },
+    "editProfile": {
+      "title": "Edit Profile"
+    },
+    "scopes": {
+      "modals": {
+        "deleteSessions": {
+          "title": "Delete Sessions",
+          "mainMessage": "All your sessions and tokens for the application {{clientName}} will be deleted"
+        },
+        "revokeScopes": {
+          "title": "Revoke Permissions",
+          "mainMessage": "The application {{clientName}} will no longer be able to access your data"
+        }
+      },
+      "controls": {
+        "deleteSessions": "End Sessions",
+        "revokeScopes": "Revoke Permissions"
+      },
+      "clientDescription": "Description:",
+      "grantedPermissions": "Granted Permissions:",
+      "scopesProfileDescription": {
+        "profile": "View name, photo, and date of birth",
+        "email": "View email address",
+        "phone": "View phone number",
+        "offlineAccess": "The application will access your data at any time",
+        "accounts": "View social media accounts added to the profile",
+        "openid": "View your identifier",
+        "lk": "View brief personal account information",
+        "locale": "View language information",
+        "unknown": "Unknown permission {{scope}}",
+        "catalog": "View information about applications added to the catalog"
+      }
+    },
+    "eventLog": {
+      "dateAndTime": "Date and Time:",
+      "user": "User ID:",
+      "client": "Application ID:",
+      "placement": "Location (IP):",
+      "details": "Details:",
+      "device": "Device:",
+      "description": "Description:",
+      "events": {
+        "successUserLogin": "Successful user login",
+        "userDeletedDb": "User deleted from DB",
+        "userDeleted": "User marked for deletion",
+        "userCreated": "User created",
+        "userUpdated": "User updated",
+        "userRestored": "User restored",
+        "userBlock": "User blocked",
+        "userUnblock": "User unblocked"
+      }
+    },
+    "request": {
+      "title": "Join Invitation"
+    },
+    "usersList": {
+      "labels": {
+        "role": "Permissions:",
+        "status": "Status:"
+      },
+      "createButton": "Create User",
+      "defaultClient": "application",
+      "status": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "To be deleted"
+      },
+      "roles": {
+        "user": {
+          "title": "Member",
+          "description": "Has access to the application and can view the application profile"
+        },
+        "editor": {
+          "title": "Administrator",
+          "descriptionFirst": "Has full control over all users and applications",
+          "descriptionSecond": "Has full control over all users and applications"
+        },
+        "owner": {
+          "title": "Manager",
+          "description": "Can create their own applications, manage member permissions for their applications, and view personal data of their application members"
+        }
+      },
+      "modals": {
+        "changeUserRole": {
+          "title": "Are you sure you want to change the user role?",
+          "mainMessage": "Organization personal account, applications, and providers will be deleted."
+        },
+        "deleteUserFromClient": {
+          "title": "Remove User from Application",
+          "mainMessage": "User {{userName}} will be removed from application {{clientName}} and will lose access to it."
+        },
+        "endSessions": {
+          "mainMessage": "All sessions and tokens for user {{userName}} will be deleted.",
+          "actions": {
+            "endSessions": "End"
+          }
+        },
+        "blockUser": {
+          "mainMessage": "User {{userName}} {{action}} access to applications where they used the {{projectName}} account to log in. Data associated with the account will be preserved.",
+          "actions": {
+            "first": "will gain",
+            "second": "will lose",
+            "blocked": "Block",
+            "unblocked": "Unblock"
+          }
+        },
+        "removeUser": {
+          "titleFirst": "Delete Account",
+          "titleSecond": "Remove from Application",
+          "mainMessageFirst": "Account {{userName}} will be deleted. Data associated with the account will be permanently removed. The user will lose access to applications where they used the {{projectName}} account to log in.",
+          "mainMessageSecond": "User {{userName}} will be removed from the application."
+        },
+        "chooseRole": {
+          "title": "Change Permissions",
+          "description": "Select permissions in {{projectName}} for the user:",
+          "listRoles": "Permission Level"
+        }
+      },
+      "menuControls": {
+        "changeUserRole": "Change Permissions",
+        "deleteUserFromClient": "Remove from Application",
+        "endSessions": "End Sessions",
+        "blockUser": "Block in {{projectName}}",
+        "unblockUser": "Unblock in {{projectName}}",
+        "removeUser": "Delete User"
+      },
+      "notice": {
+        "changeUserRole": "User {{userName}} permissions in {{projectName}} have been changed",
+        "NotChangeUserRole": "Failed to change user {{userName}} permissions in {{projectName}}"
+      }
+    },
+    "createUser": {
+      "title": "Create User",
+      "errors": {
+        "fillAtLeastOneIdentifier": "At least one identifier must be filled"
+      }
+    },
+    "editUser": {
+      "title": "Edit User Profile"
+    },
+    "userProfile": {
+      "nameHidden": "Name hidden by user",
+      "noName": "No name",
+      "deleteAccountModal": {
+        "title": "Delete {{projectName}} Account",
+        "message": [
+          "Account {{userName}} will be deleted. Data associated with the account will be permanently removed. The user will lose access to applications where they used the {{projectName}} account to log in.",
+          "Applications where the user being deleted is the owner will also be deleted."
+        ]
+      },
+      "notifications": {
+        "userDeleted": "User {{userName}} deleted in {{projectName}}."
+      },
+      "emptyIdentifiers": "No identifiers available"
+    },
+    "createClient": {
+      "validation": {
+        "nameMaxLength": "Name cannot exceed 50 characters",
+        "descriptionMaxLength": "Description cannot exceed 255 characters",
+        "linkMaxLength": "Link cannot exceed 2000 characters",
+        "invalidUrl": "Invalid link format",
+        "required": "Required field"
+      },
+      "title": "Create Application",
+      "sections": {
+        "main": "Main Parameters",
+        "params": "Application Parameters"
+      },
+      "fields": {
+        "name": {
+          "label": "Application Name",
+          "description": "Application name displayed to users"
+        },
+        "description": {
+          "label": "Application Description"
+        },
+        "avatar": {
+          "label": "Application Logo"
+        },
+        "type": "Application Type",
+        "typeOther": "Other",
+        "catalog": "Display in Catalog",
+        "authorize_only_admins": "Restricted Access",
+        "domain": {
+          "label": "Application Address",
+          "description": "Application address in the format \"protocol://domain:port\""
+        },
+        "redirectUri": {
+          "label": "Redirect URI #",
+          "description": "Address to which the user is redirected after authorization"
+        },
+        "postLogout": {
+          "label": "Post-Logout Redirect URI #",
+          "description": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used"
+        },
+        "requestUri": {
+          "label": "Authentication Request or Recovery URL #",
+          "description": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used"
+        }
+      }
+    },
+    "listClient": {
+      "createButton": "Create Application",
+      "providersEmpty": "None",
+      "users": "Members:",
+      "catalog": "Catalog",
+      "activeLoginMethods": "Active Login Methods:"
+    },
+    "clientDetails": {
+      "notFound": "Application not found",
+      "catalogDisplayed": "Displayed in catalog",
+      "catalogNotDisplayed": "Not displayed in catalog",
+      "clientIdLabel": "Identifier (client_id)",
+      "clientSecretLabel": "Secret Key (client_secret)",
+      "participantsCount": "Members:",
+      "activeLoginMethods": "Active Login Methods:",
+      "providersEmpty": "None",
+      "copiedMessage": "{{text}} copied",
+      "settingsTooltip": "Settings",
+      "widgetTooltip": "Login Methods and Widget Settings",
+      "deleteAppTooltip": "Delete Application",
+      "descriptionTitle": "Description",
+      "noDescription": "No application description",
+      "invitationTitle": "List of Sent Invitations to Application ({{ value }})",
+      "invitationModalTitle": "Send Invitation",
+      "emailsRequest": "List of email addresses to which the invitation notification will be sent. To add, enter an email address and press Enter. To add multiple, separate email addresses with a space, comma, or semicolon",
+      "emailsError": "Failed to create invitations for these email addresses. Validation error",
+      "modals": {
+        "deleteClient": {
+          "title": "Delete Application",
+          "mainMessage": "Application {{projectName}} will be deleted. Users will not be able to log in to your application. This action cannot be undone."
+        }
+      }
+    },
+    "settings": {
+      "title": "Settings for Application {{name}}",
+      "sections": {
+        "params": "Application Parameters",
+        "catalog": "Catalog",
+        "loginMethods": "Login Methods",
+        "profileFields": "User Profile Settings",
+        "generalInfo": "Main Information",
+        "additionalInfo": "Additional Information",
+        "emailTemplates": "Email Templates",
+        "appTypes": "Application Types",
+        "trusted": "Trusted Providers",
+        "licenses": "Licenses",
+        "sentry": "Sentry",
+        "widgetAppearance": "Login Methods and Widget Settings",
+        "localization": "Localization",
+        "accessSettings": "Access Settings",
+        "requiredFields": "Required Fields",
+      },
+      "trusted": {
+        "localAutoMergeUsers": {
+          "title": "Automatic User Merging",
+          "description": "Convert self-registered users to trusted users when email matches",
+          "worksOnlyWithUniqueEmail": "Works only with unique email"
+        }
+      },
+      "labels": {
+        "appName": "Application Name",
+        "appDescription": "Application Description",
+        "appType": "Application Type",
+        "displayInCatalog": "Display in Catalog",
+        "appLogo": "Application Logo",
+        "displayInMiniWidget": "Display in Mini-Widget",
+        "paramsTitle": "Application Parameters",
+        "clientId": "Identifier (client_id)",
+        "clientSecret": "Secret Key (client_secret)",
+        "domain": "Application Address",
+        "restrictedAccess": "Restricted Access",
+        "onlyEmployees": "Prohibit access for external users",
+        "redirectUri": "Redirect URI #",
+        "postLogoutUri": "Post-Logout Redirect URI #",
+        "requestUri": "Authentication Request or Recovery URL #",
+        "responseTypes": "Response Types (response_types)",
+        "grantTypes": "Grant Types (grant_types)",
+        "tokenAuthMethod": "Client Authentication Method for Token Endpoint (token_endpoint_auth_method)",
+        "introspectionAuthMethod": "Authentication Method for Introspection Endpoint (introspection_endpoint_auth_method)",
+        "revocationAuthMethod": "Authentication Method for Revocation Endpoint (revocation_endpoint_auth_method)",
+        "idTokenSignAlg": "Signing Algorithm for ID Token (id_token_signed_response_alg)",
+        "requireAuthTime": "Require Authentication Time (require_auth_time)",
+        "subjectType": "User ID Transmission Method in ID Token (subject_type)",
+        "applicationType": "Application Type (application_type)",
+        "accessTokenTtl": "Access Token (access_token_ttl)",
+        "refreshTokenTtl": "Refresh Token (refresh_token_ttl)"
+      },
+      "descriptions": {
+        "appName": "Application name displayed to users",
+        "appType": "Value set from the list of types",
+        "clientId": "Unique application identifier",
+        "clientSecret": "Application access key",
+        "domain": "Application address in the format \"protocol://domain:port\"",
+        "restrictedAccess": "Application login is available only for users with \"Administrator\" permissions",
+        "onlyEmployees": "Application login is available only for application members",
+        "redirectUri": "Address to which the user is redirected after authorization",
+        "postLogoutUri": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used",
+        "requestUri": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used",
+        "accessTokenTtl": "access_token lifetime in seconds",
+        "refreshTokenTtl": "refresh_token lifetime in seconds"
+      },
+      "errors": {
+        "allowedChars": "Can contain Latin letters (a-z), numbers (0-9), hyphens (-), and underscores (_)"
+      },
+      "locale": {
+        "title": "Change Language",
+        "description": "Value set from the list of available languages",
+        "english": "English",
+        "russian": "Russian",
+        "spanish": "Spanish",
+        "french": "French",
+        "german": "German",
+        "italian": "Italian"
+      },
+      "access": {
+        "twoFactorTitle": "Two-Factor Authentication",
+        "twoFactorDescription": "Enables an additional layer of security for logging in (2FA MFA)",
+        "ignoreRequiredFieldsTitle": "Ignore required profile fields for applications",
+        "ignoreRequiredFieldsDescription": "Disables verification of required profile fields during application authorization",
+        "prohibitBindingTitle": "Prohibit identifier binding on the widget form",
+        "prohibitBindingDescription": "Disables the ability to bind identifiers on the widget form",
+        "restrictedAccessTitle": "Restricted access for all applications",
+        "restrictedAccessDescription": "Login to any application is available only for users with \"Administrator\" permissions",
+        "registrationPolicyTitle": "Prohibit Registration",
+        "registrationDisabled": "Registration prohibited",
+        "registrationAllowed": "Registration allowed",
+        "registrationAutoOnly": "Only auto-registration allowed"
+      },
+      "requiredFields": {
+        "mainFields": "Main Profile Fields",
+        "nameAndSurname": "First and Last Name",
+        "customFields": "Custom Profile Fields"
+      },
+      "requiredProviderDescription": "Logging into the application requires a login method in the user profile",
+      "profileFieldsSubtitle": "Configure profile field parameters and add identifiers that the user must have in their profile",
+      "passwordPolicy": "Password Policy",
+      "otherType": "Other",
+      "modals": {
+        "deleteOrg": {
+          "title": "Are you sure you want to delete the organization?",
+          "mainMessage": "The organization's dashboard, applications, and providers will be deleted"
+        }
+      },
+      "tariff": "Pricing plan",
+      "plan": {
+        "free": "Free",
+        "extended": "Extended",
+        "full": "Full"
+      },
+      "balance": "Balance",
+      "deleteOrg": "Delete organization"
+    },
+    "widget": {
+      "title": "Configure Widget Appearance",
+      "widgetTitle": "Widget Title",
+      "widgetTitleDescription": "To display the application name in the widget title, use the value {{value}}",
+      "appCover": "Widget Cover",
+      "coverModeTitle": "Auto-substitution mode for current cover on all application widgets",
+      "coverMode": {
+        "default": "Disabled",
+        "replace": "Default",
+        "inherit": "Enforced"
+      },
+      "coverModeDescription": {
+        "default": "No auto-substitution",
+        "replace": "Applied to widgets without a cover",
+        "inherit": "Single cover for all"
+      },
+      "infoField": "Additional information field inside the form",
+      "infoFieldOut": "Additional field outside the widget",
+      "infoFieldHtml5": "Fields support HTML5 code with full semantic markup, including embedded and inline CSS styles.",
+      "infoFieldDangerous": "Use of the `script` tag is prohibited. When saving data, the entire `script` tag (including its content and attributes) will be automatically removed from the field at the database level.",
+      "enterLabel": "Enter",
+      "login": " login",
+      "email": " email",
+      "phone": " phone",
+      "or": " or",
+      "availableAuthMethods": "Other methods",
+      "buttonColor": "Button background color",
+      "fontColor": "Button font color",
+      "linkColor": "Link color",
+      "emptyGroup": "List is empty",
+      "editProviders": "Configure Login Methods",
+      "big": "Main Login Methods",
+      "small": "Other Login Methods",
+      "otherProviders": "Disabled Login Methods",
+      "emptyTitle": "No login methods available",
+      "tooltip": "System public login method",
+      "required": "To log in to the application, the user will need to add the login method identifier to their profile",
+      "notRequired": "Having the login method identifier in the user profile will become optional",
+      "HtmlField": "Enter HTML code for the widget",
+      "modals": {
+        "deleteProvider": {
+          "title": "Delete Login Method",
+          "mainMessage": "The login method will be deleted. If the login method is used in an application, users will not be able to log in using this method."
+        }
+      },
+      "preview": {
+        "createAccount": "Create account",
+        "logIn": "Log in",
+        "toggleLogin": "Login methods",
+        "toggleSessions": "Sessions",
+        "otherProvider": "Other methods"
+      },
+      "switches": {
+        "showAvatar": "Show application logo on the widget",
+        "showAvatarDescription": "The logo is only displayed if an icon has been added",
+        "hideAvatarsOfBigProviders": "Hide logos of major login providers",
+        "hideCreateAccount": "Hide create account button",
+        "hideFooter": "Hide footer",
+        "hideFooterDescription": "Only the copyright is displayed in the footer"
+      }
+    }
+  },
+  "tabs": {
+    "clients": "Applications",
+    "eventLog": "Event Log",
+    "profile": "Profile",
+    "scopes": "Scopes",
+    "settings": "Settings",
+    "users": "Users",
+    "widget": "Widget",
+    "request": "Requests"
+  },
+  "errors": {
+    "valueNotAvailable": "This value is not available",
+    "invalidImageFormat": "Invalid image format",
+    "imageSizeExceeded": "Image size must not exceed {{maxSize}} MB",
+    "adminAccessOnly": "Access to the dashboard is restricted to users with \"Owner\" or \"Administrator\" roles.",
+    "requiredField": "This field is required",
+    "unknownError": "Unknown error",
+    "valueMaxLength": "Value must not exceed {{maxLength}} characters",
+    "valueMinLength": "Value must be at least {{minLength}} characters",
+    "valuesShouldNotRepeat": "Values must be unique",
+    "invalidUrlFormat": "Invalid URL format",
+    "invalidEmailFormat": "Invalid email address format",
+    "invalidPhoneFormat": "Invalid phone number format",
+    "mustBeNumber": "Must be a number",
+    "mustBePositiveNumber": "Must be a positive number",
+    "noSpaces": "Value cannot contain spaces",
+    "hexColor": "Color must be in HEX format"
+  },
+  "info": {
+    "dataCopied": "Data copied to clipboard",
+    "infoUpdated": "Information updated",
+    "insufficientAccessRights": "Insufficient access rights",
+    "insufficientAccessRightsDescription": "To view the service dashboard",
+    "saveError": "Failed to save data",
+    "updateError": "Failed to update data",
+    "deleteError": "Failed to delete data",
+    "pasteError": "Error pasting parameters from clipboard",
+    "emptySearch": "No results found for your search",
+    "requestCancel": "Request rejected",
+    "requestConfirm": "Request successfully accepted"
+  },
+  "global": {
+    "catalog": {
+      "tooltip": "Application catalog",
+      "noServices": "No services available",
+      "other": "Other",
+      "favorite": "Favorites"
+    }
+  },
+  "panel": {
+    "license": {
+      "inputLabel": "Enter value",
+      "deleteLicense": "Delete license",
+      "expirationDate": "Expiration date",
+      "perpetual": "perpetual",
+      "keys": "Keys",
+      "deleteNotice": "Providers linked to the license {{licenseName}} will stop working"
+    },
+    "trusted": {
+      "title": "Configure trusted providers",
+      "providers": "Providers",
+      "publicOutlinedIcon": "System public login method",
+      "license": "License",
+      "noLicense": "no license",
+      "licenseDescription": "Within a single license, you can use the same server Address",
+      "localAutoMergeUsers": {
+        "title": "Automatic user merging",
+        "description": "Convert self-registered users to trusted users when email matches",
+        "worksOnlyWithUniqueEmail": "Works only with unique email"
+      }
+    },
+    "sentry": {
+      "title": "Configure Sentry",
+      "description": "Configure sending traces and errors to Sentry",
+      "dsnLabel": "DSN",
+      "dsnDescription": "DSN is a unique key issued for each project in Sentry",
+      "enabledLabel": "Active",
+      "userIdLabel": "User ID",
+      "userIdDescription": "ID of the user whose actions should trigger traces and errors"
+    },
+    "notification": {
+      "title": "Notifications",
+      "newNotifications": "New notifications:",
+      "clear": "Clear",
+      "goToLog": "Go to log"
+    },
+    "chooseProviders": {
+      "title": "Create login method",
+      "description": "Select a login method template"
+    },
+    "twoFactor": {
+      "title": "Configure two-factor authentication",
+      "controlledMethodsTitle": "Provider types requiring two-factor authentication",
+      "availableProvidersTitle": "Second factor providers"
+    },
+    "ruleValidation": {
+      "title": "Configure validation rules for '{{fieldName}}'",
+      "description": "Select the validation rules you want to apply to the field:",
+      "tooltipDescription": "Validation rule is disabled for all fields",
+      "edit": {
+        "editTitle": "Edit validation rule",
+        "createTitle": "Create validation rule",
+        "titleLabel": "Name",
+        "titleDescription": "Field name in the system",
+        "errorLabel": "Error text",
+        "errorPlaceholder": "Enter text",
+        "errorDescription": "Error text displayed if the validation rule fails",
+        "regexLabel": "Regular expression",
+        "regexPlaceholder": "Enter text",
+        "regexDescription": "Regular expression describing the validation rule in ^\\S+$ format",
+        "activeLabel": "Active",
+        "activeDescription": "Completely enables or disables the use of the rule"
+      }
+    },
+    "types": {
+      "title": "Application types",
+      "description": "Configure application types for various purposes",
+      "edit": {
+        "editTitle": "Edit application type",
+        "createTitle": "Create application type",
+        "nameLabel": "Group name",
+        "nameDescription": "Display name of the type"
+      }
+    },
+    "mailTemplate": {
+      "title": "Configure email templates",
+      "description": "Configure email templates for registration, password recovery, and other events",
+      "edit": {
+        "editTitle": "Edit email template",
+        "editDescription": "Change the email template for event {{action}}",
+        "titleLabel": "Template name",
+        "subjectLabel": "Email subject",
+        "contentLabel": "Email content"
+      }
+    },
+    "profileFields": {
+      "createTitle": "Add profile field",
+      "editTitle": "Edit parameters for field \"{{fieldName}}\"",
+      "labels": {
+        "field": "Enter name",
+        "title": "Field description",
+        "allowedAsLogin": "Use as login",
+        "active": "Active",
+        "parameters": "Parameters",
+        "parametersDescription": "Specify field parameters",
+        "editable": "Editable",
+        "required": "Required",
+        "unique": "Unique",
+        "public": "Public",
+        "publicDescription": "Publicity level of the field for new users",
+        "vcardAttribute": "vCard attribute",
+        "vcardDescription": "Specify the vCard attribute name to which the field will be mapped",
+        "vcardPlaceholder": "Enter vCard attribute",
+        "defaultValue": "Default value",
+        "defaultDescription": "Specify the default value for the field",
+        "defaultPlaceholder": "Enter default value",
+        "phoneProviderTitle": "Phone number verification settings",
+        "emailProviderTitle": "Email verification settings",
+        "validationRules": "Validation rules",
+        "validationRulesPlaceholder": "No validation rules set",
+        "agreementLink": "Link to data processing policy file",
+        "agreementPlaceholder": "Enter link to file"
+      },
+      "descriptions": {
+        "field": "Field name in the system",
+        "title": "Display name of the field"
+      },
+      "modals": {
+        "deleteProvider": {
+          "title": "Delete provider",
+          "message": "The provider will be deleted along with its associated settings. The corresponding login method will also be removed."
+        }
+      }
+    }
+  },
+  "providers": {
+    "filter": {
+      "title": "Type:",
+      "all": "All",
+      "public": "Public",
+      "private": "Private"
+    },
+    "createProvider": {
+      "title": "Create login method {{ type }}",
+      "description": "Select a login method template"
+    },
+    "editProvider": {
+      "title": "Edit login method",
+      "description": "Modify login method parameters"
+    },
+    "name": "Name",
+    "nameDescription": "Name displayed to users",
+    "description": "Description",
+    "logo": "Logo",
+    "public": "Publicity",
+    "publicDescription": "Publicity level of the field for new users",
+    "publicMethods": "Public login method",
+    "publicMethodsDescription": "The login method will be available for addition to user applications",
+    "ethereum": {
+      "contractAddress": "Contract address",
+      "contractAddressDescription": "Unique address of the Ethereum smart contract",
+      "privateKey": "Private key",
+      "privateKeyDescription": "Private key for contract access",
+      "callbackUrl": "Callback URL",
+      "callbackUrlDescription": "URL must be specified in the smart contract settings for correct user authentication"
+    },
+    "kloud": {
+      "clientId": "Client ID (client_id)",
+      "clientIdDescription": "Unique identifier of the connected resource",
+      "clientSecret": "Client secret (client_secret)",
+      "clientSecretDescription": "Resource secret key",
+      "issuer": "Base authorization server address (issuer)",
+      "issuerDescription": "Authorization server address"
+    },
+    "custom": {
+      "clientId": "Client ID (client_id)",
+      "clientIdDescription": "Unique identifier of the connected resource",
+      "clientSecret": "Client secret (client_secret)",
+      "clientSecretDescription": "Resource secret key",
+      "redirectUri": "Redirect URI",
+      "redirectUriDescription": "URL must be specified in the external login method settings for correct user authentication",
+      "issuer": "Base authorization server address (issuer)",
+      "authorizationEndpoint": "Authorization endpoint (authorization_endpoint)",
+      "authorizationEndpointDescription": "Endpoint where the user is redirected for authorization",
+      "tokenEndpoint": "Token endpoint (token_endpoint)",
+      "tokenEndpointDescription": "Resource that provides token issuance",
+      "userinfoEndpoint": "UserInfo endpoint (userinfo_endpoint)",
+      "userinfoEndpointDescription": "Resource that returns information about the current user",
+      "scopes": "Requested permissions (scopes)",
+      "scopesDescription": "List of permissions to be obtained when contacting the identity provider. To add a permission, type its name and press Enter."
+    },
+    "template": {
+      "clientId": "Client ID (client_id)",
+      "clientIdDescription": "Unique identifier of the connected resource",
+      "clientSecret": "Client secret (client_secret)",
+      "clientSecretDescription": "Resource secret key",
+      "redirectUri": "Redirect URI",
+      "redirectUriDescription": "URL must be specified in the external login method settings for correct user authentication"
+    },
+    "email": {
+      "rootMail": "Primary email address",
+      "rootMailDescription": "Email service address that will also be used for sending emails",
+      "mailHostname": "Outgoing mail server address",
+      "mailHostnameDescription": "Email service address for sending emails",
+      "mailPort": "Outgoing mail server port",
+      "mailPortDescription": "Email service port for sending emails",
+      "mailPassword": "Email password",
+      "mailPasswordDescription": "Regular password or application password created in the email service account settings",
+      "mailImage": "Email image",
+      "mailCodeTtlSec": "Verification code TTL",
+      "mailCodeTtlSecDescription": "Verification code lifetime for the email service in seconds",
+      "useForLogin": "Use for code-based login",
+      "useForLoginDescription": "Will be available in applications as a login method using one-time passwords"
+    },
+    "phone": {
+      "issuer": "Base authorization address (issuer)",
+      "clientId": "Client ID (client_id)",
+      "clientIdDescription": "Unique identifier of the connected resource",
+      "clientSecret": "Client secret (client_secret)",
+      "clientSecretDescription": "Resource secret key",
+      "phoneImage": "Phone image",
+      "useForLogin": "Use for code-based login",
+      "useForLoginDescription": "Will be available in applications as a login method using one-time passwords"
+    },
+    "otp": {
+      "digits": "Number of digits",
+      "digitsDescription": "Number of digits in the one-time password",
+      "period": "Validity period",
+      "periodDescription": "One-time password validity period in seconds",
+      "algorithm": "Algorithm",
+      "algorithmDescription": "Hashing algorithm (SHA1, SHA256, or SHA512)",
+      "periodMin": "Minimum period value is 15",
+      "periodMax": "Maximum period value is 300",
+      "digitsValidation": "Number of digits must be between 6 and 8",
+      "counter": "Initial counter value",
+      "counterDescription": "Current counter (automatically increments with each authentication)",
+      "counterMin": "Minimum counter value is 0"
+    },
+    "mtls": {
+      "issuer": "mTLS connection entry point (issuer)",
+      "issuerDescription": "Entry point address"
+    }
+  },
+  "actionButtons": {
+    "edit": "Edit",
+    "add": "Add",
+    "deleteAccount": "Delete account",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "download": "Download",
+    "upload": "Upload",
+    "available": "Available",
+    "apply": "Apply",
+    "show": "Show",
+    "hide": "Hide",
+    "resend": "Resend",
+    "confirm": "Confirm",
+    "getCode": "Get code",
+    "revoke": "Revoke",
+    "configure": "Configure",
+    "create": "Create",
+    "send": "Send",
+    "replenish": "Top up balance",
+    "connect": "Connect"
+  },
+  "privacy": {
+    "private": {
+      "title": "Available only to you",
+      "description": "Data is confidential and visible only to you"
+    },
+    "publicOauth": {
+      "title": "Available on request",
+      "description": "Access to data will be granted after your consent"
+    },
+    "publicGravatar": {
+      "title": "Available to everyone",
+      "description": "Data is public and accessible to everyone"
+    }
+  },
+  "statuses": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "expired": "Expired"
+  },
+  "roles": {
+    "owner": "Owner",
+    "admin": "Manager",
+    "editor": "Administrator",
+    "user": "Member",
+    "trusted_user": "Trusted user"
+  },
+  "toolTips": {
+    "goToLink": "Go to link",
+    "rules": "Validation rules",
+    "edit": "Edit",
+    "delete": "Delete",
+    "id": "Used as login",
+    "unique": "Unique",
+    "doRequired": "Make required",
+    "doNotRequired": "Make optional",
+    "copy": "Copy",
+    "paste": "Paste",
+    "pen": "Not editable",
+    "penFilled": "Editable",
+    "download": "Export vCard",
+    "close": "Close",
+    "generatePassword": "Generate password",
+    "required": "Required",
+    "notActive": "Not active",
+    "confirm": "Confirm"
+  },
+  "helperText": {
+    "value": {
+      "notSet": "Not set"
+    },
+    "characterCount": "characters",
+    "password": "Password",
+    "lastChanged": "Last modified date",
+    "mainInfo": "Main information",
+    "additionalInfo": "Additional information",
+    "loading": "Loading...",
+    "search": "Search...",
+    "help": "Help",
+    "emptyList": "List is empty",
+    "parameters": "Parameters",
+    "send": "Sent",
+    "recipient": "Recipient"
+  },
+  "modals": {
+    "uploadImage": {
+      "title": "Add image",
+      "description": "The image will be displayed in the card list and in the detailed view window.",
+      "uploadButton": "Upload",
+      "formatInfo": "Format — JPG, GIF, PNG, WEBP",
+      "maxSizeInfo": "Maximum size — {{maxSize}} MB"
+    },
+    "editImage": {
+      "title": "Edit image",
+      "description": "The selected area will be used to display the image"
+    },
+    "confirmSave": {
+      "title": "Save changes",
+      "mainMessage": [
+        "You have incomplete required fields necessary for further operation",
+        "Continue saving?"
+      ]
+    },
+    "unSavedChanges": {
+      "title": "Save changes",
+      "mainMessage": "Changes are not saved. Continue without saving?"
+    }
+  }
+}

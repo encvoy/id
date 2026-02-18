@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <!-- Load environment config for production -->
+    <script src="/config.js"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        // Google Analytics
+        const GOOGLE_METRICA_ID =
+          window.ENV_CONFIG?.GOOGLE_METRICA_ID || "%VITE_GOOGLE_METRICA_ID%";
+        if (
+          GOOGLE_METRICA_ID &&
+          GOOGLE_METRICA_ID.trim() !== "" &&
+          !GOOGLE_METRICA_ID.startsWith("%VITE_")
+        ) {
+          var gtagScript = document.createElement("script");
+          gtagScript.async = true;
+          gtagScript.src =
+            "https://www.googletagmanager.com/gtag/js?id=" + GOOGLE_METRICA_ID;
+          document.head.appendChild(gtagScript);
+
+          window.dataLayer = window.dataLayer || [];
+
+          function gtag() {
+            window.dataLayer.push(arguments);
+          }
+
+          gtag("js", new Date());
+          gtag("config", GOOGLE_METRICA_ID);
+        }
+      });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="apple-touch-icon" href="/node.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="preload"
+      href="/fonts/Inter-400.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Inter-500.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Play-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/app/index.tsx"></script>
+  </body>
+</html>

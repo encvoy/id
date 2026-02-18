@@ -1,0 +1,11 @@
+.publicButton {
+  padding-right: 20px !important;
+}
+
+.publicButtonDisabled {
+  opacity: 0.5;
+}
+
+.arrowRotate {
+  transform: rotate(180deg);
+}

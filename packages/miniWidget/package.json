@@ -1,0 +1,67 @@
+{
+  "name": "encvoy-widget",
+  "version": "1.0.20",
+  "description": "EncvoyWidget - React виджет для аутентификации и управления пользователем",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "widget",
+    "authentication",
+    "id",
+    "encvoy"
+  ],
+  "author": "Encvoy",
+  "license": "MIT",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "dev:umd": "BUILD_TYPE=umd rollup -c -w",
+    "build": "rollup -c",
+    "build:umd": "BUILD_TYPE=umd rollup -c",
+    "build:cjs-esm-types": "BUILD_TYPE=cjs-esm-types rollup -c",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist",
+    "pack": "npm pack",
+    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.0.0",
+    "@mui/material": "^6.0.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "rollup": "^4.6.1",
+    "rollup-plugin-delete": "^3.0.1",
+    "rollup-plugin-dts": "^6.2.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "i18next": "^25.5.2",
+    "react-i18next": "^15.7.3",
+    "tslib": "^2.8.1",
+    "universal-cookie": "^8.0.1"
+  }
+}

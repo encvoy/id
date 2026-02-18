@@ -1,0 +1,70 @@
+.notice {
+  padding: 12px 12px 12px 10px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  height: 112px;
+  border-bottom: 1px solid var(--mui-palette-divider);
+  transition: background-color 0.4s ease-out;
+}
+
+.notice:hover {
+  background-color: var(--mui-palette-action-hover) !important;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  width: 54px;
+}
+
+.markerWrapper {
+  width: 14px;
+}
+
+.marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 50px;
+  background: var(--accent-color);
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+}
+
+.iconInfo {
+  color: rgb(60, 60, 255);
+}
+
+.iconWarning {
+  color: rgb(255, 217, 49);
+}
+
+.iconError {
+  color: rgb(255, 62, 62);
+}
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.text {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button {
+  min-width: 40px;
+  height: 40px;
+}

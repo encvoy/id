@@ -1,0 +1,373 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  binaryTargets   = ["native", "darwin", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  // Profile fields
+  sub                       String?
+  email                     String?
+  email_verified            Boolean?  @default(false)
+  birthdate                 DateTime?
+  family_name               String?
+  given_name                String?
+  login                     String    @unique
+  middle_name               String?
+  nickname                  String?
+  phone_number              String?   @unique
+  phone_number_verified     Boolean?
+  picture                   String?
+  custom_fields             Json?     @db.JsonB
+  data_processing_agreement Boolean   @default(false)
+
+  // Publicity
+  email_public                   Boolean?
+  profile_privacy                Boolean  @default(true)
+  public_profile_claims_gravatar String   @default("")
+  public_profile_claims_oauth    String   @default("id")
+
+  // Business card
+  /// Additional path for business card URL
+  card_url    String  @unique @default(uuid())
+  /// Business card availability
+  card_active Boolean @default(false)
+
+  // Password
+  hashed_password     String
+  password_updated_at DateTime @default(now())
+
+  // Settings
+  locale String?
+
+  // Service fields
+  password_change_required Boolean?
+  updated_at               DateTime?
+  deleted                  DateTime?
+  blocked                  Boolean   @default(false)
+
+  // Relations
+  Role            Role[]
+  Scopes          Scopes[]
+  ExternalAccount ExternalAccount[]
+  SearchHistory   SearchHistory[]
+
+  /// Favorite applications
+  favorite_clients FavoriteClients[]
+}
+
+model CustomField {
+  id            Int     @id @default(autoincrement())
+  field         String  @unique
+  title         String  @unique
+  mapping_vcard String?
+}
+
+model ClientType {
+  id   String @id @default(uuid())
+  name String @unique
+
+  Client Client[]
+}
+
+model Client {
+  avatar                        String?
+  cover                         String?
+  cover_mode                    String   @default("")
+  created_at                    DateTime @default(now())
+  description                   String?
+  domain                        String?
+  name                          String?
+  catalog                       Boolean  @default(false)
+  mini_widget                   Boolean  @default(false)
+  authorize_only_admins         Boolean  @default(false)
+  authorize_only_employees      Boolean  @default(false)
+  show_avatar_in_widget         Boolean  @default(false)
+  hide_avatars_of_big_providers Boolean  @default(false)
+  hide_widget_header            Boolean  @default(false)
+  hide_widget_footer            Boolean  @default(false)
+  hide_widget_create_account    Boolean  @default(false)
+  widget_title                  String   @default("WIDGET_APP_NAME")
+  widget_colors                 Json     @default("{}") @db.JsonB
+  widget_info                   String   @default("")
+  widget_info_out               String   @default("")
+  required_providers_ids        String[] @default([])
+
+  //oidc
+  client_id                          String   @id @unique
+  client_secret                      String
+  redirect_uris                      String[]
+  post_logout_redirect_uris          String[]
+  application_type                   String   @default("web")
+  grant_types                        String[] @default(["authorization_code"])
+  id_token_signed_response_alg       String   @default("RS256")
+  request_uris                       String[] @default([])
+  require_auth_time                  Boolean  @default(false)
+  response_types                     String[] @default(["code"])
+  subject_type                       String   @default("public")
+  token_endpoint_auth_method         String   @default("client_secret_basic")
+  introspection_endpoint_auth_method String   @default("client_secret_basic")
+  revocation_endpoint_auth_method    String   @default("client_secret_basic")
+  require_signed_request_object      Boolean  @default(false)
+  access_token_ttl                   Int      @default(1800)
+  refresh_token_ttl                  Int      @default(86400)
+
+  Role               Role[]
+  Scopes             Scopes[]
+  Provider_relations Provider_relations[]
+  Provider           Provider[]
+  favorite_clients   FavoriteClients[]
+  rules              ClientRule[] // Relation to application rules
+
+  // Application type
+  type_id String?
+  type    ClientType? @relation(fields: [type_id], references: [id], onUpdate: Cascade, onDelete: SetNull)
+
+  // Parent client
+  parent_id String?
+  parent    Client?  @relation("ClientParent", fields: [parent_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  children  Client[] @relation("ClientParent")
+
+  clientInvitations ClientInvitation[]
+}
+
+model FavoriteClients {
+  id        String @id @default(uuid())
+  user_id   Int
+  user      User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  client_id String
+  client    Client @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@unique([user_id, client_id])
+}
+
+model SearchHistory {
+  user_id Int                @id
+  user    User               @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  type    SearchHistoryTypes
+  list    String[]
+
+  @@unique([user_id, type])
+}
+
+enum SearchHistoryTypes {
+  log
+  users
+  clients
+}
+
+model EmailTemplates {
+  id      Int    @id @default(autoincrement())
+  title   String
+  action  String
+  subject String
+  content String
+  locale  String
+
+  @@unique([action, locale])
+}
+
+model Settings {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  title  String  @unique
+  value  Json    @db.JsonB
+  public Boolean @default(false)
+}
+
+model Role {
+  id        Int    @id @default(autoincrement())
+  user_id   Int
+  user      User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  client_id String
+  client    Client @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  role      String
+
+  @@unique([user_id, client_id])
+}
+
+model Scopes {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  client_id  String
+  client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  scopes     String
+  created_at DateTime @default(now())
+
+  @@unique([user_id, client_id])
+}
+
+model ExternalAccount {
+  id               Int     @id @default(autoincrement())
+  sub              String
+  issuer           String?
+  type             String
+  user_id          Int
+  user             User    @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  avatar           String?
+  hashed_email     String?
+  hashed_email_md5 String?
+  label            String?
+  profile_link     String?
+  rest_info        Json?   @db.JsonB
+  public           Int     @default(0)
+
+  // Service marks
+  last_active_provider_id Int?
+  last_active_provider    Provider? @relation(fields: [last_active_provider_id], references: [id], onUpdate: Cascade, onDelete: SetNull)
+}
+
+model Provider {
+  id                Int     @id @default(autoincrement())
+  type              String
+  is_public         Boolean @default(false)
+  password_required Boolean @default(false)
+  avatar            String?
+  description       String?
+  name              String
+  params            Json?   @db.JsonB
+  default_public    Int     @default(0)
+
+  // Relation to Provider_relations
+  Provider_relations Provider_relations[]
+
+  // Relation to Client
+  client_id String
+  Client    Client? @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+
+  ExternalAccount ExternalAccount[]
+}
+
+// Many-to-many relation table for Client and Provider
+model Provider_relations {
+  id          Int      @id @default(autoincrement())
+  provider_id Int
+  provider    Provider @relation(fields: [provider_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  client_id   String
+  client      Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  created_at  DateTime @default(now())
+  index       Int      @default(0)
+  groupe      String   @default("SMALL")
+
+  @@unique([client_id, provider_id])
+}
+
+model Log {
+  id          String   @id @default(uuid())
+  date        DateTime @default(now()) @db.Timestamptz
+  ip_address  String?
+  user_id     String?
+  client_id   String?
+  device      String?
+  event       String
+  description String?
+  details     Json     @db.JsonB
+}
+
+model Rule {
+  id         Int         @id @default(autoincrement())
+  target     TargetTypes
+  field_name String
+  default    String?
+  editable   Boolean     @default(true)
+  required   Boolean     @default(false)
+  unique     Boolean     @default(false)
+  active     Boolean     @default(false)
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt()
+
+  validations  RuleRuleValidation[] // Relation to intermediate table
+  client_rules ClientRule[] // Relation to applications using this rule
+
+  @@unique([target, field_name])
+}
+
+model RuleValidation {
+  id         Int      @id @default(autoincrement())
+  active     Boolean  @default(true)
+  title      String   @unique
+  error      String
+  regex      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+
+  rules RuleRuleValidation[] // Relation to intermediate table
+}
+
+// Many-to-many relation table for Rule and RuleValidation
+model RuleRuleValidation {
+  rule_id Int
+  rule    Rule @relation(fields: [rule_id], references: [id], onDelete: Cascade)
+
+  rule_validation_id Int
+  rule_validation    RuleValidation @relation(fields: [rule_validation_id], references: [id], onDelete: Cascade)
+
+  @@id([rule_id, rule_validation_id])
+}
+
+// Many-to-many relation table for Client and Rule
+model ClientRule {
+  id         Int      @id @default(autoincrement())
+  client_id  String
+  client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  rule_id    Int
+  rule       Rule     @relation(fields: [rule_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@unique([client_id, rule_id])
+}
+
+model ClientInvitation {
+  id         String   @id @default(uuid())
+  email      String
+  client_id  String
+  client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  created_at DateTime @default(now())
+}
+
+enum TargetTypes {
+  USER
+  CLIENT
+  PROVIDER
+}
+
+enum AuthMethodTypes {
+  client_secret_basic
+  client_secret_post
+  client_secret_jwt
+  private_key_jwt
+  none
+}
+
+enum SigningAlgTypes {
+  RS256
+  PS256
+}
+
+enum GrantTypes {
+  authorization_code
+  implicit
+  refresh_token
+}
+
+enum SubjectTypes {
+  public
+  pairwise
+}
+
+enum RegistrationPolicyVariants {
+  allowed
+  allowed_autoregistration_only
+  disabled
+}

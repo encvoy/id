@@ -1,0 +1,23 @@
+.container {
+  padding-right: 6px;
+  overflow: scroll;
+}
+
+.inputWrapper {
+  margin-bottom: 32px;
+}
+
+.switchWrapper {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  margin-bottom: 8px;
+}
+
+.description {
+  margin-top: 8px;
+}

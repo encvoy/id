@@ -1,0 +1,242 @@
+.widgetBack {
+  padding: 60px 12px 12px;
+  border-radius: 24px;
+}
+
+.widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  border-radius: 24px;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  position: absolute;
+  top: -50px;
+  right: calc(50% - 33px);
+  width: 66px;
+  padding: 12px;
+  height: 66px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px #00000040;
+  border-radius: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.iconButton {
+  padding: 8px;
+  background-color: rgb(249, 250, 251);
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 125%;
+  color: #000000;
+  margin: 0;
+  text-align: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toggles {
+  background-color: #f9fafb;
+  border-radius: 20px;
+  gap: 8px;
+  width: 100%;
+  padding: 4px;
+  display: flex;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  padding: 12px 4px;
+  border-radius: 20px;
+  width: 100%;
+  min-width: unset;
+  max-width: 400px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggle:hover {
+  background-color: #e9ebef;
+}
+
+.active {
+  background-color: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.label {
+  background-color: rgb(249, 250, 251);
+  padding: 10px 14px;
+  border-radius: 20px;
+  transition: outline 0.2s ease;
+  outline: 0 solid #e9ebef;
+}
+
+.label:hover {
+  outline: 2px solid #e9ebef;
+}
+
+.label:focus-within {
+  outline: 4px solid #e9ebef;
+}
+
+.input {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentcolor;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  display: block;
+  animation-duration: 10ms;
+  outline: none;
+  width: 100%;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-weight: 500;
+  line-height: 1.75;
+  padding: 10px 12px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, filter 0.2s ease;
+}
+
+.button:hover {
+  filter: brightness(80%);
+}
+
+.buttonIcon {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+  background-color: #fff;
+  padding: 1px;
+}
+
+.buttonSecondary {
+  background-color: rgb(249, 250, 251);
+  color: rgb(0, 0, 0);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.buttonSecondary:hover {
+  background-color: #e9ebef;
+  filter: none;
+}
+
+.text {
+  font-size: 14px;
+  color: #98a1ae;
+  text-align: center;
+  margin: 0;
+}
+
+.actions {
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+}
+
+.providerIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.providerIcon:hover {
+  background-color: #e9ebef;
+}
+
+.moreButton {
+  background-color: rgb(249, 250, 251);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.moreButton:hover {
+  background-color: #e9ebef;
+}
+
+.divider {
+  background-color: #0000001f;
+  width: 116%;
+  height: 1px;
+  margin-bottom: 8px;
+  margin-left: -8%;
+}
+
+.footerText {
+  font-size: 12px;
+  color: #98a1ae;
+  text-align: center;
+  margin: 0;
+}
+
+.footer {
+  max-height: 20px;
+}
+
+@media screen and (max-width: 900px) {
+  .content {
+    display: block;
+    max-width: calc(100vw - 65px);
+    padding: 0 16px 32px;
+  }
+
+  .settings {
+    padding: 32px 16px;
+    border-right: none;
+  }
+
+  .widgetBack {
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}

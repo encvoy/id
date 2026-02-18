@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.groupTitle {
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.emptyPlaceholder {
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.emptyPlaceholderContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 2px dashed var(--mui-palette-divider);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}

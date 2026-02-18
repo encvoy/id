@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 26px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tooltip {
+  flex-shrink: 0;
+}
+
+.buttonIcon {
+  width: 30px;
+  height: 30px;
+}
+
+@media screen and (max-width: 1023px) {
+  .header {
+    align-items: start;
+  }
+
+  .container {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

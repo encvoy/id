@@ -1,0 +1,167 @@
+.content {
+  display: flex;
+  padding: 0 32px 32px;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: max-content;
+  grid-gap: 16px;
+  grid-template-areas:
+    "mainInfo mainInfo"
+    "colors providers"
+    "settings providers"
+    "settings text"
+    "settings textOut";
+  grid-template-columns: 260px minmax(0, 604px);
+  padding-top: 24px;
+}
+
+.settings {
+  padding: 32px 24px 16px 0;
+  border-right: 1px solid var(--mui-palette-divider);
+}
+
+.block {
+  background: var(--mui-palette-background-default);
+  border: 1px solid var(--mui-palette-divider);
+  padding: 16px;
+}
+
+.mainInfoBlock {
+  grid-area: mainInfo;
+}
+
+.providersBlock {
+  grid-area: providers;
+}
+
+.colorsBlock {
+  grid-area: colors;
+}
+
+.settingsBlock {
+  grid-area: settings;
+  align-self: flex-start;
+}
+
+.textBlock {
+  grid-area: text;
+}
+
+.infoContainer {
+  margin-top: 32px;
+}
+
+.infoText {
+  margin: 8px 0;
+}
+
+.codeMirror {
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 6px;
+}
+
+.submitButton {
+  display: flex;
+  margin-left: auto;
+  margin-top: 16px;
+}
+
+.widgetWrapper {
+  position: sticky;
+  top: 120px;
+  right: 0;
+  max-width: 410px;
+  padding: 8px 8px 12px;
+  width: 100%;
+  height: calc(100vh - 152px);
+  overflow-y: scroll;
+  flex-shrink: 0;
+}
+
+.modalClose {
+  display: none;
+}
+
+.previewButton {
+  display: none;
+}
+
+.radioWrapper {
+  margin-top: 16px;
+}
+
+@media screen and (max-width: 1300px) {
+  .content {
+    max-width: calc(100vw - 65px);
+    padding: 0 16px 32px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .settingsBlock {
+    align-self: auto;
+  }
+
+  .codeMirror {
+    width: calc(100vw * 0.4);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .content {
+    display: block;
+    max-width: calc(100vw - 65px);
+    padding: 0 16px 32px;
+  }
+
+  .settings {
+    padding: 32px 0;
+    border-right: none;
+  }
+
+  .widgetWrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    max-width: unset;
+    padding: 24px 60px 24px 40px;
+    width: 100%;
+    height: calc(100vh - 33px);
+    z-index: 10;
+    transform: translateY(110%);
+    background-color: #ffffff;
+    transition: transform 0.5s ease;
+  }
+
+  .previewButton {
+    display: block;
+    position: fixed;
+    bottom: 38px;
+    right: 30%;
+  }
+
+  .widgetWrapperMobile {
+    transform: translateY(0);
+  }
+
+  .modalClose {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+  }
+
+  .modalCloseIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .codeMirror {
+    width: unset;
+  }
+}

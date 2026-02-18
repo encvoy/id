@@ -1,0 +1,17 @@
+.widgetColor {
+  width: 100%;
+}
+
+.colorPicker {
+  margin-bottom: 32px;
+}
+
+.colorTitle {
+  margin-bottom: 8px;
+}
+
+@media screen and (max-width: 1023px) {
+  .widgetColor {
+    padding-bottom: 32px;
+  }
+}

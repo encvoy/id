@@ -1,0 +1,51 @@
+.inputFields {
+  width: 100%;
+}
+
+.inputFieldsMin {
+  min-width: 60%;
+  margin-bottom: 24px;
+}
+
+.submit-buttons {
+  margin-left: auto;
+  width: fit-content;
+  margin-top: 24px;
+}
+
+.create-button {
+  margin-left: 16px;
+}
+
+.switch-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 32px 0;
+}
+
+.input-subtitle {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+.input-title {
+  margin-bottom: 8px;
+}
+
+.asterisk::after {
+  content: '*';
+  color: red;
+}
+
+.typeButton {
+  flex-shrink: 0;
+  height: 36.5px;
+}
+
+.type-buttons-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}

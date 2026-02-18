@@ -1,0 +1,20 @@
+.sectionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.switchRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--mui-palette-divider);
+  padding: 18px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--mui-palette-divider);
+  margin: 24px 0;
+}

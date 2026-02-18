@@ -1,0 +1,34 @@
+.wrapper {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.wrapper:last-child {
+  margin-bottom: 0;
+}
+
+.asterisk::after {
+  content: '*';
+  color: red;
+  padding-left: 6px;
+}
+
+.inputLabel {
+  margin-bottom: 8px;
+}
+
+.textFieldRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.description {
+  margin-top: 8px;
+}
+
+@media screen and (max-width: 540px) {
+  .textFieldRow {
+    flex-flow: wrap;
+  }
+}

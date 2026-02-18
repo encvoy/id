@@ -1,0 +1,8 @@
+node_modules/
+src/
+public/
+*.log
+rollup.config.mjs
+tsconfig.json
+eslint.config.mjs
+index.html

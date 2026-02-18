@@ -1,0 +1,44 @@
+.inviteBlock {
+  margin-bottom: 16px;
+}
+
+.inviteTitle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.inviteIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: var(--hover-background-color);
+  padding: 2px;
+}
+
+.inviteList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invite {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.inviteHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px 18px;
+  flex-wrap: wrap;
+}
+
+.inviteText {
+  display: inline-block;
+}

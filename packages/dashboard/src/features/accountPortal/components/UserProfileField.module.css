@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.container + .container {
+  border-top: 1px solid var(--mui-palette-divider);
+}
+
+.field {
+  display: flex;
+  flex-flow: nowrap;
+  align-items: center;
+  width: 100%;
+}
+
+.fieldText {
+  width: 250px;
+}
+
+.fieldValue {
+  min-width: 105px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .field {
+    display: block;
+  }
+
+  .containerImage {
+    min-height: 84px;
+  }
+
+  .fieldText {
+    width: 180px;
+  }
+}

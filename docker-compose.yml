@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  redis:
+    container_name: redis_dev
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+        tag: "{{.ImageName}}|{{.Name}}"
+
+  postgres:
+    container_name: postgres_dev
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .local.env
+    ports:
+      - "5432:5432"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+        tag: "{{.ImageName}}|{{.Name}}"

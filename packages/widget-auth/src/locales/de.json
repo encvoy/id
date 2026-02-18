@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "login": {
+      "toggleLogin": "Anmeldeoptionen",
+      "otherProvider": "Weitere Möglichkeiten",
+      "toggleSessions": "Sitzungen",
+      "noSessions": "Keine aktiven Sitzungen"
+    },
+    "phone": {
+      "codeNumber": "Auf die angegebene Nummer erfolgt ein kostenloser Anruf. Geben Sie die Ziffern der eingehenden Nummer nach den ersten {{length}} Ziffern ein",
+      "codeVoice": "Auf die angegebene Nummer erfolgt ein kostenloser Anruf mit einer Sprachnachricht, die den Autorisierungscode enthält",
+      "codeTimer": "Erneut anfordern in {{minutes}}:{{seconds}}"
+    },
+    "scopes": {
+      "profile": "Anzeigen von Name, Foto und Geburtsdatum",
+      "email": "Anzeigen der E-Mail-Adresse",
+      "phone": "Anzeigen der Telefonnummer",
+      "offlineAccess": "Die Anwendung erhält jederzeit Zugriff auf Ihre Daten",
+      "accounts": "Anzeigen der Ihrem Profil hinzugefügten Social‑Media‑Konten",
+      "openid": "Anzeigen Ihrer Benutzerkennung",
+      "lk": "Anzeigen kurzer Informationen zu Ihren Benutzerkonten",
+      "locale": "Anzeigen Ihrer Spracheinstellungen",
+      "title": "Angeforderte Berechtigungen",
+      "catalog": "Anzeigen von Informationen zu Anwendungen, die dem Katalog hinzugefügt wurden"
+    },
+    "bind": {
+      "title": "Kein Konto",
+      "createAccount": "Neues Konto erstellen",
+      "bindToAccount": "Identifikator mit einem bestehenden Konto verknüpfen"
+    },
+    "changePassword": {
+      "title": "Passwort ändern",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort"
+    },
+    "identifiers": {
+      "title": "Konto bestätigen",
+      "second-title": "Erforderliche Identifikatoren hinzufügen"
+    },
+    "recover": {
+      "account": "Konto wiederherstellen",
+      "password": "Passwort wiederherstellen",
+      "sendMessage": "Code an die E-Mail {{ value }} gesendet",
+      "new": "Neues Passwort"
+    },
+    "changeStatusFields": {
+      "title": "Sichtbarkeit erhöhen"
+    },
+    "steps": {
+      "title": "Erforderliche Daten ausfüllen",
+      "selectImage": "Bitte wählen Sie ein Bild aus",
+      "notExceed": "Das Bild darf 5 MB nicht überschreiten",
+      "uploadImage": "Bild hochladen",
+      "requiredImage": "Bild erforderlich",
+      "selectFile": "Ausgewählte Datei: {{value}}"
+    }
+  },
+  "helperText": {
+    "password": "Passwort",
+    "enter": "Geben Sie ein",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "login": "Benutzername",
+    "code": "Code",
+    "or": "oder",
+    "serviceInstructions": "Befolgen Sie die Anweisungen des Dienstes {{ value }}",
+    "rulesValidation": "Validierungsregeln",
+    "success": "Erfolg",
+    "operationSuccess": "Vorgang erfolgreich abgeschlossen"
+  },
+  "actionButtons": {
+    "home": "Startseite",
+    "logIn": "Anmelden",
+    "save": "Speichern",
+    "create": "Erstellen",
+    "createAccount": "Konto erstellen",
+    "bind": "Verknüpfen",
+    "change": "Ändern",
+    "get": "Abrufen",
+    "repeat": "Wiederholen",
+    "confirm": "Bestätigen",
+    "recover": "Wiederherstellen",
+    "next": "Weiter",
+    "select": "Auswählen",
+    "recoverPassword": "Passwort wiederherstellen"
+  },
+  "errors": {
+    "error": "Fehler",
+    "errorOccurred": "Es ist ein Fehler aufgetreten",
+    "requiredField": "Dieses Feld ist erforderlich",
+    "invalidEmailFormat": "Ungültiges E-Mail-Format",
+    "passwordsMatch": "Das neue Passwort darf nicht mit dem alten Passwort übereinstimmen"
+  }
+}

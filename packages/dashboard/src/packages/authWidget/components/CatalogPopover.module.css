@@ -1,0 +1,138 @@
+.popover {
+  max-width: 290px !important;
+}
+
+.container {
+  max-height: 400px;
+  overflow: scroll;
+  padding-right: 6px;
+}
+
+.favorite {
+  padding: 10px;
+  border: 1px solid #e7e8ec;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+}
+
+.favoriteTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #858ba0;
+  margin-bottom: 16px;
+  margin-left: 10px;
+}
+
+.listFavorite {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0;
+}
+
+.listItem {
+  padding: 0;
+}
+
+.client {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  text-align: center;
+  transition: background-color 0.2s ease-out;
+}
+
+.client:hover {
+  background-color: #eaeaea;
+}
+
+.clientImage {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border: 1px solid #e7e8ec;
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+  color: #858ba0;
+}
+
+.clientImageDefault {
+  padding: 6px;
+}
+
+.client:hover .clientButton {
+  display: block;
+}
+
+.clientText {
+  width: 100%;
+  font-size: 12px;
+  line-height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.2s ease-out;
+}
+
+.client:hover .clientText {
+  position: absolute;
+  white-space: normal;
+  background-color: #eaeaea;
+  left: 0;
+  padding: 0 4px 6px;
+  border-radius: 12px;
+  word-break: break-all;
+}
+
+.button {
+  display: none;
+  position: absolute;
+  top: -10px;
+  right: -5px;
+  border-radius: 50%;
+  border: 1px solid #e7e8ec;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.4s ease-out;
+  padding: 7px;
+  height: 32px;
+}
+
+.client:hover .button {
+  display: block;
+}
+
+.button:hover {
+  background-color: #f6f6f6;
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.block:last-child {
+  padding-bottom: 40px;
+}
+
+.list {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0;
+}
+
+.groupTitle {
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 12px;
+}
+

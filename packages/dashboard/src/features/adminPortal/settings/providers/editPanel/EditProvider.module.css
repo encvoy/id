@@ -1,0 +1,13 @@
+.asterisk::after {
+  content: "*";
+  color: red;
+}
+
+.label {
+  margin-bottom: 8px;
+}
+
+.input-subtitle {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}

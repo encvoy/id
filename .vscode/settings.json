@@ -1,0 +1,30 @@
+{
+  "jest.autoRun": {},
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/package-lock.json": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/views/widget": true,
+    "**/views/widget-auth": true,
+    "**/views/docs": true,
+    "**/backend/auth": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "cSpell.words": ["Kloud", "OIDC"]
+}

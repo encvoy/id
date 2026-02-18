@@ -1,0 +1,13 @@
+.container {
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+}
+
+@media screen and (max-width: 540px) {
+  .container {
+    padding: 16px 12px;
+  }
+}

@@ -1,0 +1,49 @@
+{
+	"name": "encvoy-id",
+	"version": "1.0.0",
+	"description": "** Service Single Sign-On by OpenId Connect.**",
+	"main": "index.js",
+	"scripts": {
+		"init:backend": "cd packages/backend && npm install",
+		"init:dashboard": "cd packages/dashboard && npm install",
+		"init:widget": "cd packages/widget-auth && npm install",
+		"init:oidc": "cd packages/oidc && npm install",
+		"init:auth": "cd packages/auth && npm install",
+		"init": "concurrently \"npm run init:backend\" \"npm run init:dashboard\" \"npm run init:widget\" \"npm run init:oidc\" \"npm run init:auth\"",
+		"prisma:update": "npm run prisma:generate && npm run prisma:deploy",
+		"prisma:generate": "dotenv -e .local.env -- sh -c 'cd packages/backend && npx prisma generate && cd ../../packages/oidc && npx prisma generate'",
+		"prisma:deploy": "dotenv -e .local.env -- sh -c 'cd packages/backend && npx prisma migrate deploy'",
+		"prisma:reset": "dotenv -e .local.env -- sh -c 'cd packages/backend && npx prisma migrate reset --force'",
+		"prisma:migrate": "dotenv -e .local.env -- sh -c 'cd packages/backend && npx prisma migrate dev --create-only --name $npm_config_name'",
+		"prisma:resolve": "dotenv -e .local.env -- sh -c 'cd packages/backend && npx prisma migrate resolve --rolled-back $npm_config_name'",
+		"start:backend": "dotenv -e .local.env -- sh -c 'cd packages/backend && npm run start'",
+		"start:dashboard": "dotenv -e .local.env -- sh -c 'cd packages/dashboard && npm run start'",
+		"start:widget": "cd packages/widget-auth && npm run dev",
+		"start:oidc": "dotenv -e .local.env -- sh -c 'cd packages/oidc && npm run dev'",
+		"start:auth": "dotenv -e .local.env -- sh -c 'cd packages/auth && npm run dev'",
+		"start": "concurrently \"npm run start:backend\" \"npm run start:dashboard\" \"npm run start:widget\" \"npm run start:oidc\" \"npm run start:auth\"",
+		"stop": "taskkill //f //im node.exe",
+		"nginx:start": "sudo nginx -c $(pwd)/nginx.local.conf",
+		"nginx:stop": "sudo pkill nginx",
+		"nginx:restart": "sudo pkill nginx || true && sudo nginx -c $(pwd)/nginx.local.conf"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://git.digtlab.ru/trustedplus/idtrustednode.git"
+	},
+	"keywords": [],
+	"author": "Encvoy",
+	"license": "MIT",
+	"devDependencies": {
+		"concurrently": "^9.0.1",
+		"dotenv": "^16.4.5",
+		"dotenv-cli": "^7.4.2",
+		"react-devtools": "^6.0.1"
+	},
+	"dependencies": {
+		"@dnd-kit/core": "^6.3.1",
+		"@dnd-kit/sortable": "^10.0.0",
+		"@dnd-kit/utilities": "^3.2.2",
+		"oidc-provider": "^8.8.1"
+	}
+}

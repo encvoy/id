@@ -1,0 +1,22 @@
+.drawerPaper {
+  width: 100%;
+  max-width: 728px;
+  box-shadow: none;
+  padding: 32px 32px 24px;
+}
+
+.description {
+  padding-bottom: 26px;
+}
+
+.backdrop {
+  background: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .drawerPaper {
+    overflow-x: hidden;
+    width: 100vw;
+    height: 100%;
+  }
+}

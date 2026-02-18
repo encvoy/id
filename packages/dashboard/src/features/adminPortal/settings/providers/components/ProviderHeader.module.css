@@ -1,0 +1,17 @@
+.subtitle {
+  margin-bottom: 24px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 32px;
+  background: var(--mui-palette-divider);
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}

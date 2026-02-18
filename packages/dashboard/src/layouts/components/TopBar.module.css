@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "Play";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Play"), local("Play-Regular"),
+  url("/fonts/Play-Regular.ttf") format("truetype");
+}
+
+.topBar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  text-align: start;
+  padding: 0 24px;
+  background-color: var(--mui-palette-background-default);
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.logo {
+  margin-right: 12px;
+  max-width: 28px;
+  max-height: 28px;
+}
+
+.title {
+  font-family: Play;
+  color: var(--main-color);
+  font-size: 20px;
+  letter-spacing: 0em;
+}
+
+.profile {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 440px) {
+  .topBar {
+    padding: 0 12px;
+  }
+}

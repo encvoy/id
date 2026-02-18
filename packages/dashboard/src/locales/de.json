@@ -1,0 +1,979 @@
+{
+  "pages": {
+    "experimental": {
+      "title": "Experimentelle Funktionen",
+      "description": "Bereich für experimentelle Service-Einstellungen",
+      "features": {
+        "cards": {
+          "name": "Visitenkarten",
+          "description": "Aktiviert die Verwendung von Visitenkarten in der Anwendung. Im Profil jedes Benutzers erscheint ein entsprechender Bereich. Die Visitenkarte des Benutzers ist unter api/cards/{userId} verfügbar."
+        },
+        "catalog": {
+          "name": "Katalog",
+          "description": "Aktiviert die Nutzung des Katalogs für öffentliche Anwendungen. Jede Anwendung kann zum Katalog hinzugefügt werden, um einen bequemeren und schnelleren Zugriff zu ermöglichen."
+        }
+      }
+    },
+    "profile": {
+      "description": "Sie können den Zugriff auf Ihr Konto verwalten. Legen Sie fest, welche Daten den Anwendungen nach Ihrer Zustimmung zur Verfügung gestellt werden.",
+      "sections": {
+        "contacts": "Kontakte",
+        "identifiers": "Identifikatoren",
+        "security": "Sicherheit",
+        "privacy": "Profil-Privatsphäre",
+        "businessCard": "Visitenkarte",
+        "otherActions": "Weitere Aktionen"
+      },
+      "actions": {
+        "logoutAllDevices": "Von allen Geräten abmelden",
+        "privacyPolicy": "Datenschutzerklärung",
+        "downloadData": "Daten herunterladen"
+      },
+      "fields": {
+        "userId": "Benutzer-ID",
+        "publicName": "Öffentlicher Name",
+        "profilePhoto": "Profilbild",
+        "fullName": "Vor- und Nachname",
+        "givenName": "Vorname",
+        "familyName": "Nachname",
+        "login": "Login",
+        "birthDate": "Geburtsdatum",
+        "email": "E-Mail",
+        "phone": "Telefonnummer"
+      },
+      "notices": {
+        "publicDataRequireEmail": "Öffentliche Daten sind verfügbar, wenn eine E-Mail-Adresse vorhanden ist"
+      },
+      "modals": {
+        "confirmDeletion": {
+          "title": "Löschen bestätigen",
+          "message": "Sind Sie sicher, dass Sie den Kontakt löschen möchten?"
+        },
+        "logoutAllDevices": {
+          "title": "Von allen Geräten abmelden",
+          "message": "Sie werden auf allen Geräten von Ihrem Konto abgemeldet. Sie müssen sich erneut authentifizieren. Fortfahren?"
+        },
+        "searchAvatars": {
+          "title": "Verfügbare Avatare",
+          "description": "Wählen Sie einen Avatar aus, den Sie speichern möchten:",
+          "searchPlaceholder": "Suche"
+        }
+      },
+      "businessCard": {
+        "activity": {
+          "title": "Aktivität",
+          "description": "Wenn deaktiviert, ist die Visitenkarte nicht zur Ansicht verfügbar"
+        },
+        "fields": {
+          "cardUrl": {
+            "label": "Visitenkarten-ID (slug)",
+            "description": "https://example.com/slug"
+          }
+        },
+        "tooltips": {
+          "openPreview": "Vorschau der Visitenkarte öffnen",
+          "openQrCode": "QR-Code öffnen",
+          "copyLink": "Link kopieren"
+        }
+      },
+      "publicProfile": {
+        "panelTitle": "Öffentliche Profildaten",
+        "mainInfo": "Basisinformationen",
+        "externalAccounts": "Externe Konten",
+        "title": "Privates Profil",
+        "description": "Übermittlung des öffentlichen Profils untersagen, auch wenn das Feld die Sichtbarkeitsstufe „Für alle verfügbar“ hat",
+        "button": "Öffentliche Daten",
+        "togglePrivacy": "Profil-Privatsphäre umschalten"
+      }
+    },
+    "addLoginMethod": {
+      "title": "Anmeldemethode hinzufügen",
+      "description": "Wählen Sie eine Anmeldemethode aus, die Sie Ihrem Profil hinzufügen möchten:",
+      "noMethods": "Keine verfügbaren Anmeldemethoden",
+      "errors": {
+        "noAvailableMethods": "Keine verfügbaren Anmeldemethoden",
+        "bindingError": "Fehler beim Verknüpfen",
+        "operationCancelled": "Vorgang vom Benutzer abgebrochen",
+        "installMetamask": "Bitte installieren Sie Metamask",
+        "certificateBindingError": "Fehler beim Verknüpfen des Zertifikats",
+        "webauthnBindingError": "Fehler beim Verknüpfen des WebAuthn-Geräts"
+      },
+      "modals": {
+        "loginToAccount": "Melden Sie sich bei Ihrem {{providerName}}-Konto an",
+        "confirmAddition": "Führen Sie im neu geöffneten Fenster (Tab) den Autorisierungsprozess auf der entsprechenden Plattform durch. Nach erfolgreicher Autorisierung wird diese Anmeldemethode automatisch zur Liste der verfügbaren Konto-Identifikatoren hinzugefügt und steht als Authentifizierungsmethode für den Dienst zur Verfügung"
+      },
+      "ethereumSignMessage": "Um sich beim Dienst {{projectName}} anzumelden, signieren Sie bitte den zufällig generierten Text: {{nonce}}"
+    },
+    "deleteAccount": {
+      "title": "Konto löschen",
+      "description": "Beim Löschen des Kontos werden die damit verbundenen Daten unwiderruflich gelöscht. Sie verlieren den Zugriff auf Anwendungen, bei denen Sie dieses Konto zur Anmeldung verwendet haben.",
+      "passwordConfirmation": "Passwort zur Bestätigung",
+      "errors": {
+        "deletionError": "Fehler beim Löschen des Kontos"
+      }
+    },
+    "changePassword": {
+      "title": "Passwort ändern",
+      "description": "Nach der Passwortänderung werden Sie auf allen Geräten abgemeldet, auf denen Sie mit dem aktuellen Passwort angemeldet sind.",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "validationRules": "Festgelegte Regeln für die Passwortvalidierung:",
+      "noRules": "Keine Passwortregeln",
+      "errors": {
+        "currentPasswordRequired": "Bitte geben Sie das aktuelle Passwort an",
+        "newPasswordRequired": "Bitte geben Sie ein neues Passwort an",
+        "passwordsMustDiffer": "Das neue Passwort darf nicht mit dem aktuellen übereinstimmen",
+        "changeError": "Fehler beim Ändern des Benutzerpassworts"
+      }
+    },
+    "confirmEmail": {
+      "titles": {
+        "change": "E-Mail ändern",
+        "add": "E-Mail hinzufügen"
+      },
+      "emailLabel": "Geben Sie die E-Mail-Adresse an",
+      "emailDescription": "Ein Bestätigungscode wird an diese Adresse gesendet",
+      "codeLabel": "Geben Sie den an die angegebene Adresse gesendeten Code ein",
+      "codeDescriptionTimer": "Ein neuer Code kann in {{minutes}}:{{seconds}} gesendet werden",
+      "errors": {
+        "emailRequired": "Bitte geben Sie eine E-Mail-Adresse an",
+        "emailTooLong": "Die E-Mail-Adresse darf {{maxLength}} Zeichen nicht überschreiten",
+        "emailInvalid": "Ungültiges E-Mail-Format",
+        "emailAlreadyExists": "Diese E-Mail konnte nicht registriert werden. Bitte versuchen Sie eine andere Adresse.",
+        "codeRequired": "Geben Sie den Code zur E-Mail-Bestätigung ein"
+      }
+    },
+    "confirmPhone": {
+      "titles": {
+        "change": "Telefonnummer ändern",
+        "add": "Telefonnummer hinzufügen"
+      },
+      "phoneLabel": "Geben Sie die Telefonnummer an",
+      "phoneDescription": "Sie erhalten einen Anruf mit dem Bestätigungscode auf diese Nummer",
+      "codeLabel": "Geben Sie den telefonisch erhaltenen Code ein",
+      "codeDescriptionTimer": "Ein erneuter Anruf ist in {{minutes}}:{{seconds}} möglich",
+      "codeMessages": {
+        "lastDigits": "die letzten {{count}} Ziffern",
+        "lastDigitsFour": "die letzten 4 Ziffern",
+        "number": "Sie erhalten einen kostenlosen Anruf auf die angegebene Nummer. Geben Sie die {{digits}} der eingehenden Nummer an",
+        "voice": "Sie erhalten einen kostenlosen Anruf mit einer Sprachnachricht, die den Autorisierungscode enthält",
+        "sms": "Eine SMS mit dem Autorisierungscode wurde an die angegebene Nummer gesendet"
+      },
+      "errors": {
+        "phoneRequired": "Bitte geben Sie eine Telefonnummer an",
+        "phoneDigits": "Die Nummer muss 10 Ziffern enthalten",
+        "phoneMobileFormat": "Geben Sie eine gültige Mobilfunknummer ein",
+        "phoneAlreadyExists": "Diese Telefonnummer ist bereits vergeben. Verwenden Sie eine andere Nummer",
+        "codeRequired": "Geben Sie den Code zur Telefonbestätigung ein"
+      }
+    },
+    "editProfile": {
+      "title": "Profil bearbeiten"
+    },
+    "scopes": {
+      "modals": {
+        "deleteSessions": {
+          "title": "Sitzungen löschen",
+          "mainMessage": "Alle Ihre Sitzungen und Token für die Anwendung {{clientName}} werden gelöscht"
+        },
+        "revokeScopes": {
+          "title": "Berechtigungen widerrufen",
+          "mainMessage": "Die Anwendung {{clientName}} kann nicht mehr auf Ihre Daten zugreifen"
+        }
+      },
+      "controls": {
+        "deleteSessions": "Sitzungen beenden",
+        "revokeScopes": "Berechtigungen widerrufen"
+      },
+      "clientDescription": "Beschreibung:",
+      "grantedPermissions": "Erteilte Berechtigungen:",
+      "scopesProfileDescription": {
+        "profile": "Name, Foto und Geburtsdatum einsehen",
+        "email": "E-Mail-Adresse einsehen",
+        "phone": "Telefonnummer einsehen",
+        "offlineAccess": "Die Anwendung erhält jederzeit Zugriff auf Ihre Daten",
+        "accounts": "Im Profil hinzugefügte Social-Media-Konten einsehen",
+        "openid": "Ihre Kennung einsehen",
+        "lk": "Kurzinformationen der persönlichen Benutzerkonten einsehen",
+        "locale": "Sprachinformationen einsehen",
+        "unknown": "Unbekannte Berechtigung {{scope}}",
+        "catalog": "Anzeigen von Informationen über Anwendungen, die dem Katalog hinzugefügt wurden"
+      }
+    },
+    "eventLog": {
+      "dateAndTime": "Datum und Uhrzeit:",
+      "user": "Benutzer-ID:",
+      "client": "Anwendungs-ID:",
+      "placement": "Standort (IP):",
+      "details": "Details:",
+      "device": "Gerät:",
+      "description": "Beschreibung:",
+      "events": {
+        "successUserLogin": "Erfolgreiche Benutzeranmeldung",
+        "userDeletedDb": "Benutzer aus DB gelöscht",
+        "userDeleted": "Benutzer zum Löschen markiert",
+        "userCreated": "Benutzer erstellt",
+        "userUpdated": "Benutzer aktualisiert",
+        "userRestored": "Benutzer wiederhergestellt",
+        "userBlock": "Benutzer gesperrt",
+        "userUnblock": "Benutzer entsperrt"
+      }
+    },
+    "request": {
+      "title": "Einladung zum Beitritt"
+    },
+    "usersList": {
+      "labels": {
+        "role": "Rechte:",
+        "status": "Status:"
+      },
+      "createButton": "Benutzer erstellen",
+      "defaultClient": "Anwendung",
+      "status": {
+        "active": "Aktiv",
+        "blocked": "Gesperrt",
+        "deleted": "Wird gelöscht"
+      },
+      "roles": {
+        "user": {
+          "title": "Mitglied",
+          "description": "Hat Zugriff auf die Anwendung und kann das Anwendungsprofil einsehen"
+        },
+        "editor": {
+          "title": "Administrator",
+          "descriptionFirst": "Hat die volle Kontrolle über alle Benutzer und Anwendungen",
+          "descriptionSecond": "Hat die volle Kontrolle über alle Benutzer und Anwendungen"
+        },
+        "owner": {
+          "title": "Manager",
+          "description": "Kann eigene Anwendungen erstellen, Berechtigungen der Mitglieder seiner Anwendungen verwalten und personenbezogene Daten der Mitglieder seiner Anwendungen einsehen"
+        }
+      },
+      "modals": {
+        "changeUserRole": {
+          "title": "Sind Sie sicher, dass Sie die Benutzerrolle ändern möchten?",
+          "mainMessage": "Das Organisationskonto, Anwendungen und Provider werden gelöscht."
+        },
+        "deleteUserFromClient": {
+          "title": "Benutzer aus Anwendung entfernen",
+          "mainMessage": "Der Benutzer {{userName}} wird aus der Anwendung {{clientName}} entfernt und verliert den Zugriff darauf."
+        },
+        "endSessions": {
+          "mainMessage": "Alle Sitzungen und Token für den Benutzer {{userName}} werden gelöscht.",
+          "actions": {
+            "endSessions": "Beenden"
+          }
+        },
+        "blockUser": {
+          "mainMessage": "Der Benutzer {{userName}} {{action}} den Zugriff auf Anwendungen, bei denen er das Konto {{projectName}} zur Anmeldung verwendet hat. Die mit dem Konto verbundenen Daten bleiben erhalten.",
+          "actions": {
+            "first": "erhält",
+            "second": "verliert",
+            "blocked": "Sperren",
+            "unblocked": "Entsperren"
+          }
+        },
+        "removeUser": {
+          "titleFirst": "Konto löschen",
+          "titleSecond": "Aus Anwendung entfernen",
+          "mainMessageFirst": "Das Konto {{userName}} wird gelöscht. Die mit dem Konto verbundenen Daten werden dauerhaft gelöscht. Der Benutzer verliert den Zugriff auf Anwendungen, bei denen er das Konto {{projectName}} zur Anmeldung verwendet hat.",
+          "mainMessageSecond": "Der Benutzer {{userName}} wird aus der Anwendung entfernt."
+        },
+        "chooseRole": {
+          "title": "Rechte ändern",
+          "description": "Wählen Sie die Rechte in {{projectName}} für den Benutzer:",
+          "listRoles": "Berechtigungsstufe"
+        }
+      },
+      "menuControls": {
+        "changeUserRole": "Rechte ändern",
+        "deleteUserFromClient": "Aus Anwendung entfernen",
+        "endSessions": "Sitzungen beenden",
+        "blockUser": "In {{projectName}} sperren",
+        "unblockUser": "In {{projectName}} entsperren",
+        "removeUser": "Benutzer löschen"
+      },
+      "notice": {
+        "changeUserRole": "Die Rechte des Benutzers {{userName}} in {{projectName}} wurden geändert",
+        "NotChangeUserRole": "Die Rechte des Benutzers {{userName}} in {{projectName}} konnten nicht geändert werden"
+      }
+    },
+    "createUser": {
+      "title": "Benutzer erstellen",
+      "errors": {
+        "fillAtLeastOneIdentifier": "Mindestens ein Identifikator muss ausgefüllt werden"
+      }
+    },
+    "editUser": {
+      "title": "Benutzerprofil bearbeiten"
+    },
+    "userProfile": {
+      "nameHidden": "Name vom Benutzer verborgen",
+      "noName": "Kein Name",
+      "deleteAccountModal": {
+        "title": "Konto {{projectName}} löschen",
+        "message": [
+          "Das Konto {{userName}} wird gelöscht. Die mit dem Konto verbundenen Daten werden dauerhaft gelöscht. Der Benutzer verliert den Zugriff auf Anwendungen, bei denen er das Konto {{projectName}} zur Anmeldung verwendet hat.",
+          "Zusammen mit dem Konto werden Anwendungen gelöscht, bei denen der zu löschende Benutzer der Eigentümer ist."
+        ]
+      },
+      "notifications": {
+        "userDeleted": "Benutzer {{userName}} wurde in {{projectName}} gelöscht."
+      },
+      "emptyIdentifiers": "Keine verfügbaren Identifikatoren"
+    },
+    "createClient": {
+      "validation": {
+        "nameMaxLength": "Der Name darf 50 Zeichen nicht überschreiten",
+        "descriptionMaxLength": "Die Beschreibung darf 255 Zeichen nicht überschreiten",
+        "linkMaxLength": "Der Link darf 2000 Zeichen nicht überschreiten",
+        "invalidUrl": "Ungültiges Linkformat",
+        "required": "Pflichtfeld"
+      },
+      "title": "Anwendung erstellen",
+      "sections": {
+        "main": "Hauptparameter",
+        "params": "Anwendungsparameter"
+      },
+      "fields": {
+        "name": {
+          "label": "Anwendungsname",
+          "description": "Der den Benutzern angezeigte Name der Anwendung"
+        },
+        "description": {
+          "label": "Anwendungsbeschreibung"
+        },
+        "avatar": {
+          "label": "Anwendungslogo"
+        },
+        "type": "Anwendungstyp",
+        "typeOther": "Sonstiges",
+        "catalog": "Im Katalog anzeigen",
+        "authorize_only_admins": "Eingeschränkter Zugriff",
+        "domain": {
+          "label": "Anwendungsadresse",
+          "description": "Anwendungsadresse im Format „Protokoll://Domainname:Port“"
+        },
+        "redirectUri": {
+          "label": "Redirect-URL #",
+          "description": "Adresse, an die der Benutzer nach der Autorisierung weitergeleitet wird"
+        },
+        "postLogout": {
+          "label": "Logout-URL #",
+          "description": "Adresse, an die der Benutzer nach dem Abmelden weitergeleitet wird. Wenn kein Wert angegeben ist, wird die „Redirect-URL“ verwendet"
+        },
+        "requestUri": {
+          "label": "Authentifizierungsanfrage- oder Recovery-URL #",
+          "description": "Adresse, an die der Benutzer nach dem Abmelden weitergeleitet wird. Wenn kein Wert angegeben ist, wird die „Redirect-URL“ verwendet"
+        }
+      }
+    },
+    "listClient": {
+      "createButton": "Anwendung erstellen",
+      "providersEmpty": "Keine vorhanden",
+      "users": "Mitglieder:",
+      "catalog": "Katalog",
+      "activeLoginMethods": "Aktive Anmeldemethoden:"
+    },
+    "clientDetails": {
+      "notFound": "Anwendung nicht gefunden",
+      "catalogDisplayed": "Wird im Katalog angezeigt",
+      "catalogNotDisplayed": "Wird nicht im Katalog angezeigt",
+      "clientIdLabel": "Kennung (client_id)",
+      "clientSecretLabel": "Geheimschlüssel (client_secret)",
+      "participantsCount": "Mitglieder:",
+      "activeLoginMethods": "Aktive Anmeldemethoden:",
+      "providersEmpty": "Keine vorhanden",
+      "copiedMessage": "{{text}} kopiert",
+      "settingsTooltip": "Einstellungen",
+      "widgetTooltip": "Anmeldemethoden und Widget-Einstellungen",
+      "deleteAppTooltip": "Anwendung löschen",
+      "descriptionTitle": "Beschreibung",
+      "noDescription": "Keine Anwendungsbeschreibung vorhanden",
+      "invitationTitle": "Liste der gesendeten Einladungen zur Anwendung ({{ value }})",
+      "invitationModalTitle": "Einladung senden",
+      "emailsRequest": "Liste der E-Mail-Adressen, an die eine Einladungsbenachrichtigung gesendet wird. Geben Sie zum Hinzufügen eine E-Mail-Adresse ein und drücken Sie die Eingabetaste. Um mehrere hinzuzufügen, trennen Sie die E-Mail-Adressen durch Leerzeichen, Komma oder Semikolon",
+      "emailsError": "Für diese E-Mail-Adressen konnten keine Einladungen erstellt werden. Validierungsfehler",
+      "modals": {
+        "deleteClient": {
+          "title": "Anwendung löschen",
+          "mainMessage": "Die Anwendung {{projectName}} wird gelöscht. Benutzer können sich nicht mehr bei Ihrer Anwendung anmelden. Diese Aktion kann nicht rückgängig gemacht werden."
+        }
+      }
+    },
+    "settings": {
+      "title": "Einstellungen der Anwendung {{name}}",
+      "sections": {
+        "params": "Anwendungsparameter",
+        "catalog": "Katalog",
+        "loginMethods": "Anmeldemethoden",
+        "profileFields": "Benutzerprofil-Einstellungen",
+        "generalInfo": "Basisinformationen",
+        "additionalInfo": "Zusätzliche Informationen",
+        "emailTemplates": "E-Mail-Vorlagen",
+        "appTypes": "Anwendungstypen",
+        "trusted": "Vertrauenswürdige Provider",
+        "licenses": "Lizenzen",
+        "sentry": "Sentry",
+        "widgetAppearance": "Anmeldemethoden und Widget-Einstellungen",
+        "localization": "Lokalisierung",
+        "accessSettings": "Zugriffseinstellungen",
+        "requiredFields": "Pflichtfelder",
+      },
+      "trusted": {
+        "localAutoMergeUsers": {
+          "title": "Automatische Benutzerzusammenführung",
+          "description": "Umwandlung selbstregistrierter Benutzer in vertrauenswürdige Benutzer bei E-Mail-Übereinstimmung",
+          "worksOnlyWithUniqueEmail": "Funktioniert nur bei eindeutiger E-Mail"
+        }
+      },
+      "labels": {
+        "appName": "Anwendungsname",
+        "appDescription": "Anwendungsbeschreibung",
+        "appType": "Anwendungstyp",
+        "displayInCatalog": "Im Katalog anzeigen",
+        "appLogo": "Anwendungslogo",
+        "displayInMiniWidget": "Im Mini-Widget anzeigen",
+        "paramsTitle": "Anwendungsparameter",
+        "clientId": "Kennung (client_id)",
+        "clientSecret": "Geheimschlüssel (client_secret)",
+        "domain": "Anwendungsadresse",
+        "restrictedAccess": "Eingeschränkter Zugriff",
+        "onlyEmployees": "Zugriff für externe Benutzer untersagen",
+        "redirectUri": "Redirect-URL #",
+        "postLogoutUri": "Logout-URL #",
+        "requestUri": "Authentifizierungsanfrage- oder Recovery-URL #",
+        "responseTypes": "Antworttypen (response_types)",
+        "grantTypes": "Berechtigungstypen (grant_types)",
+        "tokenAuthMethod": "Authentifizierungsmethode des Clients für den Token-Endpunkt (token_endpoint_auth_method)",
+        "introspectionAuthMethod": "Authentifizierungsmethode für den Introspektions-Endpunkt (introspection_endpoint_auth_method)",
+        "revocationAuthMethod": "Authentifizierungsmethode für den Widerrufs-Endpunkt (revocation_endpoint_auth_method)",
+        "idTokenSignAlg": "Signaturalgorithmus für das ID-Token (id_token_signed_response_alg)",
+        "requireAuthTime": "Prüfung des Authentifizierungszeitpunkts (require_auth_time)",
+        "subjectType": "Art der Benutzer-ID-Übertragung im ID-Token (subject_type)",
+        "applicationType": "Anwendungstyp (application_type)",
+        "accessTokenTtl": "Access Token (access_token_ttl)",
+        "refreshTokenTtl": "Refresh Token (refresh_token_ttl)"
+      },
+      "descriptions": {
+        "appName": "Der den Benutzern angezeigte Name der Anwendung",
+        "appType": "Wert aus der Liste der Typen",
+        "clientId": "Eindeutige Kennung der Anwendung",
+        "clientSecret": "Zugriffsschlüssel für die Anwendung",
+        "domain": "Anwendungsadresse im Format „Protokoll://Domainname:Port“",
+        "restrictedAccess": "Anmeldung an der Anwendung nur für Benutzer mit „Administrator“-Rechten möglich",
+        "onlyEmployees": "Anmeldung an der Anwendung nur für Mitglieder der Anwendung möglich",
+        "redirectUri": "Adresse, an die der Benutzer nach der Autorisierung weitergeleitet wird",
+        "postLogoutUri": "Adresse, an die der Benutzer nach dem Abmelden weitergeleitet wird. Wenn kein Wert angegeben ist, wird die „Redirect-URL“ verwendet",
+        "requestUri": "Adresse, an die der Benutzer nach dem Abmelden weitergeleitet wird. Wenn kein Wert angegeben ist, wird die „Redirect-URL“ verwendet",
+        "accessTokenTtl": "Lebensdauer des access_token in Sekunden",
+        "refreshTokenTtl": "Lebensdauer des refresh_token in Sekunden"
+      },
+      "errors": {
+        "allowedChars": "Darf lateinische Buchstaben (a-z), Ziffern (0-9), Bindestriche (-) und Unterstriche (_) enthalten"
+      },
+      "locale": {
+        "title": "Sprachwechsel",
+        "description": "Wert aus der Liste der verfügbaren Sprachen",
+        "english": "English",
+        "russian": "Русский",
+        "spanish": "Español",
+        "french": "Français",
+        "german": "Deutsch",
+        "italian": "Italiano"
+      },
+      "access": {
+        "twoFactorTitle": "Zwei-Faktor-Authentifizierung",
+        "twoFactorDescription": "Aktiviert eine zusätzliche Sicherheitsebene für die Anmeldung (2FA MFA)",
+        "ignoreRequiredFieldsTitle": "Pflichtfelder des Profils für Anwendungen ignorieren",
+        "ignoreRequiredFieldsDescription": "Deaktiviert die Prüfung von Pflichtfeldern des persönlichen Bereichs bei der Autorisierung in Anwendungen",
+        "prohibitBindingTitle": "Verknüpfung von Identifikatoren im Widget untersagen",
+        "prohibitBindingDescription": "Deaktiviert die Möglichkeit, Identifikatoren im Widget-Formular zu verknüpfen",
+        "restrictedAccessTitle": "Eingeschränkter Zugriff für alle Anwendungen",
+        "restrictedAccessDescription": "Anmeldung an jeder Anwendung nur für Benutzer mit „Administrator“-Rechten möglich",
+        "registrationPolicyTitle": "Registrierungsverbot",
+        "registrationDisabled": "Registrierung untersagt",
+        "registrationAllowed": "Registrierung erlaubt",
+        "registrationAutoOnly": "Nur automatische Registrierung erlaubt"
+      },
+      "requiredFields": {
+        "mainFields": "Basis-Profilfelder",
+        "nameAndSurname": "Vor- und Nachname",
+        "customFields": "Benutzerdefinierte Profilfelder"
+      },
+      "requiredProviderDescription": "Für die Anmeldung an der Anwendung ist eine Anmeldemethode im Benutzerprofil erforderlich",
+      "profileFieldsSubtitle": "Konfigurieren Sie die Profilfeldparameter und fügen Sie Identifikatoren hinzu, die der Benutzer im Profil haben muss",
+      "passwordPolicy": "Passwortrichtlinie",
+      "otherType": "Sonstiges",
+      "modals": {
+        "deleteOrg": {
+          "title": "Sind Sie sicher, dass Sie die Organisation löschen möchten?",
+          "mainMessage": "Das Organisations-Dashboard, die Anwendungen und Provider werden gelöscht"
+        }
+      },
+      "tariff": "Tarifplan",
+      "plan": {
+        "free": "Kostenlos",
+        "extended": "Erweitert",
+        "full": "Vollständig"
+      },
+      "balance": "Guthaben",
+      "deleteOrg": "Organisation löschen"
+    },
+    "widget": {
+      "title": "Widget-Erscheinungsbild anpassen",
+      "widgetTitle": "Widget-Titel",
+      "widgetTitleDescription": "Um den Anwendungsnamen im Widget-Titel anzuzeigen, verwenden Sie den Wert {{value}}",
+      "appCover": "Widget-Cover",
+      "coverModeTitle": "Modus für die automatische Übernahme des aktuellen Covers auf alle Anwendungs-Widgets",
+      "coverMode": {
+        "default": "Deaktiviert",
+        "replace": "Standard",
+        "inherit": "Erzwungen"
+      },
+      "coverModeDescription": {
+        "default": "Keine automatische Übernahme",
+        "replace": "Wird auf Widgets ohne Cover angewendet",
+        "inherit": "Einheitliches Cover für alle"
+      },
+      "infoField": "Zusätzliches Informationsfeld innerhalb des Formulars",
+      "infoFieldOut": "Zusätzliches Feld außerhalb des Widgets",
+      "infoFieldHtml5": "Felder unterstützen das Einfügen von HTML5-Code mit vollständigem semantischem Markup, einschließlich eingebetteter und Inline-CSS-Styles.",
+      "infoFieldDangerous": "Die Verwendung des `script`-Tags ist untersagt. Beim Speichern der Daten wird das gesamte `script`-Tag (einschließlich Inhalt und Attribute) automatisch auf Datenbankebene aus dem Feld entfernt.",
+      "enterLabel": "Geben Sie",
+      "login": " Login",
+      "email": " E-Mail",
+      "phone": " Telefon",
+      "or": " oder",
+      "availableAuthMethods": "Andere Methoden",
+      "buttonColor": "Hintergrundfarbe der Schaltflächen",
+      "fontColor": "Schriftfarbe auf Schaltflächen",
+      "linkColor": "Linkfarbe",
+      "emptyGroup": "Liste ist leer",
+      "editProviders": "Anmeldemethoden konfigurieren",
+      "big": "Haupt-Anmeldemethoden",
+      "small": "Andere Anmeldemethoden",
+      "otherProviders": "Deaktivierte Anmeldemethoden",
+      "emptyTitle": "Keine verfügbaren Anmeldemethoden",
+      "tooltip": "Systemweite öffentliche Anmeldemethode",
+      "required": "Um sich an der Anwendung anzumelden, muss der Benutzer einen Identifikator der Anmeldemethode zu seinem Profil hinzufügen",
+      "notRequired": "Das Vorhandensein eines Identifikators der Anmeldemethode im Benutzerprofil wird optional",
+      "HtmlField": "HTML-Code für das Widget eingeben",
+      "modals": {
+        "deleteProvider": {
+          "title": "Anmeldemethode löschen",
+          "mainMessage": "Die Anmeldemethode wird gelöscht. Wenn die Anmeldemethode in einer Anwendung verwendet wird, können sich Benutzer nicht mehr mit dieser Methode anmelden."
+        }
+      },
+      "preview": {
+        "createAccount": "Konto erstellen",
+        "logIn": "Anmelden",
+        "toggleLogin": "Anmeldemethoden",
+        "toggleSessions": "Sitzungen",
+        "otherProvider": "Andere Methoden"
+      },
+      "switches": {
+        "showAvatar": "Anwendungslogo im Widget anzeigen",
+        "showAvatarDescription": "Das Logo wird nur angezeigt, wenn ein Icon hinzugefügt wurde",
+        "hideAvatarsOfBigProviders": "Logos der Hauptanmeldemethoden ausblenden",
+        "hideCreateAccount": "Schaltfläche „Konto erstellen“ ausblenden",
+        "hideFooter": "Fußzeile ausblenden",
+        "hideFooterDescription": "In der Fußzeile wird nur das Copyright angezeigt"
+      }
+    }
+  },
+  "tabs": {
+    "clients": "Anwendungen",
+    "eventLog": "Protokoll",
+    "profile": "Profil",
+    "scopes": "Berechtigungen",
+    "settings": "Einstellungen",
+    "users": "Benutzer",
+    "widget": "Widget",
+    "request": "Anfragen"
+  },
+  "errors": {
+    "valueNotAvailable": "Dieser Wert kann nicht verwendet werden",
+    "invalidImageFormat": "Ungültiges Bildformat",
+    "imageSizeExceeded": "Die Bildgröße darf {{maxSize}} MB nicht überschreiten",
+    "adminAccessOnly": "Der Zugriff auf das Dashboard ist nur Benutzern mit den Rollen „Eigentümer“ und „Administrator“ gestattet.",
+    "requiredField": "Dieses Feld ist ein Pflichtfeld",
+    "unknownError": "Unbekannter Fehler",
+    "valueMaxLength": "Der Wert darf {{maxLength}} Zeichen nicht überschreiten",
+    "valueMinLength": "Der Wert muss mindestens {{minLength}} Zeichen lang sein",
+    "valuesShouldNotRepeat": "Werte dürfen sich nicht wiederholen",
+    "invalidUrlFormat": "Ungültiges URL-Format",
+    "invalidEmailFormat": "Ungültiges E-Mail-Format",
+    "invalidPhoneFormat": "Ungültiges Telefonnummernformat",
+    "mustBeNumber": "Muss eine Zahl sein",
+    "mustBePositiveNumber": "Muss eine positive Zahl sein",
+    "noSpaces": "Der Wert darf keine Leerzeichen enthalten",
+    "hexColor": "Die Farbe muss im HEX-Format vorliegen"
+  },
+  "info": {
+    "dataCopied": "Daten in die Zwischenablage kopiert",
+    "infoUpdated": "Informationen aktualisiert",
+    "insufficientAccessRights": "Unzureichende Zugriffsrechte",
+    "insufficientAccessRightsDescription": "Um das Dashboard des Dienstes anzuzeigen",
+    "saveError": "Daten konnten nicht gespeichert werden",
+    "updateError": "Daten konnten nicht aktualisiert werden",
+    "deleteError": "Daten konnten nicht gelöscht werden",
+    "pasteError": "Fehler beim Einfügen der Parameter aus der Zwischenablage",
+    "emptySearch": "Für Ihre Suchanfrage wurden keine Ergebnisse gefunden",
+    "requestCancel": "Anfrage abgelehnt",
+    "requestConfirm": "Anfrage erfolgreich angenommen"
+  },
+  "global": {
+    "catalog": {
+      "tooltip": "Anwendungskatalog",
+      "noServices": "Keine verfügbaren Dienste",
+      "other": "Sonstiges",
+      "favorite": "Favoriten"
+    }
+  },
+  "panel": {
+    "license": {
+      "inputLabel": "Wert eingeben",
+      "deleteLicense": "Lizenz löschen",
+      "expirationDate": "Ablaufdatum",
+      "perpetual": "unbefristet",
+      "keys": "Schlüssel",
+      "deleteNotice": "Provider, die mit der Lizenz {{licenseName}} verknüpft sind, werden nicht mehr funktionieren"
+    },
+    "trusted": {
+      "title": "Vertrauenswürdige Provider konfigurieren",
+      "providers": "Provider",
+      "publicOutlinedIcon": "Systemweite öffentliche Anmeldemethode",
+      "license": "Lizenz",
+      "noLicense": "keine Lizenz",
+      "localAutoMergeUsers": {
+        "title": "Benutzer automatisch zusammenführen",
+        "description": "Konvertierung von selbstregistrierten Benutzern in vertrauenswürdige Benutzer bei E-Mail-Übereinstimmung",
+        "worksOnlyWithUniqueEmail": "Funktioniert nur bei eindeutiger E-Mail-Adresse"
+      },
+      "licenseDescription": "Im Rahmen einer Lizenz können Sie dieselbe Serveradresse verwenden"
+    },
+    "sentry": {
+      "title": "Sentry konfigurieren",
+      "description": "Konfigurieren Sie das Senden von Traces und Fehlern an Sentry",
+      "dsnLabel": "DSN",
+      "dsnDescription": "Die DSN ist ein eindeutiger Schlüssel, der für jedes Projekt in Sentry vergeben wird",
+      "enabledLabel": "Aktiv",
+      "userIdLabel": "Benutzer-ID",
+      "userIdDescription": "ID des Benutzers, für dessen Aktionen Traces und Fehler gesendet werden sollen"
+    },
+    "notification": {
+      "title": "Benachrichtigungen",
+      "newNotifications": "Neue Benachrichtigungen:",
+      "clear": "Leeren",
+      "goToLog": "Zum Protokoll gehen"
+    },
+    "chooseProviders": {
+      "title": "Anmeldemethode erstellen",
+      "description": "Wählen Sie eine Vorlage für die Anmeldemethode"
+    },
+    "twoFactor": {
+      "title": "Zwei-Faktor-Authentifizierung konfigurieren",
+      "controlledMethodsTitle": "Provider-Typen, die eine Zwei-Faktor-Authentifizierung erfordern",
+      "availableProvidersTitle": "Zweite-Faktor-Provider"
+    },
+    "ruleValidation": {
+      "title": "Validierungsregeln für '{{fieldName}}' konfigurieren",
+      "description": "Wählen Sie die Validierungsregeln aus, die Sie auf das Feld anwenden möchten:",
+      "tooltipDescription": "Validierungsregel für alle Felder deaktiviert",
+      "edit": {
+        "editTitle": "Validierungsregel bearbeiten",
+        "createTitle": "Validierungsregel erstellen",
+        "titleLabel": "Name",
+        "titleDescription": "Name des Feldes im System",
+        "errorLabel": "Fehlertext",
+        "errorPlaceholder": "Text eingeben",
+        "errorDescription": "Fehlertext, wenn die Validierungsregel ausgelöst wird",
+        "regexLabel": "Regulärer Ausdruck",
+        "regexPlaceholder": "Text eingeben",
+        "regexDescription": "Regulärer Ausdruck, der die Validierungsregel im Format ^\\S+$ beschreibt",
+        "activeLabel": "Aktivität",
+        "activeDescription": "Deaktiviert oder aktiviert die Verwendung der Regel vollständig"
+      }
+    },
+    "types": {
+      "title": "Anwendungstypen",
+      "description": "Konfigurieren Sie Anwendungstypen für verschiedene Zwecke",
+      "edit": {
+        "editTitle": "Anwendungstyp bearbeiten",
+        "createTitle": "Anwendungstyp erstellen",
+        "nameLabel": "Gruppenname",
+        "nameDescription": "Anzeigename des Typs"
+      }
+    },
+    "mailTemplate": {
+      "title": "E-Mail-Vorlagen konfigurieren",
+      "description": "Konfigurieren Sie E-Mail-Vorlagen für Registrierung, Passwortwiederherstellung und andere Ereignisse",
+      "edit": {
+        "editTitle": "E-Mail-Vorlage bearbeiten",
+        "editDescription": "E-Mail-Vorlage für das Ereignis {{action}} ändern",
+        "titleLabel": "Vorlagenname",
+        "subjectLabel": "Betreff",
+        "contentLabel": "Inhalt der E-Mail"
+      }
+    },
+    "profileFields": {
+      "createTitle": "Profilfeld hinzufügen",
+      "editTitle": "Parameter für Feld \"{{fieldName}}\" bearbeiten",
+      "labels": {
+        "field": "Name eingeben",
+        "title": "Feldbeschreibung",
+        "allowedAsLogin": "Als Login verwenden",
+        "active": "Aktivität",
+        "parameters": "Parameter",
+        "parametersDescription": "Feldparameter angeben",
+        "editable": "Editierbar",
+        "required": "Erforderlich",
+        "unique": "Eindeutig",
+        "public": "Öffentlichkeit",
+        "publicDescription": "Sichtbarkeitsstufe des Feldes für neue Benutzer",
+        "vcardAttribute": "vCard-Attribut",
+        "vcardDescription": "Geben Sie den Namen des vCard-Attributs an, dem das Feld zugeordnet werden soll",
+        "vcardPlaceholder": "vCard-Attribut eingeben",
+        "defaultValue": "Standardwert",
+        "defaultDescription": "Standardwert für das Feld angeben",
+        "defaultPlaceholder": "Standardwert eingeben",
+        "phoneProviderTitle": "Einstellungen zur Telefonnummer-Bestätigung",
+        "emailProviderTitle": "Einstellungen zur E-Mail-Bestätigung",
+        "validationRules": "Validierungsregeln",
+        "validationRulesPlaceholder": "Keine Validierungsregeln festgelegt",
+        "agreementLink": "Link zur Datenschutzrichtlinie",
+        "agreementPlaceholder": "Link zur Datei eingeben"
+      },
+      "descriptions": {
+        "field": "Systemname des Feldes",
+        "title": "Anzeigename des Feldes"
+      },
+      "modals": {
+        "deleteProvider": {
+          "title": "Provider löschen",
+          "message": "Der Provider wird zusammen mit den zugehörigen Einstellungen gelöscht. Die entsprechende Anmeldemethode wird ebenfalls entfernt."
+        }
+      }
+    }
+  },
+  "providers": {
+    "filter": {
+      "title": "Typ:",
+      "all": "Alle",
+      "public": "Öffentlich",
+      "private": "Privat"
+    },
+    "createProvider": {
+      "title": "Anmeldemethode {{ type }} erstellen",
+      "description": "Wählen Sie eine Vorlage für die Anmeldemethode"
+    },
+    "editProvider": {
+      "title": "Anmeldemethode bearbeiten",
+      "description": "Parameter der Anmeldemethode ändern"
+    },
+    "name": "Name",
+    "nameDescription": "Name, der Benutzern angezeigt wird",
+    "description": "Beschreibung",
+    "logo": "Logo",
+    "public": "Öffentlichkeit",
+    "publicDescription": "Sichtbarkeitsstufe des Feldes für neue Benutzer",
+    "publicMethods": "Öffentliche Anmeldemethode",
+    "publicMethodsDescription": "Die Anmeldemethode steht für das Hinzufügen zu Benutzeranwendungen zur Verfügung",
+    "ethereum": {
+      "contractAddress": "Vertragsadresse (contract address)",
+      "contractAddressDescription": "Eindeutige Adresse des Ethereum Smart Contracts",
+      "privateKey": "Privater Schlüssel (private key)",
+      "privateKeyDescription": "Privater Schlüssel für den Zugriff auf den Vertrag",
+      "callbackUrl": "Callback URL",
+      "callbackUrlDescription": "Der Link muss in den Smart-Contract-Einstellungen für eine korrekte Benutzerauthentifizierung angegeben werden"
+    },
+    "kloud": {
+      "clientId": "Client-ID (client_id)",
+      "clientIdDescription": "Eindeutige Kennung der zu verbindenden Ressource",
+      "clientSecret": "Client-Geheimnis (client_secret)",
+      "clientSecretDescription": "Geheimschlüssel der Ressource",
+      "issuer": "Basisadresse des Autorisierungsservers (issuer)",
+      "issuerDescription": "Adresse des Autorisierungsservers"
+    },
+    "custom": {
+      "clientId": "Client-ID (client_id)",
+      "clientIdDescription": "Eindeutige Kennung der zu verbindenden Ressource",
+      "clientSecret": "Client-Geheimnis (client_secret)",
+      "clientSecretDescription": "Geheimschlüssel der Ressource",
+      "redirectUri": "Rücksprung-URL (Redirect URI)",
+      "redirectUriDescription": "Der Link muss in den Einstellungen der externen Anmeldemethoden für eine korrekte Benutzerauthentifizierung angegeben werden",
+      "issuer": "Basisadresse des Autorisierungsservers (issuer)",
+      "authorizationEndpoint": "Autorisierungsendpunkt (authorization_endpoint)",
+      "authorizationEndpointDescription": "Adresse, an die der Benutzer zur Autorisierung weitergeleitet wird",
+      "tokenEndpoint": "Token-Endpunkt (token_endpoint)",
+      "tokenEndpointDescription": "Ressource, die Token ausstellt",
+      "userinfoEndpoint": "Benutzerinfo-Endpunkt (userinfo_endpoint)",
+      "userinfoEndpointDescription": "Ressource, die Informationen über den aktuellen Benutzer zurückgibt",
+      "scopes": "Angeforderte Berechtigungen (scopes)",
+      "scopesDescription": "Liste der Berechtigungen, die beim Identitätsanbieter angefordert werden sollen. Geben Sie den Namen ein und drücken Sie die Eingabetaste, um eine Berechtigung hinzuzufügen."
+    },
+    "template": {
+      "clientId": "Client-ID (client_id)",
+      "clientIdDescription": "Eindeutige Kennung der zu verbindenden Ressource",
+      "clientSecret": "Client-Geheimnis (client_secret)",
+      "clientSecretDescription": "Geheimschlüssel der Ressource",
+      "redirectUri": "Rücksprung-URL (Redirect URI)",
+      "redirectUriDescription": "Der Link muss in den Einstellungen der externen Anmeldemethoden für eine korrekte Benutzerauthentifizierung angegeben werden"
+    },
+    "email": {
+      "rootMail": "Haupt-E-Mail-Adresse",
+      "rootMailDescription": "Adresse des E-Mail-Dienstes, die auch für den Versand von E-Mails verwendet wird",
+      "mailHostname": "Postausgangsserver-Adresse",
+      "mailHostnameDescription": "Adresse des E-Mail-Dienstes für den E-Mail-Versand",
+      "mailPort": "Postausgangsserver-Port",
+      "mailPortDescription": "Port des E-Mail-Dienstes für den E-Mail-Versand",
+      "mailPassword": "E-Mail-Passwort",
+      "mailPasswordDescription": "Normales Passwort oder App-Passwort, das in den Kontoeinstellungen des E-Mail-Dienstes erstellt wird",
+      "mailImage": "E-Mail-Bild",
+      "mailCodeTtlSec": "Gültigkeitsdauer des Bestätigungscodes",
+      "mailCodeTtlSecDescription": "Gültigkeitsdauer des Bestätigungscodes für den E-Mail-Dienst in Sekunden",
+      "useForLogin": "Für Anmeldung per Code verwenden",
+      "useForLoginDescription": "Wird in Anwendungen als Anmeldemethode mit Einmalpasswörtern verfügbar sein"
+    },
+    "phone": {
+      "issuer": "Basisadresse der Autorisierung (issuer)",
+      "clientId": "Client-ID (client_id)",
+      "clientIdDescription": "Eindeutige Kennung der zu verbindenden Ressource",
+      "clientSecret": "Client-Geheimnis (client_secret)",
+      "clientSecretDescription": "Geheimschlüssel der Ressource",
+      "phoneImage": "Telefon-Bild",
+      "useForLogin": "Für Anmeldung per Code verwenden",
+      "useForLoginDescription": "Wird in Anwendungen als Anmeldemethode mit Einmalpasswörtern verfügbar sein"
+    },
+    "otp": {
+      "digits": "Anzahl der Ziffern",
+      "digitsDescription": "Anzahl der Ziffern im Einmalpasswort",
+      "period": "Gültigkeitszeitraum",
+      "periodDescription": "Gültigkeitsdauer des Einmalpassworts in Sekunden",
+      "algorithm": "Algorithmus",
+      "algorithmDescription": "Hashing-Algorithmus (SHA1, SHA256 oder SHA512)",
+      "periodMin": "Mindestwert für Zeitraum ist 15",
+      "periodMax": "Höchstwert für Zeitraum ist 300",
+      "digitsValidation": "Die Anzahl der Ziffern muss zwischen 6 und 8 liegen",
+      "counter": "Anfangswert des Zählers",
+      "counterDescription": "Aktueller Zähler (wird bei jeder Authentifizierung automatisch erhöht)",
+      "counterMin": "Mindestwert des Zählers ist 0"
+    },
+    "mtls": {
+      "issuer": "mTLS-Verbindungsendpunkt (issuer)",
+      "issuerDescription": "Adresse des Endpunkts"
+    }
+  },
+  "actionButtons": {
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "deleteAccount": "Konto löschen",
+    "continue": "Weiter",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "download": "Herunterladen",
+    "upload": "Hochladen",
+    "available": "Verfügbar",
+    "apply": "Anwenden",
+    "show": "Anzeigen",
+    "hide": "Ausblenden",
+    "resend": "Erneut senden",
+    "confirm": "Bestätigen",
+    "getCode": "Code anfordern",
+    "revoke": "Widerrufen",
+    "configure": "Konfigurieren",
+    "create": "Erstellen",
+    "send": "Senden",
+    "replenish": "Guthaben aufladen",
+    "connect": "Verbinden"
+  },
+  "privacy": {
+    "private": {
+      "title": "Nur für Sie sichtbar",
+      "description": "Die Daten sind vertraulich und nur für Sie sichtbar"
+    },
+    "publicOauth": {
+      "title": "Auf Anfrage verfügbar",
+      "description": "Der Zugriff auf die Daten erfolgt erst nach Ihrer Zustimmung"
+    },
+    "publicGravatar": {
+      "title": "Öffentlich verfügbar",
+      "description": "Die Daten sind öffentlich und für jeden zugänglich"
+    }
+  },
+  "statuses": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "expired": "Abgelaufen"
+  },
+  "roles": {
+    "owner": "Eigentümer",
+    "admin": "Manager",
+    "editor": "Administrator",
+    "user": "Mitglied",
+    "trusted_user": "Vertrauenswürdiger Benutzer"
+  },
+  "toolTips": {
+    "goToLink": "Link öffnen",
+    "rules": "Validierungsregeln",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "id": "Wird als Login verwendet",
+    "unique": "Einzigartig",
+    "doRequired": "Als Pflichtfeld festlegen",
+    "doNotRequired": "Optional machen",
+    "copy": "Kopieren",
+    "paste": "Einfügen",
+    "pen": "Nicht bearbeitbar",
+    "penFilled": "Bearbeitbar",
+    "download": "vCard exportieren",
+    "close": "Schließen",
+    "generatePassword": "Passwort generieren",
+    "required": "Erforderlich",
+    "notActive": "Nicht aktiv",
+    "confirm": "Bestätigen"
+  },
+  "helperText": {
+    "value": {
+      "notSet": "Nicht festgelegt"
+    },
+    "characterCount": "Zeichen",
+    "password": "Passwort",
+    "lastChanged": "Zuletzt geändert am",
+    "mainInfo": "Basisinformationen",
+    "additionalInfo": "Zusätzliche Informationen",
+    "loading": "Wird geladen...",
+    "search": "Suche...",
+    "help": "Hilfe",
+    "emptyList": "Liste ist leer",
+    "parameters": "Parameter",
+    "send": "Gesendet",
+    "recipient": "Empfänger"
+  },
+  "modals": {
+    "uploadImage": {
+      "title": "Bild hinzufügen",
+      "description": "Das Bild wird in der Listenansicht und in der Detailansicht angezeigt.",
+      "uploadButton": "Hochladen",
+      "formatInfo": "Format — JPG, GIF, PNG, WEBP",
+      "maxSizeInfo": "Maximale Größe — {{maxSize}} MB"
+    },
+    "editImage": {
+      "title": "Bild bearbeiten",
+      "description": "Der ausgewählte Bereich wird für die Anzeige des Bildes verwendet"
+    },
+    "confirmSave": {
+      "title": "Änderungen speichern",
+      "mainMessage": [
+        "Es gibt nicht ausgefüllte Pflichtfelder, die für die weitere Arbeit erforderlich sind",
+        "Speichervorgang fortsetzen?"
+      ]
+    },
+    "unSavedChanges": {
+      "title": "Änderungen speichern",
+      "mainMessage": "Änderungen wurden nicht gespeichert. Ohne Speichern fortfahren?"
+    }
+  }
+}

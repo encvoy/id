@@ -1,0 +1,37 @@
+.wrapper {
+  height: calc(100vh - 120px);
+  overflow: scroll;
+  background: var(--mui-palette-background-default);
+  max-width: 728px;
+}
+
+.provider {
+  margin-bottom: 16px;
+  display: flex;
+  background: var(--mui-palette-background-default);
+  align-items: center;
+  height: 64px;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.providerIcon {
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--mui-palette-action-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+  border: 1px solid var(--mui-palette-divider);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.providerName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

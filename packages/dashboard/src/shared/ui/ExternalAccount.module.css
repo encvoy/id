@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.container + .container {
+  border-top: 1px solid var(--mui-palette-divider);
+}
+
+.contentHeader {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 24px;
+}
+
+.defaultIcon {
+  padding: 4px;
+  width: 40px;
+  height: 40px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    display: block;
+  }
+
+  .contentHeader {
+    margin-bottom: 6px;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "login": {
+      "toggleLogin": "Méthodes de connexion",
+      "otherProvider": "Autres méthodes",
+      "toggleSessions": "Sessions",
+      "noSessions": "Aucune session active"
+    },
+    "phone": {
+      "codeNumber": "Un appel gratuit sera passé au numéro indiqué. Indiquez ensuite les {{length}} chiffres du numéro entrant",
+      "codeVoice": "Un appel gratuit sera passé au numéro indiqué avec un message vocal contenant le code d'authentification",
+      "codeTimer": "Nouvelle demande possible dans {{minutes}}:{{seconds}}"
+    },
+    "scopes": {
+      "profile": "Voir le nom, la photo et la date de naissance",
+      "email": "Voir l'adresse e-mail",
+      "phone": "Voir le numéro de téléphone",
+      "offlineAccess": "L'application pourra accéder à vos données à tout moment",
+      "accounts": "Voir les comptes de réseaux sociaux ajoutés au profil",
+      "openid": "Voir votre identifiant",
+      "lk": "Voir les informations succinctes des comptes personnels",
+      "locale": "Voir les informations de langue",
+      "title": "Accès demandés",
+      "catalog": "Consulter les informations sur les applications ajoutées au catalogue"
+    },
+    "bind": {
+      "title": "Aucun compte",
+      "createAccount": "Créez un nouveau compte",
+      "bindToAccount": "Lier l'identifiant à un compte existant"
+    },
+    "changePassword": {
+      "title": "Changer le mot de passe",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe"
+    },
+    "identifiers": {
+      "title": "Confirmer le compte",
+      "second-title": "Ajout des identifiants requis"
+    },
+    "recover": {
+      "account": "Récupération du compte",
+      "password": "Récupération du mot de passe",
+      "sendMessage": "Le code a été envoyé à l'adresse {{ value }}",
+      "new": "Nouveau mot de passe"
+    },
+    "changeStatusFields": {
+      "title": "Augmentation du niveau de visibilité"
+    },
+    "steps": {
+      "title": "Remplissage des données requises",
+      "selectImage": "Veuillez sélectionner une image",
+      "notExceed": "L'image ne doit pas dépasser 5 Mo",
+      "uploadImage": "Téléversement de l'image",
+      "requiredImage": "Image requise",
+      "selectFile": "Fichier sélectionné : {{value}}"
+    }
+  },
+  "helperText": {
+    "password": "Mot de passe",
+    "enter": "Entrez",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "login": "Identifiant",
+    "code": "Code",
+    "or": "ou",
+    "serviceInstructions": "Suivez les instructions du service {{ value }}",
+    "rulesValidation": "Règles de validation",
+    "success": "Succès",
+    "operationSuccess": "Opération effectuée avec succès"
+  },
+  "actionButtons": {
+    "home": "Accueil",
+    "logIn": "Se connecter",
+    "save": "Enregistrer",
+    "create": "Créer",
+    "createAccount": "Créer un compte",
+    "bind": "Lier",
+    "change": "Changer",
+    "get": "Obtenir",
+    "repeat": "Répéter",
+    "confirm": "Confirmer",
+    "recover": "Récupérer",
+    "next": "Continuer",
+    "select": "Sélectionner",
+    "recoverPassword": "Récupérer le mot de passe"
+  },
+  "errors": {
+    "error": "Erreur",
+    "errorOccurred": "Une erreur est survenue",
+    "requiredField": "Champ obligatoire",
+    "invalidEmailFormat": "Format de l'adresse e-mail invalide",
+    "passwordsMatch": "Le nouveau mot de passe ne doit pas être identique à l'ancien"
+  }
+}

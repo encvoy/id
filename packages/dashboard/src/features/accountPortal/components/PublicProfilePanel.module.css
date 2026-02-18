@@ -1,0 +1,21 @@
+.panel {
+  margin-bottom: 24px;
+  padding: 16px 32px;
+  border: 1px solid var(--mui-palette-divider);
+}
+
+.userIcon {
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--mui-palette-divider);
+  margin-bottom: 8px;
+}
+
+.itemValue:not(:last-child) {
+  margin-bottom: 8px;
+}

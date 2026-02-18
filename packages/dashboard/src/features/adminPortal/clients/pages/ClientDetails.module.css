@@ -1,0 +1,45 @@
+.client {
+  height: 100%;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-areas:
+    "mainInfo mainInfo"
+    "usersList addInfo";
+  grid-template-columns: minmax(0, 700px) 1fr;
+  grid-template-rows: max-content;
+}
+
+.mainInfo {
+  grid-area: mainInfo;
+}
+
+.addInfo {
+  grid-area: addInfo;
+}
+
+.usersList {
+  grid-area: usersList;
+}
+
+@media screen and (max-width: 1023px) {
+  .client {
+    grid-template-areas:
+      "mainInfo mainInfo"
+      "usersList addInfo";
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .client {
+    display: block;
+  }
+
+  .addInfo {
+    margin: 20px 0;
+  }
+
+  .usersList {
+    height: 100%;
+  }
+}

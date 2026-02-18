@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "login": {
+      "toggleLogin": "Metodi di accesso",
+      "otherProvider": "Altri metodi",
+      "toggleSessions": "Sessioni",
+      "noSessions": "Nessuna sessione attiva"
+    },
+    "phone": {
+      "codeNumber": "Al numero indicato verrà effettuata una chiamata gratuita. Indica dopo {{length}} le cifre del numero chiamante",
+      "codeVoice": "Al numero indicato verrà effettuata una chiamata gratuita con un messaggio vocale contenente il codice di autorizzazione",
+      "codeTimer": "È possibile richiedere nuovamente tra {{minutes}}:{{seconds}}"
+    },
+    "scopes": {
+      "profile": "Visualizzazione del nome, della foto e della data di nascita",
+      "email": "Visualizzazione dell'indirizzo email",
+      "phone": "Visualizzazione del numero di telefono",
+      "offlineAccess": "L'applicazione potrà accedere ai tuoi dati in qualsiasi momento",
+      "accounts": "Visualizzazione degli account dei social network aggiunti al profilo",
+      "openid": "Visualizzazione del tuo identificatore",
+      "lk": "Visualizzazione di informazioni sintetiche dei profili personali",
+      "locale": "Visualizzazione delle informazioni sulla lingua",
+      "title": "Autorizzazioni richieste",
+      "catalog": "Visualizzazione delle informazioni sulle applicazioni aggiunte al catalogo"
+    },
+    "bind": {
+      "title": "Nessun account",
+      "createAccount": "Crea un nuovo account",
+      "bindToAccount": "Collega l'identificatore a un account esistente"
+    },
+    "changePassword": {
+      "title": "Modifica password",
+      "current": "Password attuale",
+      "new": "Nuova password"
+    },
+    "identifiers": {
+      "title": "Conferma account",
+      "second-title": "Aggiunta degli identificatori necessari"
+    },
+    "recover": {
+      "account": "Recupero account",
+      "password": "Recupero password",
+      "sendMessage": "Codice inviato all'indirizzo email {{ value }}",
+      "new": "Nuova password"
+    },
+    "changeStatusFields": {
+      "title": "Aumento del livello di visibilità"
+    },
+    "steps": {
+      "title": "Inserimento dei dati richiesti",
+      "selectImage": "Seleziona un'immagine",
+      "notExceed": "L'immagine non deve superare 5 MB",
+      "uploadImage": "Caricamento immagine",
+      "requiredImage": "Immagine richiesta",
+      "selectFile": "File selezionato: {{value}}"
+    }
+  },
+  "helperText": {
+    "password": "Password",
+    "enter": "Inserisci",
+    "email": "Email",
+    "phone": "Telefono",
+    "login": "Nome utente",
+    "code": "Codice",
+    "or": "o",
+    "serviceInstructions": "Segui le istruzioni del servizio {{ value }}",
+    "rulesValidation": "Regole di validazione",
+    "success": "Successo",
+    "operationSuccess": "Operazione completata con successo"
+  },
+  "actionButtons": {
+    "home": "Home",
+    "logIn": "Accedi",
+    "save": "Salva",
+    "create": "Crea",
+    "createAccount": "Crea account",
+    "bind": "Collega",
+    "change": "Modifica",
+    "get": "Ottieni",
+    "repeat": "Riprova",
+    "confirm": "Conferma",
+    "recover": "Recupera",
+    "next": "Continua",
+    "select": "Seleziona",
+    "recoverPassword": "Recupera password"
+  },
+  "errors": {
+    "error": "Errore",
+    "errorOccurred": "Si è verificato un errore",
+    "requiredField": "Campo obbligatorio",
+    "invalidEmailFormat": "Formato dell'indirizzo email non valido",
+    "passwordsMatch": "La nuova password non deve coincidere con quella precedente"
+  }
+}

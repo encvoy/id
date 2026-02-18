@@ -1,0 +1,47 @@
+<html lang='en'>
+  <head>
+    <title>Encvoy: User Authorization</title>
+    <meta name='description' content='Encvoy: User Authorization  ' />
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+    />
+    <script>
+      if (window.env && window.env.GOOGLE_METRICA_ID) { var GOOGLE_METRICA_ID =
+      window.env.GOOGLE_METRICA_ID; var gtagScript = document.createElement('script');
+      gtagScript.async = true; gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' +
+      GOOGLE_METRICA_ID; document.head.appendChild(gtagScript); window.dataLayer = window.dataLayer
+      || []; function gtag() { window.dataLayer.push(arguments); } gtag('js', new Date());
+      gtag('config', GOOGLE_METRICA_ID); }
+    </script>
+
+    <style>
+      @font-face { font-family: 'Material Icons'; font-style: normal; font-weight: 400; src:
+      url('resources/font/material-icons.woff2') format('woff2'); } .material-icons { font-family:
+      'Material Icons'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1;
+      letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap;
+      word-wrap: normal; direction: ltr; font-feature-settings: 'liga'; -webkit-font-smoothing:
+      antialiased; } @font-face { font-family: Roboto; src: url('/fonts/Roboto-Light.ttf')
+      format('truetype'); font-weight: 300; } @font-face { font-family: Roboto; src: local(Roboto
+      Regular), url('/fonts/Roboto-Regular.ttf') format('truetype'); font-weight: 400; } @font-face
+      { font-family: Roboto; src: url('/fonts/Roboto-Medium.ttf') format('truetype'); font-weight:
+      500; }
+    </style>
+
+  </head>
+
+  <body>
+    <div class='main'>
+      <div id='login-form' class='main-auth'></div>
+    </div>
+    <script>
+      var envVars =
+      {{{envVars}}}; var initialRoute = "{{initialRoute}}"; var missingOIDCScope = "{{details.missingOIDCScope}}";
+      var interactionId = "{{uid}}"; var externalAccountInfo =
+      {{{externalAccountInfo}}}; var publicProfileClaims = "{{publicProfileClaims}}"; var
+      loggedUsers = "{{loggedUsers}}"; var login = "{{login}}"
+    </script>
+    <script type='text/javascript' src='/widget/login.js?v={{version}}'></script>
+    <script type='text/javascript' src='/widget/vendor-src_login_tsx.js?v={{version}}'></script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+.wrapper {
+  height: calc(100vh - 120px);
+  overflow: scroll;
+  padding-right: 6px;
+}
+
+.itemSettings {
+  margin: 24px 0;
+}
+
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.provider {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 4px;
+  padding: 12px 20px 12px 24px;
+  margin-top: 8px;
+  transition: background-color 0.4s ease-out;
+}
+
+.provider:hover {
+  cursor: pointer;
+  background: var(--mui-palette-background-hover);
+}
+
+.providerName {
+  width: 100%;
+  margin: 0 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.agreement {
+  margin-top: 24px;
+}
+
+.providerIcon {
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--hover-background-color);
+}

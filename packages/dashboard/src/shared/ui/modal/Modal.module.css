@@ -1,0 +1,19 @@
+.container {
+  background: var(--mui-palette-background-default);
+  padding: 24px 24px 32px 32px;
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  outline: none;
+}
+
+.header {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.closeButton {
+  margin-left: auto;
+}

@@ -1,0 +1,10 @@
+.item {
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 4px;
+  padding: 12px 24px;
+  transition: background-color 0.4s ease-out;
+}
+
+.item:hover {
+  background-color: var(--mui-palette-background-hover);
+}

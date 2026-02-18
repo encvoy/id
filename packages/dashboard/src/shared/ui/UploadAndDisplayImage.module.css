@@ -1,0 +1,55 @@
+.title {
+  margin-bottom: 8px;
+}
+
+.container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.avatar,
+.avatarRectangle,
+.avatarCircle {
+  background: var(--mui-palette-background-default);
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 4px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.avatarCircle {
+  border-radius: 50%;
+}
+
+.avatarRectangle {
+  width: 100px;
+  height: 48px;
+}
+
+.uploadButton {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  border: 1px dashed var(--mui-palette-text-secondary);
+}
+
+.uploadButton:hover {
+  text-decoration: none;
+}
+
+.modalCropContent {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.cropContainer {
+  max-height: 400px;
+}
