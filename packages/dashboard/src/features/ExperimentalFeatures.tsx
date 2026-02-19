@@ -6,14 +6,6 @@ import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { RootState } from "src/app/store/store";
 import {
-  useGetCardsEnabledQuery,
-  useUpdateCardsEnabledMutation,
-} from "src/shared/api/cards";
-import {
-  useGetOrgLkSelfConnectEnabledQuery,
-  useUpdateOrgLkSelfConnectEnabledMutation,
-} from "src/shared/api/organization";
-import {
   useGetCatalogEnabledQuery,
   useUpdateCatalogEnabledMutation,
 } from "src/shared/api/settings";
@@ -42,82 +34,43 @@ export const ExperimentalFeaturesComponent: FC<TExperimentalFeaturesComponent> =
     const [stateFeatures, setStateFeatures] = useState<{
       [name: string]: boolean;
     }>({});
-    const { data: cardsEnabled, refetch: cardsRefetch } =
-      useGetCardsEnabledQuery();
-    const [updateCardsEnabled] = useUpdateCardsEnabledMutation();
     const { data: catalogEnabled, refetch: catalogRefetch } =
       useGetCatalogEnabledQuery();
     const [updateCatalogEnabled] = useUpdateCatalogEnabledMutation();
     const { t: translate } = useTranslation();
-    const { data: orgLkSelfConnectEnabled, refetch: orgLkSelfConnectRefetch } =
-      useGetOrgLkSelfConnectEnabledQuery();
-    const [updateOrgLkSelfConnectEnabled] =
-      useUpdateOrgLkSelfConnectEnabledMutation();
 
     const features: IFeatures[] = [
       {
         id: 1,
-        key: "cards",
-        name: "pages.experimental.features.cards.name",
-        description: "pages.experimental.features.cards.description",
-        roles: [ERoles.EDITOR, ERoles.OWNER],
-      },
-      {
-        id: 2,
         key: "catalog",
         name: "pages.experimental.features.catalog.name",
         description: "pages.experimental.features.catalog.description",
         roles: [ERoles.EDITOR, ERoles.OWNER],
       },
-      {
-        id: 3,
-        key: "orgs",
-        name: "Самостоятельное подключение ЛК",
-        description:
-          "Позволяет пользователю самостоятельно подключить личный кабинет организации без обращения к администратору.",
-        roles: [ERoles.EDITOR, ERoles.OWNER],
-      },
     ];
 
     useEffect(() => {
-      if (cardsEnabled !== undefined || catalogEnabled !== undefined) {
+      if (catalogEnabled !== undefined) {
         setStateFeatures({
-          cards: cardsEnabled || false,
           catalog: catalogEnabled || false,
         });
       }
-    }, [cardsEnabled, catalogEnabled]);
+    }, [catalogEnabled]);
 
     useEffect(() => {
-      if (
-        cardsEnabled !== undefined ||
-        catalogEnabled !== undefined ||
-        orgLkSelfConnectEnabled !== undefined
-      ) {
+      if (catalogEnabled !== undefined) {
         setStateFeatures({
-          Визитки: cardsEnabled || false,
-          Каталог: catalogEnabled || false,
-          "Самостоятельное подключение ЛК": orgLkSelfConnectEnabled || false,
+          Catalog: catalogEnabled || false,
         });
       }
-    }, [cardsEnabled, catalogEnabled, orgLkSelfConnectEnabled]);
+    }, [catalogEnabled]);
 
     const handleSwitchChange = async (key: string, checked: boolean) => {
       setStateFeatures((prev) => ({ ...prev, [key]: checked }));
 
-      if (key === "cards") {
-        await updateCardsEnabled(checked).unwrap();
-        cardsRefetch(); // Drop cache and get fresh data cards
-      }
-
       if (key === "catalog") {
         await updateCatalogEnabled(checked).unwrap();
         catalogRefetch(); // Drop cache and get fresh data catalog
-      }
-
-      if (key === "orgs") {
-        await updateOrgLkSelfConnectEnabled(checked).unwrap();
-        orgLkSelfConnectRefetch(); // Сбрасываем кеш и получаем актуальные данные
       }
     };
 

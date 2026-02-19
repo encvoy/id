@@ -418,7 +418,7 @@
         "widgetAppearance": "Métodos de inicio de sesión y configuración del widget",
         "localization": "Localización",
         "accessSettings": "Configuración de acceso",
-        "requiredFields": "Campos obligatorios",
+        "requiredFields": "Campos obligatorios"
       },
       "trusted": {
         "localAutoMergeUsers": {

@@ -418,7 +418,7 @@
         "widgetAppearance": "Metodi di accesso e impostazioni del widget",
         "localization": "Localizzazione",
         "accessSettings": "Impostazioni di accesso",
-        "requiredFields": "Campi obbligatori",
+        "requiredFields": "Campi obbligatori"
       },
       "trusted": {
         "localAutoMergeUsers": {

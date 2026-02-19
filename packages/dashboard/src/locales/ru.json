@@ -418,7 +418,7 @@
         "widgetAppearance": "Способы входа и настройки виджета",
         "localization": "Локализация",
         "accessSettings": "Настройки доступа",
-        "requiredFields": "Обязательные поля",
+        "requiredFields": "Обязательные поля"
       },
       "trusted": {
         "localAutoMergeUsers": {

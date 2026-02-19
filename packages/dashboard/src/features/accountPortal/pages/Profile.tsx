@@ -4,7 +4,6 @@ import { connect, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import { useTranslation } from "react-i18next";
-import { useGetCardsEnabledQuery } from "src/shared/api/cards";
 import { ProviderType } from "src/shared/api/provider";
 import {
   useGetPrivateClaimsQuery,
@@ -26,8 +25,6 @@ import { RootState } from "src/app/store/store";
 import { TUserSlice } from "src/shared/lib/userSlice";
 import { Box, Typography } from "@mui/material";
 import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
-import { BusinessCardBlock } from "../components/BusinessCardBlock";
-import { ChangePasswordBlock } from "../components/ChangePasswordBlock";
 import { PublicProfileBlock } from "../components/PublicProfileBlock";
 import { UserProfileField } from "../components/UserProfileField";
 import { ExternalAccount } from "../../../shared/ui/ExternalAccount";
@@ -65,7 +62,6 @@ const ProfileComponent: FC<IProfileProps> = ({ profile, roleInApp }) => {
   const { data: privateClaims } = useGetPrivateClaimsQuery(String(profile.id), {
     skip: !profile.id,
   });
-  const { data: cardsEnabled } = useGetCardsEnabledQuery();
   const { data: dataSettings } = useGetSettingsQuery();
   const [deleteAllSession] = useLazyDeleteAllSessionQuery();
   const [updateUser] = useUpdateUserMutation();
@@ -331,20 +327,6 @@ const ProfileComponent: FC<IProfileProps> = ({ profile, roleInApp }) => {
           </div>
           <PublicProfileBlock onOpenDrawer={handleOpenPublicPanel} />
         </Box>
-
-        {cardsEnabled && (
-          <Box
-            className={styles.panel}
-            sx={{ borderRadius: componentBorderRadius }}
-          >
-            <div className={styles.panelTitle}>
-              <Typography className="text-17">
-                {translate("pages.profile.sections.businessCard")}
-              </Typography>
-            </div>
-            <BusinessCardBlock userId={profile.id} />
-          </Box>
-        )}
 
         <AccordionBlock
           title={translate("pages.profile.sections.otherActions")}

@@ -418,7 +418,7 @@
         "widgetAppearance": "Anmeldemethoden und Widget-Einstellungen",
         "localization": "Lokalisierung",
         "accessSettings": "Zugriffseinstellungen",
-        "requiredFields": "Pflichtfelder",
+        "requiredFields": "Pflichtfelder"
       },
       "trusted": {
         "localAutoMergeUsers": {
