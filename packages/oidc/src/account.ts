@@ -181,26 +181,15 @@ export class Account {
 
     let shouldAddSystemClients = false;
     let shouldAddOrgClients = false;
-    let shouldAddCreateOrg = false;
     let targetOrgId: string | undefined;
-
-    const s = await prisma.settings.findUnique({
-      where: { name: "org-lk-self-connect" },
-    });
-    if (s && s.value === true) {
-      shouldAddCreateOrg = true;
-    }
 
     if (client_id === CLIENT_ID) {
       shouldAddSystemClients = true;
       if (orgClient?.client_id) {
-        shouldAddCreateOrg = false;
         shouldAddOrgClients = true;
         targetOrgId = orgClient.client_id;
       }
     } else {
-      shouldAddCreateOrg = false;
-
       const currentClient = await prisma.client.findUnique({
         where: { client_id },
       });
@@ -251,22 +240,6 @@ export class Account {
           link: item.domain,
           type: "client_org",
           avatar: item.avatar ? getUrl(item.avatar) : undefined,
-        });
-      }
-    }
-
-    if (shouldAddCreateOrg) {
-      const isAdmin = user.Role.find(
-        (item: any) =>
-          item.client_id === CLIENT_ID &&
-          (item.role === "OWNER" || item.role === "EDITOR"),
-      );
-
-      if (!isAdmin) {
-        lk.push({
-          text: "SSO",
-          link: `${DOMAIN}/api/v1/orgs`,
-          type: "add_sso",
         });
       }
     }

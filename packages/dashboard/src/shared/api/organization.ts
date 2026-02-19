@@ -12,24 +12,8 @@ export const organizationApi = emptySplitApi.injectEndpoints({
       query: () => createFetchArgs(`${endPoints.orgs}`, "DELETE"),
       invalidatesTags: [ETags.Organization],
     }),
-    getOrgLkSelfConnectEnabled: builder.query<boolean, void>({
-      query: () => `${endPoints.settings}/org-lk-self-connect`,
-      providesTags: [ETags.OrgLkSelfConnect],
-    }),
-    updateOrgLkSelfConnectEnabled: builder.mutation<void, boolean>({
-      query: (enabled) =>
-        createFetchArgs(
-          `${endPoints.settings}/org-lk-self-connect?enabled=${enabled}`,
-          "PUT"
-        ),
-      invalidatesTags: [ETags.OrgLkSelfConnect],
-    }),
   }),
 });
 
-export const {
-  useCreateOrganizationMutation,
-  useDeleteOrganizationMutation,
-  useGetOrgLkSelfConnectEnabledQuery,
-  useUpdateOrgLkSelfConnectEnabledMutation,
-} = organizationApi;
+export const { useCreateOrganizationMutation, useDeleteOrganizationMutation } =
+  organizationApi;

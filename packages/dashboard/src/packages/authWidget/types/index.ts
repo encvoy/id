@@ -99,7 +99,6 @@ export enum EButtonTypes {
   system = "lk_system",
   org = "lk_org",
   admin = "lk_admin",
-  sso = "add_sso",
   logout = "logout",
   login = "login",
 }

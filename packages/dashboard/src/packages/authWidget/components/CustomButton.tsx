@@ -48,19 +48,6 @@ export const CustomButton: FC<ICustomButtonProps> = ({
           logout();
         }
         break;
-      case EButtonTypes.sso:
-        if (link) {
-          const accessToken = localStorage.getItem("accessToken");
-          const response = await fetch(link, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const res = await response.json();
-          window.location.href = `/${routes.customer}/${res.orgId}/${tabs.settings}`;
-        }
-        break;
       default:
         if (onClick) {
           onClick();
@@ -103,10 +90,6 @@ export const CustomButton: FC<ICustomButtonProps> = ({
       case EButtonTypes.system:
       case EButtonTypes.org:
         return <HomeWorkOutlinedIcon className={styles.buttonIcon} />;
-      case EButtonTypes.sso:
-        return (
-          <AddIcon className={clsx(styles.buttonIcon, styles.addIconWrapper)} />
-        );
       case EButtonTypes.admin:
         return <HomeRepairServiceOutlinedIcon className={styles.buttonIcon} />;
       default:

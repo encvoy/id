@@ -418,7 +418,7 @@
         "widgetAppearance": "Login Methods and Widget Settings",
         "localization": "Localization",
         "accessSettings": "Access Settings",
-        "requiredFields": "Required Fields",
+        "requiredFields": "Required Fields"
       },
       "trusted": {
         "localAutoMergeUsers": {

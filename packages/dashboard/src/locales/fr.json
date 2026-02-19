@@ -418,7 +418,7 @@
         "widgetAppearance": "Méthodes de connexion et paramètres du widget",
         "localization": "Localisation",
         "accessSettings": "Paramètres d'accès",
-        "requiredFields": "Champs obligatoires",
+        "requiredFields": "Champs obligatoires"
       },
       "trusted": {
         "localAutoMergeUsers": {

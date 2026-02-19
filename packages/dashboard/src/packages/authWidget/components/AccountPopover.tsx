@@ -40,9 +40,7 @@ export const AccountPopover: FC<IAccountPopoverProps> = ({
     (item) => item.type === "client_org"
   );
   const lkSystem = profile?.lk?.find((item) => item.type === "lk_system");
-  const lkOrg = profile?.lk?.filter(
-    (item) => item.type === "lk_org" || item.type === EButtonTypes.sso
-  );
+  const lkOrg = profile?.lk?.filter((item) => item.type === "lk_org");
   const lkListAdmin = profile?.lk?.filter((item) => item.type === "lk_admin");
 
   return (

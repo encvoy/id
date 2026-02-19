@@ -168,7 +168,7 @@ export class SettingsModule implements NestModule {
       create: {
         name: ESettingsNames.allowed_login_fields,
         title: 'Allowed login fields',
-        value: 'email login phone_number',
+        value: 'login phone_number',
         public: true,
       },
       update: {},
@@ -181,7 +181,7 @@ export class SettingsModule implements NestModule {
       create: {
         name: ESettingsNames.allowed_login_fields,
         title: 'Allowed login fields',
-        value: 'email login phone_number',
+        value: 'login phone_number',
         public: true,
       },
       update: {},
@@ -221,7 +221,7 @@ export class SettingsModule implements NestModule {
         target: 'USER',
         field_name: 'email',
         editable: true,
-        required: true,
+        required: false,
         active: true,
         unique: true,
       },
