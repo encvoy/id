@@ -10,8 +10,7 @@ Encvoy ID provides secure access to applications, websites, and APIs
 through a centralized identity platform supporting SSO and modern
 authentication standards.
 
-<img width="1904" height="640" alt="ENCVOYID" src="/workspaces/id/ENCVOYID.png" />
-
+<img width="1904" height="640" alt="ENCVOYID" src="ENCVOYID.png" />
 
 Built for organizations that need control, flexibility,
 and compliance across digital services.
