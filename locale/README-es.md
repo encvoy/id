@@ -6,11 +6,16 @@
 
 **Gestión de Identidad y Acceso (IAM) gratuita y de código abierto para organizaciones modernas.**
 
+[![docs](https://img.shields.io/badge/docs-current-green)](https://id.encvoy.es/docs)
+[![website](https://img.shields.io/badge/website-encvoy.es-green)](https://encvoy.es)
+[![email](https://img.shields.io/badge/email-contact-blue)](mailto:contact@encvoy.es)
+[![Follow](https://img.shields.io/twitter/follow/encvoy?style=social)](https://x.com/EncvoyL46776)
+
 Encvoy ID proporciona acceso seguro a aplicaciones, sitios web y APIs
 a través de una plataforma de identidad centralizada que admite SSO y
 estándares de autenticación modernos.
 
-<img width="1904" height="640" alt="banner ENCVOYID" src="https://github.com/user-attachments/assets/13956de3-5878-43c0-b364-3b831cbe80db" />
+<img width="1904" height="640" alt="ENCVOYID" src="../ENCVOYID.png" />
 
 Diseñado para organizaciones que necesitan control, flexibilidad
 y cumplimiento en todos sus servicios digitales.
