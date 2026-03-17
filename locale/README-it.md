@@ -9,7 +9,7 @@
 [![docs](https://img.shields.io/badge/docs-current-green)](https://id.encvoy.es/docs)
 [![website](https://img.shields.io/badge/website-encvoy.es-green)](https://encvoy.es)
 [![email](https://img.shields.io/badge/email-contact-blue)](mailto:contact@encvoy.es)
-[![Follow](https://img.shields.io/twitter/follow/encvoy?style=social)](https://x.com/EncvoyL46776)
+[![Follow](https://img.shields.io/twitter/follow/encvoylab?style=social)](https://x.com/EncvoyLab)
 
 Encvoy ID fornisce accesso sicuro ad applicazioni, siti web e API
 attraverso una piattaforma di identità centralizzata che supporta SSO e
