@@ -4,104 +4,168 @@
 
 ---
 
-**Gestione delle Identità e degli Accessi (IAM) gratuita e open-source per organizzazioni moderne.**
+**Gestione delle identità e degli accessi (IAM) gratuita e open-source per organizzazioni moderne.**
 
 [![docs](https://img.shields.io/badge/docs-current-green)](https://id.encvoy.es/docs)
 [![website](https://img.shields.io/badge/website-encvoy.es-green)](https://encvoy.es)
 [![email](https://img.shields.io/badge/email-contact-blue)](mailto:contact@encvoy.es)
 [![Follow](https://img.shields.io/twitter/follow/encvoylab?style=social)](https://x.com/EncvoyLab)
 
-Encvoy ID fornisce accesso sicuro ad applicazioni, siti web e API
-attraverso una piattaforma di identità centralizzata che supporta SSO e
-standard di autenticazione moderni.
+Piattaforma open-source di Identity and Access Management (IAM) che fornisce autenticazione sicura, autorizzazione e Single Sign-On (SSO) per applicazioni moderne.
+
+Encvoy ID consente alle organizzazioni di gestire le identità, autenticare gli utenti e controllare l'accesso ai servizi utilizzando standard di sicurezza moderni come OpenID Connect (OIDC) e OAuth 2.0.
 
 <img width="1904" height="640" alt="ENCVOYID" src="../ENCVOYID.png" />
 
-Progettato per organizzazioni che necessitano di controllo, flessibilità
-e conformità tra i servizi digitali.
+È progettato per operare come provider centrale di identità per applicazioni, API, strumenti interni e piattaforme SaaS.
+
+---
+## Contenuti
+
+- [Perché Encvoy ID](#perché-encvoy-id)
+- [Capacità Principali](#-capacità-principali)
+- [Standard Supportati](#-standard-supportati)
+- [Architettura](#-architettura)
+- [Audit e Monitoraggio](#-audit-e-monitoraggio)
+- [Stato del Progetto](#-stato-del-progetto)
+- [Casi d'Uso](#-casi-duso)
+- [Sicurezza](#-sicurezza)
+- [Distribuzione](#-distribuzione)
+- [Open Source](#-open-source)
+- [Avvio Rapido](#-avvio-rapido)
+- [Documentazione](#-documentazione)
+
+## Perché Encvoy ID
+
+I sistemi moderni richiedono una gestione delle identità sicura e flessibile.
+
+Encvoy ID offre:
+- Gestione centralizzata delle identità
+- Autenticazione sicura
+- Single Sign-On tra applicazioni
+- Integrazione flessibile con sistemi moderni
+- Supporto per l'autenticazione passwordless
+
+La piattaforma può essere utilizzata come alternativa self-hosted alle soluzioni IAM commerciali.
 
 ---
 
 ## ✨ Capacità Principali
 
-- Single Sign-On (SSO)
-- OpenID Connect (OIDC) e OAuth 2.0
+### Gestione delle Identità
+
+- Directory utenti centralizzata
+- Gestione del ciclo di vita delle identità
+- Gruppi e ruoli utente
 - Controllo degli accessi basato sui ruoli (RBAC)
-- Auto-registrazione utenti e provisioning automatico
-- Gestione di applicazioni e utenti
-- Esperienza di accesso personalizzabile
-- Registrazione e auditing degli eventi di sicurezza
 
-## 🔑 Metodi di Autenticazione e Login
+### Autenticazione
 
-Encvoy ID supporta una vasta gamma di metodi di autenticazione,
-incluse opzioni passwordless e resistenti al phishing.
+Encvoy ID supporta una vasta gamma di metodi di autenticazione, incluse opzioni passwordless e resistenti al phishing.
 
-Basato su standard ampiamente adottati:
-
-- OpenID Connect (OIDC)
-- OAuth 2.0
-
-### Metodi standard
+#### Metodi standard
 
 - Nome utente e password
-- Login basato su email
+- Accesso tramite email
 
-### Provider sociali ed esterni
-
-- Google, GitHub e altri provider
-- Provider di identità esterni
-
-### Metodi forti e passwordless
+#### Metodi forti e passwordless
 
 - WebAuthn / Passkeys
 - mTLS (certificati client)
 - Password monouso TOTP / HOTP
 
-Supporta l'autenticazione a più fattori (MFA) combinando più fattori di verifica.
+### Provider di identità esterni
 
-Aiuta a soddisfare requisiti di sicurezza e conformità più elevati.
-Encvoy ID è progettato per supportare una transizione graduale verso l'autenticazione passwordless.
+Encvoy ID può integrarsi con provider di identità esterni come:
+
+- Google
+- GitHub
+- Altri provider OpenID Connect
+
+Più fattori di autenticazione possono essere combinati per implementare l'**autenticazione a più fattori (MFA)**.
+
+---
+
+## 📜 Standard Supportati
+
+- OpenID Connect (OIDC)
+- OAuth 2.0
+- WebAuthn
+- TOTP / HOTP
+- TLS reciproco (mTLS)
+
+---
+
+## 🏗 Architettura
+
+Encvoy ID è costruito come piattaforma modulare composta da diversi servizi.
+
+| Componente | Descrizione |
+|---|---|
+| Backend | Servizio IAM principale |
+| OIDC | Provider OpenID Connect |
+| Dashboard | Interfaccia di amministrazione |
+| Auth | Servizio di autenticazione |
+| Widget-auth | Widget di autenticazione per applicazioni |
+
+Questa architettura consente alla piattaforma di scalare e integrarsi con ambienti differenti.
 
 ---
 
 ## 📊 Audit e Monitoraggio
 
-Registrazione dettagliata degli eventi di autenticazione
-e delle attività degli utenti.
+Encvoy ID fornisce una registrazione dettagliata degli eventi di autenticazione e delle attività degli utenti.
 
-Consente il monitoraggio della sicurezza
-e l'audit di conformità.
+Le funzionalità includono:
+
+- Log degli eventi di autenticazione
+- Tracciamento delle attività degli utenti
+- Monitoraggio della sicurezza
+- Registri pronti per audit e conformità
 
 ---
 
-## 🏗 Casi d'Uso
+## 🚧 Stato del Progetto
 
-- Identità della forza lavoro
-- Identità dei clienti (CIAM)
-- Accesso partner e B2B
-- Ecosistemi multi-applicazione
-- Accesso centralizzato tra servizi
+Encvoy ID è un progetto open-source in sviluppo attivo.
+
+Nuove funzionalità e miglioramenti vengono aggiunti continuamente.
+Feedback e contributi della community sono benvenuti.
+
+## 💼 Casi d'Uso
+
+Encvoy ID può essere utilizzato per:
+
+- Piattaforma centrale di identità per organizzazioni
+- SSO per servizi interni
+- Autenticazione per piattaforme SaaS
+- Provider di identità per API
+- Autenticazione di microservizi
+- Accesso centralizzato per più applicazioni
 
 ---
 
 ## 🔐 Sicurezza
 
-- Opzioni di autenticazione resistenti al phishing
+Encvoy ID è progettato secondo principi security-first.
+
+Le funzionalità di sicurezza includono:
+
+- Autenticazione resistente al phishing
+- Accesso passwordless
 - Autenticazione sicura basata su token
 - Applicazione centralizzata delle policy
-- Controllo completo sui dati di identità
-- Registrazione pronta per l'audit
+- Audit logging dettagliato
 
 ---
 
-## 🌍 Deployment
+## 🌍 Distribuzione
 
-Encvoy ID supporta:
+Encvoy ID può essere distribuito in ambienti diversi:
 
-- Ambienti on-premise
+- Infrastruttura on-premise
 - Cloud privato o pubblico
-- Infrastrutture ibride
+- Ambienti ibridi
 
 ---
 
@@ -110,15 +174,18 @@ Encvoy ID supporta:
 Encvoy ID è gratuito e open-source.
 
 Le organizzazioni possono usarlo, modificarlo e distribuirlo liberamente.
-I contributi della comunità sono benvenuti.
+I contributi della community sono benvenuti.
 
 ---
+
+## 🚀 Avvio Rapido
+
+- [Avvio rapido](README-qs-it.md)
 
 ## 📚 Documentazione
 
 - [Documentazione](../docs/it/SUMMARY-github-it.md)
-- [Avvio rapido](README-qs-it.md)
 
 ---
 
-© encvoy
+© Encvoy Lab
