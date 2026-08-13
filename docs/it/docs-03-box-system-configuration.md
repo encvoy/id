@@ -1,23 +1,23 @@
 ---
-title: "Variabili d'ambiente Encvoy ID — Riferimento per l'amministratore"
-description: "Scopri come configurare correttamente le variabili d'ambiente di Encvoy ID e garantire il funzionamento sicuro del sistema. Una guida passo-passo per gli amministratori."
+title: "Variabili d'ambiente {{projectName}} — Riferimento per l'amministratore"
+description: "Scopri come configurare correttamente le variabili d'ambiente di {{projectName}} e garantire il funzionamento sicuro del sistema. Una guida passo-passo per gli amministratori."
 keywords:
-  - variabili d'ambiente Encvoy ID
-  - configurare env Encvoy ID
+  - variabili d'ambiente {{projectName}}
+  - configurare env {{projectName}}
   - variabili env OIDC
   - variabili d'ambiente OpenID Connect
   - configurazione ambiente OAuth 2.0
   - docker-compose env
-  - configurazione PostgreSQL Encvoy ID
-  - configurazione SMTP Encvoy ID
-  - personalizzazione interfaccia Encvoy ID
-  - CUSTOM_STYLES Encvoy ID
+  - configurazione PostgreSQL {{projectName}}
+  - configurazione SMTP {{projectName}}
+  - personalizzazione interfaccia {{projectName}}
+  - CUSTOM_STYLES {{projectName}}
   - sicurezza variabili d'ambiente
-  - amministratore Encvoy ID
-  - configurazione server Encvoy ID
-  - guida alla configurazione Encvoy ID
-  - metriche Google Encvoy ID
-author: "Team Encvoy ID"
+  - amministratore {{projectName}}
+  - configurazione server {{projectName}}
+  - guida alla configurazione {{projectName}}
+  - metriche Google {{projectName}}
+author: "Team {{projectName}}"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -26,20 +26,20 @@ menu_title: "Configurazione Variabili d'Ambiente"
 order: 3
 ---
 
-# Come configurare le variabili d'ambiente di Encvoy ID
+# Come configurare le variabili d'ambiente di {{projectName}}
 
-In questa guida imparerai come configurare le variabili d'ambiente per **Encvoy ID** sul tuo server. Analizzeremo nel dettaglio tutti i parametri — dal database e OIDC alla cache, posta e interfaccia — per garantire che il sistema funzioni correttamente fin dal primo avvio.
+In questa guida imparerai come configurare le variabili d'ambiente per **{{projectName}}** sul tuo server. Analizzeremo nel dettaglio tutti i parametri — dal database e OIDC alla cache, posta e interfaccia — per garantire che il sistema funzioni correttamente fin dal primo avvio.
 
 **Sommario:**
 
-- [Come configurare le variabili d'ambiente di Encvoy ID](#come-configurare-le-variabili-dambiente-di-encvoy-id)
+- [Come configurare le variabili d'ambiente di {{projectName}}](#come-configurare-le-variabili-dambiente-di-projectname)
   - [Variabili d'ambiente comuni { #common-environment-variables }](#variabili-dambiente-comuni--common-environment-variables-)
   - [Variabili d'ambiente del database (PostgreSQL) { #database-environment-variables }](#variabili-dambiente-del-database-postgresql--database-environment-variables-)
   - [Redis, Sessioni e Cookie OIDC { #redis-sessions-and-oidc-cookies }](#redis-sessioni-e-cookie-oidc--redis-sessions-and-oidc-cookies-)
   - [Rate Limiting e Logging { #rate-limiting-and-logging }](#rate-limiting-e-logging--rate-limiting-and-logging-)
   - [Posta e Notifiche { #mail-and-notifications }](#posta-e-notifiche--mail-and-notifications-)
   - [Personalizzazione dell'interfaccia { #interface-customization }](#personalizzazione-dellinterfaccia--interface-customization-)
-  - [Permessi e Licenze { #permissions-and-licenses }](#permessi-e-licenze--permissions-and-licenses-)
+  - [Diritto d'autore { #copyright }](#diritto-dautore--copyright-)
   - [Metriche { #metrics }](#metriche--metrics-)
   - [Vedi anche { #see-also }](#vedi-anche--see-also-)
 
@@ -62,7 +62,7 @@ Queste variabili definiscono il comportamento di base e l'identificazione del se
 | `CLIENT_SECRET`             | Segreto univoco dell'applicazione (consigliato UUID)                    | —                           |
 | `MANUAL_URL`                | Link alla documentazione per gli utenti                                 | `https://your-domain/docs/` |
 
-> ⚠️ Le variabili `CLIENT_ID` e `CLIENT_SECRET` sono utilizzate per identificare **Encvoy ID** come client OAuth 2.0 / OpenID Connect e devono essere mantenute segrete.
+> ⚠️ Le variabili `CLIENT_ID` e `CLIENT_SECRET` sono utilizzate per identificare **{{projectName}}** come client OAuth 2.0 / OpenID Connect e devono essere mantenute segrete.
 
 ---
 
@@ -120,7 +120,7 @@ Impostazioni del server SMTP per l'invio di email (conferma registrazione, reset
 
 L'aspetto di pulsanti, link e schede è configurato tramite un oggetto JSON nella variabile `CUSTOM_STYLES`.
 
-La variabile `CUSTOM_STYLES` consente di personalizzare l'interfaccia di **Encvoy ID** senza modificare il codice.
+La variabile `CUSTOM_STYLES` consente di personalizzare l'interfaccia di **{{projectName}}** senza modificare il codice.
 
 ```env
 # Vai alla cartella del progetto
@@ -158,7 +158,7 @@ Descrizione della variabile `CUSTOM_STYLES`:
 
 ---
 
-## Permessi e Licenze { #permissions-and-licenses }
+## Diritto d'autore { #copyright }
 
 | Variabile   | Descrizione                                | Valore Predefinito    | Esempio                                |
 | ----------- | ------------------------------------------ | --------------------- | -------------------------------------- |
@@ -176,5 +176,5 @@ Descrizione della variabile `CUSTOM_STYLES`:
 
 ## Vedi anche { #see-also }
 
-- [Installazione del sistema Encvoy ID](./docs-02-box-system-install.md) — guida per l'installazione del sistema.
+- [Installazione del sistema {{projectName}}](./docs-02-box-system-install.md) — guida per l'installazione del sistema.
 - [Configurazione del sistema](./docs-04-box-system-settings.md) — guida per la configurazione dell'interfaccia e dell'accesso utente al sistema.

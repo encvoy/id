@@ -1,6 +1,4 @@
 .container {
-  width: 100%;
-  border: 1px solid var(--mui-palette-divider);
   margin-top: 32px;
   display: flex;
   flex-direction: column;
@@ -23,7 +21,6 @@
   display: flex;
   align-items: center;
   padding: 8px 12px;
-  border: 1px solid var(--mui-palette-divider);
   overflow: hidden;
   cursor: pointer;
   transition: background-color 0.4s ease-in-out;

@@ -1,47 +1,78 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
-import { UserId } from 'src/decorators/userId.decorator';
-import { Scope } from '../../../../decorators/scope.decorator';
-import { UsersActions } from '../../../users/users.roles';
-import { ConfirmTOTPSetupDto, DisableTOTPDto, RegenerateBackupCodesDto } from './otp.dto';
-import { OtpService } from './otp.service';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOperation, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { Request, Response } from 'express';
+import { Ei18nCodes, EProviderTypes } from 'src/enums';
+import { UidNotUndefinedGuard } from 'src/middlewares/guards/uid.guard';
+import { OidcService } from 'src/modules/oidc/oidc.service';
+import { prisma } from 'src/modules/prisma';
+import { OtpProviderQueryDto } from './common/otp.dto';
+import { HotpService } from './hotp/hotp.service';
+import { TotpService } from './totp/totp.service';
 
-@Controller('otp')
-export class OtpController {
-  constructor(private readonly totpService: OtpService) {}
+@Controller('interaction')
+@UseGuards(UidNotUndefinedGuard)
+export class InteractionOtpController {
+  constructor(
+    private readonly oidcService: OidcService,
+    private readonly totpService: TotpService,
+    private readonly hotpService: HotpService,
+  ) {}
 
-  @Get('setup')
-  @ApiOperation({ summary: 'Generate OTP setup QR code' })
-  @Scope(UsersActions.externalAccounts)
-  async setupTOTP(@UserId() userId: string, @Query('app_name') appName?: string) {
-    return this.totpService.generateTOTPSetup(userId, appName);
-  }
+  @Get('/:uid/otp/setup')
+  @ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
+  @ApiOperation({ summary: 'Generate OTP setup data for widget flow' })
+  @ApiOkResponse()
+  @UseGuards(ThrottlerGuard)
+  async setup(
+    @Param('uid') uid: string,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Query() query: OtpProviderQueryDto,
+  ) {
+    if (!query.provider_id) {
+      throw new BadRequestException(Ei18nCodes.T3E0030);
+    }
 
-  @Post('confirm-setup')
-  @ApiOperation({ summary: 'Confirm OTP setup with verification code' })
-  @Scope(UsersActions.externalAccounts)
-  async confirmSetup(@UserId() userId: string, @Body() dto: ConfirmTOTPSetupDto) {
-    return this.totpService.confirmTOTPSetup(userId, dto.token);
-  }
+    const { jti } = await this.oidcService.interactionDetails(req, res);
 
-  @Get('status')
-  @ApiOperation({ summary: 'Get OTP status for user' })
-  @Scope(UsersActions.externalAccounts)
-  async getStatus(@UserId() userId: string) {
-    return this.totpService.getTOTPStatus(userId);
-  }
+    if (uid !== jti) {
+      throw new BadRequestException(Ei18nCodes.T3E0039);
+    }
 
-  @Post('regenerate-backup-codes')
-  @ApiOperation({ summary: 'Regenerate backup codes' })
-  @Scope(UsersActions.externalAccounts)
-  async regenerateBackupCodes(@UserId() userId: string, @Body() dto: RegenerateBackupCodesDto) {
-    return this.totpService.regenerateBackupCodes(userId, dto.token);
-  }
+    const provider = await prisma.provider.findFirst({
+      where: {
+        id: query.provider_id,
+        type: {
+          in: [EProviderTypes.TOTP, EProviderTypes.HOTP],
+        },
+      },
+      select: {
+        id: true,
+        type: true,
+      },
+    });
 
-  @Post('disable')
-  @ApiOperation({ summary: 'Disable OTP for user' })
-  @Scope(UsersActions.externalAccounts)
-  async disable(@UserId() userId: string, @Body() dto: DisableTOTPDto) {
-    return this.totpService.disableTOTP(userId, dto.token);
+    if (!provider) {
+      throw new BadRequestException(Ei18nCodes.T3E0030);
+    }
+
+    const otpService = provider.type === EProviderTypes.TOTP ? this.totpService : this.hotpService;
+    res.setHeader('Cache-Control', 'no-store');
+
+    return otpService.generateSetup(null, provider.id, {
+      requiredAccountsInfoUid: req.cookies?.required_accounts_info_uid,
+      requiredProviderIds: req.cookies?._req_ids,
+      interactionId: uid,
+    });
   }
 }

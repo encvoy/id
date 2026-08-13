@@ -11,6 +11,8 @@ interface IInputPhoneProps {
   label?: string;
   disabled?: boolean;
   children?: ReactNode;
+  dataTestId?: string;
+  autoComplete?: string;
 }
 
 const getUserCountryByIP = async (): Promise<CountryCode | undefined> => {
@@ -34,7 +36,13 @@ const getUserCountryByIP = async (): Promise<CountryCode | undefined> => {
   }
 };
 
-export const InputPhone = ({ fieldName, disabled, children }: IInputPhoneProps) => {
+export const InputPhone = ({
+  fieldName,
+  disabled,
+  children,
+  dataTestId,
+  autoComplete,
+}: IInputPhoneProps) => {
   const [country, setCountry] = useState<CountryCode | undefined>();
   const {
     control,
@@ -61,6 +69,8 @@ export const InputPhone = ({ fieldName, disabled, children }: IInputPhoneProps) 
         defaultCountry={country}
         disabled={disabled}
         inputComponent={CustomInput}
+        data-test-id={dataTestId}
+        autoComplete={autoComplete}
       />
       {children}
       {!!errors[fieldName] && (

@@ -4,7 +4,7 @@
   font-weight: 400;
   font-display: swap;
   src: local("Play"), local("Play-Regular"),
-  url("/fonts/Play-Regular.ttf") format("truetype");
+    url("/fonts/Play-Regular.ttf") format("truetype");
 }
 
 .topBar {
@@ -21,8 +21,20 @@
   border-bottom: 1px solid var(--mui-palette-divider);
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .logo {
   margin-right: 12px;
+  max-width: 28px;
+  max-height: 28px;
+}
+
+.orgLogo {
+  margin-right: 8px;
   max-width: 28px;
   max-height: 28px;
 }
@@ -32,6 +44,22 @@
   color: var(--main-color);
   font-size: 20px;
   letter-spacing: 0em;
+}
+
+.subTitle {
+  font-family: Play;
+  color: var(--main-color);
+  font-size: 16px;
+  letter-spacing: 0em;
+}
+
+.separator {
+  width: 1px;
+  height: 24px;
+  margin: 0 12px;
+  background-color: var(--mui-palette-divider);
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .profile {

@@ -1,10 +1,12 @@
+@import "flag-icons/css/flag-icons.min.css";
+
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: local("Inter"), local("Inter-Regular"),
-  url("/fonts/Inter-400.ttf") format("truetype");
+    url("/fonts/Inter-400.ttf") format("truetype");
 }
 
 @font-face {
@@ -13,11 +15,7 @@
   font-weight: 500;
   font-display: swap;
   src: local("Inter"), local("Inter-Regular"),
-  url("/fonts/Inter-500.ttf") format("truetype");
-}
-
-:root {
-  --content-position: "start";
+    url("/fonts/Inter-500.ttf") format("truetype");
 }
 
 * {
@@ -137,6 +135,23 @@ textarea {
   -webkit-appearance: button; /* 1 */
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 details {
   display: block;
 }
@@ -150,49 +165,6 @@ summary {
   transition: 0.3s ease background-color;
 }
 
-.text-12 {
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
-}
-
-.text-14 {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 21px;
-}
-
-.text-17 {
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 24px;
-}
-
-.text-20 {
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 30px;
-}
-
-.text-15-medium {
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 22px;
-}
-
-.text-20-medium {
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 30px;
-}
-
-.title-medium {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 29px;
-}
-
-
 @media screen and (max-width: 599.95px) {
   .notistack-SnackbarContainer {
     width: auto !important;
@@ -202,28 +174,5 @@ summary {
 @media screen and (max-width: 432px) {
   .notistack-SnackbarContainer {
     width: 100% !important;
-  }
-}
-
-.page-container {
-  width: 100%;
-  display: flex;
-  place-content: var(--content-position);
-}
-
-.content {
-  padding: 32px 32px 48px;
-  width: 100%;
-  max-width: 1032px;
-  height: 100%;
-}
-
-.content_max {
-  max-width: 1280px;
-}
-
-@media screen and (max-width: 425px) {
-  .content {
-    padding: 32px 16px 16px;
   }
 }

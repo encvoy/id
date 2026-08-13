@@ -1,6 +1,6 @@
 {
   "name": "encvoy-auth",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,7 +18,7 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
-    "node": "^22.18.0",
+    "ioredis": "^5.11.1",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.6"
   },

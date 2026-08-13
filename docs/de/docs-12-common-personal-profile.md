@@ -1,21 +1,21 @@
 ---
-title: "Encvoy ID Persönliches Profil — Kontoverwaltung"
-description: "Erfahren Sie, wie Sie Ihr persönliches Encvoy ID-Profil einrichten: Daten und Privatsphäre bearbeiten, App-Zugriffe verwalten und die Kontosicherheit gewährleisten."
-keywords:
-  - Encvoy ID persönliches Profil
-  - Encvoy ID persönliches Konto
-  - Encvoy ID Profil bearbeiten
-  - Encvoy ID Profileinstellungen
-  - Encvoy ID Kontosicherheit
-  - Encvoy ID Passwort ändern
+title: "{{projectName}} Persönliches Profil — Kontoverwaltung"
+description: "Erfahren Sie, wie Sie Ihr persönliches {{projectName}}-Profil einrichten: Daten und Privatsphäre bearbeiten, App-Zugriffe verwalten und die Kontosicherheit gewährleisten."
+keywords: 
+  - {{projectName}} persönliches Profil
+  - {{projectName}} persönliches Konto
+  - {{projectName}} Profil bearbeiten
+  - {{projectName}} Profileinstellungen
+  - {{projectName}} Kontosicherheit
+  - {{projectName}} Passwort ändern
   - OAuth App-Berechtigungen
   - App-Zugriffsverwaltung
-  - Encvoy ID Konto löschen
-  - Encvoy ID Konto entfernen
-  - Encvoy ID Kontowiederherstellung
+  - {{projectName}} Konto löschen
+  - {{projectName}} Konto entfernen
+  - {{projectName}} Kontowiederherstellung
   - Profildaten-Export
   - alle Sitzungen beenden
-author: "Encvoy ID Team"
+author: "{{projectName}} Team"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -24,11 +24,11 @@ menu_title: "Persönliches Profil"
 order: 12
 ---
 
-# So verwalten Sie Ihr persönliches Encvoy ID-Profil
+# So verwalten Sie Ihr persönliches {{projectName}}-Profil
 
-**Das Encvoy ID-Profil** ist Ihre Zentrale für Kontodaten und Sicherheit.
+**Das {{projectName}}-Profil** ist Ihre Zentrale für Kontodaten und Sicherheit.
 
-In dieser Anleitung erfahren Sie, wie Sie Ihr persönliches Profil in **Encvoy ID** verwalten: Daten und Privatsphäre-Einstellungen bearbeiten, Ihr Passwort aktualisieren, den Anwendungszugriff steuern, das Aktivitätenprotokoll einsehen und Profildaten exportieren.
+In dieser Anleitung erfahren Sie, wie Sie Ihr persönliches Profil in **{{projectName}}** verwalten: Daten und Privatsphäre-Einstellungen bearbeiten, Ihr Passwort aktualisieren, den Anwendungszugriff steuern, das Aktivitätenprotokoll einsehen und Profildaten exportieren.
 
 **Inhaltsverzeichnis:**
 
@@ -50,13 +50,13 @@ Ihr Profil enthält grundlegende Informationen zur Identifizierung innerhalb des
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Bearbeiten** im Block **Basisinformationen**.
 
-<img src="./images/personal-profile-01.webp" alt="Schaltfläche zum Bearbeiten grundlegender Informationen im persönlichen Encvoy ID-Profil" style="max-width:700px; width:100%">
+<img src="./images/personal-profile-01.webp" alt="Schaltfläche zum Bearbeiten grundlegender Informationen im persönlichen {{projectName}}-Profil" style="max-width:700px; width:100%">
 
 3. Nehmen Sie die erforderlichen Änderungen im sich öffnenden Formular vor.
 
    > 💡 Für einige Felder sind Validierungsregeln festgelegt. Bitte seien Sie vorsichtig bei Änderungen.
    >
-   > <img src="./images/personal-profile-02.webp" alt="Beispiel für die Validierung des E-Mail-Feldes im Bearbeitungsformular des Encvoy ID-Benutzerprofils" style="max-width:500px; width:100%">
+   > <img src="./images/personal-profile-02.webp" alt="Beispiel für die Validierung des E-Mail-Feldes im Bearbeitungsformular des {{projectName}}-Benutzerprofils" style="max-width:500px; width:100%">
 
 4. Klicken Sie auf **Speichern**.
 
@@ -72,11 +72,11 @@ Sie können ein Foto von Ihrem Gerät hochladen oder einen Avatar von verknüpft
 4. Fügen Sie ein Foto mit einer der folgenden Methoden hinzu:
    - Klicken Sie auf die Schaltfläche **Hochladen** und geben Sie den Pfad zur Fotodatei an,
 
-       <img src="./images/personal-profile-03.webp" alt="Schaltfläche zum Hochladen eines Fotos von einem Gerät im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+       <img src="./images/personal-profile-03.webp" alt="Schaltfläche zum Hochladen eines Fotos von einem Gerät im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
    - Klicken Sie auf die Schaltfläche **Verfügbar** und wählen Sie ein Foto aus einem externen System aus.
 
-       <img src="./images/personal-profile-04.webp" alt="Schaltfläche zur Auswahl eines Avatars aus verknüpften externen Diensten des Encvoy ID-Benutzers" style="max-width:600px; width:100%">
+       <img src="./images/personal-profile-04.webp" alt="Schaltfläche zur Auswahl eines Avatars aus verknüpften externen Diensten des {{projectName}}-Benutzers" style="max-width:600px; width:100%">
 
    > 📌 Wenn im Profil keine verknüpften externen System-IDs mit einem Foto vorhanden sind, wird die Schaltfläche **Verfügbar** ausgeblendet.
 
@@ -91,11 +91,11 @@ Sie können ein Foto von Ihrem Gerät hochladen oder einen Avatar von verknüpft
 1. Gehen Sie zu Ihrem **Profil**.
 2. Suchen Sie den Block **Kontakte** und klicken Sie auf **Bearbeiten** im Panel **E-Mail**.
 
-<img src="./images/personal-profile-05.webp" alt="Schaltfläche zum Bearbeiten der E-Mail im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-05.webp" alt="Schaltfläche zum Bearbeiten der E-Mail im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 3. Das Formular zum Hinzufügen öffnet sich.
 
-<img src="./images/personal-profile-06.webp" alt="E-Mail-Bearbeitung im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-06.webp" alt="E-Mail-Bearbeitung im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 4. Geben Sie die E-Mail-Adresse ein und klicken Sie auf **Code anfordern**.
 
@@ -112,11 +112,11 @@ Sie können ein Foto von Ihrem Gerät hochladen oder einen Avatar von verknüpft
 1. Gehen Sie zu Ihrem **Profil**.
 2. Suchen Sie den Block **Kontakte** und klicken Sie auf **Bearbeiten** im Panel **Telefonnummer**.
 
-<img src="./images/personal-profile-07.webp" alt="Schaltfläche zum Bearbeiten der Telefonnummer im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-07.webp" alt="Schaltfläche zum Bearbeiten der Telefonnummer im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 3. Das Bearbeitungsformular öffnet sich.
 
-<img src="./images/personal-profile-08.webp" alt="Telefonnummer-Bearbeitung im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-08.webp" alt="Telefonnummer-Bearbeitung im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 4. Geben Sie die Nummer ein und klicken Sie auf **Code anfordern**.
 
@@ -131,11 +131,11 @@ Sie können ein Foto von Ihrem Gerät hochladen oder einen Avatar von verknüpft
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Bearbeiten** im Block **Sicherheit**.
 
-<img src="./images/personal-profile-09.webp" alt="Platzierung der Schaltfläche zum Ändern des Passworts im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-09.webp" alt="Platzierung der Schaltfläche zum Ändern des Passworts im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 3. Geben Sie im sich öffnenden Fenster das aktuelle Passwort und das neue Passwort an.
 
-<img src="./images/personal-profile-10.webp" alt="Passwort-ändern-Dialog im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-10.webp" alt="Passwort-ändern-Dialog im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 Nach dem Ändern des Passworts werden Sie abgemeldet. Um weiterzuarbeiten, müssen Sie sich mit dem neuen Passwort erneut anmelden.
 
@@ -147,11 +147,11 @@ Diese Einstellung ermöglicht es Ihnen, die Privatsphäre für jedes Feld in den
 
 #### Privatsphäre-Stufen { #privacy-levels }
 
-| Stufe                     | Icon                                                                                                 | Beschreibung                                                                                                                                   |
-| ------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Nur für Sie sichtbar**  | ![Icon für privaten Zugriff](./images/button-lock.webp "Icon für privaten Zugriff")                  | Daten werden nicht an Drittsysteme übertragen und sind nur für Sie verfügbar.                                                                  |
-| **Auf Anfrage verfügbar** | ![Icon für Zugriff nach Zustimmung](./images/button-approve.webp "Icon für Zugriff nach Zustimmung") | Daten sind in Drittsystemen verfügbar, die mit Encvoy ID integriert sind. <br> Ihre Zustimmung ist erforderlich, um auf die Daten zuzugreifen. |
-| **Öffentlich verfügbar**  | ![Icon für öffentlichen Zugriff](./images/button-public.webp "Icon für öffentlichen Zugriff")        | Daten sind immer öffentlich. Ihre Zustimmung ist für den Zugriff nicht erforderlich.                                                           |
+| Stufe                     | Icon                                                                                                 | Beschreibung                                                                                                                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Nur für Sie sichtbar**  | ![Icon für privaten Zugriff](./images/button-lock.webp "Icon für privaten Zugriff")                  | Daten werden nicht an Drittsysteme übertragen und sind nur für Sie verfügbar.                                                                        |
+| **Auf Anfrage verfügbar** | ![Icon für Zugriff nach Zustimmung](./images/button-approve.webp "Icon für Zugriff nach Zustimmung") | Daten sind in Drittsystemen verfügbar, die mit {{projectName}} integriert sind. <br> Ihre Zustimmung ist erforderlich, um auf die Daten zuzugreifen. |
+| **Öffentlich verfügbar**  | ![Icon für öffentlichen Zugriff](./images/button-public.webp "Icon für öffentlichen Zugriff")        | Daten sind immer öffentlich. Ihre Zustimmung ist für den Zugriff nicht erforderlich.                                                                 |
 
 #### So konfigurieren Sie die Feld-Privatsphäre
 
@@ -159,7 +159,7 @@ Diese Einstellung ermöglicht es Ihnen, die Privatsphäre für jedes Feld in den
 2. Klicken Sie auf die Schaltfläche für Privatsphäre-Einstellungen neben dem Feld.
 3. Wählen Sie die gewünschte Stufe aus.
 
-<img src="./images/personal-profile-11.webp" alt="Konfiguration der Feld-Privatsphäre im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-11.webp" alt="Konfiguration der Feld-Privatsphäre im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 Je nach gewähltem Wert wird der Feldwert im Profil öffentlich oder privat.
 
@@ -169,7 +169,7 @@ Die Einstellung wird ohne zusätzliche Bestätigung übernommen.
 
 **Identifikatoren** sind externe Dienste, die Sie Ihrem Profil hinzugefügt haben oder über die Sie sich jemals bei Anwendungen oder dem persönlichen Konto angemeldet haben.
 
-Die Liste der zur Hinzufügung verfügbaren Identifikatoren im Profil wird aus den öffentlichen Login-Methoden gebildet, die im **Encvoy ID**-Dashboard erstellt wurden.
+Die Liste der zur Hinzufügung verfügbaren Identifikatoren im Profil wird aus den öffentlichen Login-Methoden gebildet, die im **{{projectName}}**-Dashboard erstellt wurden.
 
 > 🔍 Identifikatoren, die zur Verknüpfung verfügbar sind, werden im Administrator-Dashboard konfiguriert.
 
@@ -180,11 +180,11 @@ Die Liste der zur Hinzufügung verfügbaren Identifikatoren im Profil wird aus d
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Hinzufügen** im Block **Identifikatoren**.
 
-<img src="./images/personal-profile-12.webp" alt="Schaltfläche zum Hinzufügen eines Identifikators im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Schaltfläche zum Hinzufügen eines Identifikators im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 3. Wählen Sie im sich öffnenden Fenster einen externen Dienst aus.
 
-<img src="./images/personal-profile-13.webp" alt="Hinzufügen eines Identifikators im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-13.webp" alt="Hinzufügen eines Identifikators im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 4. Schließen Sie die Authentifizierung im Dienst ab.
 
@@ -198,13 +198,13 @@ Die Liste der zur Hinzufügung verfügbaren Identifikatoren im Profil wird aus d
 2. Klicken Sie auf den Identifikator, den Sie löschen möchten.
 3. Wählen Sie die Aktion **Löschen**.
 
-<img src="./images/personal-profile-14.webp" alt="Löschen eines Identifikators im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-14.webp" alt="Löschen eines Identifikators im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 Der Identifikator wird **sofort** aus dem Profil entfernt.
 
 ### Konfiguration des öffentlichen Profils
 
-Das **öffentliche Profil** besteht aus öffentlichen Daten, die für andere Mitglieder des **Encvoy ID**-Systems und verbundene Anwendungen einsehbar sind. Es ermöglicht Ihnen zu steuern, welche Benutzerinformationen für andere sichtbar sind, ohne vollen Kontozugriff zu gewähren.
+Das **öffentliche Profil** besteht aus öffentlichen Daten, die für andere Mitglieder des **{{projectName}}**-Systems und verbundene Anwendungen einsehbar sind. Es ermöglicht Ihnen zu steuern, welche Benutzerinformationen für andere sichtbar sind, ohne vollen Kontozugriff zu gewähren.
 
 #### Öffentliches Profil ansehen
 
@@ -243,7 +243,7 @@ END:VCARD
 1. Gehen Sie zu Ihrem **Profil**.
 2. Aktivieren Sie den Schalter **Privates Profil** im Block **Profil-Privatsphäre**.
 
-   <img src="./images/personal-profile-15.webp" alt="Deaktivieren des öffentlichen Profils im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+   <img src="./images/personal-profile-15.webp" alt="Deaktivieren des öffentlichen Profils im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
    Die Einstellung wird ohne zusätzliche Bestätigung übernommen.
 
@@ -253,7 +253,7 @@ Nach Aktivierung der Einstellung werden Daten mit der Privatsphäre-Stufe „Fü
 
 > 🔬 **Experimentelles Feature**: Die Verfügbarkeit wird vom Systemadministrator geregelt.
 
-**Die Encvoy ID-Visitenkarte** ist ein moderner digitaler Ersatz für eine Papier-Visitenkarte, erreichbar über einen einzigartigen Link.
+**Die {{projectName}}-Visitenkarte** ist ein moderner digitaler Ersatz für eine Papier-Visitenkarte, erreichbar über einen einzigartigen Link.
 
 **Inhalt der Visitenkarte:**
 
@@ -275,7 +275,7 @@ Für die Visitenkarte ist eine Aktivitätseinstellung verfügbar.
 1. Gehen Sie zu Ihrem **Profil**.
 2. Aktivieren Sie im Block **Visitenkarte** den Schalter **Aktivität**.
 
-   <img src="./images/personal-profile-16.webp" alt="Aktivieren der digitalen Visitenkarte im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+   <img src="./images/personal-profile-16.webp" alt="Aktivieren der digitalen Visitenkarte im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
    Stellen Sie sicher, dass Ihre Visitenkarte nun erreichbar ist. Folgen Sie dazu dem Link: `https://<ihre-domain>/api/cards/<identifikator>`:
 
@@ -313,9 +313,9 @@ Danach müssen Sie sich auf allen Geräten **erneut anmelden**.
 
 #### Herunterladen persönlicher Profildaten
 
-**Encvoy ID** ermöglicht es Ihnen, alle Profildaten im JSON-Format zu exportieren.
+**{{projectName}}** ermöglicht es Ihnen, alle Profildaten im JSON-Format zu exportieren.
 
-Diese Datei enthält alle Informationen zu Ihrem Profil in **Encvoy ID** sowie Details zu externen Konten, die Sie als Login-Methoden hinzugefügt haben, unabhängig davon, ob der Privatsphäre-Parameter für sie gesetzt ist.
+Diese Datei enthält alle Informationen zu Ihrem Profil in **{{projectName}}** sowie Details zu externen Konten, die Sie als Login-Methoden hinzugefügt haben, unabhängig davon, ob der Privatsphäre-Parameter für sie gesetzt ist.
 
 So laden Sie Profildaten herunter:
 
@@ -325,7 +325,7 @@ So laden Sie Profildaten herunter:
 
 #### Richtlinie zur Verarbeitung personenbezogener Daten
 
-Lesen Sie das Dokument darüber, wie **Encvoy ID** Ihre Daten verarbeitet.
+Lesen Sie das Dokument darüber, wie **{{projectName}}** Ihre Daten verarbeitet.
 
 So lesen Sie die Richtlinie:
 
@@ -335,7 +335,7 @@ So lesen Sie die Richtlinie:
 
 ### Kontolöschung und Wiederherstellung
 
-Die Kontolöschung in **Encvoy ID** ist ein unumkehrbarer Vorgang, nach dem es unmöglich ist, Daten wiederherzustellen. Das System verwendet einen Mechanismus zur verzögerten Löschung: Ihr Konto wird zur Löschung markiert, bleibt aber für einen bestimmten Zeitraum zur Wiederherstellung verfügbar. Dies dient dem Schutz vor versehentlichem Löschen und gibt Ihnen Zeit, Ihre Meinung zu ändern.
+Die Kontolöschung in **{{projectName}}** ist ein unumkehrbarer Vorgang, nach dem es unmöglich ist, Daten wiederherzustellen. Das System verwendet einen Mechanismus zur verzögerten Löschung: Ihr Konto wird zur Löschung markiert, bleibt aber für einen bestimmten Zeitraum zur Wiederherstellung verfügbar. Dies dient dem Schutz vor versehentlichem Löschen und gibt Ihnen Zeit, Ihre Meinung zu ändern.
 
 So löschen Sie ein Konto:
 
@@ -343,7 +343,7 @@ So löschen Sie ein Konto:
 2. Erweitern Sie den Block **Weitere Aktionen** und wählen Sie die Aktion **Konto löschen**.
 3. Geben Sie im sich öffnenden Fenster Ihr Kontopasswort ein, um die Aktion zu bestätigen, und klicken Sie auf **Löschen**.
 
-<img src="./images/personal-profile-17.webp" alt="Kontolöschungsdialog im persönlichen Encvoy ID-Profil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-17.webp" alt="Kontolöschungsdialog im persönlichen {{projectName}}-Profil" style="max-width:600px; width:100%">
 
 **Was passiert:**
 
@@ -351,15 +351,15 @@ So löschen Sie ein Konto:
 - Sie werden automatisch abgemeldet
 - Die Kontowiederherstellung ist für einen bestimmten Zeitraum möglich
 
-Für einen bestimmten Zeitraum nach der Kontolöschung haben Sie die Möglichkeit, den Zugriff darauf wiederherzustellen. Dazu müssen Sie sich erneut im persönlichen **Encvoy ID**-Konto anmelden und dann auf **Konto wiederherstellen** klicken.
+Für einen bestimmten Zeitraum nach der Kontolöschung haben Sie die Möglichkeit, den Zugriff darauf wiederherzustellen. Dazu müssen Sie sich erneut im persönlichen **{{projectName}}**-Konto anmelden und dann auf **Konto wiederherstellen** klicken.
 
-> 💡 Die Kontowiederherstellung ist nur bei der Anmeldung im persönlichen **Encvoy ID**-Konto verfügbar. Bei der Anmeldung an einer Anwendung über den **Encvoy ID**-Dienst ist die Kontowiederherstellung nicht verfügbar.
+> 💡 Die Kontowiederherstellung ist nur bei der Anmeldung im persönlichen **{{projectName}}**-Konto verfügbar. Bei der Anmeldung an einer Anwendung über den **{{projectName}}**-Dienst ist die Kontowiederherstellung nicht verfügbar.
 
 ---
 
 ## App-Berechtigungen und OAuth-Zugriff { #app-permissions-and-oauth }
 
-**Berechtigungen** sind die Rechte, die Sie externen Anwendungen gewähren, um auf bestimmte Daten in Ihrem **Encvoy ID**-Profil zuzugreifen. Sie können den Zugriff einschränken, aktive Sitzungen beenden oder Berechtigungen jederzeit vollständig widerrufen.
+**Berechtigungen** sind die Rechte, die Sie externen Anwendungen gewähren, um auf bestimmte Daten in Ihrem **{{projectName}}**-Profil zuzugreifen. Sie können den Zugriff einschränken, aktive Sitzungen beenden oder Berechtigungen jederzeit vollständig widerrufen.
 
 Alle Anwendungen, die Zugriff auf Ihre Daten haben, werden im **Profil** auf dem Tab **Berechtigungen** angezeigt.
 
@@ -369,7 +369,7 @@ Um schnell eine Anwendung zu öffnen, der Sie zuvor Zugriff gewährt haben:
 
 1. Gehen Sie zu Ihrem **Profil** → Tab **Berechtigungen**.
 
-<img src="./images/personal-profile-18.webp" alt="Anwendung in der Berechtigungsliste im persönlichen Encvoy ID-Profil" style="max-width:700px; width:100%">
+<img src="./images/personal-profile-18.webp" alt="Anwendung in der Berechtigungsliste im persönlichen {{projectName}}-Profil" style="max-width:700px; width:100%">
 
 2. Klicken Sie auf den **Anwendungsnamen** in der Liste.
 3. Sie werden automatisch zur ausgewählten Anwendung weitergeleitet.
@@ -382,7 +382,7 @@ Wenn Sie sofort alle Sitzungen in einer bestimmten Anwendung beenden möchten:
 2. Öffnen Sie das Aktionsmenü für die Anwendung, in der Sie Sitzungen beenden müssen.
 3. Wählen Sie die Aktion **Sitzungen beenden**.
 
-<img src="./images/personal-profile-19.webp" alt="Aktionsmenü der Anwendung im persönlichen Encvoy ID-Profil" style="max-width:700px; width:100%">
+<img src="./images/personal-profile-19.webp" alt="Aktionsmenü der Anwendung im persönlichen {{projectName}}-Profil" style="max-width:700px; width:100%">
 
 4. Bestätigen Sie die Aktion im Modal-Fenster.
 
@@ -412,7 +412,7 @@ Eine **Einladung** ist ein Weg, Zugriff auf eine geschlossene Anwendung zu erhal
 Eine Einladung kommt auf zwei Wegen an:
 
 1. **Per E-Mail**: Sie erhalten eine E-Mail mit einer Einladung und einem Link für den schnellen Zugriff auf die Anwendung.
-2. **In Ihrem Encvoy ID-Profil**: Eine neue Einladung erscheint im Bereich **Anfragen**.
+2. **In Ihrem {{projectName}}-Profil**: Eine neue Einladung erscheint im Bereich **Anfragen**.
 
 ### Wie nehme ich eine Einladung an?
 
@@ -434,16 +434,16 @@ Sie können eine Einladung auf jedem bequemen Weg annehmen.
 2. Suchen Sie die gewünschte Einladung in der Liste.
 3. Klicken Sie auf die Schaltfläche **Annehmen**.
 
-<img src="./images/personal-profile-21.webp" alt="Einladung aus dem Encvoy ID-Profil annehmen" style="max-width:700px; width:100%">
+<img src="./images/personal-profile-21.webp" alt="Einladung aus dem {{projectName}}-Profil annehmen" style="max-width:700px; width:100%">
 
 Danach wird der Zugriff auf die Anwendung aktiviert, und Sie können zu ihr navigieren.
 
 #### Wenn Sie noch kein Konto haben
 
-Wenn Sie eine Einladung erhalten haben, aber noch nicht im **Encvoy ID**-System registriert sind:
+Wenn Sie eine Einladung erhalten haben, aber noch nicht im **{{projectName}}**-System registriert sind:
 
 1. Folgen Sie dem Link aus der Einladungs-E-Mail.
-2. Registrieren Sie sich im **Encvoy ID**-System.
+2. Registrieren Sie sich im **{{projectName}}**-System.
 3. Geben Sie bei der Registrierung dieselbe E-Mail-Adresse an, an die die Einladung gesendet wurde.
 4. Nach Abschluss der Registrierung erhalten Sie automatisch Zugriff auf die Anwendung.
 
@@ -455,7 +455,7 @@ Wenn Sie eine Einladung erhalten haben, aber noch nicht im **Encvoy ID**-System 
 
 ### Was ist der Katalog?
 
-**Der Katalog** ist ein zentraler Marktplatz für alle Anwendungen, die im **Encvoy ID**-Ökosystem verfügbar sind.
+**Der Katalog** ist ein zentraler Marktplatz für alle Anwendungen, die im **{{projectName}}**-Ökosystem verfügbar sind.
 
 Der Katalog bringt alle öffentlichen Anwendungen an einem Ort zusammen und ermöglicht es Ihnen, die benötigten Apps schnell zu finden, Namen und Beschreibungen einzusehen und auf Anwendungen zuzugreifen, ohne sich komplexe Links oder Pfade merken zu müssen.
 
@@ -468,13 +468,13 @@ Anwendungen aus dem Katalog können zu den Favoriten hinzugefügt werden. Für d
 1. Klicken Sie auf die Schaltfläche ![Schaltfläche zum Aufrufen des Anwendungskatalogs](./images/button-catalog.webp "Schaltfläche zum Aufrufen des Anwendungskatalogs").
 2. Ein Fenster mit einer Liste der dem Katalog hinzugefügten Anwendungen öffnet sich.
 
-<img src="./images/personal-profile-22.webp" alt="Anwendungskatalog im persönlichen Encvoy ID-Profil" style="max-width:400px; width:100%">
+<img src="./images/personal-profile-22.webp" alt="Anwendungskatalog im persönlichen {{projectName}}-Profil" style="max-width:400px; width:100%">
 
 3. Wählen Sie die gewünschte Anwendung im Katalog aus.
 4. Sie werden automatisch zur Anwendungsseite weitergeleitet.
-5. Authentifizieren Sie sich in der Anwendung mit **Encvoy ID** und gewähren Sie der Anwendung Zugriff auf Ihre Daten.
+5. Authentifizieren Sie sich in der Anwendung mit **{{projectName}}** und gewähren Sie der Anwendung Zugriff auf Ihre Daten.
 
-Jetzt können Sie sich mit Ihrem **Encvoy ID**-Profil bei der Anwendung anmelden.
+Jetzt können Sie sich mit Ihrem **{{projectName}}**-Profil bei der Anwendung anmelden.
 
 ### Aktionen im Katalog
 
@@ -486,7 +486,7 @@ Jetzt können Sie sich mit Ihrem **Encvoy ID**-Profil bei der Anwendung anmelden
 
    Die Anwendung wird zu den Favoriten hinzugefügt und in der entsprechenden Gruppe angezeigt.
 
-   <img src="./images/personal-profile-23.webp" alt="Favoriten-Anwendungen im persönlichen Encvoy ID-Profil" style="max-width:400px; width:100%">
+   <img src="./images/personal-profile-23.webp" alt="Favoriten-Anwendungen im persönlichen {{projectName}}-Profil" style="max-width:400px; width:100%">
 
 #### Eine App aus den Favoriten entfernen
 
@@ -500,7 +500,7 @@ Die Anwendung wird aus den Favoriten entfernt und verschwindet aus dem Seitenmen
 
 ## Aktivitätenprotokoll und Login-Verlauf { #activity-log-and-login-history }
 
-**Das Aktivitätenprotokoll** ist ein Sicherheitswerkzeug, mit dem Sie verfolgen können, wo und von welchen Geräten aus Sie sich bei **Encvoy ID** oder Anwendungen angemeldet haben.
+**Das Aktivitätenprotokoll** ist ein Sicherheitswerkzeug, mit dem Sie verfolgen können, wo und von welchen Geräten aus Sie sich bei **{{projectName}}** oder Anwendungen angemeldet haben.
 
 ### Ereignisdetails
 

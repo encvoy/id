@@ -4,17 +4,23 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import { ElementType, FC, MouseEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
+import { CustomIcon } from "@encvoy-id/components";
 import styles from "./PublicStatusPopover.module.css";
 import { EClaimPrivacy, EClaimPrivacyNumber } from "src/shared/utils/enums";
 import {
   useChangeClaimPrivacyMutation,
   useChangeExternalAccountMutation,
 } from "src/shared/api/users";
-import { IconWithTooltip } from "src/shared/ui/components/IconWithTooltip";
+import { IconWithTooltip } from "@encvoy-id/components";
 import Box from "@mui/material/Box";
 import { SvgIconProps } from "@mui/material";
-import { MenuControls } from "src/shared/ui/components/MenuControls";
+import { MenuControls } from "@encvoy-id/components";
+
+const testIds = [
+  "btn-profile-available-private",
+  "btn-profile-available-oauth",
+  "btn-profile-available-public",
+];
 
 type TButtonPrivacyClaim = {
   title: string;
@@ -28,19 +34,23 @@ type PublicStatusPopoverProps = {
   field?: string;
   userId?: string;
   disabled?: boolean;
-  externalAccountId?: number;
+  readOnly?: boolean;
+  externalAccountId?: string;
   setStatus?: (status: EClaimPrivacy | EClaimPrivacyNumber) => void;
   mode?: "string" | "number";
+  dataTestId?: string;
 };
 
 export const PublicStatusPopover: FC<PublicStatusPopoverProps> = ({
   claimPrivacy,
   field,
   disabled,
+  readOnly = false,
   externalAccountId,
   userId,
   setStatus,
   mode = "string",
+  dataTestId,
 }) => {
   const [buttonClaimPrivacy, setButtonClaimPrivacy] =
     useState<TButtonPrivacyClaim>();
@@ -82,6 +92,9 @@ export const PublicStatusPopover: FC<PublicStatusPopoverProps> = ({
 
   const openPopover = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    if (readOnly) {
+      return;
+    }
     setAnchorEl(event.currentTarget);
   };
 
@@ -126,30 +139,37 @@ export const PublicStatusPopover: FC<PublicStatusPopoverProps> = ({
   };
 
   return (
-    <Box className={disabled ? styles.publicButtonDisabled : ""}>
+    <Box
+      className={disabled ? styles.publicButtonDisabled : ""}
+      data-test-id={dataTestId || `btn-profile-available-${field}`}
+    >
       <IconWithTooltip
+        dataTestId={dataTestId}
         onClick={openPopover}
         Icon={buttonClaimPrivacy?.icon}
         title={buttonClaimPrivacy?.title}
-        customStyleButton={styles.publicButton}
+        customStyleButton={readOnly ? undefined : styles.publicButton}
         disabled={disabled}
       >
-        <CustomIcon
-          Icon={KeyboardArrowDownOutlinedIcon}
-          className={anchorEl ? styles.arrowRotate : ""}
-          sx={{
-            display: "block",
-            position: "absolute",
-            right: "4px",
-            width: "16px",
-            transition: "transform 0.4s ease",
-          }}
-        />
+        {!readOnly && (
+          <CustomIcon
+            Icon={KeyboardArrowDownOutlinedIcon}
+            className={anchorEl ? styles.arrowRotate : ""}
+            sx={{
+              display: "block",
+              position: "absolute",
+              right: "4px",
+              width: "16px",
+              transition: "transform 0.4s ease",
+            }}
+          />
+        )}
       </IconWithTooltip>
 
-      {!disabled && (
+      {!disabled && !readOnly && (
         <>
           <MenuControls
+            dataTestId={testIds}
             anchorEl={anchorEl}
             onClose={closePopover}
             controls={claimPrivacyButtons.map((item) => {

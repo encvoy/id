@@ -7,8 +7,42 @@ import svgr from "vite-plugin-svgr";
 import checker from "vite-plugin-checker";
 import eslint from "vite-plugin-eslint";
 
+const URL_SCHEME_PATTERN = /^[A-Za-z][A-Za-z0-9+.-]*:\/\//;
+
+const stripOptionalQuotes = (value: string) => value.replace(/^(['"])(.*)\1$/, "$2");
+
+const resolveRuntimeDomain = () => {
+  const idHost = stripOptionalQuotes((process.env.ID_HOST || "").trim());
+  const configuredBasePath = stripOptionalQuotes(
+    (process.env.ID_BASE_PATH || "").trim()
+  );
+  const basePath =
+    configuredBasePath && configuredBasePath !== "/"
+      ? `/${configuredBasePath.replace(/^\/+|\/+$/g, "")}`
+      : "";
+  let domain = stripOptionalQuotes(
+    (
+      process.env.DOMAIN ||
+      process.env.VITE_DOMAIN ||
+      `${idHost.replace(/\/+$/, "")}${basePath}`
+    ).trim()
+  ).replace(/\/+$/, "");
+
+  if (domain && !URL_SCHEME_PATTERN.test(domain)) {
+    domain = `https://${domain}`;
+  }
+
+  return domain;
+};
+
 export default defineConfig(() => {
+  const runtimeDomain = resolveRuntimeDomain();
+  const localProxyTarget = runtimeDomain || "https://local.trusted.plus/id";
+
   return {
+    // Production bundles stay mount-point agnostic. Local prefixes are passed
+    // explicitly with Vite's `--base` CLI option by the root dev scripts.
+    base: "./",
     plugins: [
       react(),
       {
@@ -44,18 +78,9 @@ export default defineConfig(() => {
         },
         include: "**/*.svg",
       }),
-      // Plugin for replacing variables in HTML
-      {
-        name: "html-env-vars",
-        transformIndexHtml(html) {
-          return html.replace(/%(\w+)%/g, (match, varName) => {
-            return process.env[varName] || match;
-          });
-        },
-      },
     ],
     server: {
-      host: "localhost",
+      host: "127.0.0.1",
       port: 3001,
       historyApiFallback: true,
       hmr: true,
@@ -63,11 +88,11 @@ export default defineConfig(() => {
       ...(() => {
         const keyPath = path.resolve(
           __dirname,
-          "../../certs/local.encvoy.com-key.pem"
+          "../../certs/local.trusted.plus-key.pem"
         );
         const certPath = path.resolve(
           __dirname,
-          "../../certs/local.encvoy.com.pem"
+          "../../certs/local.trusted.plus.pem"
         );
 
         // Use HTTPS if certificates are available (local development)
@@ -85,24 +110,37 @@ export default defineConfig(() => {
       proxy: {
         // Redirect API requests to backend via nginx
         "/api": {
-          target: "https://local.encvoy.com",
+          target: localProxyTarget,
           changeOrigin: true,
           secure: true,
         },
         "/oidc": {
-          target: "https://local.encvoy.com",
+          target: localProxyTarget,
           changeOrigin: true,
           secure: true,
         },
         "/auth": {
-          target: "https://local.encvoy.com",
+          target: localProxyTarget,
           changeOrigin: true,
           secure: true,
         },
       },
     },
-    // Base public path for production
-    base: process.env.VITE_DOMAIN || "/",
+    resolve: {
+      preserveSymlinks: true,
+      alias: {
+        react: path.resolve(__dirname, "node_modules/react"),
+      },
+      dedupe: [
+        "react",
+        "react-dom",
+        "react-hook-form",
+        "@emotion/react",
+        "@emotion/styled",
+        "@mui/material",
+        "@mui/icons-material",
+      ],
+    },
     build: {
       // Settings for production build
       rollupOptions: {
@@ -127,11 +165,11 @@ export default defineConfig(() => {
       ...(() => {
         const keyPath = path.resolve(
           __dirname,
-          "../../certs/local.encvoy.com-key.pem"
+          "../../certs/local.trusted.plus-key.pem"
         );
         const certPath = path.resolve(
           __dirname,
-          "../../certs/local.encvoy.com.pem"
+          "../../certs/local.trusted.plus.pem"
         );
 
         if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
@@ -147,23 +185,17 @@ export default defineConfig(() => {
     },
     // Prebuild dependencies
     optimizeDeps: {
+      // @encvoy-id/components is a linked local package whose public exports change
+      // as its dist is rebuilt. Recreate the prebundle on every Dashboard start
+      // so Vite cannot serve an older export surface.
+      force: true,
       include: [
         "react",
         "react-dom",
         "@emotion/react",
         "@emotion/styled",
         "@mui/material",
-        "react-is",
-        "prop-types",
-        "void-elements",
       ],
-      force: true,
-      esbuildOptions: {
-        mainFields: ["module", "main"],
-      },
-    },
-    resolve: {
-      dedupe: ["react", "react-dom", "react-is", "prop-types"],
     },
   };
 });

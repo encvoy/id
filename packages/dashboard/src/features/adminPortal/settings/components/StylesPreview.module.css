@@ -1,0 +1,107 @@
+.previewSticky {
+  width: 100%;
+  position: sticky;
+  top: 130px;
+}
+
+.previewThemeTabs {
+  margin-top: 12px;
+}
+
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.previewSection {
+  padding: 12px;
+}
+
+.previewHoverSection {
+  transition: background-color 0.2s ease;
+}
+
+.previewHoverSection:hover {
+  background: var(--preview-hover-background);
+}
+
+.previewButton {
+  width: fit-content;
+  text-transform: none;
+}
+
+.previewFieldsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.previewInteractiveSection {
+  color: var(--preview-text-primary);
+}
+
+.previewSubControl {
+  margin-top: 8px;
+}
+
+.previewInteractiveSection :global(.MuiTypography-root) {
+  color: var(--preview-text-primary);
+}
+
+.previewInteractiveSection :global(.MuiTypography-colorTextSecondary) {
+  color: var(--preview-text-secondary);
+}
+
+.previewInteractiveSection :global(.MuiInput-root) {
+  border-radius: var(--preview-component-radius);
+  background: var(--preview-paper-color);
+  color: var(--preview-text-primary);
+}
+
+.previewInteractiveSection :global(.MuiInputBase-input) {
+  color: var(--preview-text-primary);
+}
+
+.previewInteractiveSection :global(.MuiFormHelperText-root) {
+  color: var(--preview-text-secondary);
+}
+
+.previewInteractiveSection :global(.MuiFormControlLabel-label) {
+  color: var(--preview-text-primary);
+}
+
+.previewInteractiveSection :global(.MuiCheckbox-root) {
+  color: var(--preview-primary-color);
+}
+
+.previewInteractiveSection :global(.MuiCheckbox-root.Mui-checked) {
+  color: var(--preview-primary-color);
+}
+
+.previewInteractiveSection :global(.MuiRadio-root) {
+  color: var(--preview-text-secondary);
+}
+
+.previewInteractiveSection :global(.MuiRadio-root.Mui-checked) {
+  color: var(--preview-primary-color);
+}
+
+.previewInteractiveSection :global(.MuiSwitch-track) {
+  border: 1px solid var(--preview-divider-color);
+  background: var(--preview-text-secondary);
+  opacity: 1;
+}
+
+.previewInteractiveSection :global(.MuiSwitch-thumb) {
+  background: var(--preview-primary-contrast-color);
+}
+
+.previewInteractiveSection
+  :global(.MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track) {
+  background: var(--preview-primary-color);
+  opacity: 1;
+}

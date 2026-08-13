@@ -7,6 +7,12 @@
   transition: background-color 0.4s ease;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .authWidget_padding {
   padding: 0px 0px 0px 12px;
 }
@@ -19,6 +25,9 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background-color 0.3s ease;
 }
 
@@ -36,8 +45,21 @@
   object-fit: cover;
 }
 
+.headerActionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+}
+
 .text {
   margin: 0;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 560px) {

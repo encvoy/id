@@ -1,12 +1,12 @@
 ---
-title: "Encvoy ID Mini-widget — Configuración y Personalización"
-description: "Aprenda a conectar y configurar el mini-widget de Encvoy ID: botones de inicio de sesión, perfil de usuario y estilos personalizados. Integre la solución en su proyecto."
-keywords:
-  - Encvoy ID mini-widget
-  - integración de mini-widget
-  - personalización de mini-widget
+title: "{{projectName}} Mini-widget — Configuración y Personalización"
+description: "Aprenda a conectar y configurar el mini-widget de {{projectName}}: botones de inicio de sesión, perfil de usuario y estilos personalizados. Integre la solución en su proyecto."
+keywords: 
+  - {{projectName}} mini-widget 
+  - integración de mini-widget 
+  - personalización de mini-widget 
   - estilo de botón de inicio de sesión
-author: "Equipo de Encvoy ID"
+author: "Equipo de {{projectName}}"
 date: 2025-12-12
 updated: 2025-12-12
 product: [box, github, service]
@@ -15,9 +15,9 @@ menu_title: "Configuración del Mini-widget"
 order: 10
 ---
 
-# Cómo configurar y conectar el mini-widget de Encvoy ID
+# Cómo configurar y conectar el mini-widget de {{projectName}}
 
-En esta guía, aprenderá a conectar y configurar el mini-widget de **Encvoy ID** en su recurso web. Aprenderá a establecer los parámetros de autenticación, la visualización del perfil de usuario, los botones de inicio de sesión y los menús, así como a personalizar la apariencia del widget para que armonice con el diseño de su proyecto.
+En esta guía, aprenderá a conectar y configurar el mini-widget de **{{projectName}}** en su recurso web. Aprenderá a establecer los parámetros de autenticación, la visualización del perfil de usuario, los botones de inicio de sesión y los menús, así como a personalizar la apariencia del widget para que armonice con el diseño de su proyecto.
 
 **Tabla de contenidos:**
 
@@ -36,13 +36,13 @@ En esta guía, aprenderá a conectar y configurar el mini-widget de **Encvoy ID*
 
 Un **mini-widget** es un menú que contiene datos del usuario y funciones esenciales. Proporciona acceso al perfil, al panel de administración, a las organizaciones o pequeña oficina, y al cierre de sesión del sistema. También puede colocar una aplicación aquí para un acceso rápido. El widget se abre al hacer clic en el avatar del usuario en la esquina superior derecha de la pantalla.
 
-El mini-widget es un componente JavaScript ligero para la autenticación de usuarios en el servicio **Encvoy ID**. Funciona basado en los estándares OIDC/OAuth2 y PKCE y puede integrarse en cualquier sitio web o interfaz, desde HTML simple hasta SPAs en React o Vue.
+El mini-widget es un componente JavaScript ligero para la autenticación de usuarios en el servicio **{{projectName}}**. Funciona basado en los estándares OIDC/OAuth2 y PKCE y puede integrarse en cualquier sitio web o interfaz, desde HTML simple hasta SPAs en React o Vue.
 
 > 💡 Para añadir una aplicación al mini-widget, active el interruptor **Mostrar en el mini-widget** en la [configuración de la aplicación](./docs-10-common-app-settings.md).
 
-Ejemplos de widget:
+Ejemplos de widget:  
 
-<img src="./images/mini-widget-01.webp" alt="Ejemplo de diseño de mini-widget en Encvoy ID" style="max-width:600px; width:100%">
+<img src="./images/mini-widget-01.webp" alt="Ejemplo de diseño de mini-widget en {{projectName}}" style="max-width:600px; width:100%">
 
 ---
 
@@ -52,27 +52,27 @@ Ejemplos de widget:
 
 Para el funcionamiento básico del widget, se deben especificar tres parámetros clave:
 
-| Parámetro     | Tipo     | Descripción                                     | Ejemplo                         |
-| ------------- | -------- | ----------------------------------------------- | ------------------------------- |
-| `appId`       | `string` | Identificador único de la aplicación en Trusted | `"MTnOOTdx85FgNbOFy2nUsH"`      |
-| `backendUrl`  | `string` | URL de su API de backend                        | `"http://localhost:3001"`       |
-| `redirectUrl` | `string` | URL para redirección tras la autorización       | `"http://localhost:3000/login"` |
+| Parámetro     | Tipo     | Descripción                                      | Ejemplo                         |
+| ------------- | -------- | ------------------------------------------------ | ------------------------------- |
+| `appId`       | `string` | Identificador único de la aplicación en Trusted  | `"MTnOOTdx85FgNbOFy2nUsH"`      |
+| `backendUrl`  | `string` | URL de su API de backend                         | `"http://localhost:3001"`       |
+| `redirectUrl` | `string` | URL para redirección tras la autorización        | `"http://localhost:3000/login"` |
 
 ### Parámetros opcionales
 
 Existen parámetros opcionales disponibles para una configuración avanzada:
 
-| Parámetro             | Tipo                  | Descripción                              | Valor por defecto             |
-| --------------------- | --------------------- | ---------------------------------------- | ----------------------------- |
-| `issuer`              | `string`              | URL del servidor Trusted SSO             | `"https://id.kloud.one"`      |
-| `withOutHomePage`     | `boolean`             | Redirección automática a la autorización | `false`                       |
-| `getTokenEndPoint`    | `string`              | Endpoint para obtener un token           | `"/api/oidc/token"`           |
-| `getUserInfoEndPoint` | `string`              | Endpoint para obtener datos del usuario  | `"/api/oidc/me"`              |
-| `scopes`              | `string[]`            | Permisos OAuth2                          | `["openid", "lk", "profile"]` |
-| `profile`             | `IProfileConfig`      | Ajustes del perfil de usuario            | Ver sección abajo             |
-| `loginButton`         | `ICustomMenuButton`   | Ajustes del botón de inicio de sesión    | Ver sección abajo             |
-| `menuButtons`         | `ICustomMenuButton[]` | Array de botones adicionales             | Ver sección abajo             |
-| `customStyles`        | `ICustomStyles`       | Estilos globales del widget              | Ver sección abajo             |
+| Parámetro             | Tipo                  | Descripción                                | Valor por defecto             |
+| --------------------- | --------------------- | ------------------------------------------ | ----------------------------- |
+| `issuer`              | `string`              | URL del servidor Trusted SSO               | `"https://id.kloud.one"`      |
+| `withOutHomePage`     | `boolean`             | Redirección automática a la autorización   | `false`                       |
+| `getTokenEndPoint`    | `string`              | Endpoint para obtener un token             | `"/api/oidc/token"`           |
+| `getUserInfoEndPoint` | `string`              | Endpoint para obtener datos del usuario    | `"/api/oidc/me"`              |
+| `scopes`              | `string[]`            | Permisos OAuth2                            | `["openid", "lk", "profile"]` |
+| `profile`             | `IProfileConfig`      | Ajustes del perfil de usuario              | Ver sección abajo             |
+| `loginButton`         | `ICustomMenuButton`   | Ajustes del botón de inicio de sesión      | Ver sección abajo             |
+| `menuButtons`         | `ICustomMenuButton[]` | Array de botones adicionales               | Ver sección abajo             |
+| `customStyles`        | `ICustomStyles`       | Estilos globales del widget                | Ver sección abajo             |
 
 ### Ejemplo de conexión básica
 
@@ -101,9 +101,9 @@ const newConfig: TrustedWidgetConfig = {
 
 El **Perfil de Usuario** es un componente que contiene el avatar y el nombre de usuario.
 
-| Parámetro    | Tipo               | Descripción                                      | Valor por defecto     |
-| ------------ | ------------------ | ------------------------------------------------ | --------------------- |
-| `isHideText` | `boolean`          | Ocultar la visualización del nombre de usuario   | `false`               |
+| Parámetro    | Tipo               | Descripción                                      | Valor por defecto |
+| ------------ | ------------------ | ------------------------------------------------ | ----------------- |
+| `isHideText` | `boolean`          | Ocultar la visualización del nombre de usuario   | `false`           |
 | `wrapper`    | `IComponentStyles` | Estilos del contenedor del perfil (solo colores) | Ver sección de estilo |
 | `button`     | `IComponentStyles` | Estilos del botón del avatar (solo colores)      | Ver sección de estilo |
 
@@ -131,12 +131,12 @@ El botón de inicio de sesión se muestra para usuarios no autorizados. Puede pe
 
 ### Parámetros del botón de inicio de sesión
 
-| Parámetro      | Tipo                           | Descripción                         | Valor por defecto     |
-| -------------- | ------------------------------ | ----------------------------------- | --------------------- |
-| `text`         | `string`                       | Texto del botón de inicio de sesión | `"Login"`             |
-| `type`         | `string`                       | Tipo de botón                       | `"login"`             |
-| `icon`         | `string \| React.ReactElement` | Enlace de imagen o elemento React   | `null`                |
-| `customStyles` | `IComponentStyles`             | Estilos individuales para el botón  | Ver sección de estilo |
+| Parámetro      | Tipo                           | Descripción                             | Valor por defecto |
+| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
+| `text`         | `string`                       | Texto del botón de inicio de sesión     | `"Login"`         |
+| `type`         | `string`                       | Tipo de botón                           | `"login"`         |
+| `icon`         | `string \| React.ReactElement` | Enlace de imagen o elemento React       | `null`            |
+| `customStyles` | `IComponentStyles`             | Estilos individuales para el botón      | Ver sección de estilo |
 
 ### Ejemplo de configuración
 
@@ -176,17 +176,17 @@ const config: TrustedWidgetConfig = {
 
 ### Parámetros requeridos
 
-| Parámetro | Tipo     | Descripción                  | Ejemplo              |
-| --------- | -------- | ---------------------------- | -------------------- |
-| `text`    | `string` | Nombre del botón mostrado    | `"TestService"`      |
-| `link`    | `string` | URL de la página a la que ir | `"https://test.com"` |
+| Parámetro | Tipo     | Descripción                     | Ejemplo              |
+| --------- | -------- | ------------------------------- | -------------------- |
+| `text`    | `string` | Nombre del botón mostrado       | `"TestService"`      |
+| `link`    | `string` | URL de la página a la que ir    | `"https://test.com"` |
 
 ### Parámetros opcionales
 
-| Parámetro      | Tipo                           | Descripción                        | Valor por defecto     |
-| -------------- | ------------------------------ | ---------------------------------- | --------------------- |
-| `icon`         | `string \| React.ReactElement` | Enlace de imagen o elemento React  | `null`                |
-| `customStyles` | `IComponentStyles`             | Estilos individuales para el botón | Ver sección de estilo |
+| Parámetro      | Tipo                           | Descripción                             | Valor por defecto |
+| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
+| `icon`         | `string \| React.ReactElement` | Enlace de imagen o elemento React       | `null`            |
+| `customStyles` | `IComponentStyles`             | Estilos individuales para el botón      | Ver sección de estilo |
 
 ### Ejemplo de configuración
 
@@ -233,30 +233,30 @@ customStyles: {
 
 #### Estilos globales
 
-| Parámetro             | Tipo               | Descripción                               | Ejemplo   |
-| --------------------- | ------------------ | ----------------------------------------- | --------- |
-| `global.borderRadius` | `string`           | Radio de esquina para todos los elementos | `"12px"`  |
-| `global.color`        | `IComponentStyles` | Colores globales                          | Ver abajo |
+| Parámetro             | Tipo               | Descripción                         | Ejemplo  |
+| --------------------- | ------------------ | ----------------------------------- | -------- |
+| `global.borderRadius` | `string`           | Radio de esquina para todos los elementos | `"12px"` |
+| `global.color`        | `IComponentStyles` | Colores globales                    | Ver abajo|
 
 #### Estilos de componentes
 
-| Parámetro                    | Tipo               | Descripción                       | Propósito                   |
-| ---------------------------- | ------------------ | --------------------------------- | --------------------------- |
-| `components.primaryButton`   | `IComponentStyles` | Estilo de botón primario          | Botón "Login", "Profile"    |
-| `components.secondaryButton` | `IComponentStyles` | Estilo de botón secundario        | Botón "Logout"              |
+| Parámetro                    | Tipo               | Descripción                 | Propósito                   |
+| ---------------------------- | ------------------ | --------------------------- | --------------------------- |
+| `components.primaryButton`   | `IComponentStyles` | Estilo de botón primario    | Botón "Login", "Profile"    |
+| `components.secondaryButton` | `IComponentStyles` | Estilo de botón secundario  | Botón "Logout"              |
 | `components.accountButton`   | `IComponentStyles` | Estilo de botón de menú de cuenta | Botones en menú desplegable |
 
 #### Parámetros de estilo de componente IComponentStyles
 
-| Parámetro          | Tipo                 | Descripción                       | Ejemplo      |
-| ------------------ | -------------------- | --------------------------------- | ------------ |
-| `color.text`       | `string`             | Color de texto e icono (HEX)      | `"#ffffff"`  |
-| `color.background` | `string`             | Color de fondo (HEX)              | `"#1976d2"`  |
-| `color.hover`      | `string`             | Color de fondo al pasar (HEX)     | `"#1565c0"`  |
-| `borderRadius`     | `string`             | Radio de esquina del elemento     | `"8px"`      |
-| `padding`          | `string`             | Relleno interno                   | `"8px 16px"` |
+| Parámetro          | Tipo                 | Descripción                    | Ejemplo      |
+| ------------------ | -------------------- | ------------------------------ | ------------ |
+| `color.text`       | `string`             | Color de texto e icono (HEX)   | `"#ffffff"`  |
+| `color.background` | `string`             | Color de fondo (HEX)           | `"#1976d2"`  |
+| `color.hover`      | `string`             | Color de fondo al pasar (HEX)  | `"#1565c0"`  |
+| `borderRadius`     | `string`             | Radio de esquina del elemento  | `"8px"`      |
+| `padding`          | `string`             | Relleno interno                | `"8px 16px"` |
 | `position`         | `"left" \| "center"` | Alineación del contenido en botón | `"center"`   |
-| `isHideIcon`       | `boolean`            | Ocultar icono en botón            | `false`      |
+| `isHideIcon`       | `boolean`            | Ocultar icono en botón         | `false`      |
 
 #### Herencia de estilos
 
@@ -359,6 +359,7 @@ const config: TrustedWidgetConfig = {
   },
 };
 ```
+
 
 #### Ejemplo de configuración completa con estilos globales y menú
 
@@ -498,23 +499,23 @@ const config: TrustedWidgetConfig = {
 
 ### Principios de estilo del Mini-widget
 
-| Principio                                       | Qué significa                                                                                       | Cómo aplicarlo                                                                                                                                                                                                               |
-| :---------------------------------------------- | :-------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Gestión Centralizada**                        | Todos los ajustes de apariencia se definen mediante tres objetos de configuración clave.            | Configure el aspecto general en `customStyles`, el perfil en `profile` y el botón de inicio de sesión en `loginButton`.                                                                                                      |
-| **Configuración Flexible del Perfil**           | La apariencia del bloque con el nombre y avatar del usuario autorizado se configura por separado.   | Use `profile.wrapper` para el fondo y `profile.button` para el botón del avatar. Tenga en cuenta que aquí solo funcionan los ajustes de color.                                                                               |
-| **Configuración del Botón de Inicio de Sesión** | Los estilos para el botón que ven los usuarios no autorizados se configuran de forma independiente. | Defina el texto, el icono y los estilos en el objeto `loginButton` y su propiedad `customStyles`.                                                                                                                            |
-| **Estructura de Color**                         | El esquema de color para cualquier elemento se describe de manera uniforme.                         | Use siempre un objeto `color` anidado con los campos `text`, `background` y `hover` (ej. `color: {text: "#fff", background: "#1976d2"}`).                                                                                    |
-| **Gestión de Visualización**                    | Las etiquetas de texto o los iconos se pueden ocultar fácilmente.                                   | Use los indicadores `isHideText` (ocultar texto) e `isHideIcon` (ocultar icono) en los estilos de los componentes.                                                                                                           |
-| **Alineación Flexible**                         | El contenido dentro de los botones se puede alinear a la izquierda o al centro.                     | Establezca la propiedad `position: "left"` o `position: "center"` en los estilos del botón deseado.                                                                                                                          |
-| **Herencia Inteligente**                        | El sistema llena los vacíos de configuración utilizando valores lógicos por defecto.                | - Para `secondaryButton`: si no se establecen estilos, hereda de `primaryButton` con transparencia añadida.<br>- Para `hover`: si no se especifica el color, se aplica `filter: brightness(90%)` al fondo al pasar el ratón. |
-| **Sistema de Respaldo (Fallback)**              | Los botones del menú desplegable utilizan estilos generales si no se establecen los individuales.   | Si un botón en `menuButtons` carece de su propio `customStyles`, se aplican automáticamente los estilos de `accountButton`.                                                                                                  |
-| **Radio de Borde Global**                       | Se puede establecer un único valor de radio de esquina para todos los elementos del widget.         | Especifique `customStyles.global.borderRadius` (ej. `"8px"`), y afectará a los botones y ventanas modales.                                                                                                                   |
-| **Personalización Individual**                  | Cualquier botón del menú puede tener un estilo completamente único.                                 | Añada un objeto `customStyles` para un elemento específico en el array `menuButtons`.                                                                                                                                        |
+| Principio | Qué significa | Cómo aplicarlo |
+| :--- | :--- | :--- |
+| **Gestión Centralizada** | Todos los ajustes de apariencia se definen mediante tres objetos de configuración clave. | Configure el aspecto general en `customStyles`, el perfil en `profile` y el botón de inicio de sesión en `loginButton`. |
+| **Configuración Flexible del Perfil** | La apariencia del bloque con el nombre y avatar del usuario autorizado se configura por separado. | Use `profile.wrapper` para el fondo y `profile.button` para el botón del avatar. Tenga en cuenta que aquí solo funcionan los ajustes de color. |
+| **Configuración del Botón de Inicio de Sesión** | Los estilos para el botón que ven los usuarios no autorizados se configuran de forma independiente. | Defina el texto, el icono y los estilos en el objeto `loginButton` y su propiedad `customStyles`. |
+| **Estructura de Color** | El esquema de color para cualquier elemento se describe de manera uniforme. | Use siempre un objeto `color` anidado con los campos `text`, `background` y `hover` (ej. `color: {text: "#fff", background: "#1976d2"}`). |
+| **Gestión de Visualización** | Las etiquetas de texto o los iconos se pueden ocultar fácilmente. | Use los indicadores `isHideText` (ocultar texto) e `isHideIcon` (ocultar icono) en los estilos de los componentes. |
+| **Alineación Flexible** | El contenido dentro de los botones se puede alinear a la izquierda o al centro. | Establezca la propiedad `position: "left"` o `position: "center"` en los estilos del botón deseado. |
+| **Herencia Inteligente** | El sistema llena los vacíos de configuración utilizando valores lógicos por defecto. | - Para `secondaryButton`: si no se establecen estilos, hereda de `primaryButton` con transparencia añadida.<br>- Para `hover`: si no se especifica el color, se aplica `filter: brightness(90%)` al fondo al pasar el ratón. |
+| **Sistema de Respaldo (Fallback)** | Los botones del menú desplegable utilizan estilos generales si no se establecen los individuales. | Si un botón en `menuButtons` carece de su propio `customStyles`, se aplican automáticamente los estilos de `accountButton`. |
+| **Radio de Borde Global** | Se puede establecer un único valor de radio de esquina para todos los elementos del widget. | Especifique `customStyles.global.borderRadius` (ej. `"8px"`), y afectará a los botones y ventanas modales. |
+| **Personalización Individual** | Cualquier botón del menú puede tener un estilo completamente único. | Añada un objeto `customStyles` para un elemento específico en el array `menuButtons`. |
 
 ---
 
 ## Vea también { #see-also }
 
 - [Gestión de Aplicaciones](./docs-10-common-app-settings.md) — guía para crear, configurar y gestionar aplicaciones OAuth 2.0 y OpenID Connect (OIDC).
-- [Gestión de Organizaciones](./docs-11-common-org-settings.md) — guía para trabajar con organizaciones en **Encvoy ID**.
+- [Gestión de Organizaciones](./docs-11-common-org-settings.md) — guía para trabajar con organizaciones en **{{projectName}}**.
 - [Gestión del Perfil Personal y Permisos de Aplicaciones](./docs-12-common-personal-profile.md) — guía para gestionar su perfil personal.

@@ -1,14 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import { FC, FocusEvent } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { InputField } from "src/shared/ui/components/InputBlock";
-import { tabs } from "src/shared/utils/enums";
+import { ArrayTextFields } from "src/features/adminPortal/settings/components/SettingsArrayFields";
 import {
   IClientFull,
   useCreateClientMutation,
@@ -18,16 +19,22 @@ import {
   useGetCatalogEnabledQuery,
   useGetClientTypesQuery,
 } from "src/shared/api/settings";
-import * as yup from "yup";
+import { InputField } from "@encvoy-id/components";
+import { MultiLanguageModalInputField } from "src/shared/ui/components/MultiLanguageModalInputField";
+import { SurfaceBlock } from "@encvoy-id/components";
+import { tabs } from "src/shared/utils/enums";
 import { findDuplicateIndex, isUrl } from "src/shared/utils/helpers";
+import {
+  buildLocalizedTextSchema,
+  DEFAULT_SYSTEM_LANGUAGE,
+  getLocalizedTextValue,
+} from "src/shared/utils/locales";
+import * as yup from "yup";
 import { RootState } from "../../../../app/store/reducer";
-import { ArrayTextFields } from "src/features/adminPortal/settings/components/SettingsArrayFields";
-import { ActionButtons } from "../../../../shared/ui/components/ActionButtons";
-import { SwitchBlock } from "../../../../shared/ui/components/SwitchBlock";
+import { ActionButtons } from "@encvoy-id/components";
+import { SwitchBlock } from "@encvoy-id/components";
 import { UploadAndDisplayImage } from "../../../../shared/ui/UploadAndDisplayImage";
 import styles from "./CreateClient.module.css";
-import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
 
 const baseUriSchema = (translate: any) =>
   yup
@@ -42,22 +49,6 @@ export const redirectUriSchema = (translate: any) =>
   baseUriSchema(translate).required(translate("errors.requiredField"));
 export const UriSchema = (translate: any) => baseUriSchema(translate);
 
-export const requestUriSchema = (translate: any) =>
-  yup.object({
-    value: yup
-      .string()
-      .required(translate("errors.requiredField"))
-      .max(2000, translate("errors.valueMaxLength", { maxLength: 2000 }))
-      .test(
-        "is-url",
-        translate("errors.invalidUrlFormat"),
-        (value?: string) => {
-          if (!value) return true;
-          return isUrl(value);
-        }
-      ),
-  });
-
 interface ICreateClientProps {
   startRoutePath: string;
 }
@@ -69,7 +60,7 @@ const mapStateToProps = (state: RootState) => ({
 const CreateClientComponent: FC<ICreateClientProps> = ({ startRoutePath }) => {
   const { appId = "" } = useParams<{ appId: string }>();
   const navigate = useNavigate();
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const [createClient] = useCreateClientMutation();
   const [updateAvatar] = useUpdateAvatarClientMutation();
   const { data: types = [] } = useGetClientTypesQuery();
@@ -77,10 +68,15 @@ const CreateClientComponent: FC<ICreateClientProps> = ({ startRoutePath }) => {
 
   const schema = yup
     .object({
-      name: yup
-        .string()
-        .max(50, translate("errors.valueMaxLength", { maxLength: 50 }))
-        .required(translate("errors.requiredField")),
+      name: buildLocalizedTextSchema({
+        translate,
+        maxLength: 50,
+      }),
+      catalog_name: buildLocalizedTextSchema({
+        translate,
+        required: false,
+        maxLength: 50,
+      }),
       description: yup
         .string()
         .max(255, translate("errors.valueMaxLength", { maxLength: 255 }))
@@ -106,7 +102,12 @@ const CreateClientComponent: FC<ICreateClientProps> = ({ startRoutePath }) => {
   const methods = useForm<IClientFull>({
     resolver: yupResolver(schema) as any,
     defaultValues: {
-      name: "",
+      name: {
+        [DEFAULT_SYSTEM_LANGUAGE]: "",
+      },
+      catalog_name: {
+        [DEFAULT_SYSTEM_LANGUAGE]: "",
+      },
       avatar: null,
       description: "",
       domain: "",
@@ -141,6 +142,7 @@ const CreateClientComponent: FC<ICreateClientProps> = ({ startRoutePath }) => {
 
     try {
       const { avatar, ...body } = data;
+      body.parent_id = appId;
       const res = await createClient(body).unwrap();
       if (avatar || avatar === null) {
         await updateAvatar({
@@ -157,134 +159,154 @@ const CreateClientComponent: FC<ICreateClientProps> = ({ startRoutePath }) => {
   return (
     <div className="page-container">
       <div className="content">
+        <Typography className="title-medium" sx={{ margin: "32px 0" }}>
+          {translate("pages.createClient.title")}
+        </Typography>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
-            <div className={styles.content}>
-              <Typography className={clsx("title-medium", styles.title)}>
-                {translate("pages.createClient.title")}
-              </Typography>
-              <Typography className={clsx("text-17", styles.subtitle)}>
-                {translate("pages.createClient.sections.main")}
-              </Typography>
-              <InputField
-                name="name"
-                label={translate("pages.createClient.fields.name.label")}
-                description={translate(
-                  "pages.createClient.fields.name.description"
-                )}
-                required
-              />
-              <InputField
-                name="description"
-                label={translate("pages.createClient.fields.description.label")}
-                multiline
-                watchLength
-              />
-              <UploadAndDisplayImage
-                title={translate("pages.createClient.fields.avatar.label")}
-                defaultIcon={LayersOutlinedIcon}
-              />
-              {catalogEnabled && (
-                <>
-                  <Typography className={clsx("text-14", styles.inputTitle)}>
-                    {translate("pages.createClient.fields.type")}
-                  </Typography>
-                  <Select
-                    {...register("type_id", {
-                      required: true,
-                      onBlur: (event: FocusEvent<HTMLInputElement>) => {
-                        setValue("type_id", event.target.value);
-                      },
-                      onChange: () => {
-                        if (errors.type_id) clearErrors("type_id");
-                      },
-                    })}
-                    defaultValue={"empty"}
-                    className={styles.select}
-                    data-id="group-select"
-                  >
-                    <MenuItem
-                      className="custom-select"
-                      key={"empty"}
-                      value={"empty"}
-                      data-id={`group-item-empty`}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SurfaceBlock className={styles.container}>
+              <div className={styles.content}>
+                <Typography className={clsx("text-17", styles.subtitle)}>
+                  {translate("pages.createClient.sections.main")}
+                </Typography>
+                <MultiLanguageModalInputField
+                  name="name"
+                  label={translate("pages.createClient.fields.name.label")}
+                  description={translate(
+                    "pages.createClient.fields.name.description"
+                  )}
+                  required
+                />
+                <InputField
+                  name="description"
+                  label={translate(
+                    "pages.createClient.fields.description.label"
+                  )}
+                  multiline
+                  watchLength
+                  characterCountLabel={translate("helperText.characterCount")}
+                  maxCharacterCount={255}
+                />
+                <UploadAndDisplayImage
+                  title={translate("pages.createClient.fields.avatar.label")}
+                  defaultIcon={LayersOutlinedIcon}
+                />
+                {catalogEnabled && (
+                  <>
+                    <MultiLanguageModalInputField
+                      name="catalog_name"
+                      label={translate("pages.settings.labels.catalogName")}
+                      description={translate(
+                        "pages.settings.descriptions.catalogName"
+                      )}
+                    />
+                    <Typography className={clsx("text-14", styles.inputTitle)}>
+                      {translate("pages.createClient.fields.type")}
+                    </Typography>
+                    <Select
+                      {...register("type_id", {
+                        required: true,
+                        onBlur: (event: FocusEvent<HTMLInputElement>) => {
+                          setValue("type_id", event.target.value);
+                        },
+                        onChange: () => {
+                          if (errors.type_id) clearErrors("type_id");
+                        },
+                      })}
+                      defaultValue={"empty"}
+                      className={styles.select}
+                      data-id="group-select"
                     >
-                      {translate("pages.createClient.fields.typeOther")}
-                    </MenuItem>
-                    {types.map((item, index) => (
                       <MenuItem
                         className="custom-select"
-                        key={index}
-                        value={item.id}
-                        data-id={`group-item-${item.id}`}
+                        key={"empty"}
+                        value={"empty"}
+                        data-id={`group-item-empty`}
                       >
-                        {item.name}
+                        {translate("pages.createClient.fields.typeOther")}
                       </MenuItem>
-                    ))}
-                  </Select>
-                  <SwitchBlock
-                    name="catalog"
-                    label={translate("pages.createClient.fields.catalog")}
-                    defaultValue={false}
-                  />
-                </>
-              )}
-              <SwitchBlock
-                name="authorize_only_admins"
-                label={translate(
-                  "pages.createClient.fields.authorize_only_admins"
+                      {types.map((item, index) => (
+                        <MenuItem
+                          className="custom-select"
+                          key={index}
+                          value={item.id}
+                          data-id={`group-item-${item.id}`}
+                        >
+                          {getLocalizedTextValue(item.name, i18n.language)}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <SwitchBlock
+                      name="catalog"
+                      label={translate("pages.createClient.fields.catalog")}
+                      defaultValue={false}
+                    />
+                  </>
                 )}
-                defaultValue={false}
-              />
-            </div>
+                <SwitchBlock
+                  name="authorize_only_admins"
+                  label={translate(
+                    "pages.createClient.fields.authorize_only_admins"
+                  )}
+                  defaultValue={false}
+                />
+              </div>
 
-            <div className={styles.divider} />
+              <div className={styles.divider} />
 
-            <div className={styles.content}>
-              <Typography className={clsx("text-17", styles.subtitle)}>
-                {translate("pages.createClient.sections.params")}
-              </Typography>
+              <div className={styles.content}>
+                <Typography className={clsx("text-17", styles.subtitle)}>
+                  {translate("pages.createClient.sections.params")}
+                </Typography>
 
-              <InputField
-                name="domain"
-                label={translate("pages.createClient.fields.domain.label")}
-                description={translate(
-                  "pages.createClient.fields.domain.description"
-                )}
-                required
-              />
+                <InputField
+                  name="domain"
+                  label={translate("pages.createClient.fields.domain.label")}
+                  description={translate(
+                    "pages.createClient.fields.domain.description"
+                  )}
+                  required
+                />
 
-              <ArrayTextFields
-                name="redirect_uris"
-                title={translate("pages.createClient.fields.redirectUri.label")}
-                description={translate(
-                  "pages.createClient.fields.redirectUri.description"
-                )}
-                required
-              />
+                <ArrayTextFields
+                  name="redirect_uris"
+                  title={translate(
+                    "pages.createClient.fields.redirectUri.label"
+                  )}
+                  description={translate(
+                    "pages.createClient.fields.redirectUri.description"
+                  )}
+                  required
+                />
 
-              <ArrayTextFields
-                name="post_logout_redirect_uris"
-                title={translate("pages.createClient.fields.postLogout.label")}
-                description={translate(
-                  "pages.createClient.fields.postLogout.description"
-                )}
-                required
-              />
+                <ArrayTextFields
+                  name="post_logout_redirect_uris"
+                  title={translate(
+                    "pages.createClient.fields.postLogout.label"
+                  )}
+                  description={translate(
+                    "pages.createClient.fields.postLogout.description"
+                  )}
+                  required
+                />
 
-              <ArrayTextFields
-                name="request_uris"
-                title={translate("pages.createClient.fields.requestUri.label")}
-                description={translate(
-                  "pages.createClient.fields.requestUri.description"
-                )}
-              />
+                <ArrayTextFields
+                  name="request_uris"
+                  title={translate(
+                    "pages.createClient.fields.requestUri.label"
+                  )}
+                  description={translate(
+                    "pages.createClient.fields.requestUri.description"
+                  )}
+                />
 
-              <ActionButtons
-                onCancel={() => navigate(-1)}
-                submitText={translate("actionButtons.create")}
-              />
-            </div>
+                <ActionButtons
+                  cancelText={translate("actionButtons.cancel")}
+                  onCancel={() => navigate(-1)}
+                  submitText={translate("actionButtons.create")}
+                />
+              </div>
+            </SurfaceBlock>
           </form>
           <div className="zeroBlock"></div>
         </FormProvider>

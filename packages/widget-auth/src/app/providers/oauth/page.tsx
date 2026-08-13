@@ -2,7 +2,7 @@
 
 import { Container } from '@/components/container/Container';
 import { Section } from '@/components/section/Section';
-import { CLIENT_ID, DOMAIN, INTERACTION_ID, PROVIDERS } from '@/lib/constant';
+import { buildPublicUrl, CLIENT_ID, INTERACTION_ID, PROVIDERS } from '@/lib/constant';
 import { Cookie } from '@/lib/cookie';
 import { useHashParams } from '@/lib/hooks';
 import { Typography } from '@mui/material';
@@ -36,7 +36,7 @@ export const authRequest = async (provider_id: number, opts?: { pkce?: boolean }
   const antiForgeryStateToken = randomString(30);
   window.localStorage.setItem('antiForgeryStateToken', antiForgeryStateToken);
 
-  const url = new URL('/api/v1/auth/oauth', DOMAIN);
+  const url = new URL(buildPublicUrl('/api/v1/auth/oauth'), window.location.origin);
   const params: Record<string, string> = {
     provider_id: provider_id.toString(),
     state: antiForgeryStateToken,
@@ -51,10 +51,14 @@ export const authRequest = async (provider_id: number, opts?: { pkce?: boolean }
       params.code_verifier = codeVerifier;
       params.code_challenge = await pkceChallengeFromVerifier(codeVerifier);
       params.code_challenge_method = 'S256';
-      // Put PKCE parameters in cookie
-      document.cookie = `pkce_code_verifier_${provider_id}=${codeVerifier}; path=/; max-age=300`;
-      document.cookie = `pkce_code_challenge_${provider_id}=${params.code_challenge}; path=/; max-age=300`;
-      document.cookie = `pkce_code_challenge_method_${provider_id}=S256; path=/; max-age=300`;
+      const cookieTtlDays = 1 / 288;
+      Cookie.create(`pkce_code_verifier_${provider_id}`, codeVerifier, cookieTtlDays);
+      Cookie.create(
+        `pkce_code_challenge_${provider_id}`,
+        params.code_challenge,
+        cookieTtlDays,
+      );
+      Cookie.create(`pkce_code_challenge_method_${provider_id}`, 'S256', cookieTtlDays);
     }
   }
 

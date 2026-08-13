@@ -30,8 +30,8 @@ ROLES.set(UserRoles.EDITOR, [
   InvitationActions.confirmUser,
 ]);
 
-ROLES.set(UserRoles.ADMIN, [
-  ...(ROLES.get(UserRoles.ADMIN) || []),
+ROLES.set(UserRoles.MANAGER, [
+  ...(ROLES.get(UserRoles.MANAGER) || []),
   InvitationActions.getAllByUser,
   InvitationActions.deleteUser,
   InvitationActions.confirmUser,

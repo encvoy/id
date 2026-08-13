@@ -1,41 +1,31 @@
+import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { ERoles, tabs } from "src/shared/utils/enums";
-import { TAppSlice } from "src/shared/lib/appSlice";
+import { RootState } from "src/app/store/store";
+import { AdditionalModulesSettings } from "src/features/adminPortal/settings/components/AdditionalModulesSettings";
+import { SentryPanel } from "src/features/adminPortal/settings/sentryPanel/SentryPanel";
+import { WinstonPanel } from "src/features/adminPortal/settings/winstonPanel/WinstonPanel";
 import { useGetClientInfoQuery } from "src/shared/api/clients";
 import {
   EGetProviderAction,
-  IEmailParams,
-  IPhoneParams,
-  IProvider,
-  ProviderType,
   useGetProvidersQuery,
 } from "src/shared/api/provider";
-import {
-  IProfileField,
-  useGetProfileFieldsQuery,
-} from "src/shared/api/settings";
-import { RootState } from "src/app/store/store";
+import { TAppSlice } from "src/shared/slices/appSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
+import { AccordionBlock } from "@encvoy-id/components";
+import { CustomIcon } from "@encvoy-id/components";
+import { ERoles, tabs } from "src/shared/utils/enums";
 import { AccessSettings } from "../components/AccessSettings";
+import AdditionalParamsSettings from "../components/AdditionalParamsSettings";
 import LocaleSettings from "../components/LocaleSettings";
-import { SettingsHeader } from "../components/SettingsHeader";
-import { AccordionBlock } from "src/shared/ui/components/AccordionBlock";
-import { SettingsParams } from "../components/SettingsParams";
-import { ListEmailTemplatesPanel } from "src/features/adminPortal/settings/editEmailTemplatesPanel/ListEmailTemplatesPanel";
+import { LogRetentionSettings } from "../components/LogRetentionSettings";
 import { TypesListPanel } from "../editTypesPanel/TypesListPanel";
-import { EditProfileFieldPanel } from "../components/EditProfileFieldPanel";
-import { ProfileField } from "../components/ProfileField";
-import { ListRuleValidationsPanel } from "src/features/adminPortal/settings/ruleValidationsPanel/ListRuleValidationsPanel";
-import { SentryPanel } from "src/features/adminPortal/settings/sentryPanel/SentryPanel";
 import styles from "./Settings.module.css";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
-import { TUserSlice } from "src/shared/lib/userSlice";
-import Typography from "@mui/material/Typography";
 
 const mapStateToProps = (state: RootState) => ({
   startRoutePath: state.app.startRoutePath,
@@ -53,9 +43,18 @@ export const SystemSettingsComponent: FC<ISystemSettingsProps> = ({
 }) => {
   const navigate = useNavigate();
   const { appId = "" } = useParams<{ appId: string }>();
-  const { data: client, isLoading } = useGetClientInfoQuery({ id: appId });
   const { t: translate } = useTranslation();
-  const { data: profileFields } = useGetProfileFieldsQuery();
+  const {
+    data: client,
+    isLoading,
+    isFetching,
+    isError,
+  } = useGetClientInfoQuery(
+    { id: appId },
+    {
+      skip: !appId,
+    }
+  );
   const { data: providers = [] } = useGetProvidersQuery(
     {
       client_id: client?.client_id || "",
@@ -66,62 +65,16 @@ export const SystemSettingsComponent: FC<ISystemSettingsProps> = ({
     { skip: !client?.client_id }
   );
 
-  const [isProfileFieldPanelOpen, setIsProfileFieldPanelOpen] = useState(false);
-  const [isEmailTemplatesModalOpen, setEmailTemplatesModalOpen] =
-    useState(false);
   const [isClientTypesPanelOpen, setClientTypesPanelOpen] = useState(false);
-  const [savePasswordPolicyModalOpen, setSavePasswordPolicyModalOpen] =
-    useState(false);
-  const [phoneProvider, setPhoneProvider] = useState<
-    IProvider<IPhoneParams> | undefined
-  >(undefined);
-  const [emailProvider, setEmailProvider] = useState<
-    IProvider<IEmailParams> | undefined
-  >(undefined);
-  const [selectedProfileField, setSelectedProfileField] = useState<
-    IProfileField | undefined
-  >(undefined);
   const [isSentryPanelOpen, setIsSentryPanelOpen] = useState(false);
-  const passwordProfileField = profileFields?.find(
-    (f) => f.field === "password"
-  );
-  const generalProfileFields = profileFields?.filter(
-    (item) => item.type === "general" && item.field !== "password"
-  );
-  const customProfileFields = profileFields?.filter(
-    (item) => item.type === "custom"
-  );
+  const [isWinstonPanelOpen, setIsWinstonPanelOpen] = useState(false);
 
-  useEffect(() => {
-    if (providers.length) {
-      if (selectedProfileField?.field === "phone_number") {
-        const phoneProvider = providers.find(
-          (provider) => provider.type === ProviderType.PHONE
-        );
-
-        if (phoneProvider && phoneProvider.type === ProviderType.PHONE) {
-          setPhoneProvider(phoneProvider as IProvider<IPhoneParams>);
-        } else {
-          setPhoneProvider(undefined);
-        }
-      }
-
-      if (selectedProfileField?.field === "email") {
-        const emailProvider = providers.find(
-          (provider) => provider.type === ProviderType.EMAIL
-        );
-
-        if (emailProvider && emailProvider.type === ProviderType.EMAIL) {
-          setEmailProvider(emailProvider as IProvider<IEmailParams>);
-        } else {
-          setEmailProvider(undefined);
-        }
-      }
-    }
-  }, [selectedProfileField, providers]);
-
-  if (isLoading || client === undefined) {
+  if (!client && (isLoading || isFetching)) {
     return <Typography>{translate("helperText.loading")}</Typography>;
+  }
+
+  if (!appId || isError || !client) {
+    return <Typography>{translate("pages.clientDetails.notFound")}</Typography>;
   }
 
   if (roleInApp !== ERoles.OWNER && roleInApp !== ERoles.EDITOR) {
@@ -155,104 +108,74 @@ export const SystemSettingsComponent: FC<ISystemSettingsProps> = ({
     );
   }
 
-  const listGeneralProfileFields = generalProfileFields?.map((item) => {
-    return (
-      <ProfileField
-        onClick={() => {
-          setIsProfileFieldPanelOpen(true);
-          setSelectedProfileField(item);
-        }}
-        key={item.field}
-        profile={item}
-      />
-    );
-  });
-
-  const listCustomProfileFields = customProfileFields?.map((item) => {
-    return (
-      <ProfileField
-        onClick={() => {
-          setIsProfileFieldPanelOpen(true);
-          setSelectedProfileField(item);
-        }}
-        key={item.field}
-        profile={item}
-        deleted={true}
-      />
-    );
-  });
-
   return (
     <>
       <div className="page-container">
         <div className={clsx("content", styles.content)}>
-          <SettingsHeader client={client} />
-
-          <SettingsParams client={client} />
-
           <AccordionBlock
-            title={translate("pages.settings.sections.widgetAppearance")}
-            onClick={() =>
-              navigate(`/${startRoutePath}/${appId}/${tabs.widget}`)
-            }
-            mode="compact"
-          />
-
-          <AccordionBlock
+            dataTestIdCompact="btn-settings-profile-fields"
             title={translate("pages.settings.sections.profileFields")}
+            onClick={() =>
+              navigate(
+                `/${startRoutePath}/${appId}/${tabs.systemProfileSettings}`
+              )
+            }
+            configureText={translate("actionButtons.configure")}
+            mode="compact"
+          />
+
+          <AccordionBlock
+            dataTestIdCompact="btn-settings-application-types"
+            title={translate("pages.settings.sections.additionalParams")}
           >
-            <Typography className="text-14" color="text.secondary">
-              {translate("pages.settings.profileFieldsSubtitle")}
-            </Typography>
-            <Typography className={clsx(styles.subTitleWrapper, "text-17")}>
-              {translate("pages.settings.passwordPolicy")}
-            </Typography>
-            {passwordProfileField && (
-              <ProfileField
-                onClick={() => {
-                  setIsProfileFieldPanelOpen(true);
-                  setSelectedProfileField(passwordProfileField);
-                }}
-                key={"password"}
-                profile={passwordProfileField}
-              />
-            )}
-
-            <Typography className={clsx(styles.subTitleWrapper, "text-17")}>
-              {translate("pages.settings.sections.generalInfo")}
-            </Typography>
-            {listGeneralProfileFields}
-
-            <div className={styles.subTitleWrapper}>
-              <Typography className="text-17">
-                {translate("pages.settings.sections.additionalInfo")}
+            <div className={styles.fieldWrapper}>
+              <div className={styles.row}>
+                <Typography className="text-14">
+                  {translate("pages.settings.sections.appTypes")}
+                </Typography>
+                <Button
+                  data-test-id="btn-settings-app-types-settings"
+                  variant="text"
+                  onClick={() => setClientTypesPanelOpen(true)}
+                >
+                  {translate("actionButtons.configure")}
+                </Button>
+              </div>
+              <Typography className="text-14" color="text.secondary">
+                {translate("panel.types.description")}
               </Typography>
-              <Button
-                variant="text"
-                onClick={() => setIsProfileFieldPanelOpen(true)}
-              >
-                {translate("actionButtons.add")}
-              </Button>
             </div>
-            {listCustomProfileFields}
+
+            <div
+              className={styles.fieldWrapper}
+              data-test-id="ddl-settings-localization"
+            >
+              <LocaleSettings />
+            </div>
+
+            <div className={styles.fieldWrapper}>
+              <AdditionalParamsSettings />
+            </div>
           </AccordionBlock>
 
           <AccordionBlock
-            title={translate("pages.settings.sections.emailTemplates")}
-            onClick={() => setEmailTemplatesModalOpen(true)}
-            mode="compact"
-          />
-          <AccordionBlock
-            title={translate("pages.settings.sections.appTypes")}
-            onClick={() => setClientTypesPanelOpen(true)}
-            mode="compact"
-          />
-
-          <AccordionBlock
-            title={translate("pages.settings.sections.localization")}
+            dataTestIdCompact="btn-settings-additional-modules"
+            title={translate("pages.settings.sections.additionalModules")}
           >
-            <LocaleSettings />
+            <div className={styles.fieldWrapper}>
+              <AdditionalModulesSettings />
+            </div>
           </AccordionBlock>
+
+          <AccordionBlock
+            dataTestId="ddl-settings-access-settings"
+            title={translate("pages.settings.sections.styling")}
+            onClick={() =>
+              navigate(`/${startRoutePath}/${appId}/${tabs.styling}`)
+            }
+            configureText={translate("actionButtons.configure")}
+            mode="compact"
+          />
 
           <AccordionBlock
             title={translate("pages.settings.sections.accessSettings")}
@@ -261,34 +184,57 @@ export const SystemSettingsComponent: FC<ISystemSettingsProps> = ({
           </AccordionBlock>
 
           <AccordionBlock
-            title={translate("pages.settings.sections.sentry")}
-            onClick={() => setIsSentryPanelOpen(true)}
-            mode="compact"
-          />
+            dataTestId="ddl-settings-logging"
+            title={translate("pages.settings.sections.logging")}
+          >
+            <div className={styles.fieldWrapper}>
+              <div className={styles.row}>
+                <Typography className="text-14">
+                  {translate("pages.settings.sections.sentry")}
+                </Typography>
+                <Button
+                  data-test-id="btn-settings-sentry"
+                  variant="text"
+                  onClick={() => setIsSentryPanelOpen(true)}
+                >
+                  {translate("actionButtons.configure")}
+                </Button>
+              </div>
+              <Typography className="text-14" color="text.secondary">
+                {translate("pages.settings.logging.sentryDescription")}
+              </Typography>
+            </div>
 
-          <ListEmailTemplatesPanel
-            onClose={() => setEmailTemplatesModalOpen(false)}
-            isOpen={isEmailTemplatesModalOpen}
-          />
+            <div className={styles.fieldWrapper}>
+              <div className={styles.row}>
+                <Typography className="text-14">
+                  {translate("pages.settings.sections.winston")}
+                </Typography>
+                <Button
+                  data-test-id="btn-settings-winston"
+                  variant="text"
+                  onClick={() => setIsWinstonPanelOpen(true)}
+                >
+                  {translate("actionButtons.configure")}
+                </Button>
+              </div>
+              <Typography className="text-14" color="text.secondary">
+                {translate("pages.settings.logging.winstonDescription")}
+              </Typography>
+            </div>
+
+            <div className={styles.fieldWrapper}>
+              <LogRetentionSettings />
+            </div>
+          </AccordionBlock>
+
           <TypesListPanel
             onClose={() => setClientTypesPanelOpen(false)}
             isOpen={isClientTypesPanelOpen}
           />
-          <EditProfileFieldPanel
-            onClose={() => {
-              setIsProfileFieldPanelOpen(false);
-              setSelectedProfileField(undefined);
-            }}
-            isOpen={isProfileFieldPanelOpen}
-            selectedProfile={selectedProfileField}
-            phoneProvider={phoneProvider}
-            emailProvider={emailProvider}
-          />
-          <ListRuleValidationsPanel
-            onClose={() => setSavePasswordPolicyModalOpen(false)}
-            fieldName={"password"}
-            isOpen={savePasswordPolicyModalOpen}
-            isNoBackdrop={false}
+          <WinstonPanel
+            isOpen={isWinstonPanelOpen}
+            onClose={() => setIsWinstonPanelOpen(false)}
           />
 
           <SentryPanel

@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import * as Sentry from '@sentry/nestjs';
 import { DOMAIN, NODE_ENV, VERSION } from 'src/constants';
 import { Ei18nCodes } from 'src/enums';
-import { app } from 'src/main';
 import { ErrorHandlingService } from 'src/middlewares/exceptionFilters/error.handling.service';
-import { SettingsService } from 'src/modules';
+import { SettingsService } from 'src/modules/settings/settings.service';
 import { SentryUpdateDto } from './sentry.dto';
 
 interface SentrySettingsConfig {
@@ -14,10 +14,21 @@ interface SentrySettingsConfig {
 }
 
 const SettingsSentryName = 'sentry';
+const DEFAULT_SENTRY_SETTINGS: SentrySettingsConfig = {
+  dsn: '',
+  user_id: '',
+  enabled: false,
+};
 
 @Injectable()
 export class SentryService {
-  constructor(private readonly errorHandlingService: ErrorHandlingService) {
+  private configSnapshot: SentrySettingsConfig = { ...DEFAULT_SENTRY_SETTINGS };
+  private runtimeSignature: string | null = null;
+
+  constructor(
+    private readonly errorHandlingService: ErrorHandlingService,
+    private readonly settingsService: SettingsService,
+  ) {
     this.errorHandlingService.onError(async (error, userId, request) => {
       try {
         await this.captureException(error, userId, request);
@@ -27,96 +38,117 @@ export class SentryService {
     });
   }
 
-  get settingsService() {
-    return app.get(SettingsService, { strict: false });
+  private normalizeConfig(
+    config?: Partial<SentrySettingsConfig> | null,
+  ): SentrySettingsConfig {
+    return {
+      ...DEFAULT_SENTRY_SETTINGS,
+      ...(config || {}),
+      enabled: Boolean(config?.enabled),
+    };
   }
 
-  /**
-   * A unique key issued for each project in Sentry
-   */
-  private dsn: string = null;
-  /**
-   * User ID for whose actions traces and errors should be sent
-   */
-  private user_id: string = null;
-  /**
-   * Sentry enable flag
-   */
-  public enabled = false;
+  private getConfigSignature(config: SentrySettingsConfig): string {
+    return JSON.stringify(config);
+  }
 
-  /**
-   * Cache sync flag
-   */
-  private syncCache = false;
+  public get enabled() {
+    return this.configSnapshot.enabled;
+  }
+
+  public get runtimeEnabled() {
+    return this.configSnapshot.enabled && Sentry.isEnabled();
+  }
+
+  private async loadConfig(forceRefresh = false): Promise<SentrySettingsConfig> {
+    const config = await this.settingsService.getSettingsByName<Partial<SentrySettingsConfig>>(
+      SettingsSentryName,
+      forceRefresh,
+    );
+    this.configSnapshot = this.normalizeConfig(config);
+    return this.configSnapshot;
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async syncRuntimeWithStoredConfig() {
+    try {
+      const config = await this.loadConfig();
+      await this.syncRuntimeWithConfig(config);
+    } catch (error) {
+      console.error('Failed to sync Sentry runtime config from Redis:', error);
+    }
+  }
+
+  private async syncRuntimeWithConfig(config: SentrySettingsConfig) {
+    const nextSignature = config.enabled ? this.getConfigSignature(config) : null;
+
+    if (!config.enabled) {
+      await this.turnOffSentry();
+      this.runtimeSignature = null;
+      return;
+    }
+
+    if (!config.dsn) {
+      throw new BadRequestException(Ei18nCodes.T3E0013);
+    }
+
+    if (this.runtimeSignature === nextSignature && Sentry.isEnabled()) {
+      return;
+    }
+
+    await this.turnOffSentry();
+    this.turnOnSentry(config);
+    this.runtimeSignature = nextSignature;
+  }
 
   /**
    * Updating Sentry settings
    */
   public async update(body: SentryUpdateDto) {
-    if (body.dsn || body.dsn === null) {
-      this.dsn = body.dsn;
-    }
+    const currentConfig = await this.get();
+    const nextConfig: SentrySettingsConfig = {
+      ...currentConfig,
+      ...(body.dsn !== undefined ? { dsn: body.dsn } : {}),
+      ...(body.user_id !== undefined ? { user_id: body.user_id } : {}),
+      ...(body.enabled !== undefined ? { enabled: body.enabled } : {}),
+    };
 
-    if (body.user_id || body.user_id === null) {
-      this.user_id = body.user_id;
-    }
-
-    this.turnOffSentry();
-
-    if (body.enabled === true) {
-      if (!this.dsn) {
-        throw new BadRequestException(Ei18nCodes.T3E0013);
-      }
-      await this.turnOnSentry();
+    if (nextConfig.enabled && !nextConfig.dsn) {
+      throw new BadRequestException(Ei18nCodes.T3E0013);
     }
 
     await this.settingsService.updateSettings({
       name: SettingsSentryName,
-      value: {
-        dsn: this.dsn,
-        user_id: this.user_id,
-        enabled: this.enabled,
-      },
+      value: nextConfig as any,
     });
+
+    this.configSnapshot = nextConfig;
+    await this.syncRuntimeWithConfig(nextConfig);
   }
 
   /**
    * Getting Sentry settings
    */
-  public async get() {
-    if (!this.syncCache) {
-      const config = await this.settingsService.getSettingsByName<SentrySettingsConfig>(
-        SettingsSentryName,
-      );
-      this.dsn = config.dsn;
-      this.user_id = config.user_id;
-      this.enabled = config.enabled;
-      this.syncCache = true;
-    }
-    return {
-      dsn: this.dsn,
-      user_id: this.user_id,
-      enabled: this.enabled,
-    };
+  public async get(forceRefresh = false) {
+    return { ...(await this.loadConfig(forceRefresh)) };
   }
 
-  private turnOffSentry() {
-    if (this.enabled) {
-      Sentry.close();
-      this.enabled = false;
+  private async turnOffSentry() {
+    if (Sentry.isEnabled()) {
+      await Sentry.close(2000);
     }
   }
 
   /**
    * Initializing Sentry with the configured settings
    */
-  public async turnOnSentry() {
-    if (!this.dsn) {
+  private turnOnSentry(config: SentrySettingsConfig) {
+    if (!config.dsn) {
       throw new BadRequestException(Ei18nCodes.T3E0013);
     }
 
     Sentry.init({
-      dsn: this.dsn,
+      dsn: config.dsn,
       tracesSampleRate: 1.0,
       includeLocalVariables: true,
       release: `v${VERSION}`,
@@ -124,8 +156,6 @@ export class SentryService {
     });
 
     Sentry.setTag('domain', DOMAIN || DOMAIN);
-
-    this.enabled = true;
   }
 
   /**
@@ -163,7 +193,10 @@ export class SentryService {
    * Sending an error to Sentry
    */
   public async captureException(exception: any, user_id: string, request?: any) {
-    if (!this.enabled) return;
+    const config = await this.loadConfig();
+    await this.syncRuntimeWithConfig(config);
+
+    if (!config.enabled || !Sentry.isEnabled()) return;
 
     Sentry.withScope((scope) => {
       if (request) {
@@ -185,7 +218,7 @@ export class SentryService {
         scope.setUser({ id: user_id });
       }
 
-      if (this.user_id && this.user_id !== user_id) return;
+      if (config.user_id && config.user_id !== user_id) return;
 
       Sentry.captureException(exception);
       console.info('Error sent to Sentry');

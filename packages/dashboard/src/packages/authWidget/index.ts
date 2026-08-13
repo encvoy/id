@@ -1,15 +1,13 @@
 import "./styles/index.css";
 
-export { Widget } from "./components/Widget";
-export { InfoWidget } from "./components/Widget";
+export { TrustedWidget, InfoWidget } from "./EmbeddedWidgets";
 export { AccountPopover } from "./components/AccountPopover";
 export { CustomButton } from "./components/CustomButton";
 export type {
-  WidgetConfig,
+  TrustedWidgetConfig,
   InfoWidgetConfig,
   ICustomStyles,
   IComponentStyles,
   IMenuButton,
   ICustomMenuButton,
 } from "./types";
-import "./i18n";

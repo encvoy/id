@@ -1,80 +1,111 @@
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import PersonIcon from "@mui/icons-material/Person";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import clsx from "clsx";
-import { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { connect, useDispatch } from "react-redux";
-import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
-import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
-import { ChangePasswordBlock } from "src/features/accountPortal/components/ChangePasswordBlock";
-import { IUserClient, useGetUserClientQuery } from "src/shared/api/clients";
-import { ProviderType } from "src/shared/api/provider";
+import PersonIcon from '@mui/icons-material/Person';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import clsx from 'clsx';
+import { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect, useDispatch } from 'react-redux';
+import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
+import { CustomIcon } from '@encvoy-id/components';
+import { SubmitModal } from '@encvoy-id/components';
+import { ChangePasswordBlock } from 'src/features/accountPortal/components/ChangePasswordBlock';
+import { AdditionalProfileFields } from 'src/features/accountPortal/components/AdditionalProfileFields';
+import { IUserClient, useGetUserClientQuery } from 'src/shared/api/clients';
+import { EProviderType } from 'src/shared/api/provider';
 import {
+  IExternalAccount,
   IUserProfile,
+  useConfirmUserContactMutation,
   useDeleteUsersMutation,
   useGetPrivateClaimsQuery,
   useGetPublicExternalAccountsQuery,
   useLazyDeleteAllSessionQuery,
-} from "src/shared/api/users";
-import {
-  EClaimPrivacy,
-  ERoles,
-  routes,
-  subTabs,
-  tabs,
-} from "src/shared/utils/enums";
-import {
-  exportToJson,
-  formatPhoneNumber,
-  getClaimPrivacy,
-  getImageURL,
-  isOwnerOrEditor,
-} from "src/shared/utils/helpers";
-import { TAppSlice } from "src/shared/lib/appSlice";
-import { setNoticeInfo } from "src/shared/lib/noticesSlice";
-import {
-  useGetProfileFieldsQuery,
-  useGetSettingsQuery,
-} from "src/shared/api/settings";
-import { RootState } from "src/app/store/store";
-import { TUserSlice } from "src/shared/lib/userSlice";
-import { ExternalAccount } from "../../../shared/ui/ExternalAccount";
-import { PublicStatusPopover } from "../../../shared/ui/PublicStatusPopover";
-import styles from "./UserProfile.module.css";
-import Link from "@mui/material/Link";
-import { AccordionBlock } from "src/shared/ui/components/AccordionBlock";
-import Typography from "@mui/material/Typography";
-import { componentBorderRadius } from "src/shared/theme/Theme";
-import { Box } from "@mui/material";
+  useUpdateUserMutation,
+} from 'src/shared/api/users';
+import { EClaimPrivacy, ERoles, routes, subTabs, tabs } from 'src/shared/utils/enums';
+import { exportToJson, formatPhoneNumber, getImageURL } from 'src/shared/utils/helpers';
+import { getLocalizedTextValue } from 'src/shared/utils/locales';
+import { TAppSlice } from 'src/shared/slices/appSlice';
+import { setNoticeError, setNoticeInfo } from 'src/shared/slices/noticesSlice';
+import { useGetProfileFieldsQuery, useGetSettingsQuery } from 'src/shared/api/settings';
+import { RootState } from 'src/app/store/store';
+import { TUserSlice } from 'src/shared/slices/userSlice';
+import { ExternalAccount } from '../../../shared/ui/ExternalAccount';
+import styles from './UserProfile.module.css';
+import Link from '@mui/material/Link';
+import { AccordionBlock } from '@encvoy-id/components';
+import { SurfaceBlock } from '@encvoy-id/components';
+import Typography from '@mui/material/Typography';
+import { UserProfileField } from 'src/features/accountPortal/components/UserProfileField';
+import { ContactStatusIndicator } from '@encvoy-id/components';
+import { canManageTargetUser } from 'src/shared/utils/userAccess';
 
 interface IUserProfileProps {
-  startRoutePath: TAppSlice["startRoutePath"];
-  roleInApp: TUserSlice["roleInApp"];
-  loggedUserId: IUserProfile["id"];
-  clientProfile: TAppSlice["clientProfile"];
+  startRoutePath: TAppSlice['startRoutePath'];
+  roleInApp: TUserSlice['roleInApp'];
+  loggedUserId: IUserProfile['id'];
+  roles: TUserSlice['roles'];
+  clientProfile: TAppSlice['clientProfile'];
+  userIdOverride?: string;
+  embedded?: boolean;
+  onEditClick?: () => void;
+  onChangePasswordClick?: () => void;
+  onDeleted?: () => void;
 }
 
 const mapStateToProps = (state: RootState) => ({
   startRoutePath: state.app.startRoutePath,
   roleInApp: state.user.roleInApp,
   loggedUserId: state.user.profile.id,
+  roles: state.user.roles,
   clientProfile: state.app.clientProfile,
 });
+
+const EMAIL_CONTACT_TYPES = [EProviderType.EMAIL, EProviderType.EMAIL_CUSTOM];
+const PHONE_CONTACT_TYPES = [EProviderType.PHONE, EProviderType.KLOUD];
+
+type TContactGroup = 'email' | 'phone';
+
+const normalizeContactValue = (contactGroup: TContactGroup, value?: string | null) => {
+  if (!value) return null;
+
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return null;
+
+  return contactGroup === 'email' ? trimmedValue.toLowerCase() : trimmedValue.replace(/\D/g, '');
+};
+
+const getContactGroupByAccountType = (type: IExternalAccount['type']): TContactGroup | null => {
+  if (EMAIL_CONTACT_TYPES.includes(type as EProviderType)) {
+    return 'email';
+  }
+
+  if (PHONE_CONTACT_TYPES.includes(type as EProviderType)) {
+    return 'phone';
+  }
+
+  return null;
+};
 
 const UserProfileComponent: FC<IUserProfileProps> = ({
   roleInApp,
   startRoutePath,
   loggedUserId,
+  roles,
   clientProfile,
+  userIdOverride,
+  embedded = false,
+  onEditClick,
+  onChangePasswordClick,
+  onDeleted,
 }) => {
   const {
-    appId = "",
-    clientId = "",
-    userId = "",
+    appId = '',
+    clientId = '',
+    userId = '',
   } = useParams<{ appId: string; clientId: string; userId: string }>();
+  const resolvedUserId = userIdOverride || userId;
   const { t: translate, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -84,57 +115,112 @@ const UserProfileComponent: FC<IUserProfileProps> = ({
     { user: IUserClient; role: string } | null | undefined
   >(null);
   const [deleteUsersModalOpen, setDeleteUsersModalOpen] = useState(false);
+  const [contactToConfirm, setContactToConfirm] = useState<'email' | 'phone_number' | null>(null);
 
   // get data
   const { data: externalAccounts } = useGetPublicExternalAccountsQuery({
-    user_id: String(userId),
+    id: String(resolvedUserId),
     client_id: clientId || appId,
   });
-  const { data: privateClaims } = useGetPrivateClaimsQuery(String(userId), {
-    skip: !isOwnerOrEditor(roleInApp) || !userId,
-  });
-  const { data: profileFields } = useGetProfileFieldsQuery();
+  const profileFieldScope = clientId || appId ? { client_id: clientId || appId } : undefined;
+  const { data: profileFields } = useGetProfileFieldsQuery(profileFieldScope);
 
   const { data: dataSettings } = useGetSettingsQuery();
   const { data: userProfile } = useGetUserClientQuery({
-    clientId: clientId || appId,
-    userId: String(userId),
+    client_id: clientId || appId,
+    id: String(resolvedUserId),
   });
+  const targetUserOrgId = selectedUser?.user?.org_id || userProfile?.user?.org_id;
+  const canManageUserAccounts = canManageTargetUser({
+    roleInApp,
+    roles,
+    targetUserOrgId,
+  });
+  const { data: privateClaims } = useGetPrivateClaimsQuery(
+    { id: String(resolvedUserId) },
+    {
+      skip: !canManageUserAccounts || !resolvedUserId,
+    },
+  );
 
   useEffect(() => {
     setSelectedUser(userProfile);
   }, [userProfile]);
 
   const [deleteAllSession] = useLazyDeleteAllSessionQuery();
-  const [deleteUsers, { isLoading: deleteUsersLoading }] =
-    useDeleteUsersMutation();
+  const [confirmUserContact, { isLoading: confirmUserContactLoading }] =
+    useConfirmUserContactMutation();
+  const [deleteUsers, { isLoading: deleteUsersLoading }] = useDeleteUsersMutation();
+  const [updateUserFetch, { isLoading: updateUserLoading }] = useUpdateUserMutation();
 
-  const { public_profile_claims_oauth, public_profile_claims_gravatar } =
-    privateClaims || {};
-  const customFields =
-    profileFields?.filter((field) => field.type === "custom" && field.active) ||
-    [];
   const currentLanguage = i18n.language;
-  const PROJECT_NAME = clientProfile?.name || "PROJECT_NAME";
+  const PROJECT_NAME =
+    getLocalizedTextValue(clientProfile?.name, currentLanguage) || 'PROJECT_NAME';
+  const userProfileEditLink = clientId
+    ? `/${startRoutePath}/${appId}/${tabs.clients}/${clientId}/${tabs.users}/${resolvedUserId}/${subTabs.edit}`
+    : `/${startRoutePath}/${appId}/${tabs.users}/${resolvedUserId}/${subTabs.edit}`;
   const changePasswordLink =
-    userId?.toString() === loggedUserId
-      ? `/${routes.profile}/change-password`
-      : `/${startRoutePath}/${appId}/${tabs.users}/${userId}/change-password`;
+    resolvedUserId?.toString() === loggedUserId?.toString()
+      ? `/${routes.profile}/${tabs.password}`
+      : clientId
+        ? `/${startRoutePath}/${appId}/${tabs.clients}/${clientId}/${tabs.users}/${resolvedUserId}/${tabs.password}`
+        : `/${startRoutePath}/${appId}/${tabs.users}/${resolvedUserId}/${tabs.password}`;
   const name = (
-    (selectedUser?.user.given_name || "") +
-    " " +
-    (selectedUser?.user.family_name || "")
+    (selectedUser?.user.given_name || '') +
+    ' ' +
+    (selectedUser?.user.family_name || '')
   ).trim();
-  const date = selectedUser?.user?.birthdate
-    ? new Date(selectedUser?.user?.birthdate)
-    : null;
+  const date = selectedUser?.user?.birthdate ? new Date(selectedUser?.user?.birthdate) : null;
+
+  const handleConfirmContact = async (contactType: 'email' | 'phone_number') => {
+    try {
+      await confirmUserContact({
+        userId: String(resolvedUserId),
+        contactType,
+      }).unwrap();
+
+      dispatch(setNoticeInfo(translate('info.infoUpdated')));
+      return true;
+    } catch (e) {
+      console.error('handleConfirmContact error', e);
+      dispatch(setNoticeError(translate('info.updateError')));
+      return false;
+    }
+  };
+
+  const closeConfirmContactModal = () => {
+    setContactToConfirm(null);
+  };
+
+  const getContactLabel = (contactType: 'email' | 'phone_number') =>
+    translate(
+      contactType === 'email' ? 'pages.profile.fields.email' : 'pages.profile.fields.phone',
+    );
+
+  const getContactValue = (contactType: 'email' | 'phone_number') => {
+    if (contactType === 'email') {
+      return selectedUser?.user.email || '';
+    }
+
+    return selectedUser?.user.phone_number ? formatPhoneNumber(selectedUser.user.phone_number) : '';
+  };
+
+  const submitConfirmContact = async () => {
+    if (!contactToConfirm) return;
+
+    const isConfirmed = await handleConfirmContact(contactToConfirm);
+
+    if (isConfirmed) {
+      closeConfirmContactModal();
+    }
+  };
 
   const handleDeleteButton = async () => {
     try {
       if (!selectedUser?.user?.id) return;
       setDeleteUsersModalOpen(true);
     } catch (e) {
-      console.error("handleDeleteButton error", e);
+      console.error('handleDeleteButton error', e);
     }
   };
 
@@ -143,477 +229,460 @@ const UserProfileComponent: FC<IUserProfileProps> = ({
 
     try {
       await deleteUsers({
-        checked_id: selectedUser?.user.id,
+        id: selectedUser?.user.id.toString(),
       }).unwrap();
 
       const id: string =
-        selectedUser.user.nickname ||
-        selectedUser.user.login ||
-        selectedUser.user.id.toString();
+        selectedUser.user.nickname || selectedUser.user.login || selectedUser.user.id.toString();
 
       dispatch(
         setNoticeInfo(
-          translate("pages.userProfile.notifications.userDeleted", {
+          translate('pages.userProfile.notifications.userDeleted', {
             userName: id,
             projectName: PROJECT_NAME,
-          })
-        )
+          }),
+        ),
       );
 
       setDeleteUsersModalOpen(false);
+      if (onDeleted) {
+        onDeleted();
+        return;
+      }
+
       if (clientId) {
-        navigate(
-          `/${startRoutePath}/${appId}/${tabs.clients}/${clientId}${tabs.users}`
-        );
+        navigate(`/${startRoutePath}/${appId}/${tabs.clients}/${clientId}${tabs.users}`);
       } else {
         navigate(`/${startRoutePath}/${appId}/${tabs.users}`);
       }
     } catch (e) {
-      console.error("handleDeleteUsers error", e);
+      console.error('handleDeleteUsers error', e);
     }
   };
 
-  const lineCustomFields = customFields
-    .filter(
-      (field) =>
-        selectedUser?.user.custom_fields &&
-        selectedUser.user.custom_fields[field.field]
-    )
-    .map((field) => {
-      return (
-        <div key={field.field} className={styles["info-item"]}>
-          <Typography
-            className={clsx("text-14", styles["info-item-title"])}
-            color="text.secondary"
-          >
-            {field.title}
-          </Typography>
-          <Typography className={clsx("text-14", styles["info-item-value"])}>
-            {selectedUser?.user.custom_fields &&
-            selectedUser.user.custom_fields[field.field]
-              ? (selectedUser?.user?.custom_fields[field.field] as string)
-              : translate("helperText.value.notSet")}
-          </Typography>
-          {isOwnerOrEditor(roleInApp) && (
-            <PublicStatusPopover
-              claimPrivacy={getClaimPrivacy(
-                field.field,
-                public_profile_claims_oauth,
-                public_profile_claims_gravatar
-              )}
-              field={field.field}
-              userId={selectedUser?.user.id?.toString()}
-            />
-          )}
-        </div>
+  const handlePasswordChangeRequiredToggle = async (value: boolean) => {
+    if (!selectedUser?.user?.id) return;
+
+    const previousValue = Boolean(selectedUser.user.password_change_required);
+
+    setSelectedUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            user: {
+              ...prev.user,
+              password_change_required: value,
+            },
+          }
+        : prev,
+    );
+
+    try {
+      await updateUserFetch({
+        userId: String(selectedUser.user.id),
+        body: {
+          password_change_required: value,
+        },
+      }).unwrap();
+
+      dispatch(setNoticeInfo(translate('info.infoUpdated')));
+    } catch (e) {
+      console.error('handlePasswordChangeRequiredToggle error', e);
+      setSelectedUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              user: {
+                ...prev.user,
+                password_change_required: previousValue,
+              },
+            }
+          : prev,
       );
-    });
+      dispatch(setNoticeError(translate('info.updateError')));
+    }
+  };
+
+  const baseIdentifierAccounts = canManageUserAccounts
+    ? externalAccounts || []
+    : externalAccounts?.filter((account) => {
+        const contactGroup = getContactGroupByAccountType(account.type);
+        if (!contactGroup) {
+          return true;
+        }
+
+        const primaryValue =
+          contactGroup === 'email' ? selectedUser?.user.email : selectedUser?.user.phone_number;
+
+        return (
+          normalizeContactValue(contactGroup, account.sub) !==
+          normalizeContactValue(contactGroup, primaryValue)
+        );
+      }) || [];
+
+  const normalizedConfirmedEmail = selectedUser?.user.email_verified
+    ? normalizeContactValue('email', selectedUser?.user.email)
+    : null;
+
+  const identifierAccounts = baseIdentifierAccounts.filter((account) => {
+    const contactGroup = getContactGroupByAccountType(account.type);
+
+    if (contactGroup !== 'email') {
+      return true;
+    }
+
+    return normalizeContactValue('email', account.sub) !== normalizedConfirmedEmail;
+  });
 
   if (!userProfile) {
-    return <div>{translate("helperText.loading")}</div>;
+    return <div>{translate('helperText.loading')}</div>;
   }
 
+  const hasVisibleAdditionalFields = Boolean(
+    selectedUser?.user.custom_fields && Object.keys(selectedUser.user.custom_fields).length,
+  );
+
   return (
-    <div className="page-container">
-      <div className="content">
-        <div className={styles["panel-top"]}>
-          <Avatar
-            className={styles["app-icon-wrapper"]}
-            src={getImageURL(selectedUser?.user?.picture)}
-          >
+    <div className={embedded ? '' : 'page-container'}>
+      <div className={embedded ? '' : 'content'}>
+        <div className={styles.panelTop}>
+          <Avatar className={styles.appIconWrapper} src={getImageURL(selectedUser?.user?.picture)}>
             {!selectedUser?.user.picture && selectedUser?.user.nickname && (
-              <div className={styles["app-icon-default"]}>
+              <div className={styles.appIconDefault}>
                 {selectedUser?.user.nickname
-                  ?.split(" ")
+                  ?.split(' ')
                   .map((name: string) => name[0]?.toUpperCase())
-                  .join("")}
+                  .join('')}
               </div>
             )}
             {!selectedUser?.user.picture && !selectedUser?.user.nickname && (
-              <CustomIcon
-                className={styles["app-icon-default"]}
-                Icon={PersonIcon}
-              />
+              <CustomIcon className={styles.appIconDefault} Icon={PersonIcon} />
             )}
           </Avatar>
-          <div className={styles["name-wrapper"]}>
-            <Typography
-              className={clsx("text-20-medium", styles["overflow-ellipsis"])}
-            >
+          <div className={styles.nameWrapper}>
+            <Typography className={clsx('text-20-medium', styles.overflowEllipsis)}>
               {!name
-                ? translate("pages.userProfile.nameHidden")
-                : name || translate("pages.userProfile.noName")}
+                ? translate('pages.userProfile.nameHidden')
+                : name || translate('pages.userProfile.noName')}
             </Typography>
           </div>
         </div>
-        <Box
-          className={styles.panel}
-          sx={{ borderRadius: componentBorderRadius }}
-        >
+        <SurfaceBlock className={styles.panel}>
           <div className={styles.panelTitle}>
-            <Typography className="text-17">
-              {translate("helperText.mainInfo")}
-            </Typography>
-            {isOwnerOrEditor(roleInApp) && (
-              <Link
-                component={RouterLink}
-                to={
-                  clientId
-                    ? `/${startRoutePath}/${appId}/${tabs.clients}/${clientId}/${tabs.users}/${userId}/${subTabs.edit}`
-                    : `/${startRoutePath}/${appId}/${tabs.users}/${userId}/${subTabs.edit}`
-                }
-              >
-                {translate("actionButtons.edit")}
-              </Link>
+            <Typography className="text-17">{translate('helperText.mainInfo')}</Typography>
+            {canManageUserAccounts && (
+              <>
+                {onEditClick ? (
+                  <Link
+                    data-test-id="lnk-profile-edit"
+                    component="button"
+                    type="button"
+                    onClick={onEditClick}
+                    underline="hover"
+                  >
+                    {translate('actionButtons.edit')}
+                  </Link>
+                ) : (
+                  <Link
+                    data-test-id="lnk-profile-edit"
+                    component={RouterLink}
+                    to={userProfileEditLink}
+                  >
+                    {translate('actionButtons.edit')}
+                  </Link>
+                )}
+              </>
             )}
           </div>
           <div>
-            <div className={styles["info-item"]}>
-              <div className={styles["flex-wrap"]}>
-                <Typography
-                  className={clsx("text-14", styles["info-item-title"])}
-                  color="text.secondary"
-                >
-                  {translate("pages.profile.fields.userId")}
-                </Typography>
-                <Typography
-                  className={clsx("text-14", styles["info-item-value"])}
-                >
-                  {selectedUser?.user.id}
-                </Typography>
-              </div>
-              {isOwnerOrEditor(roleInApp) && (
-                <PublicStatusPopover
-                  claimPrivacy={EClaimPrivacy.public}
-                  field="id"
-                  disabled
-                />
-              )}
-            </div>
-            {!!(selectedUser?.user.nickname || "").trim() && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
-                  >
-                    {translate("pages.profile.fields.publicName")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {(selectedUser?.user.nickname || "").trim()
-                      ? selectedUser?.user.nickname
-                      : translate("pages.userProfile.noName")}
-                  </Typography>
-                </div>
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "nickname",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="nickname"
-                    userId={String(selectedUser?.user.id)}
-                  />
-                )}
-              </div>
+            <UserProfileField
+              title={translate('pages.profile.fields.userId')}
+              value={selectedUser?.user.id}
+              fieldName="id"
+              disabled
+              showPrivacyStatus={canManageUserAccounts}
+              claimPrivacyOverride={EClaimPrivacy.public}
+            />
+            {!!(selectedUser?.user.nickname || '').trim() && (
+              <UserProfileField
+                title={translate('pages.profile.fields.publicName')}
+                value={
+                  (selectedUser?.user.nickname || '').trim()
+                    ? selectedUser?.user.nickname
+                    : translate('pages.userProfile.noName')
+                }
+                privateClaims={privateClaims}
+                fieldName="nickname"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              />
             )}
             {!!selectedUser?.user.picture && (
-              <div className={styles["info-item"]}>
-                <Typography
-                  className={clsx("text-14", styles["info-item-title"])}
-                  color="text.secondary"
-                >
-                  {translate("pages.profile.fields.profilePhoto")}
-                </Typography>
-                {selectedUser?.user.picture ? (
-                  <Avatar
-                    src={getImageURL(selectedUser?.user?.picture)}
-                    className={styles["user-icon-wrapper"]}
-                  />
-                ) : (
-                  <Avatar className={styles.avatar}>
-                    <PersonOutlineOutlinedIcon />
-                  </Avatar>
-                )}
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "picture",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="picture"
-                    userId={String(selectedUser?.user.id)}
-                  />
-                )}
-              </div>
+              <UserProfileField
+                title={translate('pages.profile.fields.profilePhoto')}
+                privateClaims={privateClaims}
+                fieldName="picture"
+                userId={String(selectedUser?.user.id)}
+                isMaxSize
+                urlImage={getImageURL(selectedUser?.user?.picture)}
+                showPrivacyStatus={canManageUserAccounts}
+              />
             )}
             {!!name && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
-                  >
-                    {translate("pages.profile.fields.fullName")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {name || translate("helperText.value.notSet")}
-                  </Typography>
-                </div>
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "family_name",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="family_name given_name"
-                    userId={String(selectedUser?.user.id)}
-                  />
-                )}
-              </div>
+              <UserProfileField
+                title={translate('pages.profile.fields.fullName')}
+                value={name || translate('helperText.value.notSet')}
+                privateClaims={privateClaims}
+                fieldName="family_name given_name"
+                otherField="family_name"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              />
             )}
             {!!selectedUser?.user.login && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
-                  >
-                    {translate("pages.profile.fields.login")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {selectedUser?.user.login ||
-                      translate("helperText.value.notSet")}
-                  </Typography>
-                </div>
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "login",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="login"
-                    userId={String(selectedUser?.user.id)}
-                  />
-                )}
-              </div>
+              <UserProfileField
+                title={translate('pages.profile.fields.login')}
+                value={selectedUser?.user.login || translate('helperText.value.notSet')}
+                privateClaims={privateClaims}
+                fieldName="login"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              />
             )}
             {!!selectedUser?.user.birthdate && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
-                  >
-                    {translate("pages.profile.fields.birthDate")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {date
-                      ? date.toLocaleDateString(currentLanguage)
-                      : translate("helperText.value.notSet")}
-                  </Typography>
-                </div>
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "birthdate",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="birthdate"
-                    userId={String(selectedUser?.user.id)}
-                  />
-                )}
-              </div>
+              <UserProfileField
+                title={translate('pages.profile.fields.birthDate')}
+                value={
+                  date
+                    ? date.toLocaleDateString(currentLanguage)
+                    : translate('helperText.value.notSet')
+                }
+                privateClaims={privateClaims}
+                fieldName="birthdate"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              />
             )}
             {!!selectedUser?.user.email && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
-                  >
-                    {translate("pages.profile.fields.email")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {selectedUser?.user.email
-                      ? selectedUser.user.email
-                      : translate("helperText.value.notSet")}
-                  </Typography>
-                </div>
-                {isOwnerOrEditor(roleInApp) && (
-                  <PublicStatusPopover
-                    claimPrivacy={getClaimPrivacy(
-                      "email",
-                      public_profile_claims_oauth,
-                      public_profile_claims_gravatar
-                    )}
-                    field="email"
-                    userId={String(selectedUser?.user.id)}
+              <UserProfileField
+                title={translate('pages.profile.fields.email')}
+                value={
+                  selectedUser?.user.email
+                    ? selectedUser.user.email
+                    : translate('helperText.value.notSet')
+                }
+                statusIndicator={
+                  <ContactStatusIndicator
+                    unverifiedText={translate('pages.profile.tooltips.contactUnverified')}
+                    verified={selectedUser?.user.email_verified}
                   />
+                }
+                privateClaims={privateClaims}
+                fieldName="email"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              >
+                {!selectedUser?.user.email_verified && canManageUserAccounts && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => setContactToConfirm('email')}
+                    data-test-id="btn-user-profile-confirm-email"
+                  >
+                    {translate('actionButtons.confirm')}
+                  </Button>
                 )}
-              </div>
+              </UserProfileField>
             )}
             {!!selectedUser?.user.phone_number && (
-              <div className={styles["info-item"]}>
-                <div className={styles["flex-wrap"]}>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-title"])}
-                    color="text.secondary"
+              <UserProfileField
+                title={translate('pages.profile.fields.phone')}
+                value={
+                  selectedUser?.user.phone_number
+                    ? formatPhoneNumber(selectedUser.user.phone_number)
+                    : translate('helperText.value.notSet')
+                }
+                statusIndicator={
+                  <ContactStatusIndicator
+                    unverifiedText={translate('pages.profile.tooltips.contactUnverified')}
+                    verified={selectedUser?.user.phone_number_verified}
+                  />
+                }
+                privateClaims={privateClaims}
+                fieldName="phone_number"
+                userId={String(selectedUser?.user.id)}
+                showPrivacyStatus={canManageUserAccounts}
+              >
+                {!selectedUser?.user.phone_number_verified && canManageUserAccounts && (
+                  <Link
+                    component="button"
+                    type="button"
+                    onClick={() => setContactToConfirm('phone_number')}
+                    data-test-id="btn-user-profile-confirm-phone"
+                    underline="hover"
+                    sx={{
+                      opacity: confirmUserContactLoading ? 0.5 : 1,
+                      pointerEvents: confirmUserContactLoading ? 'none' : 'auto',
+                    }}
                   >
-                    {translate("pages.profile.fields.phone")}
-                  </Typography>
-                  <Typography
-                    className={clsx("text-14", styles["info-item-value"])}
-                  >
-                    {selectedUser?.user.phone_number
-                      ? formatPhoneNumber(selectedUser.user.phone_number)
-                      : translate("helperText.value.notSet")}
-                  </Typography>
-                </div>
-                <PublicStatusPopover
-                  claimPrivacy={getClaimPrivacy(
-                    "phone_number",
-                    public_profile_claims_oauth,
-                    public_profile_claims_gravatar
-                  )}
-                  field="phone_number"
-                  userId={String(selectedUser?.user.id)}
-                />
-              </div>
+                    {translate('actionButtons.confirm')}
+                  </Link>
+                )}
+              </UserProfileField>
             )}
-            {lineCustomFields.length > 0 && (
+            {hasVisibleAdditionalFields && (
               <div>
                 <Typography className="text-17">
-                  {translate("helperText.additionalInfo")}
+                  {translate('helperText.additionalInfo')}
                 </Typography>
-                {lineCustomFields}
+                <AdditionalProfileFields
+                  profileFields={profileFields}
+                  customFields={selectedUser?.user.custom_fields}
+                  privateClaims={privateClaims}
+                  userId={selectedUser?.user.id?.toString()}
+                  scopeClientId={clientId || appId}
+                  showPrivacyStatus={canManageUserAccounts}
+                  hideEmptyFields
+                />
               </div>
             )}
           </div>
-        </Box>
+        </SurfaceBlock>
 
-        <Box
-          className={styles.panel}
-          sx={{ borderRadius: componentBorderRadius }}
-        >
+        <SurfaceBlock className={styles.panel}>
           <Typography style={{ marginBottom: 24 }} className="text-17">
-            {translate("pages.profile.sections.identifiers")}
+            {translate('pages.profile.sections.identifiers')}
           </Typography>
           <div>
-            {externalAccounts
-              ?.filter(
-                (ea) =>
-                  ea.type !== ProviderType.EMAIL &&
-                  ea.type !== ProviderType.PHONE
-              )
-              .map((account) => (
-                <ExternalAccount
-                  account={account}
-                  userProfileId={selectedUser?.user?.id}
-                  key={
-                    (account.sub || "") +
-                    (account.issuer || "") +
-                    (account.type || "")
-                  }
-                />
-              ))}
-            {!externalAccounts?.filter(
-              (ea) =>
-                ea.type !== ProviderType.EMAIL && ea.type !== ProviderType.PHONE
-            ).length && (
+            {identifierAccounts.map((account) => (
+              <ExternalAccount
+                account={account}
+                userProfileId={selectedUser?.user?.id}
+                withoutButtons={!canManageUserAccounts}
+                key={(account.sub || '') + (account.issuer || '') + (account.type || '')}
+              />
+            ))}
+            {!identifierAccounts.length && (
               <Typography className="text-14" color="text.secondary">
-                {translate("pages.userProfile.emptyIdentifiers")}
+                {translate('pages.userProfile.emptyIdentifiers')}
               </Typography>
             )}
           </div>
-        </Box>
+        </SurfaceBlock>
 
-        {isOwnerOrEditor(roleInApp) &&
-          selectedUser?.role !== ERoles.TRUSTED_USER && (
-            <Box
-              className={styles.panel}
-              sx={{ borderRadius: componentBorderRadius }}
+        {canManageUserAccounts && selectedUser?.role !== ERoles.TRUSTED_USER && (
+          <SurfaceBlock className={styles.panel}>
+            <div className={styles.panelTitle}>
+              <Typography className="text-17">
+                {translate('pages.profile.sections.security')}
+              </Typography>
+            </div>
+            <ChangePasswordBlock
+              passwordUpdateDate={new Date(selectedUser?.user.password_updated_at || '')}
+              navigateTo={changePasswordLink}
+              onClick={onChangePasswordClick}
+            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: 16,
+                marginTop: 24,
+              }}
             >
-              <div className={styles.panelTitle}>
-                <Typography className="text-17">
-                  {translate("pages.profile.sections.security")}
+              <div>
+                <Typography className="text-14" sx={{ marginBottom: '4px' }}>
+                  {translate('helperText.requirePasswordChangeOnNextAuthorization')}
+                </Typography>
+                <Typography className="text-12" color="text.secondary">
+                  {translate('helperText.requirePasswordChangeOnNextAuthorizationDescription')}
                 </Typography>
               </div>
-              <ChangePasswordBlock
-                passwordUpdateDate={
-                  new Date(selectedUser?.user.password_updated_at || "")
-                }
-                navigateTo={changePasswordLink}
+              <Switch
+                checked={Boolean(selectedUser?.user.password_change_required)}
+                disabled={updateUserLoading || !selectedUser?.user?.id}
+                onChange={(_, checked) => {
+                  void handlePasswordChangeRequiredToggle(checked);
+                }}
+                data-test-id="swt-user-profile-password-change-required"
               />
-            </Box>
-          )}
+            </div>
+          </SurfaceBlock>
+        )}
 
-        {isOwnerOrEditor(roleInApp) && (
+        {canManageUserAccounts && (
           <AccordionBlock
-            title={translate("pages.profile.sections.otherActions")}
+            dataTestId="ddl-profile-other-actions"
+            title={translate('pages.profile.sections.otherActions')}
           >
             {dataSettings?.data_processing_agreement && (
-              <Link
-                href={dataSettings.data_processing_agreement}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {translate("pages.profile.actions.privacyPolicy")}
+              <Link href={dataSettings.data_processing_agreement} target="_blank" rel="noreferrer">
+                {translate('pages.profile.actions.privacyPolicy')}
               </Link>
             )}
 
             <div className={styles.actions}>
-              {selectedUser?.user.id !== 1 &&
-                selectedUser?.user.id !==
-                  parseInt(loggedUserId as string, 10) && (
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleDeleteButton}
-                  >
-                    {translate("actionButtons.deleteAccount")}
-                  </Button>
-                )}
+              {selectedUser?.user.id !== '1' && selectedUser?.user.id !== loggedUserId && (
+                <Button
+                  data-test-id="btn-profile-other-delete-account"
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleDeleteButton}
+                >
+                  {translate('actionButtons.deleteAccount')}
+                </Button>
+              )}
               <Button
+                data-test-id="btn-profile-other-logout-all-devices"
                 variant="contained"
                 color="secondary"
                 onClick={() => deleteAllSession(selectedUser?.user.id)}
               >
-                {translate("pages.profile.actions.logoutAllDevices")}
+                {translate('pages.profile.actions.logoutAllDevices')}
               </Button>
               <Button
+                data-test-id="btn-profile-other-download-data"
                 variant="contained"
                 color="secondary"
-                onClick={() =>
-                  exportToJson({ ...selectedUser }, "profile.json")
-                }
+                onClick={() => exportToJson({ ...selectedUser }, 'profile.json')}
               >
-                {translate("pages.profile.actions.downloadData")}
+                {translate('pages.profile.actions.downloadData')}
               </Button>
             </div>
           </AccordionBlock>
         )}
-
-        <div className="zeroBlock"></div>
       </div>
 
       <SubmitModal
-        title={translate("pages.userProfile.deleteAccountModal.title", {
+        cancelText={translate('actionButtons.cancel')}
+        deleteText={translate('actionButtons.delete')}
+        title={translate('pages.userProfile.confirmContactModal.title', {
+          contactName: contactToConfirm ? getContactLabel(contactToConfirm) : '',
+        })}
+        isOpen={Boolean(contactToConfirm)}
+        onClose={closeConfirmContactModal}
+        onSubmit={() => {
+          void submitConfirmContact();
+        }}
+        mainMessage={
+          contactToConfirm
+            ? [
+                translate('pages.userProfile.confirmContactModal.message', {
+                  contactName: getContactLabel(contactToConfirm),
+                  contactValue: getContactValue(contactToConfirm),
+                }),
+              ]
+            : []
+        }
+        actionButtonText={translate('actionButtons.confirm')}
+        disabled={confirmUserContactLoading}
+      />
+
+      <SubmitModal
+        cancelText={translate('actionButtons.cancel')}
+        deleteText={translate('actionButtons.delete')}
+        title={translate('pages.userProfile.deleteAccountModal.title', {
           projectName: PROJECT_NAME,
         })}
         isOpen={deleteUsersModalOpen}
@@ -623,14 +692,12 @@ const UserProfileComponent: FC<IUserProfileProps> = ({
           setDeleteUsersModalOpen(false);
         }}
         mainMessage={Object.values(
-          translate("pages.userProfile.deleteAccountModal.message", {
+          translate('pages.userProfile.deleteAccountModal.message', {
             userName:
-              selectedUser?.user?.nickname ||
-              selectedUser?.user?.login ||
-              selectedUser?.user?.id,
+              selectedUser?.user?.nickname || selectedUser?.user?.login || selectedUser?.user?.id,
             projectName: PROJECT_NAME,
             returnObjects: true,
-          }) as Record<string, string>
+          }) as Record<string, string>,
         )}
         disabled={deleteUsersLoading}
       />

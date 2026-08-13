@@ -13,7 +13,10 @@ import {
   useUpdateProviderMutation,
 } from "src/shared/api/provider";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { ProviderAvatars } from "../utils";
+import {
+  buildProviderUpdatePayload,
+  ProviderAvatars,
+} from "../utils";
 import { IEditProviderProps } from "./EditProvider";
 import { useTranslation } from "react-i18next";
 
@@ -55,7 +58,8 @@ export const EditEthereumProvider: FC<IEditProviderProps> = ({
   }, [isOpen]);
 
   const onSubmit: SubmitHandler<IProvider> = (data) => {
-    updateProvider(data).then(() => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields);
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,

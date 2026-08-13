@@ -7,7 +7,7 @@ import { isAdministrator } from "src/shared/utils/helpers";
 import { TopTabsProfile } from "src/app/routes/tabs/TopTabsProfile";
 import { useGetSettingsQuery } from "src/shared/api/settings";
 import { Navigate, Outlet, Route, useLocation } from "react-router-dom";
-import { TUserSlice } from "src/shared/lib/userSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
 import { EventLog } from "src/features/eventLog/EventLogList";
 import { ConfirmPhone } from "src/features/accountPortal/pages/ConfirmPhone";
 import { ChangePassword } from "src/features/accountPortal/pages/ChangePassword";
@@ -17,8 +17,9 @@ import { EditProfile } from "src/features/accountPortal/pages/EditProfile";
 import { AddIdentifyToProfile } from "src/features/accountPortal/pages/AddIdentifyToProfile";
 import { Profile } from "src/features/accountPortal/pages/Profile";
 import { ScopesList } from "src/features/accountPortal/scopes/ScopesList";
+import { TokensList } from "src/features/accountPortal/tokens/TokensList";
 import { RequestList } from "src/features/accountPortal/requests/RequestList";
-import { routes, subTabs, tabs } from "src/shared/utils/enums";
+import { ERoles, routes, subTabs, tabs } from "src/shared/utils/enums";
 
 interface IPrivateRouteProps {
   profile: TUserSlice["profile"];
@@ -44,10 +45,11 @@ const PrivateRouteComponent: FC<IPrivateRouteProps> = ({
 
   const userId = profile?.id;
   const deleted = profile?.deleted;
-  const passwordChangeRequired = profile?.password_change_required;
+  const passwordChangeRequired =
+    profile?.password_change_required && roleInApp !== ERoles.TRUSTED_USER;
 
-  const needsProfileFill =
-    location.pathname !== "/fill-profile" &&
+  const needsPasswordChange =
+    location.pathname !== `/${routes.profile}/change-password` &&
     location.pathname !== `/${routes.profile}/restore-profile` &&
     userId &&
     passwordChangeRequired;
@@ -60,7 +62,8 @@ const PrivateRouteComponent: FC<IPrivateRouteProps> = ({
   if (settingsLoading || isAuthorized === null) return <LinearProgress />;
   if (!isAuthorized) return <Navigate to="/login" replace />;
   if (needsRestore) return <Navigate to="restore-profile" replace />;
-  if (needsProfileFill) return <Navigate to="/fill-profile" replace />;
+  if (needsPasswordChange)
+    return <Navigate to={`/${routes.profile}/change-password`} replace />;
 
   if (generalSettings?.authorize_only_admins && !isAdministrator(roleInApp)) {
     return (
@@ -95,6 +98,7 @@ export const getPrivateRoutes = () => {
       <Route path={`phone/:action`} element={<ConfirmPhone />} />,
       <Route path={`change-password`} element={<ChangePassword />} />
       <Route path={`external-provider`} element={<AddIdentifyToProfile />} />
+      <Route path={`${tabs.tokens}`} element={<TokensList />} />,
       <Route path={`${tabs.scopes}`} element={<ScopesList />} />,
       <Route path={`${tabs.eventLog}`} element={<EventLog />} />,
       <Route path={`${tabs.request}`} element={<RequestList />} />

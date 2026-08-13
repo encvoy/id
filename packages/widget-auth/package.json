@@ -1,6 +1,6 @@
 {
   "name": "widget",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "author": "Encvoy",
   "license": "MIT",
   "scripts": {
@@ -19,7 +19,7 @@
     "@mui/material": "7.3.5",
     "@mui/x-date-pickers": "^8.19.0",
     "@reduxjs/toolkit": "^2.10.1",
-    "@simplewebauthn/browser": "^13.2.2",
+    "@simplewebauthn/browser": "^13.3.0",
     "date-fns": "^4.1.0",
     "dompurify": "^3.3.0",
     "framer-motion": "^12.23.24",

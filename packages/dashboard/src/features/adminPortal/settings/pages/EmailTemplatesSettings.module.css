@@ -1,0 +1,146 @@
+.content {
+  padding: 0 32px 32px;
+}
+
+.header {
+  padding-top: 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.listColumn {
+  min-width: 0;
+}
+
+.workspaceColumn {
+  min-width: 0;
+}
+
+.block {
+  background: var(--mui-palette-background-default);
+  padding: 16px;
+}
+
+.description {
+  margin-top: 8px;
+}
+
+.modeTabs {
+  margin-top: 16px;
+}
+
+.modeTabs :global(.MuiTabs-flexContainer) {
+  align-items: stretch;
+}
+
+.modeTabs :global(.MuiTab-root) {
+  min-width: 0;
+  padding: 12px 8px;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.selectorField {
+  margin-top: 16px;
+}
+
+.listLabel {
+  margin: 16px 0 8px;
+}
+
+.list {
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--mui-palette-background-paper);
+}
+
+.listItem {
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.list :global(.MuiListItemButton-root:last-child) {
+  border-bottom: 0;
+}
+
+.listItem:global(.Mui-selected),
+.listItem:global(.Mui-selected:hover) {
+  background: var(--mui-palette-action-hover);
+}
+
+.listItemSecondary {
+  display: block;
+  margin-top: 4px;
+  color: var(--mui-palette-text-secondary);
+}
+
+.emptyState {
+  padding: 16px;
+}
+
+.workspaceMeta {
+  margin-top: 8px;
+}
+
+.workspaceForm {
+  margin-top: 20px;
+}
+
+.fieldLabel {
+  margin-bottom: 8px;
+}
+
+.variantButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.codeMirror {
+  margin-bottom: 20px;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--mui-palette-background-default);
+}
+
+.codeMirror :global(.cm-editor),
+.codeMirror :global(.cm-scroller),
+.codeMirror :global(.cm-gutters) {
+  background-color: var(--mui-palette-background-default);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.preview {
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 1200px) {
+  .content {
+    padding: 0 16px 32px;
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .listColumn,
+  .workspaceColumn {
+    width: 100%;
+  }
+}

@@ -9,17 +9,16 @@ import {
 } from "react";
 import {
   Box,
-  Chip,
   TextField,
   IconButton,
   InputAdornment,
   Typography,
 } from "@mui/material";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
 import clsx from "clsx";
 import styles from "./ScopeChips.module.css";
 import { randomString } from "src/shared/utils/helpers";
+import { Chip } from "@encvoy-id/components";
 
 export interface IChipProps {
   key: string;
@@ -43,6 +42,7 @@ interface IScopeChipsProps {
     }>
   >;
   children?: ReactNode;
+  inputDataTestId?: string;
 }
 
 export const ScopeChips: FC<IScopeChipsProps> = ({
@@ -54,6 +54,7 @@ export const ScopeChips: FC<IScopeChipsProps> = ({
   errors,
   setErrors,
   children,
+  inputDataTestId,
 }) => {
   const [inputValue, setInputValue] = useState("");
 
@@ -127,19 +128,18 @@ export const ScopeChips: FC<IScopeChipsProps> = ({
         {chips.map((chip) => (
           <Chip
             key={chip.key}
-            label={
-              chip.value.length > 20
-                ? `${chip.value.slice(0, 20)}...`
-                : chip.value
-            }
-            variant="outlined"
-            className={clsx(
-              "text-14",
-              styles.chip,
-              chip.isError && styles.errorChip
-            )}
-            deleteIcon={<CloseOutlinedIcon />}
-            onDelete={() => deleteChip(chip.key)}
+            customText={{
+              default:
+                chip.value.length > 20
+                  ? `${chip.value.slice(0, 20)}...`
+                  : chip.value,
+              error:
+                chip.value.length > 20
+                  ? `${chip.value.slice(0, 20)}...`
+                  : chip.value,
+            }}
+            status={chip.isError ? "error" : "default"}
+            onClickButton={() => deleteChip(chip.key)}
           />
         ))}
 
@@ -151,14 +151,21 @@ export const ScopeChips: FC<IScopeChipsProps> = ({
             variant="standard"
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleAddButtonClick} edge="end">
-                    <ControlPointOutlinedIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              htmlInput: { "data-test-id": inputDataTestId },
+              input: {
+                endAdornment: (
+                  <InputAdornment sx={{ mr: "10px" }} position="end">
+                    <IconButton
+                      onClick={handleAddButtonClick}
+                      edge="end"
+                      data-test-id="btn-user-add"
+                    >
+                      <ControlPointOutlinedIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
           {children}
@@ -168,10 +175,10 @@ export const ScopeChips: FC<IScopeChipsProps> = ({
       {errors &&
         Object.entries(errors).map(([key, values]) => (
           <div key={key} className={styles.errorBlock}>
-            <Typography color="custom.error" className="text-14">
+            <Typography color="error.main" className="text-14">
               {key}
             </Typography>
-            <Typography color="custom.error" className="text-12">
+            <Typography color="error.main" className="text-12">
               {values.join(", ")}
             </Typography>
           </div>

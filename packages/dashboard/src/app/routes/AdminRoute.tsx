@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Navigate, Outlet, Route, useLocation } from "react-router-dom";
 import { RootState } from "src/app/store/store";
-import { TUserSlice } from "src/shared/lib/userSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
 import { TopTabsAdmin } from "src/app/routes/tabs/TopTabsAdmin";
 import { ClientsList } from "src/features/adminPortal/clients/pages/ClientsList";
 import { EventLog } from "src/features/eventLog/EventLogList";
@@ -11,8 +11,9 @@ import { ClientSettings } from "src/features/adminPortal/settings/pages/ClientSe
 import { UserProfile } from "src/features/adminPortal/users/UserProfile";
 import LinearProgress from "@mui/material/LinearProgress";
 import { CreateClient } from "src/features/adminPortal/clients/pages/CreateClient";
-import { setStartRoutePath } from "src/shared/lib/appSlice";
-import { Widget } from "src/features/adminPortal/settings/widget/Widget";
+import { setStartRoutePath } from "src/shared/slices/appSlice";
+import { WidgetSettings } from "src/features/adminPortal/settings/pages/WidgetSettings";
+import { EmailTemplatesSettings } from "src/features/adminPortal/settings/pages/EmailTemplatesSettings";
 import { ERoles, routes, subTabs, tabs } from "src/shared/utils/enums";
 
 interface IAdminRouteProps {
@@ -38,11 +39,13 @@ const AdminRouteComponent: FC<IAdminRouteProps> = ({
 
   const userId = profile?.id;
   const passwordChangeRequired = profile?.password_change_required;
-  const needsProfileFill =
-    pathname !== "/fill-profile" && userId && passwordChangeRequired;
+  const needsPasswordChange =
+    pathname !== `/${routes.profile}/change-password` &&
+    userId &&
+    passwordChangeRequired;
 
   useEffect(() => {
-    const pathSegments = window.location.pathname.split("/");
+    const pathSegments = pathname.split("/");
     switch (pathSegments[1]) {
       case routes.admin:
         dispatch(setStartRoutePath(routes.admin));
@@ -73,7 +76,8 @@ const AdminRouteComponent: FC<IAdminRouteProps> = ({
   if (hasAccess === null) return <LinearProgress />;
   if (!isAuthorized) return <Navigate to="/login" replace />;
   if (!hasAccess) return <Navigate to={`/${routes.profile}`} replace />;
-  if (needsProfileFill) return <Navigate to="/fill-profile" replace />;
+  if (needsPasswordChange)
+    return <Navigate to={`/${routes.profile}/change-password`} replace />;
 
   return (
     <>
@@ -104,7 +108,11 @@ export const getAdminRoutes = () => {
       />
       <Route
         path={`:appId/${tabs.clients}/:clientId/${tabs.widget}`}
-        element={<Widget />}
+        element={<WidgetSettings />}
+      />
+      <Route
+        path={`:appId/${tabs.clients}/:clientId/${tabs.emailTemplates}/:providerId`}
+        element={<EmailTemplatesSettings />}
       />
       <Route
         path={`:appId/${tabs.clients}/:clientId/${tabs.users}/:userId`}

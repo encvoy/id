@@ -68,6 +68,10 @@
 
 .text {
   margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .menuWrapper {
@@ -81,6 +85,23 @@
   flex-direction: column;
   gap: 8px;
   margin: 8px 0;
+}
+
+.linkedButtonsRow {
+  display: flex;
+  gap: 0;
+}
+
+.linkedButtonItem {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+
+.linkedButtonsDivider {
+  width: 1px;
+  background-color: #e0e0e0;
+  flex-shrink: 0;
 }
 
 .buttons {

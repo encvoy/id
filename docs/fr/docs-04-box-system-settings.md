@@ -1,22 +1,22 @@
 ---
-title: "Configuration de Encvoy ID — sécurité, interface et accès"
-description: "Découvrez comment configurer Encvoy ID : accès utilisateur, interface, modèles d'e-mail et surveillance via Sentry. Configurez votre système dès maintenant !"
-keywords:
-  - configuration Encvoy ID
-  - configuration accès Encvoy ID
-  - localisation
-  - langue de l'interface
-  - modèles de notification par e-mail
-  - configuration du logo
-  - types d'applications
-  - fonctionnalités expérimentales
-  - paramètres d'accès
-  - authentification à deux facteurs
-  - jetons d'accès
-  - restrictions d'accès
-  - intégration Sentry
+title: "Configuration de {{projectName}} — sécurité, interface et accès"
+description: "Découvrez comment configurer {{projectName}} : accès utilisateur, interface, modèles d'e-mail et surveillance via Sentry. Configurez votre système dès maintenant !"
+keywords: 
+  - configuration {{projectName}}
+  - configuration accès {{projectName}}
+  - localisation 
+  - langue de l'interface 
+  - modèles de notification par e-mail 
+  - configuration du logo 
+  - types d'applications 
+  - fonctionnalités expérimentales 
+  - paramètres d'accès 
+  - authentification à deux facteurs 
+  - jetons d'accès 
+  - restrictions d'accès 
+  - intégration Sentry 
   - journal d'événements
-author: "Équipe Encvoy ID"
+author: "Équipe {{projectName}}"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github]
@@ -25,11 +25,11 @@ menu_title: "Configuration du système (Interface, Sécurité et Accès)"
 order: 4
 ---
 
-# Comment configurer Encvoy ID : Sécurité, Interface et Accès
+# Comment configurer {{projectName}} : Sécurité, Interface et Accès
 
-Dans ce guide, vous apprendrez à configurer l'interface et la localisation de **Encvoy ID**, à créer des types d'applications, à gérer l'accès des utilisateurs, à activer l'authentification à deux facteurs et à intégrer le service avec Sentry pour la surveillance des événements.
+Dans ce guide, vous apprendrez à configurer l'interface et la localisation de **{{projectName}}**, à créer des types d'applications, à gérer l'accès des utilisateurs, à activer l'authentification à deux facteurs et à intégrer le service avec Sentry pour la surveillance des événements.
 
-Cette section est destinée aux administrateurs et aux spécialistes de la sécurité qui souhaitent gérer efficacement les paramètres de **Encvoy ID**, y compris OAuth 2.0 et OpenID Connect.
+Cette section est destinée aux administrateurs et aux spécialistes de la sécurité qui souhaitent gérer efficacement les paramètres de **{{projectName}}**, y compris OAuth 2.0 et OpenID Connect.
 
 **Table des matières :**
 
@@ -49,25 +49,25 @@ Cette section est destinée aux administrateurs et aux spécialistes de la sécu
 
 ### Configuration du nom du système et du logo { #system-name-and-logo }
 
-Le nom et le logo sont affichés dans l'interface de **Encvoy ID**, ainsi que dans le [mini-widget](./docs-09-common-mini-widget-settings.md) et le [widget de connexion](./docs-06-github-en-providers-settings.md#login-widget-settings).
+Le nom et le logo sont affichés dans l'interface de **{{projectName}}**, ainsi que dans le [mini-widget](./docs-09-common-mini-widget-settings.md) et le [widget de connexion](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
 Pour configurer le nom et le logo :
 
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Développez le bloc **Informations principales**.
 
-<img src="./images/settings-main-info-01.webp" alt="Configuration du nom et du logo Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-main-info-01.webp" alt="Configuration du nom et du logo {{projectName}}" style="max-width:600px; width:100%">
 
 3. Saisissez le nouveau nom dans le champ **Nom de l'application**.
 4. Dans le bloc **Logo de l'application**, cliquez sur **Charger** et sélectionnez le fichier du logo.
 
-   <img src="./images/settings-main-info-02.webp" alt="Interface de téléchargement de logo dans Encvoy ID" style="max-width:400px; width:100%">
+    <img src="./images/settings-main-info-02.webp" alt="Interface de téléchargement de logo dans {{projectName}}" style="max-width:400px; width:100%">
 
-   > ⚡ Formats supportés : JPG, GIF, PNG, WEBP ; taille maximale 1 Mo.
+    > ⚡ Formats supportés : JPG, GIF, PNG, WEBP ; taille maximale 1 Mo.
 
 5. Configurez l'affichage et cliquez sur **Appliquer**.
 
-<img src="./images/settings-main-info-03.webp" alt="Configuration de l'affichage du logo dans Encvoy ID" style="max-width:400px; width:100%">
+    <img src="./images/settings-main-info-03.webp" alt="Configuration de l'affichage du logo dans {{projectName}}" style="max-width:400px; width:100%">
 
 6. Cliquez sur **Enregistrer**.
 
@@ -75,7 +75,7 @@ Pour configurer le nom et le logo :
 
 ### Configuration de la localisation
 
-**Encvoy ID** prend en charge l'interface dans **six langues** :
+**{{projectName}}** prend en charge l'interface dans **six langues** :
 
 - Russe (ru)
 - Anglais (en)
@@ -84,7 +84,7 @@ Pour configurer le nom et le logo :
 - Allemand (de)
 - Italien (it)
 
-La langue sélectionnée affecte l'affichage du texte dans toutes les interfaces de **Encvoy ID**, y compris le [widget de connexion](./docs-06-github-en-providers-settings.md#login-widget-settings) et le [mini-widget](./docs-09-common-mini-widget-settings.md).
+La langue sélectionnée affecte l'affichage du texte dans toutes les interfaces de **{{projectName}}**, y compris le [widget de connexion](./docs-06-github-en-providers-settings.md#login-widget-settings) et le [mini-widget](./docs-09-common-mini-widget-settings.md).
 
 Si vous utilisez des [champs de profil utilisateur supplémentaires](./docs-05-box-userfields-settings.md#additional-profile-fields) et des [modèles d'e-mail](./docs-04-box-system-settings.md#email-notification-templates), assurez-vous qu'ils s'affichent correctement.
 
@@ -93,7 +93,7 @@ Si vous utilisez des [champs de profil utilisateur supplémentaires](./docs-05-b
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Développez le bloc **Localisation** et sélectionnez la langue requise dans la liste.
 
-<img src="./images/settings-localization-01.webp" alt="Configuration de l'apparence du widget Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-localization-01.webp" alt="Configuration de l'apparence du widget {{projectName}}" style="max-width:600px; width:100%">
 
 3. Cliquez sur **Enregistrer**.
 
@@ -107,7 +107,7 @@ Les **modèles d'e-mail** sont des préréglages d'e-mails contenant un formatag
 
 #### Qu'est-ce que Mustache ?
 
-**Mustache** est un moteur de template simple pour insérer des données dans des modèles de texte. Dans **Encvoy ID**, il est utilisé pour :
+**Mustache** est un moteur de template simple pour insérer des données dans des modèles de texte. Dans **{{projectName}}**, il est utilisé pour :
 
 - L'insertion de données utilisateur (`{{user.name}}`),
 - La génération de liens dynamiques (`{{confirmation_link}}`),
@@ -117,14 +117,14 @@ Les **modèles d'e-mail** sont des préréglages d'e-mails contenant un formatag
 
 #### Types d'e-mails disponibles
 
-| Type d'e-mail                           | Événement           | Objectif                                       |
-| --------------------------------------- | ------------------- | ---------------------------------------------- |
-| Inscription                             | `account_create`    | E-mail de bienvenue pour un nouvel utilisateur |
-| Code de confirmation                    | `confirmation_code` | E-mail avec un code de vérification            |
-| Lien de confirmation                    | `confirmation_link` | E-mail avec un lien de vérification            |
-| Changement de mot de passe              | `password_change`   | Notification de changement de mot de passe     |
-| Demande de récupération de mot de passe | `password_recover`  | E-mail avec un code de vérification            |
-| Invitation                              | `invite`            | E-mail d'invitation à une application          |
+| Type d'e-mail | Événement | Objectif |
+|------------|------------|------------|
+| Inscription | `account_create` | E-mail de bienvenue pour un nouvel utilisateur |
+| Code de confirmation | `confirmation_code` | E-mail avec un code de vérification |
+| Lien de confirmation | `confirmation_link` | E-mail avec un lien de vérification |
+| Changement de mot de passe | `password_change` | Notification de changement de mot de passe |
+| Demande de récupération de mot de passe | `password_recover` | E-mail avec un code de vérification |
+| Invitation | `invite` | E-mail d'invitation à une application |
 
 #### Comment configurer un modèle
 
@@ -132,16 +132,17 @@ Les **modèles d'e-mail** sont des préréglages d'e-mails contenant un formatag
 2. Trouvez le bloc **Modèles d'e-mails** et cliquez sur **Configurer**.
 3. Sélectionnez le modèle requis et cliquez sur **Configurer**.
 
-<img src="./images/settings-letters-templates-01.webp" alt="Sélection d'un modèle d'e-mail pour édition dans Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-letters-templates-01.webp" alt="Sélection d'un modèle d'e-mail pour édition dans {{projectName}}" style="max-width:600px; width:100%">
 
 4. Dans le formulaire d'édition qui s'ouvre, spécifiez :
-   - **Nom du modèle**,
-   - **Objet de l'e-mail**,
-   - **Contenu de l'e-mail**.
 
-   > 💡 Utilisez le balisage HTML et les variables au format `{{variable_name}}`. Assurez-vous que les variables utilisées correspondent aux [champs de profil utilisateur](./docs-05-box-userfields-settings.md#basic-profile-fields) disponibles pour éviter les erreurs lors de l'envoi de l'e-mail.
+    - **Nom du modèle**,
+    - **Objet de l'e-mail**,
+    - **Contenu de l'e-mail**.
 
-   <img src="./images/settings-letters-templates-02.webp" alt="Édition d'un modèle d'e-mail HTML dans Encvoy ID" style="max-width:600px; width:100%">
+    > 💡 Utilisez le balisage HTML et les variables au format `{{variable_name}}`. Assurez-vous que les variables utilisées correspondent aux [champs de profil utilisateur](./docs-05-box-userfields-settings.md#basic-profile-fields) disponibles pour éviter les erreurs lors de l'envoi de l'e-mail.
+
+    <img src="./images/settings-letters-templates-02.webp" alt="Édition d'un modèle d'e-mail HTML dans {{projectName}}" style="max-width:600px; width:100%">
 
 5. Cliquez sur **Enregistrer**.
 
@@ -160,13 +161,14 @@ L'authentification à deux facteurs (2FA) ajoute une couche de protection suppl�
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Développez le bloc **Paramètres d'accès** et cliquez sur **Configurer**.
 
-<img src="./images/settings-access-01.webp" alt="Interface de configuration 2FA dans Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-access-01.webp" alt="Interface de configuration 2FA dans {{projectName}}" style="max-width:600px; width:100%">
 
 3. Spécifiez les fournisseurs de premier et second facteur :
-   - Fournisseur du **premier facteur** — la méthode d'authentification principale (identifiant/mot de passe ou autre méthode d'authentification).
-   - Fournisseur du **second facteur** — la méthode de confirmation d'identité (téléphone, e-mail, WebAuthn).
 
-   <img src="./images/settings-access-02.webp" alt="Configuration des combinaisons de facteurs 2FA dans Encvoy ID" style="max-width:600px; width:100%">
+    - Fournisseur du **premier facteur** — la méthode d'authentification principale (identifiant/mot de passe ou autre méthode d'authentification).
+    - Fournisseur du **second facteur** — la méthode de confirmation d'identité (téléphone, e-mail, WebAuthn).
+
+    <img src="./images/settings-access-02.webp" alt="Configuration des combinaisons de facteurs 2FA dans {{projectName}}" style="max-width:600px; width:100%">
 
 4. Cliquez sur **Enregistrer**.
 
@@ -174,7 +176,7 @@ L'authentification à deux facteurs (2FA) ajoute une couche de protection suppl�
 
 Certains champs de profil utilisateur (ex: téléphone, e-mail, etc.) peuvent être marqués comme obligatoires dans le profil personnel.
 
-Par défaut, lors de l'autorisation dans les applications, **Encvoy ID** vérifie la présence de tous les champs obligatoires et peut suspendre la connexion jusqu'à ce que l'utilisateur remplisse les données manquantes. Le paramètre **Ignorer les champs obligatoires du profil de l'espace personnel pour les applications** vous permet de désactiver cette vérification.
+Par défaut, lors de l'autorisation dans les applications, **{{projectName}}** vérifie la présence de tous les champs obligatoires et peut suspendre la connexion jusqu'à ce que l'utilisateur remplisse les données manquantes. Le paramètre **Ignorer les champs obligatoires du profil de l'espace personnel pour les applications** vous permet de désactiver cette vérification.
 
 Cela peut être utile si l'organisation utilise des sources de données utilisateur externes et ne nécessite pas de complétion manuelle du profil.
 
@@ -228,8 +230,9 @@ Pour configurer l'interdiction d'inscription :
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Développez le bloc **Paramètres d'accès**.
 3. Sélectionnez le paramètre requis :
-   - **Inscription interdite** — bloque complètement la création de nouveaux comptes.
-   - **Inscription autorisée** (par défaut) — mode de fonctionnement standard, les utilisateurs peuvent créer des comptes indépendamment.
+
+    - **Inscription interdite** — bloque complètement la création de nouveaux comptes.
+    - **Inscription autorisée** (par défaut) — mode de fonctionnement standard, les utilisateurs peuvent créer des comptes indépendamment.
 
 4. Cliquez sur **Enregistrer**.
 
@@ -244,10 +247,11 @@ Pour modifier les paramètres dans le panneau d'administration :
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Développez le bloc **Paramètres de l'application**.
 3. Configurez les paramètres :
-   - [Restriction d'accès](#access-settings)
-   - [Temps d'authentification](#authentication-time)
-   - [Jeton d'accès](#access-token)
-   - [Jeton de rafraîchissement](#refresh-token)
+
+    - [Restriction d'accès](#access-settings)
+    - [Temps d'authentification](#authentication-time)
+    - [Jeton d'accès](#access-token)
+    - [Jeton de rafraîchissement](#refresh-token)
 
 4. Cliquez sur **Enregistrer**.
 
@@ -255,92 +259,92 @@ Pour modifier les paramètres dans le panneau d'administration :
 
 #### Identifiants principaux
 
-| Nom                             | Paramètre       | Description                                                                   |
-| ------------------------------- | --------------- | ----------------------------------------------------------------------------- |
-| **Identifiant (client_id)**     | `client_id`     | Identifiant unique de l'application                                           |
-| **Clé secrète (client_secret)** | `client_secret` | Clé confidentielle de l'application                                           |
-| **Adresse de l'application**    | -               | URL de base du service **Encvoy ID** au format `protocole://nom_domaine:port` |
+| Nom | Paramètre | Description |
+|----------|----------|----------|
+| **Identifiant (client_id)** | `client_id` | Identifiant unique de l'application |
+| **Clé secrète (client_secret)** | `client_secret` | Clé confidentielle de l'application |
+| **Adresse de l'application** | - | URL de base du service **{{projectName}}** au format `protocole://nom_domaine:port` |
 
 #### Restriction d'accès
 
 Restreint la connexion au profil personnel uniquement aux utilisateurs ayant des rôles administratifs.
 
-| Nom                 | Description                                                                                                                         |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Description |
+|-------|----------|
 | **Accès restreint** | Si activé, l'accès au profil personnel sera autorisé uniquement aux utilisateurs disposant des droits de service **Administrateur** |
 
 #### URL de redirection
 
-| Nom                      | Paramètre      | Description                                                                      |
-| ------------------------ | -------------- | -------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **URL de redirection #** | `Redirect_uri` | URL vers laquelle l'utilisateur sera redirigé après une authentification réussie |
 
 #### URL de déconnexion
 
-| Nom                      | Paramètre                  | Description                                                                                                                               |
-| ------------------------ | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **URL de déconnexion #** | `post_logout_redirect_uri` | URL vers laquelle le service redirigera l'utilisateur après sa déconnexion. Si aucune valeur n'est spécifiée, `Redirect_uri` est utilisé. |
 
 #### URL de demande d'authentification
 
-| Nom                                                                               | Paramètre      | Description                                                                                                                                                       |
-| --------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **URL de requête d'authentification ou de récupération après authentification #** | `request_uris` | Liste d'URL pour l'hébergement des demandes d'autorisation JWT (`Request Object`). Le serveur récupère le JWT à partir de l'URL spécifiée lors de l'autorisation. |
 
 #### Types de réponse
 
-| Nom                                   | Paramètre        | Description                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Type de réponses (response_types)** | `response_types` | <p> Détermine quels jetons et codes sont renvoyés par le serveur d'autorisation :</p> <p> - `code` — code d'autorisation uniquement <br>- `id_token` — jeton ID uniquement <br> - `code id_token` — code + jeton ID <br> - `code token` — code + jeton d'accès <br> - `code id_token token` — code + jeton ID + jeton d'accès <br> - `none` — confirmation d'authentification uniquement </p> |
 
 #### Types d'octroi (Grant Types)
 
-| Nom                                      | Paramètre     | Description                                                                                                                                                                                                                                                                 |
-| ---------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Types d'octroi d'accès (grant_types)** | `grant_types` | <p> Méthodes d'obtention de l'autorisation : </p> - `authorization code` — code sécurisé via le serveur client (recommandé) ; <br> - `implicit` — acquisition directe de jeton (pour les clients publics) <br> - `refresh_token` — renouvellement de jeton sans reconnexion |
 
 #### Méthode d'authentification client
 
 > 💡 Le choix de la méthode dépend des exigences de sécurité et des capacités du client. Les méthodes JWT offrent une sécurité accrue car elles ne transmettent pas le secret directement.
 
-| Nom                         | Paramètre                                                                                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| --------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+| ---- | ---- | ---- |
 | **Authentification client** | `token_endpoint_auth_method`, `introspection_endpoint_auth_method`, `revocation_endpoint_auth_method` | <p> Détermine la méthode d'authentification du client lors de l'accès à divers points de terminaison (`token`, `introspection`, `revocation`). </p> Méthodes disponibles : <br> - `none` — pas d'identifiants ;<br> - `client_secret_post` — identifiants dans le corps de la requête ;<br> - `client_secret_basic` — Authentification HTTP Basic ;<br> - `client_secret_jwt` — JWT signé avec le secret client ;<br> - `private_key_jwt` — JWT signé avec la clé privée du client.</p> |
 
 #### Algorithme de signature du jeton ID
 
-| Nom                                                                                                        | Paramètre                      | Description                                                                                                                                                                       |
-| ---------------------------------------------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Algorithme de signature utilisé lors de la création d'un ID-token signé (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Spécifie l'algorithme utilisé pour signer le jeton ID. </p> Le `ID token` est un JSON Web Token (JWT) qui contient des revendications sur l'authentification de l'utilisateur |
 
 #### Temps d'authentification { #authentication-time }
 
-| Nom                                                                               | Paramètre           | Description                                                                                              |
-| --------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Vérification de la présence de l'heure d'authentification (require_auth_time)** | `require_auth_time` | Si activé, `auth_time` (l'heure de la dernière authentification de l'utilisateur) est ajouté au jeton ID |
 
 #### Paramètres de sécurité supplémentaires
 
-| Nom                                                                                                            | Paramètre                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| -------------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | Paramètre pour assurer la sécurité de la transmission des données entre le client et le serveur d'autorisation | `require_signed_request_object` | <p>Spécifie si un `Request Object` signé est requis lors de l'envoi d'une demande d'autorisation.</p> Le `Request Object` est un moyen de transmettre en toute sécurité des paramètres d'autorisation du client au serveur d'autorisation, généralement sous la forme d'un JWT (JSON Web Token).</p> <p>Lorsque `require_signed_request_object` est activé, le client doit signer le `Request Object` en utilisant un algorithme de signature convenu à l'avance et spécifié dans la configuration du client.</p> |
 
 #### Type de transmission de l'identifiant utilisateur
 
-| Nom                                                                                           | Paramètre      | Description                                                                                                                                                                                                                        |
-| --------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Méthode de transmission de l'ID utilisateur dans le jeton d'identification (subject_type)** | `subject_type` | Détermine comment la revendication `sub` est formée dans le jeton ID : <p> - `public` — le même identifiant pour tous les clients <br> - `pairwise` — un identifiant unique pour chaque client, améliorant la confidentialité </p> |
 
 #### Jeton d'accès { #access-token }
 
-| Nom                                  | Paramètre          | Description                                  |
-| ------------------------------------ | ------------------ | -------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Jeton d'accès (access_token_ttl)** | `access_token_ttl` | Durée de vie de l'`access_token` en secondes |
 
 #### Jeton de rafraîchissement { #refresh-token }
 
-| Nom                                             | Paramètre           | Description                                 |
-| ----------------------------------------------- | ------------------- | ------------------------------------------- |
+| Nom | Paramètre | Description |
+|-------|----------|----------|
 | **Jeton de renouvellement (refresh_token_ttl)** | `refresh_token_ttl` | Durée de vie du `refresh_token` en secondes |
 
 ### Connexion à Sentry
@@ -363,7 +367,7 @@ La connexion à **Sentry** vous permet de :
 2. Inscrivez-vous ou connectez-vous à votre compte.
 3. Créez un nouveau projet.
 
-Après avoir créé le projet, **Sentry** fournira un **DSN (Data Source Name)** — un identifiant unique pour connecter **Encvoy ID** à **Sentry**.
+Après avoir créé le projet, **Sentry** fournira un **DSN (Data Source Name)** — un identifiant unique pour connecter **{{projectName}}** à **Sentry**.
 
 > 💡 **Conseil** : Copiez le **DSN (Data Source Name)** pour ne pas le perdre lors du passage à l'étape suivante.
 
@@ -374,11 +378,12 @@ Pour connecter **Sentry** :
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Trouvez le bloc **Sentry** et cliquez sur **Configurer**.
 3. Dans le formulaire de connexion qui s'ouvre, spécifiez :
-   - **DSN** — l'identifiant unique créé à l'**Étape 1**.
-   - **Activité** — activez pour commencer à envoyer les erreurs et les traces à **Sentry**.
-   - **ID utilisateur** (si nécessaire) — spécifiez si vous devez suivre les erreurs et les événements par utilisateurs spécifiques.
 
-     <img src="./images/settings-sentry-01.webp" alt="Configuration de la connexion Sentry dans Encvoy ID" style="max-width:600px; width:100%">
+    - **DSN** — l'identifiant unique créé à l'**Étape 1**.
+    - **Activité** — activez pour commencer à envoyer les erreurs et les traces à **Sentry**.
+    - **ID utilisateur** (si nécessaire) — spécifiez si vous devez suivre les erreurs et les événements par utilisateurs spécifiques.
+
+      <img src="./images/settings-sentry-01.webp" alt="Configuration de la connexion Sentry dans {{projectName}}" style="max-width:600px; width:100%">
 
 4. Cliquez sur **Enregistrer**.
 
@@ -388,14 +393,14 @@ Dans le **Journal**, vous pouvez voir où et depuis quels appareils les utilisat
 
 Des informations détaillées sont disponibles pour chaque événement.
 
-| Paramètre                  | Contenu                                    |
-| -------------------------- | ------------------------------------------ |
-| **En-tête de l'événement** | Catégorie d'action                         |
-| **Date et heure**          | Horodatages exacts                         |
-| **Application**            | Identifiant de l'application (`client_id`) |
-| **Utilisateur**            | Identifiant de l'utilisateur (`id`)        |
-| **Appareil**               | Type d'appareil et navigateur              |
-| **Localisation**           | Adresse IP                                 |
+| Paramètre | Contenu |
+|----------|--------------|
+| **En-tête de l'événement** | Catégorie d'action |
+| **Date et heure** | Horodatages exacts |
+| **Application** | Identifiant de l'application (`client_id`) |
+| **Utilisateur** | Identifiant de l'utilisateur (`id`) |
+| **Appareil** | Type d'appareil et navigateur |
+| **Localisation** | Adresse IP |
 
 #### Comment accéder au journal
 
@@ -421,15 +426,15 @@ Les **types d'applications** sont des catégories permettant de systématiser le
 3. Dans la fenêtre qui apparaît, cliquez sur le bouton **Créer** ![Bouton Créer](./images/button-create.webp "Bouton Créer").
 4. Le formulaire de création s'ouvrira.
 
-<img src="./images/settings-app-type-01.webp" alt="Interface de création de type d'application dans Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-app-type-01.webp" alt="Interface de création de type d'application dans {{projectName}}" style="max-width:600px; width:100%">
 
 5. Spécifiez le nom du type.
 
-   > 💡 Le nom du type doit être unique dans le système.
+    > 💡 Le nom du type doit être unique dans le système.
 
 6. Cliquez sur **Enregistrer**.
 
-   Le type créé apparaîtra dans la liste.
+    Le type créé apparaîtra dans la liste.
 
 > 💡 L'attribution du type est effectuée lors de la [création d'une application](./docs-10-common-app-settings.md#creating-application).
 
@@ -439,7 +444,7 @@ Les **types d'applications** sont des catégories permettant de systématiser le
 2. Trouvez le bloc **Types d'applications** et cliquez sur **Configurer**.
 3. Une fenêtre avec la liste des types s'ouvrira.
 
-<img src="./images/settings-app-type-02.webp" alt="Dialogue de création de type d'application dans Encvoy ID" style="max-width:600px; width:100%">
+    <img src="./images/settings-app-type-02.webp" alt="Dialogue de création de type d'application dans {{projectName}}" style="max-width:600px; width:100%">
 
 4. Cliquez sur le bouton **Configurer** sur le panneau du type que vous souhaitez modifier.
 5. Le formulaire d'édition s'ouvrira.
@@ -463,7 +468,7 @@ La suppression s'effectue sans confirmation supplémentaire.
 
 ## Fonctionnalités expérimentales { #experimental-features }
 
-Les **fonctionnalités expérimentales** sont de nouvelles capacités du service **Encvoy ID** qui sont en phase de test et d'amélioration.
+Les **fonctionnalités expérimentales** sont de nouvelles capacités du service **{{projectName}}** qui sont en phase de test et d'amélioration.
 
 **Caractéristiques principales :**
 
@@ -479,20 +484,22 @@ La section des fonctionnalités expérimentales est disponible à l'adresse : `h
 #### Fonctionnalités disponibles
 
 1. **Carte de visite utilisateur**
-   - Analogue numérique d'une carte de visite avec les coordonnées
-   - Prise en charge du format vCard pour l'exportation
-   - Possibilité de partager via un lien ou un code QR
 
-   [En savoir plus sur la carte de visite →](./docs-12-common-personal-profile.md#digital-business-card)
+    - Analogue numérique d'une carte de visite avec les coordonnées
+    - Prise en charge du format vCard pour l'exportation
+    - Possibilité de partager via un lien ou un code QR
+
+    [En savoir plus sur la carte de visite →](./docs-12-common-personal-profile.md#digital-business-card)
 
 2. **Catalogue d'applications**
-   - Plateforme centralisée pour les applications du système **Encvoy ID**
-   - Dispose d'un système de catégories pratique
-   - Possibilité d'ajouter des applications aux favoris
 
-   [En savoir plus sur le catalogue →](./docs-12-common-personal-profile.md#application-catalog)
+    - Plateforme centralisée pour les applications du système **{{projectName}}**
+    - Dispose d'un système de catégories pratique
+    - Possibilité d'ajouter des applications aux favoris
 
-   <img src="./images/personal-profile-22.webp" alt="Interface du catalogue dans Encvoy ID" style="max-width:400px; width:100%">
+    [En savoir plus sur le catalogue →](./docs-12-common-personal-profile.md#application-catalog)
+
+    <img src="./images/personal-profile-22.webp" alt="Interface du catalogue dans {{projectName}}" style="max-width:400px; width:100%">
 
 ---
 

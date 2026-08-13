@@ -7,10 +7,6 @@
         "cards": {
           "name": "Business Cards",
           "description": "Enables business cards in the application. A corresponding section appears in each user's profile. The user's card is available at api/cards/{userId}."
-        },
-        "catalog": {
-          "name": "Catalog",
-          "description": "Enables the public application catalog. Each application can be added to the catalog for easier and faster access."
         }
       }
     },
@@ -23,6 +19,10 @@
         "privacy": "Profile Privacy",
         "businessCard": "Business Card",
         "otherActions": "Other Actions"
+      },
+      "locale": {
+        "title": "Interface Language",
+        "description": "Choose the language used in your account interface."
       },
       "actions": {
         "logoutAllDevices": "Log out from all devices",
@@ -41,8 +41,16 @@
         "email": "Email",
         "phone": "Phone Number"
       },
+      "tooltips": {
+        "contactUnverified": "Contact not verified"
+      },
+      "chips": {
+        "contactPrimary": "Contact"
+      },
       "notices": {
-        "publicDataRequireEmail": "Public data is available if an email address is provided"
+        "contactUpdated": "Contact method updated",
+        "contactDeleted": "Contact deleted",
+        "publicDataRequireTrustedEmail": "Public data is available only with a verified email address"
       },
       "modals": {
         "confirmDeletion": {
@@ -84,6 +92,9 @@
         "description": "Prohibit sharing the public profile even if the field privacy level is \"Available to everyone\"",
         "button": "Public Data",
         "togglePrivacy": "Toggle Profile Privacy"
+      },
+      "security": {
+        "additionalTokensDescription": "Create and revoke additional access tokens with a limited set of permissions."
       }
     },
     "addLoginMethod": {
@@ -96,11 +107,20 @@
         "operationCancelled": "Operation cancelled by user",
         "installMetamask": "Please install Metamask",
         "certificateBindingError": "Certificate binding error",
-        "webauthnBindingError": "Error binding WebAuthn device"
+        "webauthnBindingError": "Error binding WebAuthn device",
+        "webauthnAlreadyRegistered": "This device already has a passkey for your profile"
       },
       "modals": {
         "loginToAccount": "Log in to {{providerName}} account",
-        "confirmAddition": "In the new window (tab) that opens, complete the authorization procedure on the corresponding platform. Upon successful authorization, this login method will be automatically added to the list of available account identifiers and will become a possible authentication method for the service"
+        "confirmAddition": "In the new window (tab) that opens, complete the authorization process on the corresponding platform. Upon successful authorization, this login method will be automatically added to the list of available account identifiers and will become an available authentication method for the service.",
+        "otpModalInstruction": "Enter the code from the app",
+        "otpSetupTitleTotp": "TOTP Setup",
+        "otpSetupTitleHotp": "HOTP Setup",
+        "otpSecretManualLabel": "Secret (manual):",
+        "otpAlgorithmLabel": "Algorithm:",
+        "otpDigitsLabel": "Digits:",
+        "otpPeriodLabel": "Period:",
+        "otpCounterLabel": "Counter:"
       },
       "ethereumSignMessage": "To authorize in the {{projectName}} service, sign the randomly generated text: {{nonce}}"
     },
@@ -108,6 +128,17 @@
       "title": "Delete Account",
       "description": "When an account is deleted, associated data will be permanently removed. You will lose access to applications where you used this account to log in.",
       "passwordConfirmation": "Password for confirmation",
+      "success": {
+        "title": "Deletion completed successfully",
+        "immediate": "Your account has been deleted and cannot be restored.",
+        "scheduled": "Your account has been marked for deletion. It will be permanently deleted in {{days}} days. Until then, it can still be restored.",
+        "scheduledNoRestore": "Your account has been marked for deletion. It will be permanently deleted in {{days}} days. Restoration is disabled by the current system policy.",
+        "archived": "Your account has been moved to the archive until it is restored.",
+        "archivedNoRestore": "Your account has been moved to the archive. Automatic deletion is disabled and restoration is not allowed by the current system policy.",
+        "sessionsRevoked": "All active sessions and tokens for this account have already been revoked.",
+        "redirect": "Redirecting to the sign-in page in {{seconds}} seconds.",
+        "exitNow": "Exit now"
+      },
       "errors": {
         "deletionError": "Error deleting account"
       }
@@ -129,6 +160,7 @@
     "confirmEmail": {
       "titles": {
         "change": "Change Email",
+        "confirm": "Confirm Email",
         "add": "Add Email"
       },
       "emailLabel": "Enter email address",
@@ -146,6 +178,7 @@
     "confirmPhone": {
       "titles": {
         "change": "Change Phone",
+        "confirm": "Confirm Phone",
         "add": "Add Phone"
       },
       "phoneLabel": "Enter phone number",
@@ -194,6 +227,7 @@
         "offlineAccess": "The application will access your data at any time",
         "accounts": "View social media accounts added to the profile",
         "openid": "View your identifier",
+        "internal": "Internal system information (personal accounts, catalog, language)",
         "lk": "View brief personal account information",
         "locale": "View language information",
         "unknown": "Unknown permission {{scope}}",
@@ -225,7 +259,9 @@
     "usersList": {
       "labels": {
         "role": "Permissions:",
-        "status": "Status:"
+        "organization": "Organization:",
+        "status": "Status:",
+        "groupsCount": "Groups:"
       },
       "createButton": "Create User",
       "defaultClient": "application",
@@ -279,10 +315,35 @@
           "mainMessageFirst": "Account {{userName}} will be deleted. Data associated with the account will be permanently removed. The user will lose access to applications where they used the {{projectName}} account to log in.",
           "mainMessageSecond": "User {{userName}} will be removed from the application."
         },
+        "addToInternalList": {
+          "title": "Add to Organization",
+          "mainMessage": "User {{userName}} will be added to the organization."
+        },
+        "removeFromInternalList": {
+          "title": "Remove from Organization",
+          "mainMessage": "User {{userName}} will be removed from the organization. Their organization assignment will be cleared."
+        },
+        "markForDeletion": {
+          "title": "Mark for Deletion",
+          "mainMessage": "User {{userName}} will be marked for deletion. After the retention period expires, the profile will be deleted automatically.",
+          "action": "Mark"
+        },
+        "unmarkDeletion": {
+          "title": "Remove Deletion Mark",
+          "mainMessage": "The deletion mark for user {{userName}} will be removed.",
+          "action": "Unmark"
+        },
+        "removeFromOrganizationList": {
+          "title": "Remove from Organization List",
+          "mainMessage": "User {{userName}} will be removed from the directory and groups of organization {{projectName}}. Their organization assignment will be cleared."
+        },
         "chooseRole": {
           "title": "Change Permissions",
           "description": "Select permissions in {{projectName}} for the user:",
           "listRoles": "Permission Level"
+        },
+        "blockUserClient": {
+          "mainMessage": "User {{userName}} {{action}} access to the application {{projectName}}. Data associated with the account will be preserved."
         }
       },
       "menuControls": {
@@ -291,15 +352,47 @@
         "endSessions": "End Sessions",
         "blockUser": "Block in {{projectName}}",
         "unblockUser": "Unblock in {{projectName}}",
-        "removeUser": "Delete User"
+        "removeUser": "Delete User",
+        "markForDeletion": "Mark for Deletion",
+        "unmarkDeletion": "Remove Deletion Mark",
+        "addToInternalList": "Add to Organization",
+        "removeFromInternalList": "Remove from Organization",
+        "removeFromOrganizationList": "Remove from Organization List",
+        "manageGroups": "Add to group"
       },
       "notice": {
         "changeUserRole": "User {{userName}} permissions in {{projectName}} have been changed",
         "NotChangeUserRole": "Failed to change user {{userName}} permissions in {{projectName}}"
+      },
+      "userGroups": {
+        "title": "Groups for user {{name}}",
+        "notices": {
+          "groupAdded": "User has been added to the group.",
+          "groupRemoved": "User has been removed from the group."
+        },
+        "errors": {
+          "loadGroups": "Failed to load the user's group list.",
+          "addGroup": "Failed to add the user to the group.",
+          "removeGroup": "Failed to remove the user from the group."
+        }
       }
     },
     "createUser": {
       "title": "Create User",
+      "contactVerification": {
+        "email": {
+          "label": "Create email as verified",
+          "description": "If disabled, the email will be created as unverified"
+        },
+        "phone": {
+          "label": "Create phone as verified",
+          "description": "If disabled, the phone will be created as unverified"
+        }
+      },
+      "accountCreateEmail": {
+        "label": "Send account creation email",
+        "description": "Sends credentials to the user's email after the account is created"
+      },
       "errors": {
         "fillAtLeastOneIdentifier": "At least one identifier must be filled"
       }
@@ -316,6 +409,10 @@
           "Account {{userName}} will be deleted. Data associated with the account will be permanently removed. The user will lose access to applications where they used the {{projectName}} account to log in.",
           "Applications where the user being deleted is the owner will also be deleted."
         ]
+      },
+      "confirmContactModal": {
+        "title": "Confirm {{contactName}}",
+        "message": "Are you sure you want to confirm the contact {{contactValue}}? After that, {{contactName}} will be marked as verified."
       },
       "notifications": {
         "userDeleted": "User {{userName}} deleted in {{projectName}}."
@@ -371,9 +468,41 @@
     "listClient": {
       "createButton": "Create Application",
       "providersEmpty": "None",
-      "users": "Members:",
+      "users": "Members",
       "catalog": "Catalog",
-      "activeLoginMethods": "Active Login Methods:"
+      "activeLoginMethods": "Active Login Methods:",
+      "owner": "Owner"
+    },
+    "organizations": {
+      "labels": {
+        "activity": "Activity:",
+        "activityPeriod": "in the last 30 days"
+      },
+      "actions": {
+        "createOrganization": "Create organization"
+      },
+      "menuControls": {
+        "id": "Go to ID",
+        "transferOwner": "Change owner",
+        "delete": "Delete organization"
+      },
+      "modals": {
+        "delete": {
+          "title": "Delete organization",
+          "mainMessage": "The organization, its related applications, and settings will be removed. The owner user will remain in the system."
+        },
+        "transferOwner": {
+          "title": "Change owner",
+          "action": "Change",
+          "mainMessage": "Select a new organization owner. The current owner will remain in the member list with administrator rights.",
+          "select": "New owner",
+          "placeholder": "Start typing a name or login",
+          "helper": "You can select only a member who is already in the organization list."
+        }
+      },
+      "notices": {
+        "deleted": "Organization deleted"
+      }
     },
     "clientDetails": {
       "notFound": "Application not found",
@@ -394,10 +523,36 @@
       "invitationModalTitle": "Send Invitation",
       "emailsRequest": "List of email addresses to which the invitation notification will be sent. To add, enter an email address and press Enter. To add multiple, separate email addresses with a space, comma, or semicolon",
       "emailsError": "Failed to create invitations for these email addresses. Validation error",
+      "statistics": {
+        "title": "Information panel",
+        "authCount": "Number of authorizations",
+        "uniqueUsers": "Unique users",
+        "period": "Period",
+        "maximum": "Maximum",
+        "authMethods": {
+          "title": "Login method popularity",
+          "total": "Total authorizations",
+          "noData": "No data for the selected period"
+        },
+        "loadError": "Failed to load statistics"
+      },
       "modals": {
         "deleteClient": {
           "title": "Delete Application",
           "mainMessage": "Application {{projectName}} will be deleted. Users will not be able to log in to your application. This action cannot be undone."
+        }
+      },
+      "groups": {
+        "title": "Access Groups",
+        "description": "Users belonging to these groups will be able to log in to the application",
+        "notices": {
+          "groupAdded": "Group added to the application.",
+          "groupRemoved": "Group removed from the application."
+        },
+        "errors": {
+          "loadGroups": "Failed to load application groups.",
+          "addGroup": "Failed to add the group to the application.",
+          "removeGroup": "Failed to remove the group from the application."
         }
       }
     },
@@ -411,14 +566,20 @@
         "generalInfo": "Main Information",
         "additionalInfo": "Additional Information",
         "emailTemplates": "Email Templates",
+        "notifications": "Notifications",
         "appTypes": "Application Types",
         "trusted": "Trusted Providers",
-        "licenses": "Licenses",
         "sentry": "Sentry",
         "widgetAppearance": "Login Methods and Widget Settings",
         "localization": "Localization",
+        "additionalParams": "Additional Parameters",
+        "additionalModules": "Additional Modules",
+        "styling": "Styling",
         "accessSettings": "Access Settings",
-        "requiredFields": "Required Fields"
+        "requiredFields": "Required Fields",
+        "logging": "Logging",
+        "winston": "Winston",
+        "integrations": "Integrations"
       },
       "trusted": {
         "localAutoMergeUsers": {
@@ -429,6 +590,7 @@
       },
       "labels": {
         "appName": "Application Name",
+        "catalogName": "Catalog Name",
         "appDescription": "Application Description",
         "appType": "Application Type",
         "displayInCatalog": "Display in Catalog",
@@ -440,6 +602,7 @@
         "domain": "Application Address",
         "restrictedAccess": "Restricted Access",
         "onlyEmployees": "Prohibit access for external users",
+        "authorizeAutoBySession": "Auto sign-in by session",
         "redirectUri": "Redirect URI #",
         "postLogoutUri": "Post-Logout Redirect URI #",
         "requestUri": "Authentication Request or Recovery URL #",
@@ -457,22 +620,35 @@
       },
       "descriptions": {
         "appName": "Application name displayed to users",
+        "catalogName": "Optional short name for the catalog. If not specified, the application name is used",
         "appType": "Value set from the list of types",
         "clientId": "Unique application identifier",
         "clientSecret": "Application access key",
         "domain": "Application address in the format \"protocol://domain:port\"",
         "restrictedAccess": "Application login is available only for users with \"Administrator\" permissions",
         "onlyEmployees": "Application login is available only for application members",
+        "authorizeAutoBySession": "If enabled, the application signs the user in automatically when there is exactly one active session. If disabled, the authorization widget is always shown.",
         "redirectUri": "Address to which the user is redirected after authorization",
         "postLogoutUri": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used",
         "requestUri": "Address to which the user is redirected after logging out. If no value is specified, the \"Redirect URI\" is used",
         "accessTokenTtl": "access_token lifetime in seconds",
         "refreshTokenTtl": "refresh_token lifetime in seconds"
       },
+      "notices": {
+        "clientSecretRegenerated": "The client secret has been regenerated"
+      },
+      "modals": {
+        "regenerateClientSecret": {
+          "title": "Regenerate client secret",
+          "mainMessage": "After regeneration, the previous client_secret will stop working.",
+          "secondaryMessage": "All active OIDC tokens for this application tied to the current client_secret will be revoked."
+        }
+      },
       "errors": {
         "allowedChars": "Can contain Latin letters (a-z), numbers (0-9), hyphens (-), and underscores (_)"
       },
       "locale": {
+        "languages": "Other languages",
         "title": "Change Language",
         "description": "Value set from the list of available languages",
         "english": "English",
@@ -481,6 +657,22 @@
         "french": "French",
         "german": "German",
         "italian": "Italian"
+      },
+      "additionalParams": {
+        "copyright": "Copyright",
+        "copyrightDescription": "Displayed in the widget and account portal footer.",
+        "manualUrl": "User manual URL",
+        "manualUrlDescription": "Opens from the \"{{helpLabel}}\" link in the account portal footer. If the field is empty, the internal system documentation opens.",
+        "prohibitRestoreDeletedUsers": "Prohibit restoring accounts from DELETED status",
+        "prohibitRestoreDeletedUsersDescription": "If enabled, restoring a deleted account through the account portal will be blocked.",
+        "deleteProfileAfterDays": "Final user deletion retention",
+        "deleteProfileAfterDaysDescription": "Number of days before a user marked for deletion is removed permanently. 0 removes immediately, -1 never removes automatically."
+      },
+      "additionalModules": {
+        "catalog": {
+          "title": "Catalog",
+          "description": "Enables the public application catalog. Each application can be added to the catalog for easier and faster access."
+        }
       },
       "access": {
         "twoFactorTitle": "Two-Factor Authentication",
@@ -505,20 +697,167 @@
       "profileFieldsSubtitle": "Configure profile field parameters and add identifiers that the user must have in their profile",
       "passwordPolicy": "Password Policy",
       "otherType": "Other",
-      "modals": {
-        "deleteOrg": {
-          "title": "Are you sure you want to delete the organization?",
-          "mainMessage": "The organization's dashboard, applications, and providers will be deleted"
+      "notifications": {
+        "empty": "No notifications yet",
+        "readStats": "Read: {{read}} / {{total}}",
+        "targets": {
+          "ALL": "All users",
+          "NEW_USERS": "New users",
+          "EXISTING_USERS": "Existing users",
+          "USER_LIST": "User list"
         }
       },
-      "tariff": "Pricing plan",
-      "plan": {
-        "free": "Free",
-        "extended": "Extended",
-        "full": "Full"
+      "oidcScopes": {
+        "panel": {
+          "title": "OIDC scopes",
+          "description": "Manage consent scopes and bind them to organization custom profile fields."
+        },
+        "editor": {
+          "createTitle": "Create OIDC scope",
+          "editTitle": "Edit OIDC scope",
+          "description": "Configure a consent scope. Profile fields are attached on the drag and drop board."
+        },
+        "labels": {
+          "scope": "Scope",
+          "title": "Title",
+          "description": "Description",
+          "icon": "Material icon",
+          "active": "Active"
+        },
+        "descriptions": {
+          "scope": "OAuth scope name, for example employee_profile",
+          "title": "Text shown on the consent screen",
+          "description": "Optional explanation for the consent screen"
+        },
+        "dropZones": {
+          "profile": {
+            "empty": "New custom fields appear here until you move them into a dedicated OIDC scope group.",
+            "subtitle": "Basic profile"
+          },
+          "scope": {
+            "empty": "Drop a custom field here to expose it through this scope."
+          }
+        },
+        "empty": {
+          "noFields": "No fields bound",
+          "noScopesYet": "No OIDC scopes yet",
+          "noGroupsYet": "No OIDC scope groups yet. Create one below and then drag custom fields into it."
+        },
+        "actions": {
+          "addGroup": "Add new group"
+        },
+        "modals": {
+          "deleteTitle": "Delete OIDC scope",
+          "deleteMessage": "Scope \"{{name}}\" will be removed. Continue?",
+          "deleteFieldTitle": "Delete custom field",
+          "deleteFieldMessage": "Field \"{{name}}\" will be removed from the profile and detached from related OIDC scopes."
+        },
+        "validation": {
+          "scopeName": "Use letters, numbers, colon, dot, underscore or hyphen"
+        },
+        "status": {
+          "inactiveSuffix": " - inactive"
+        },
+        "iconOptions": {
+          "badge": "Badge",
+          "work": "Work",
+          "groups": "Groups",
+          "security": "Security",
+          "key": "Key",
+          "checklist": "Checklist",
+          "structure": "Structure",
+          "category": "Category",
+          "settings": "Settings"
+        }
       },
-      "balance": "Balance",
-      "deleteOrg": "Delete organization"
+      "styling": {
+        "errors": {
+          "invalidJson": "Invalid JSON"
+        },
+        "sections": {
+          "systemStyles": "System styles",
+          "lightTheme": "Light theme",
+          "darkTheme": "Dark theme"
+        },
+        "systemControls": {
+          "componentBorderRadius": "Component border radius",
+          "buttonBorderRadius": "Button border radius",
+          "surfaceBlockBorderWidth": "SurfaceBlock border width",
+          "surfaceBlockHideBorder": "Hide SurfaceBlock border",
+          "surfaceBlockBoxShadow": "SurfaceBlock box shadow",
+          "contentPosition": "Content position",
+          "contentPositionOptions": {
+            "start": "Left",
+            "center": "Center",
+            "end": "Right"
+          }
+        },
+        "themeFields": {
+          "primaryMain": "Primary color",
+          "primaryContrastText": "Primary contrast text",
+          "secondaryMain": "Secondary color",
+          "secondaryContrastText": "Secondary contrast text",
+          "textPrimary": "Primary text color",
+          "textSecondary": "Secondary text color",
+          "backgroundDefault": "Default background",
+          "backgroundPaper": "Paper background",
+          "actionHover": "Hover background color",
+          "actionDisabled": "Disabled background color",
+          "actionSelected": "Selected background color",
+          "divider": "Divider color",
+          "errorMain": "Error text color"
+        },
+        "preview": {
+          "description": "Preview of theme edits before saving. You can switch between light and dark themes to check how your changes affect both design variants.",
+          "tabs": {
+            "light": "Light",
+            "dark": "Dark"
+          },
+          "buttons": {
+            "primary": "Primary",
+            "secondary": "Secondary",
+            "outlined": "Outlined"
+          },
+          "textBlock": {
+            "title": "Primary text color",
+            "description": "Secondary text helps check readability and contrast.",
+            "link": "Link"
+          },
+          "surfacesBlock": {
+            "title": "Modals and panels",
+            "description": "This block shows the surface background for panels, modals, and nested interface containers."
+          },
+          "controls": {
+            "switchLabel": "Switch label",
+            "switchDescription": "Description for the switch",
+            "checkboxLabel": "Select",
+            "radioOptions": {
+              "first": {
+                "title": "First option",
+                "description": "Description for the first option"
+              },
+              "second": {
+                "title": "Second option"
+              }
+            }
+          },
+          "input": {
+            "label": "Input field",
+            "description": "The field uses the same element as in the interface."
+          },
+          "selectOptions": {
+            "recent": "Recent",
+            "active": "Active",
+            "archived": "Archived"
+          }
+        }
+      },
+      "logging": {
+        "sentryDescription": "Error tracking. Captures exceptions and call stacks.",
+        "winstonDescription": "Structured logging with external export. Collects application logs, requests, and audit events in a structured format.",
+        "logRetentionDaysLabel": "Log retention period (days)",
+        "logRetentionDaysDescription": "Number of days to store logs in the system. -1 means logs are not automatically deleted"
+      }
     },
     "widget": {
       "title": "Configure Widget Appearance",
@@ -579,6 +918,273 @@
         "hideCreateAccount": "Hide create account button",
         "hideFooter": "Hide footer",
         "hideFooterDescription": "Only the copyright is displayed in the footer"
+      },
+      "saveNoticeInfo": "Information in the additional field outside the widget and inside the form has been successfully saved"
+    },
+    "tokens": {
+      "title": "Additional Tokens",
+      "description": "Create separate access tokens with a limited set of permissions and use them independently of your account session.",
+      "name": "Token name",
+      "ttl": "Expiration",
+      "ttlDescription": "The period for which the access token will be issued.",
+      "createdAt": "Created:",
+      "expiresAt": "Expires:",
+      "last4": "Last 4 characters:",
+      "permissions": "Permissions:",
+      "searchPermission": "Find and add permission",
+      "searchPermissionPlaceholder": "Start typing a permission",
+      "selectedPermissions": "Selected permissions",
+      "selectedPermissionsEmpty": "No permissions selected yet.",
+      "noPermissionsFound": "No matching permissions found",
+      "selectPermissions": "Select permissions",
+      "emptyPermissions": "There are no permissions available for your current session to create an additional token.",
+      "tokenValue": "Access token",
+      "controls": {
+        "revoke": "Revoke token"
+      },
+      "modals": {
+        "create": {
+          "title": "Create additional token",
+          "mainMessage": "Select a name and permissions for the new access token."
+        },
+        "created": {
+          "title": "Token created",
+          "mainMessage": "Copy the access token now. It will not be shown again after you close this window."
+        },
+        "revoke": {
+          "title": "Revoke token",
+          "mainMessage": "The token {{tokenName}} will be revoked and will stop working."
+        }
+      },
+      "ttlOptions": {
+        "one_hour": "1 hour",
+        "one_day": "1 day",
+        "seven_days": "7 days",
+        "thirty_days": "30 days"
+      },
+      "expirationMode": "Expiration type",
+      "expirationDateTime": "Expiration date and time",
+      "expirationDateDescription": "Select the exact date and time when the token will expire.",
+      "neverExpiresValue": "Until revoked",
+      "neverExpiresDescription": "The token will remain active until you manually revoke it.",
+      "expirationModes": {
+        "preset": "Period",
+        "datetime": "Date and time",
+        "never": "Until revoked"
+      },
+      "errors": {
+        "invalidExpirationDate": "Specify a valid expiration date and time.",
+        "expirationDateTooSoon": "The expiration date must be at least 1 minute later than the current time."
+      }
+    },
+    "directory": {
+      "shared": {
+        "warnings": {
+          "selectOrganizationForCatalogs": "Please select an organization to view catalogs",
+          "selectApplicationForResources": "Please select an application to view resources"
+        },
+        "emptyStates": {
+          "selectItemToViewInfo": "Select an item to view information",
+          "selectedItemNotFound": "Selected item not found",
+          "noDescription": "No description provided"
+        },
+        "modals": {
+          "selectFolderTitle": "Select folder"
+        },
+        "actions": {
+          "addUser": "Add user",
+          "addGroup": "Add group"
+        },
+        "placeholders": {
+          "searchUser": "Start typing user name",
+          "searchGroup": "Start typing group name"
+        },
+        "helper": {
+          "userSearch": "User search is performed by id, login, email, external email, nickname, first name, or last name."
+        },
+        "common": {
+          "moveTargetFolder": " to folder {{name}}"
+        }
+      },
+      "folders": {
+        "title": "Folder",
+        "current": "In current folder",
+        "description": "Description:",
+        "noDescription": "No description",
+        "sections": {
+          "folders": "Folders"
+        },
+        "actions": {
+          "create": "Create folder",
+          "createUser": "Create user",
+          "createGroup": "Create group"
+        },
+        "fields": {
+          "name": {
+            "label": "Folder name"
+          }
+        },
+        "modals": {
+          "delete": {
+            "title": "Delete folder",
+            "message": "Are you sure you want to delete the folder {{name}}?"
+          },
+          "edit": {
+            "title": "Edit folder"
+          },
+          "create": {
+            "title": "Create folder"
+          },
+          "createGroup": {
+            "title": "Create group"
+          }
+        },
+        "placeholders": {
+          "searchFolder": "Start typing folder name"
+        },
+        "loadingFolders": "Loading folders...",
+        "emptyStates": {
+          "users": "There are no users in this folder yet",
+          "groups": "There are no groups in this folder yet",
+          "folders": "There are no subfolders in this folder yet",
+          "foldersNotFound": "Folders not found"
+        },
+        "errors": {
+          "loadRootFolder": "Failed to load root folder",
+          "rootFolderNotFound": "Root folder not found.",
+          "loadUsers": "Failed to load the folder's user list.",
+          "loadGroups": "Failed to load the folder's group list.",
+          "createGroup": "Failed to create group {{name}}."
+        },
+        "notices": {
+          "created": "Folder {{name}} successfully created.",
+          "updated": "Folder {{name}} successfully updated.",
+          "deleted": "Folder {{name}} successfully deleted.",
+          "moved": "Folder {{name}} successfully moved.",
+          "groupCreated": "Group {{name}} successfully created."
+        }
+      },
+      "users": {
+        "title": "User",
+        "loadingDetails": "Loading extended user information",
+        "errors": {
+          "loadRelations": "Failed to load directory path and system links",
+          "moveTargetRequired": "Select a folder to move the user to.",
+          "statusUpdate": "Failed to update status.",
+          "removeFromGroup": "Failed to remove user {{name}} from the group.",
+          "delete": "Failed to delete user {{name}}.",
+          "block": "Failed to block user {{name}}.",
+          "unblock": "Failed to unblock user {{name}}.",
+          "move": "Failed to move user {{name}}."
+        },
+        "fields": {
+          "id": "User ID",
+          "login": "Login",
+          "givenName": "First name",
+          "familyName": "Last name",
+          "email": "Email",
+          "phone": "Phone"
+        },
+        "emptyStates": {
+          "noSystemLinks": "No links to external systems found"
+        },
+        "actions": {
+          "removeFromGroup": "Remove user from group"
+        },
+        "modals": {
+          "delete": {
+            "title": "Delete user",
+            "message": "Are you sure you want to delete user {{name}}?"
+          },
+          "block": {
+            "title": "Block user",
+            "message": "Are you sure you want to block user {{name}}?",
+            "description": "The user will lose access after being blocked."
+          },
+          "unblock": {
+            "title": "Unblock user",
+            "message": "Are you sure you want to unblock user {{name}}?",
+            "description": "The user will regain access after being unblocked."
+          },
+          "removeFromGroup": {
+            "title": "Remove user from group",
+            "message": "Are you sure you want to remove user {{name}} from the current group?"
+          }
+        },
+        "labels": {
+          "statusActive": "Status: active",
+          "statusBlocked": "Status: blocked"
+        },
+        "notices": {
+          "statusUpdated": "Status successfully updated.",
+          "removedFromGroup": "User {{name}} successfully removed from group.",
+          "deleted": "User {{name}} successfully deleted.",
+          "blocked": "User {{name}} successfully blocked.",
+          "unblocked": "User {{name}} successfully unblocked.",
+          "moved": "User {{name}} successfully moved{{target}}."
+        }
+      },
+      "groups": {
+        "title": "Group",
+        "current": "In current group",
+        "actions": {
+          "removeFromGroup": "Remove from group"
+        },
+        "fields": {
+          "name": {
+            "label": "Group name"
+          }
+        },
+        "modals": {
+          "addMember": {
+            "userTitle": "Select user",
+            "groupTitle": "Select group"
+          },
+          "edit": {
+            "title": "Edit group"
+          },
+          "delete": {
+            "title": "Delete group",
+            "message": "Are you sure you want to delete group {{name}}?",
+            "warningAdminRole": "If a user was added via this group but their role in the application was changed to administrator, they will not be removed from the application."
+          },
+          "removeFromGroup": {
+            "title": "Remove from group",
+            "message": "Are you sure you want to remove group {{name}} from the current group?"
+          }
+        },
+        "emptyStates": {
+          "users": "There are no users in this group yet",
+          "groups": "There are no groups in this group yet"
+        },
+        "errors": {
+          "loadUsers": "Failed to load group user list.",
+          "loadNestedGroups": "Failed to load nested group list.",
+          "loadAutocomplete": "Failed to load results.",
+          "addMember": "Failed to add item {{name}}.",
+          "removeFromGroup": "Failed to remove group {{name}} from the group.",
+          "delete": "Failed to delete group {{name}}.",
+          "update": "Failed to update group {{name}}.",
+          "move": "Failed to move group {{name}}."
+        },
+        "notices": {
+          "userAdded": "User {{name}} successfully added.",
+          "groupAdded": "Group {{name}} successfully added.",
+          "removedFromGroup": "Group {{name}} successfully removed from the group.",
+          "deleted": "Group {{name}} successfully deleted.",
+          "updated": "Group {{name}} successfully updated.",
+          "moved": "Group {{name}} successfully moved{{target}}."
+        },
+        "labels": {
+          "usersCount": "Members:"
+        },
+        "filters": {
+          "all": "All",
+          "members": "In group",
+          "nonMembers": "Not in group",
+          "added": "Added",
+          "others": "Others"
+        }
       }
     }
   },
@@ -588,9 +1194,18 @@
     "profile": "Profile",
     "scopes": "Scopes",
     "settings": "Settings",
+    "organizations": "Organizations",
+    "system": "System",
     "users": "Users",
     "widget": "Widget",
-    "request": "Requests"
+    "request": "Requests",
+    "tokens": "Tokens",
+    "folders": "Directory",
+    "connectors": "Connectors",
+    "rbac": "RBAC",
+    "groups": "Groups",
+    "roles": "Roles",
+    "resources": "Resources"
   },
   "errors": {
     "valueNotAvailable": "This value is not available",
@@ -606,9 +1221,12 @@
     "invalidEmailFormat": "Invalid email address format",
     "invalidPhoneFormat": "Invalid phone number format",
     "mustBeNumber": "Must be a number",
+    "invalidPort": "Port must be an integer from 1 to 65535",
     "mustBePositiveNumber": "Must be a positive number",
+    "integerMinMinusOne": "Value must be an integer greater than or equal to -1",
     "noSpaces": "Value cannot contain spaces",
-    "hexColor": "Color must be in HEX format"
+    "hexColor": "Color must be in HEX format",
+    "invalidFieldNameFormat": "The field name can only contain Latin letters, numbers, and the symbols _-"
   },
   "info": {
     "dataCopied": "Data copied to clipboard",
@@ -618,6 +1236,8 @@
     "saveError": "Failed to save data",
     "updateError": "Failed to update data",
     "deleteError": "Failed to delete data",
+    "testEmailSent": "Test email sent",
+    "testEmailSendError": "Failed to send test email",
     "pasteError": "Error pasting parameters from clipboard",
     "emptySearch": "No results found for your search",
     "requestCancel": "Request rejected",
@@ -632,21 +1252,10 @@
     }
   },
   "panel": {
-    "license": {
-      "inputLabel": "Enter value",
-      "deleteLicense": "Delete license",
-      "expirationDate": "Expiration date",
-      "perpetual": "perpetual",
-      "keys": "Keys",
-      "deleteNotice": "Providers linked to the license {{licenseName}} will stop working"
-    },
     "trusted": {
       "title": "Configure trusted providers",
       "providers": "Providers",
       "publicOutlinedIcon": "System public login method",
-      "license": "License",
-      "noLicense": "no license",
-      "licenseDescription": "Within a single license, you can use the same server Address",
       "localAutoMergeUsers": {
         "title": "Automatic user merging",
         "description": "Convert self-registered users to trusted users when email matches",
@@ -666,6 +1275,8 @@
       "title": "Notifications",
       "newNotifications": "New notifications:",
       "clear": "Clear",
+      "empty": "No notifications yet",
+      "delete": "Delete notification",
       "goToLog": "Go to log"
     },
     "chooseProviders": {
@@ -712,9 +1323,45 @@
       "edit": {
         "editTitle": "Edit email template",
         "editDescription": "Change the email template for event {{action}}",
+        "languageLabel": "Template language",
+        "templateLabel": "Email template",
+        "typeLabel": "Email type",
+        "listModeLocale": "By language",
+        "listModeAction": "By email type",
+        "templatesListLabel": "Templates list",
         "titleLabel": "Template name",
         "subjectLabel": "Email subject",
-        "contentLabel": "Email content"
+        "contentLabel": "Email content",
+        "variant1Button": "Variant 1",
+        "variant2Button": "Variant 2",
+        "variant3Button": "Variant 3",
+        "editTab": "Edit",
+        "previewTab": "Preview",
+        "emptyState": "No templates found",
+        "previewLabel": "Email preview"
+      }
+    },
+    "notifications": {
+      "title": "Manage notifications",
+      "description": "Create messages that will be shown to users after successful authorization in this application",
+      "modals": {
+        "archive": {
+          "title": "Archive notification",
+          "mainMessage": "The notification \"{{title}}\" will be moved to the archive and will no longer be shown to users. Continue?"
+        }
+      },
+      "edit": {
+        "createTitle": "Create notification",
+        "editTitle": "Edit notification",
+        "titleLabel": "Title",
+        "titleDescription": "Short notification title visible in the widget",
+        "contentLabel": "Content",
+        "contentDescription": "Main notification text shown to the user",
+        "targetLabel": "Audience",
+        "targetDescription": "Choose which users should see this notification",
+        "usersLabel": "Users",
+        "usersPlaceholder": "Select users",
+        "usersDescription": "Shown only for the \"User list\" audience"
       }
     },
     "profileFields": {
@@ -726,7 +1373,6 @@
         "allowedAsLogin": "Use as login",
         "active": "Active",
         "parameters": "Parameters",
-        "parametersDescription": "Specify field parameters",
         "editable": "Editable",
         "required": "Required",
         "unique": "Unique",
@@ -743,18 +1389,44 @@
         "validationRules": "Validation rules",
         "validationRulesPlaceholder": "No validation rules set",
         "agreementLink": "Link to data processing policy file",
-        "agreementPlaceholder": "Enter link to file"
+        "agreementPlaceholder": "Enter link to file",
+        "parametersDescription": "Configure field parameters",
+        "validateOnAuthorization": "Validate email during authorization",
+        "validateOnAuthorizationDescription": "During authorization, the existing email will be checked for validity. If the field is invalid, the user will be prompted to add a new email"
       },
       "descriptions": {
-        "field": "Field name in the system",
-        "title": "Display name of the field"
+        "title": "Display name of the field",
+        "field": "The field key name in the system (Latin letters, numbers, and hyphens)"
       },
       "modals": {
         "deleteProvider": {
           "title": "Delete provider",
           "message": "The provider will be deleted along with its associated settings. The corresponding login method will also be removed."
+        },
+        "deleteField": {
+          "title": "Delete profile field",
+          "message": "The field \"{{fieldName}}\" will be deleted from the system. Continue?"
         }
       }
+    },
+    "winston": {
+      "title": "Winston Logging Settings",
+      "description": "Configure structured logging and log export",
+      "enabledLabel": "Enable logging",
+      "exportEnabledLabel": "Enable log export to an external service",
+      "exportProviderLabel": "Export provider",
+      "exportProviderDescription": "Select an external service for logging",
+      "exportUrlLabel": "Export URL",
+      "exportUrlDescription": "Endpoint URL for receiving logs",
+      "exportApiKeyLabel": "API key (optional)",
+      "exportApiKeyDescription": "Authentication key for the external service",
+      "auditExportEnabledLabel": "Export audit events",
+      "serviceNameLabel": "Service name",
+      "serviceNameDescription": "Service identifier in logs",
+      "logLevelLabel": "Log level",
+      "logLevelDescription": "Minimum log level (debug, info, warn, error)",
+      "redactHeadersLabel": "Masked headers",
+      "redactHeadersDescription": "Comma-separated list of headers to be masked in logs"
     }
   },
   "providers": {
@@ -776,10 +1448,8 @@
     "nameDescription": "Name displayed to users",
     "description": "Description",
     "logo": "Logo",
-    "public": "Publicity",
-    "publicDescription": "Publicity level of the field for new users",
     "publicMethods": "Public login method",
-    "publicMethodsDescription": "The login method will be available for addition to user applications",
+    "publicMethodsDescription": "Available only for system login methods. Makes the login method available in all organizations and applications, and allows users to add it to their profile as an identifier",
     "ethereum": {
       "contractAddress": "Contract address",
       "contractAddressDescription": "Unique address of the Ethereum smart contract",
@@ -833,8 +1503,11 @@
       "mailImage": "Email image",
       "mailCodeTtlSec": "Verification code TTL",
       "mailCodeTtlSecDescription": "Verification code lifetime for the email service in seconds",
-      "useForLogin": "Use for code-based login",
-      "useForLoginDescription": "Will be available in applications as a login method using one-time passwords"
+      "alias": "Sender alias (alias)",
+      "aliasDescription": "Sender name that will be shown in the \"From\" field",
+      "sendTestEmail": "Send test email",
+      "postalService": "Edit email service",
+      "sendTestEmailDescription": "Verify email service settings by sending a test email to the primary email address"
     },
     "phone": {
       "issuer": "Base authorization address (issuer)",
@@ -863,11 +1536,18 @@
     "mtls": {
       "issuer": "mTLS connection entry point (issuer)",
       "issuerDescription": "Entry point address"
-    }
+    },
+    "webauthn": {
+      "typeAuthenticator": "Use external security keys",
+      "typeAuthenticatorDescription": "By default, only built-in device biometrics (Face ID, Touch ID, Windows Hello, etc.) are used. When enabled, only external keys (NFC, QR, USB devices, etc.) are allowed"
+    },
+    "publicIdentity": "Publicity",
+    "publicDescriptionIdentity": "Default publicity level for the identifier in the user profile"
   },
   "actionButtons": {
     "edit": "Edit",
     "add": "Add",
+    "makePrimary": "Set as Contact",
     "deleteAccount": "Delete account",
     "continue": "Continue",
     "cancel": "Cancel",
@@ -879,15 +1559,20 @@
     "apply": "Apply",
     "show": "Show",
     "hide": "Hide",
-    "resend": "Resend",
     "confirm": "Confirm",
+    "details": "Details",
     "getCode": "Get code",
     "revoke": "Revoke",
     "configure": "Configure",
+    "regenerate": "Regenerate",
     "create": "Create",
     "send": "Send",
-    "replenish": "Top up balance",
-    "connect": "Connect"
+    "copy": "Copy",
+    "archive": "Archive",
+    "move": "Move",
+    "block": "Block",
+    "unblock": "Unblock",
+    "retry": "Retry"
   },
   "privacy": {
     "private": {
@@ -906,7 +1591,12 @@
   "statuses": {
     "active": "Active",
     "inactive": "Inactive",
-    "expired": "Expired"
+    "expired": "Expired",
+    "error": "Error",
+    "available": "Available",
+    "inUse": "In use",
+    "blocked": "Blocked",
+    "deleted": "Deleted"
   },
   "roles": {
     "owner": "Owner",
@@ -931,9 +1621,11 @@
     "download": "Export vCard",
     "close": "Close",
     "generatePassword": "Generate password",
+    "regenerate": "Regenerate",
     "required": "Required",
     "notActive": "Not active",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "details": "Details"
   },
   "helperText": {
     "value": {
@@ -941,6 +1633,8 @@
     },
     "characterCount": "characters",
     "password": "Password",
+    "requirePasswordChangeOnNextAuthorization": "Require password change on next sign-in",
+    "requirePasswordChangeOnNextAuthorizationDescription": "The user will be redirected to the password change screen on the next widget sign-in",
     "lastChanged": "Last modified date",
     "mainInfo": "Main information",
     "additionalInfo": "Additional information",
@@ -950,7 +1644,17 @@
     "emptyList": "List is empty",
     "parameters": "Parameters",
     "send": "Sent",
-    "recipient": "Recipient"
+    "recipient": "Recipient",
+    "initialLoadError": "Failed to load the list.",
+    "updateError": "Failed to update the list.",
+    "cannotUndo": "This action cannot be undone.",
+    "loadingResults": "Loading results...",
+    "nothingFound": "Nothing found",
+    "startTyping": "Start typing..."
+  },
+  "search": {
+    "recentSearches": "Recent searches",
+    "clearAll": "Clear all"
   },
   "modals": {
     "uploadImage": {
@@ -974,6 +1678,24 @@
     "unSavedChanges": {
       "title": "Save changes",
       "mainMessage": "Changes are not saved. Continue without saving?"
+    }
+  },
+  "fields": {
+    "description": "Description"
+  },
+  "dateTime": {
+    "schedule": {
+      "daily": "Daily",
+      "weekly": "Weekly"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
     }
   }
 }

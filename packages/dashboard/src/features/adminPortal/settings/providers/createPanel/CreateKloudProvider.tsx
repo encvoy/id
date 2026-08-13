@@ -3,12 +3,12 @@ import clsx from "clsx";
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
 import * as yup from "yup";
 import {
   IKloudParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "src/shared/api/provider";
@@ -16,7 +16,7 @@ import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "../components/BaseFormProvider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
+import { PasswordTextField } from "@encvoy-id/components";
 import styles from "../BaseStylesProvider.module.css";
 import { ICreateProvider } from "src/features/adminPortal/settings/providers/createPanel/CreateProvider";
 import { ProviderAvatars } from "src/features/adminPortal/settings/providers/utils";
@@ -65,10 +65,10 @@ export const CreateKloudProvider: FC<ICreateProvider> = ({
     defaultValues: {
       name: "Kloud",
       avatar: ProviderAvatars.KLOUD,
-      type: ProviderType.KLOUD,
+      type: EProviderType.KLOUD,
       params: {},
       default_public: EClaimPrivacyNumber.private,
-    },
+    } as IProvider<IKloudParams>,
     mode: "onChange",
     reValidateMode: "onBlur",
   });
@@ -116,10 +116,7 @@ export const CreateKloudProvider: FC<ICreateProvider> = ({
       type="Kloud"
       disabled={createResult.isLoading}
     >
-      <ProviderHeader
-        defaultAvatar={ProviderAvatars.KLOUD}
-        withoutPublicStatus
-      />
+      <ProviderHeader defaultAvatar={ProviderAvatars.KLOUD} />
       <InputField
         name="params.external_client_id"
         label={translate("providers.kloud.clientId")}
@@ -127,10 +124,15 @@ export const CreateKloudProvider: FC<ICreateProvider> = ({
         required
       />
 
-      <Typography className={clsx("text-14", styles.asterisk, styles.label)}>
+      <Typography className={clsx("text-14", "asterisk", styles.label)}>
         {translate("providers.kloud.clientSecret")}
       </Typography>
-      <PasswordTextField nameField="params.external_client_secret" />
+      <PasswordTextField
+        showText={translate("actionButtons.show")}
+        hideText={translate("actionButtons.hide")}
+        copyText={translate("actionButtons.copy")}
+        nameField="params.external_client_secret"
+      />
       <Typography
         className={clsx("text-14", styles.description)}
         color="text.secondary"

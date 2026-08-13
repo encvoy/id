@@ -1,6 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common/exceptions/internal-server-error.exception';
-import { Client } from '@prisma/client';
+import { Client, Prisma } from '@prisma/client';
 import type Redis from 'ioredis';
+import { CLIENT_ID } from 'src/constants';
 import { Ei18nCodes } from 'src/enums';
 import * as helpers from '../../helpers';
 import { UpdateClientDto } from '../clients/clients.dto';
@@ -10,6 +11,10 @@ import { redisClient } from './redis.client';
 interface Adapter {
   upsert(id: string, payload: any, expiresIn?: number): Promise<void>;
   find(id: string): Promise<any>;
+  take?<T>(id: string): Promise<T | undefined>;
+  addSetMember?(id: string, value: string, expiresIn?: number): Promise<void>;
+  getSetMembers?(id: string): Promise<string[]>;
+  removeSetMember?(id: string, value: string): Promise<void>;
   findByUid?(uid: string): Promise<any>;
   findByUserCode?(userCode: string): Promise<any>;
   destroy(id: string): Promise<void>;
@@ -26,7 +31,7 @@ type TLoggedUserInfo = {
 
 let client: Redis;
 
-// Функция для получения активного клиента
+// Resolve the active client.
 function getClient(): Redis {
   if (!client || client.status === 'end' || client.status === 'close') {
     client = redisClient('oidc:');
@@ -34,17 +39,8 @@ function getClient(): Redis {
   return client;
 }
 
-const grantable = new Set([
-  'AccessToken',
-  'AuthorizationCode',
-  'RefreshToken',
-  'DeviceCode',
-  'BackchannelAuthenticationRequest',
-]);
-
-const consumable = new Set(['AuthorizationCode', 'RefreshToken', 'DeviceCode']);
-
 export enum REDIS_PREFIXES {
+  AccessToken = 'AccessToken',
   grant = 'grant',
   userCode = 'userCode',
   uid = 'uid',
@@ -75,7 +71,18 @@ export enum REDIS_PREFIXES {
   BindData = 'BindData',
   UserData = 'UserData',
   EmailCode = 'EmailCode',
+  PendingAuthorization = 'PendingAuthorization',
 }
+
+const grantable = new Set([
+  REDIS_PREFIXES.AccessToken,
+  'AuthorizationCode',
+  'RefreshToken',
+  'DeviceCode',
+  'BackchannelAuthenticationRequest',
+]);
+
+const consumable = new Set(['AuthorizationCode', 'RefreshToken', 'DeviceCode']);
 
 /**
  * RedisAdapter implements oidc-provider.Adapter.
@@ -85,6 +92,19 @@ export class RedisAdapter implements Adapter {
 
   constructor(name: string) {
     this.name = name;
+  }
+
+  private isPersonalAccessTokenPayload(payload: unknown): boolean {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      return false;
+    }
+
+    const record = payload as Record<string, unknown>;
+    return (
+      record.gty === 'personal_access_token' ||
+      record.token_kind === 'personal_access' ||
+      record.kind === 'personal_access'
+    );
   }
 
   /**
@@ -144,10 +164,38 @@ export class RedisAdapter implements Adapter {
         ...restDto,
       };
 
+      // Resolve the root directory folder when creating a client.
+      const existingClient = await prisma.client.findUnique({
+        where: { client_id: id },
+        select: { folder_id: true },
+      });
+
+      let folder_id = existingClient?.folder_id;
+
+      if (!folder_id) {
+        // A new client starts in the system directory folder.
+        const directoryFolder = await prisma.folder.findFirst({
+          where: {
+            client_id: CLIENT_ID || id,
+            name: 'Directory',
+            parent_id: null,
+          },
+        });
+
+        if (!directoryFolder) {
+          throw new Error('Directory folder not found for client creation');
+        }
+
+        folder_id = directoryFolder.id;
+      }
+
       await prisma.client.upsert({
         where: { client_id: id },
         update: data,
-        create: data,
+        create: {
+          ...(data as Prisma.ClientUncheckedCreateInput),
+          folder_id,
+        },
       });
     } catch (e) {
       throw new InternalServerErrorException(Ei18nCodes.T3E0078, { cause: e });
@@ -167,6 +215,7 @@ export class RedisAdapter implements Adapter {
     let currentTTL: number | null = null;
     if (expiresIn === undefined) {
       currentTTL = await getClient().ttl(key);
+      // Do not set expiry when TTL is -1 (no expiry) or -2 (missing key).
       if (currentTTL <= 0) {
         currentTTL = null;
       }
@@ -245,6 +294,35 @@ export class RedisAdapter implements Adapter {
   }
 
   /**
+   * Adds a member to a Redis set under the adapter prefix.
+   */
+  public async addSetMember(id: string, value: string, expiresIn?: number): Promise<void> {
+    const key = this.formatRedisKey(id);
+    const multi = getClient().multi();
+    multi.sadd(key, value);
+
+    if (expiresIn && expiresIn > 0) {
+      multi.expire(key, expiresIn);
+    }
+
+    await multi.exec();
+  }
+
+  /**
+   * Reads members from a Redis set under the adapter prefix.
+   */
+  public async getSetMembers(id: string): Promise<string[]> {
+    return getClient().smembers(this.formatRedisKey(id));
+  }
+
+  /**
+   * Removes a member from a Redis set under the adapter prefix.
+   */
+  public async removeSetMember(id: string, value: string): Promise<void> {
+    await getClient().srem(this.formatRedisKey(id), value);
+  }
+
+  /**
    * Finds data by uid.
    * oidc-provider uses this method.
    */
@@ -308,9 +386,29 @@ export class RedisAdapter implements Adapter {
     }
   }
 
+  public async take<T = any>(id: string): Promise<T | undefined> {
+    try {
+      const key = this.formatRedisKey(id);
+      const data = await getClient().eval(
+        'local value = redis.call("GET", KEYS[1]); if value then redis.call("DEL", KEYS[1]); end; return value',
+        1,
+        key,
+      );
+
+      return typeof data === 'string' ? (JSON.parse(data) as T) : undefined;
+    } catch (e) {
+      throw new InternalServerErrorException(`Failed to consume key data: ${this.name}`, {
+        cause: e,
+      });
+    }
+  }
+
+  /**
+   * Remove all OIDC tokens and sessions for a user ID.
+   */
   async fullOidcCleanupByUserId(userId: string) {
     const types = [
-      'AccessToken',
+      REDIS_PREFIXES.AccessToken,
       'RefreshToken',
       'AuthorizationCode',
       'DeviceCode',
@@ -337,7 +435,7 @@ export class RedisAdapter implements Adapter {
 
           if (data) {
             const payload = typeof data === 'string' ? JSON.parse(data) : data;
-            if (payload?.accountId === userId) {
+            if (payload?.accountId === userId && !this.isPersonalAccessTokenPayload(payload)) {
               await getClient().del(key);
             }
           }
@@ -358,7 +456,7 @@ export class RedisAdapter implements Adapter {
         const data = await getClient().get(key);
         if (data) {
           const grant = JSON.parse(data);
-          if (grant?.accountId === userId) {
+          if (grant?.accountId === userId && !this.isPersonalAccessTokenPayload(grant)) {
             await getClient().del(key);
           }
         }
@@ -378,6 +476,7 @@ export class RedisAdapter implements Adapter {
       try {
         const tokens = await getClient().lrange(key, 0, -1);
         let shouldDelete = false;
+        let hasPersonalAccessTokens = false;
         for (const tokenKey of tokens) {
           let data;
           const tokenType = tokenKey.split(':')[1]; // Get the token type
@@ -391,6 +490,15 @@ export class RedisAdapter implements Adapter {
           if (data) {
             try {
               const payload = typeof data === 'string' ? JSON.parse(data) : data;
+              if (payload?.accountId !== userId) {
+                continue;
+              }
+
+              if (this.isPersonalAccessTokenPayload(payload)) {
+                hasPersonalAccessTokens = true;
+                continue;
+              }
+
               if (payload?.accountId === userId) {
                 await getClient().del(tokenKey);
                 shouldDelete = true;
@@ -398,7 +506,7 @@ export class RedisAdapter implements Adapter {
             } catch {}
           }
         }
-        if (shouldDelete) {
+        if (shouldDelete && !hasPersonalAccessTokens) {
           await getClient().del(key);
         }
       } catch (error) {
@@ -528,7 +636,11 @@ export class RedisAdapter implements Adapter {
                 if (data) {
                   try {
                     const payload = typeof data === 'string' ? JSON.parse(data) : data;
-                    if (payload?.accountId === userId && payload?.clientId === client_id) {
+                    if (
+                      payload?.accountId === userId &&
+                      payload?.clientId === client_id &&
+                      !this.isPersonalAccessTokenPayload(payload)
+                    ) {
                       shouldDelete = true;
                       break;
                     }
@@ -560,6 +672,108 @@ export class RedisAdapter implements Adapter {
     }
   }
 
+  async revokeTokensByClientId(client_id: string) {
+    try {
+      const revokedGrantIds = new Set<string>();
+
+      const getTokenPayload = async (tokenKey: string) => {
+        const tokenType = tokenKey.replace(/^oidc:/, '').split(':')[0];
+        let data = await getClient().get(tokenKey);
+
+        if (!data && consumable.has(tokenType)) {
+          data = (await getClient().hgetall(tokenKey))?.payload;
+        }
+
+        if (!data) {
+          return null;
+        }
+
+        try {
+          return typeof data === 'string' ? JSON.parse(data) : data;
+        } catch {
+          return null;
+        }
+      };
+
+      const revokeGrantKeys = async () => {
+        const stream = getClient().scanStream({
+          match: 'oidc:grant*',
+          count: 100,
+        });
+
+        return new Promise<void>((resolve, reject) => {
+          stream.on('data', async (resultKeys) => {
+            for (const currentKey of resultKeys) {
+              const tokens = await getClient().lrange(currentKey, 0, -1);
+              let matchingGrantId: string | null = null;
+
+              for (const tokenKey of tokens) {
+                const payload = await getTokenPayload(tokenKey);
+                if (payload?.clientId === client_id) {
+                  if (this.isPersonalAccessTokenPayload(payload)) {
+                    continue;
+                  }
+                  matchingGrantId = currentKey.replace(/^oidc:grant:/, '');
+                  break;
+                }
+              }
+
+              if (matchingGrantId && !revokedGrantIds.has(matchingGrantId)) {
+                revokedGrantIds.add(matchingGrantId);
+                await this.revokeByGrantId(matchingGrantId);
+              }
+            }
+          });
+
+          stream.on('end', () => resolve());
+          stream.on('error', (e) => {
+            console.error('[revokeTokensByClientId] grant stream error:', e);
+            reject(e);
+          });
+        });
+      };
+
+      const revokeStandaloneAccessTokens = async () => {
+        const stream = getClient().scanStream({
+          match: 'oidc:AccessToken*',
+          count: 100,
+        });
+
+        return new Promise<void>((resolve, reject) => {
+          stream.on('data', async (resultKeys) => {
+            for (const tokenKey of resultKeys) {
+              const payload = await getTokenPayload(tokenKey);
+              if (!payload || payload.clientId !== client_id) {
+                continue;
+              }
+
+              if (payload.gty === 'personal_access_token') {
+                continue;
+              }
+
+              if (payload.grantId && revokedGrantIds.has(payload.grantId)) {
+                continue;
+              }
+
+              await getClient().del(tokenKey);
+            }
+          });
+
+          stream.on('end', () => resolve());
+          stream.on('error', (e) => {
+            console.error('[revokeTokensByClientId] access token stream error:', e);
+            reject(e);
+          });
+        });
+      };
+
+      await revokeGrantKeys();
+      await revokeStandaloneAccessTokens();
+    } catch (e) {
+      throw new InternalServerErrorException('Failed to revoke client tokens', { cause: e });
+    }
+  }
+
   async deleteLoggedSessionsByUserId(userId: string, cookie?: any) {
     try {
       const streamPromise = (): Promise<string[]> => {
@@ -587,11 +801,11 @@ export class RedisAdapter implements Adapter {
 
       const resultKeys = await streamPromise();
       let sessionCookie = cookie?.get('_sess');
+      const sessionIdsToDelete = new Set<string>();
 
-      if (!sessionCookie) return;
-
-      sessionCookie = decodeURIComponent(sessionCookie);
-      let cookieModified = false;
+      if (sessionCookie) {
+        sessionCookie = decodeURIComponent(sessionCookie);
+      }
 
       await Promise.all(
         resultKeys.map(async (key) => {
@@ -601,30 +815,14 @@ export class RedisAdapter implements Adapter {
 
             const info: TLoggedUserInfo = JSON.parse(data);
 
-            if (info?.id === parseInt(userId, 10)) {
+            if (String(info?.id) === String(userId)) {
               const sessionId = key.replace('LoggedUserInfoCode:', '');
-
-              // Remove sessionId from the cookie (check different possible formats)
-              const patterns = [
-                new RegExp(`${sessionId},?`, 'g'), // sessionId with a comma
-                new RegExp(`,${sessionId}`, 'g'), // comma with sessionId
-                new RegExp(`^${sessionId}$`, 'g'), // sessionId only
-              ];
-
-              let newSessionCookie = sessionCookie;
-              patterns.forEach((pattern) => {
-                newSessionCookie = newSessionCookie.replace(pattern, '');
-              });
-
-              // Clear excess commas
-              newSessionCookie = newSessionCookie.replace(/,,+/g, ',').replace(/^,|,$/g, '');
-
-              if (newSessionCookie !== sessionCookie) {
-                sessionCookie = newSessionCookie;
-                cookieModified = true;
-              }
+              sessionIdsToDelete.add(sessionId);
 
               await getClient().del(key);
+              if (info.sessionToken) {
+                await getClient().del(`LoggedUserToken:${info.sessionToken}`);
+              }
             }
           } catch (error) {
             console.error(`[deleteLoggedSessionsByUserId] Error processing key ${key}:`, error);
@@ -632,13 +830,21 @@ export class RedisAdapter implements Adapter {
         }),
       );
 
-      // Update the cookie only once at the end if there were changes
-      if (cookieModified) {
+      if (sessionCookie && cookie && sessionIdsToDelete.size > 0) {
+        const newSessionCookie = sessionCookie
+          .split(' ')
+          .filter((sessionId) => sessionId && !sessionIdsToDelete.has(sessionId))
+          .join(' ');
         const cookieOptions = {
           httpOnly: true,
           overwrite: true,
         };
-        cookie.set('_sess', sessionCookie || '', cookieOptions);
+
+        if (newSessionCookie) {
+          cookie.set('_sess', newSessionCookie, cookieOptions);
+        } else {
+          cookie.set('_sess', '', cookieOptions);
+        }
       }
     } catch (error) {
       console.error('[deleteLoggedSessionsByUserId] error:', error);

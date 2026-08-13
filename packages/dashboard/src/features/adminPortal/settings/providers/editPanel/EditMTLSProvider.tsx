@@ -15,9 +15,12 @@ import {
 } from "src/shared/api/provider";
 import * as yup from "yup";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { ProviderAvatars } from "../utils";
+import {
+  buildProviderUpdatePayload,
+  ProviderAvatars,
+} from "../utils";
 import { useTranslation } from "react-i18next";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
 
 export const EditMTLSProvider: FC<IEditProviderProps> = ({
   isOpen,
@@ -65,7 +68,8 @@ export const EditMTLSProvider: FC<IEditProviderProps> = ({
   }, [isOpen]);
 
   const onSubmit: SubmitHandler<IProvider<IMTLSParams>> = (data) => {
-    updateProvider(data).then(() => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields);
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,

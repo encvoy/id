@@ -1,30 +1,30 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
+import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
+import { IconsLibrary } from "@encvoy-id/components";
+import { InputField } from "@encvoy-id/components";
+import { APP_PUBLIC_URL } from "src/shared/utils/appBasePath";
 import * as yup from "yup";
-import { DOMAIN } from "../../../../../shared/utils/constants";
 import {
   IOauthParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "../../../../../shared/api/provider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
+import { PasswordTextField } from "@encvoy-id/components";
+import styles from "../BaseStylesProvider.module.css";
+import { TTemplate } from "../ChooseListProvidersPanel";
 import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "../components/BaseFormProvider";
-import { TTemplate } from "../ChooseListProvidersPanel";
-import styles from "../BaseStylesProvider.module.css";
-import { InputField } from "src/shared/ui/components/InputBlock";
-import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
-import { useTranslation } from "react-i18next";
-import Typography from "@mui/material/Typography";
 
 const schema = (translate: (key: string, options?: any) => string) =>
   yup.object({
@@ -42,7 +42,8 @@ const schema = (translate: (key: string, options?: any) => string) =>
         .max(255, translate("errors.valueMaxLength", { maxLength: 255 }))
         .matches(/^[^\n ]*$/, {
           message: translate("errors.noSpaces"),
-        }),
+        })
+        .required(translate("errors.requiredField")),
     }),
   });
 
@@ -74,7 +75,7 @@ export const CreateProviderByTemplate: FC<ICreateProviderTemplateProps> = ({
 
   useEffect(() => {
     if (providerTemplate) {
-      reset(providerTemplate as TTemplate);
+      reset(providerTemplate as IProvider<IOauthParams>);
     }
   }, [isOpen]);
 
@@ -108,31 +109,54 @@ export const CreateProviderByTemplate: FC<ICreateProviderTemplateProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       mode="create"
-      type={providerTemplate.name}
+      type={providerTemplate.type}
       disabled={createResult.isLoading}
     >
       <ProviderHeader defaultAvatar={providerTemplate.avatar} />
       <InputField
         name="params.external_client_id"
         label={translate("providers.template.clientId")}
+        dataTestId="txt-settings-login-method-resource-id"
         description={translate("providers.template.clientIdDescription")}
         required
       />
+
+      <>
+          <Typography className={clsx("text-14", "asterisk", styles.label)}>
+            {translate("providers.template.clientSecret")}
+          </Typography>
+          <PasswordTextField
+            showText={translate("actionButtons.show")}
+            hideText={translate("actionButtons.hide")}
+            copyText={translate("actionButtons.copy")}
+            nameField="params.external_client_secret"
+            dataTestId="txt-settings-login-method-secret-key"
+          />
+          <Typography
+            className={clsx("text-14", styles.description)}
+            color="text.secondary"
+          >
+            {translate("providers.template.clientSecretDescription")}
+          </Typography>
+      </>
 
       <Typography className={clsx("text-14", styles.label)}>
         {translate("providers.template.redirectUri")}
       </Typography>
       <TextField
-        value={DOMAIN + "/api/interaction/code"}
+        value={`${APP_PUBLIC_URL}/api/interaction/code`}
         disabled
         className="custom"
         fullWidth
         variant="standard"
       >
         <IconsLibrary
+          title={translate("toolTips.copy")}
           type="copy"
           onClick={() =>
-            navigator.clipboard.writeText(DOMAIN + "/api/interaction/code")
+            navigator.clipboard.writeText(
+              `${APP_PUBLIC_URL}/api/interaction/code`
+            )
           }
         />
       </TextField>

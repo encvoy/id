@@ -7,10 +7,6 @@
         "cards": {
           "name": "Biglietti da visita",
           "description": "Attiva la possibilità di utilizzare biglietti da visita nell'applicazione. Una sezione corrispondente apparirà nel profilo di ogni utente. Il biglietto da visita dell'utente è disponibile all'indirizzo api/cards/{userId}."
-        },
-        "catalog": {
-          "name": "Catalogo",
-          "description": "Attiva la possibilità di utilizzare il catalogo delle applicazioni pubbliche. Ogni applicazione può essere aggiunta al catalogo per un accesso più comodo e veloce."
         }
       }
     },
@@ -23,6 +19,10 @@
         "privacy": "Privacy del profilo",
         "businessCard": "Biglietto da visita",
         "otherActions": "Altre azioni"
+      },
+      "locale": {
+        "title": "Lingua dell'interfaccia",
+        "description": "Seleziona la lingua da usare nell'interfaccia del tuo account."
       },
       "actions": {
         "logoutAllDevices": "Disconnetti da tutti i dispositivi",
@@ -41,8 +41,16 @@
         "email": "E-mail",
         "phone": "Numero di telefono"
       },
+      "tooltips": {
+        "contactUnverified": "Contatto non verificato"
+      },
+      "chips": {
+        "contactPrimary": "Contatto"
+      },
       "notices": {
-        "publicDataRequireEmail": "I dati pubblici sono disponibili se è presente un indirizzo e-mail"
+        "contactUpdated": "Metodo di contatto aggiornato",
+        "contactDeleted": "Contatto eliminato",
+        "publicDataRequireTrustedEmail": "I dati pubblici sono disponibili solo con un indirizzo email confermato"
       },
       "modals": {
         "confirmDeletion": {
@@ -84,6 +92,9 @@
         "description": "Impedisci la condivisione del profilo pubblico, anche se il campo ha il livello di visibilità \"Disponibile a tutti\"",
         "button": "Dati pubblici",
         "togglePrivacy": "Cambia privacy del profilo"
+      },
+      "security": {
+        "additionalTokensDescription": "Creazione e revoca di access token aggiuntivi con un set limitato di permissions."
       }
     },
     "addLoginMethod": {
@@ -96,11 +107,20 @@
         "operationCancelled": "Operazione annullata dall'utente",
         "installMetamask": "Installa Metamask",
         "certificateBindingError": "Errore di collegamento del certificato",
-        "webauthnBindingError": "Errore durante il collegamento del dispositivo WebAuthn"
+        "webauthnBindingError": "Errore durante il collegamento del dispositivo WebAuthn",
+        "webauthnAlreadyRegistered": "Questo dispositivo ha già una passkey per il tuo profilo"
       },
       "modals": {
         "loginToAccount": "Accedi all'account {{providerName}}",
-        "confirmAddition": "Nella nuova finestra (scheda) che si aprirà, completa la procedura di autorizzazione sulla piattaforma corrispondente. Al termine dell'autorizzazione con successo, questo metodo di accesso verrà aggiunto automaticamente all'elenco degli identificatori dell'account e diventerà un possibile metodo di autenticazione nel servizio"
+        "confirmAddition": "Nella nuova finestra (scheda) che si aprirà, completa la procedura di autorizzazione sulla piattaforma corrispondente. Al termine dell'autorizzazione con successo, questo metodo di accesso verrà aggiunto automaticamente all'elenco degli identificatori dell'account e diventerà un possibile metodo di autenticazione nel servizio",
+        "otpModalInstruction": "Inserisci il codice dall'app",
+        "otpSetupTitleTotp": "Configurazione TOTP",
+        "otpSetupTitleHotp": "Configurazione HOTP",
+        "otpSecretManualLabel": "Segreto (manual):",
+        "otpAlgorithmLabel": "Algoritmo:",
+        "otpDigitsLabel": "Cifre:",
+        "otpPeriodLabel": "Periodo:",
+        "otpCounterLabel": "Contatore:"
       },
       "ethereumSignMessage": "Per autorizzarti nel servizio {{projectName}}, firma il testo generato casualmente: {{nonce}}"
     },
@@ -108,6 +128,17 @@
       "title": "Elimina account",
       "description": "Quando elimini l'account, i dati associati verranno eliminati definitivamente. Perderai l'accesso alle applicazioni in cui hai utilizzato l'account per accedere.",
       "passwordConfirmation": "Password di conferma",
+      "success": {
+        "title": "Eliminazione completata con successo",
+        "immediate": "Il tuo account è stato eliminato e non può essere ripristinato.",
+        "scheduled": "Il tuo account è stato contrassegnato per l'eliminazione. Verrà eliminato definitivamente tra {{days}} giorni. Fino ad allora potrà ancora essere ripristinato.",
+        "scheduledNoRestore": "Il tuo account è stato contrassegnato per l'eliminazione. Verrà eliminato definitivamente tra {{days}} giorni. Il ripristino è disabilitato dalla politica di sistema corrente.",
+        "archived": "Il tuo account è stato spostato nell'archivio fino al suo ripristino.",
+        "archivedNoRestore": "Il tuo account è stato spostato nell'archivio. L'eliminazione automatica è disabilitata e il ripristino non è consentito dalla politica di sistema corrente.",
+        "sessionsRevoked": "Tutte le sessioni attive e i token di questo account sono già stati revocati.",
+        "redirect": "Reindirizzamento alla pagina di accesso tra {{seconds}} secondi.",
+        "exitNow": "Esci ora"
+      },
       "errors": {
         "deletionError": "Errore durante l'eliminazione dell'account"
       }
@@ -129,6 +160,7 @@
     "confirmEmail": {
       "titles": {
         "change": "Cambia e-mail",
+        "confirm": "Conferma e-mail",
         "add": "Aggiungi e-mail"
       },
       "emailLabel": "Specifica l'indirizzo e-mail",
@@ -146,6 +178,7 @@
     "confirmPhone": {
       "titles": {
         "change": "Cambia telefono",
+        "confirm": "Conferma telefono",
         "add": "Aggiungi telefono"
       },
       "phoneLabel": "Specifica il numero di telefono",
@@ -194,6 +227,7 @@
         "offlineAccess": "L'applicazione avrà accesso ai tuoi dati in qualsiasi momento",
         "accounts": "Visualizzazione degli account social aggiunti al profilo",
         "openid": "Visualizzazione del tuo identificatore",
+        "internal": "Informazioni interne del sistema (aree personali, catalogo, lingua)",
         "lk": "Visualizzazione di brevi informazioni sulle aree personali",
         "locale": "Visualizzazione delle informazioni sulla lingua",
         "unknown": "Permesso sconosciuto {{scope}}",
@@ -225,7 +259,9 @@
     "usersList": {
       "labels": {
         "role": "Permessi:",
-        "status": "Stato:"
+        "organization": "Organizzazione:",
+        "status": "Stato:",
+        "groupsCount": "Gruppi:"
       },
       "createButton": "Crea utente",
       "defaultClient": "applicazione",
@@ -279,10 +315,35 @@
           "mainMessageFirst": "L'account {{userName}} verrà eliminato. I dati associati all'account verranno eliminati definitivamente. L'utente perderà l'accesso alle applicazioni in cui ha utilizzato l'account {{projectName}} per accedere.",
           "mainMessageSecond": "L'utente {{userName}} verrà rimosso dall'applicazione."
         },
+        "addToInternalList": {
+          "title": "Aggiungi all'organizzazione",
+          "mainMessage": "L'utente {{userName}} verrà aggiunto all'organizzazione."
+        },
+        "removeFromInternalList": {
+          "title": "Rimuovi dall'organizzazione",
+          "mainMessage": "L'utente {{userName}} verrà rimosso dall'organizzazione. La sua assegnazione all'organizzazione verrà eliminata."
+        },
+        "markForDeletion": {
+          "title": "Contrassegna per eliminazione",
+          "mainMessage": "L'utente {{userName}} verrà contrassegnato per l'eliminazione. Dopo la scadenza del periodo di conservazione, il profilo verrà eliminato automaticamente.",
+          "action": "Contrassegna"
+        },
+        "unmarkDeletion": {
+          "title": "Rimuovi contrassegno di eliminazione",
+          "mainMessage": "Il contrassegno di eliminazione per l'utente {{userName}} verrà rimosso.",
+          "action": "Rimuovi contrassegno"
+        },
         "chooseRole": {
           "title": "Cambia permessi",
           "description": "Scegli i permessi in {{projectName}} per l'utente:",
           "listRoles": "Livello di autorizzazione"
+        },
+        "blockUserClient": {
+          "mainMessage": "L'utente {{userName}} {{action}} l'accesso all'applicazione {{projectName}}. I dati associati all'account verranno conservati."
+        },
+        "removeFromOrganizationList": {
+          "title": "Rimuovi utente dall'organizzazione",
+          "mainMessage": "L'utente {{userName}} verrà rimosso dalla directory e dai gruppi dell'organizzazione {{projectName}}. La sua assegnazione all'organizzazione verrà eliminata."
         }
       },
       "menuControls": {
@@ -291,15 +352,47 @@
         "endSessions": "Termina sessioni",
         "blockUser": "Blocca in {{projectName}}",
         "unblockUser": "Sblocca in {{projectName}}",
-        "removeUser": "Elimina utente"
+        "removeUser": "Elimina utente",
+        "markForDeletion": "Contrassegna per eliminazione",
+        "unmarkDeletion": "Rimuovi contrassegno di eliminazione",
+        "addToInternalList": "Aggiungi all'organizzazione",
+        "removeFromInternalList": "Rimuovi dall'organizzazione",
+        "removeFromOrganizationList": "Rimuovi dall'organizzazione",
+        "manageGroups": "Aggiungi ai gruppi"
       },
       "notice": {
         "changeUserRole": "I permessi dell'utente {{userName}} in {{projectName}} sono stati modificati",
         "NotChangeUserRole": "Impossibile modificare i permessi dell'utente {{userName}} in {{projectName}}"
+      },
+      "userGroups": {
+        "title": "Gruppi dell'utente {{name}}",
+        "notices": {
+          "groupAdded": "Utente aggiunto al gruppo.",
+          "groupRemoved": "Utente rimosso dal gruppo."
+        },
+        "errors": {
+          "loadGroups": "Impossibile caricare l'elenco dei gruppi dell'utente.",
+          "addGroup": "Impossibile aggiungere l'utente al gruppo.",
+          "removeGroup": "Impossibile rimuovere l'utente dal gruppo."
+        }
       }
     },
     "createUser": {
       "title": "Crea utente",
+      "contactVerification": {
+        "email": {
+          "label": "Crea email come verificata",
+          "description": "Se disattivato, l'email verrà creata come non verificata"
+        },
+        "phone": {
+          "label": "Crea telefono come verificato",
+          "description": "Se disattivato, il telefono verrà creato come non verificato"
+        }
+      },
+      "accountCreateEmail": {
+        "label": "Invia email di creazione account",
+        "description": "Invia le credenziali all'email dell'utente dopo la creazione dell'account"
+      },
       "errors": {
         "fillAtLeastOneIdentifier": "È necessario compilare almeno un identificatore"
       }
@@ -316,6 +409,10 @@
           "L'account {{userName}} verrà eliminato. I dati associati all'account verranno eliminati definitivamente. L'utente perderà l'accesso alle applicazioni in cui ha utilizzato l'account {{projectName}} per accedere.",
           "Insieme all'account verranno eliminate le applicazioni di cui l'utente eliminato è proprietario."
         ]
+      },
+      "confirmContactModal": {
+        "title": "Conferma {{contactName}}",
+        "message": "Sei sicuro di voler confermare il contatto {{contactValue}}? Dopo questa azione, {{contactName}} verrà contrassegnato come verificato."
       },
       "notifications": {
         "userDeleted": "L'utente {{userName}} è stato eliminato in {{projectName}}."
@@ -371,9 +468,40 @@
     "listClient": {
       "createButton": "Crea applicazione",
       "providersEmpty": "Assenti",
-      "users": "Partecipanti:",
+      "users": "Partecipanti",
       "catalog": "Catalogo",
       "activeLoginMethods": "Metodi di accesso attivi:"
+    },
+    "organizations": {
+      "labels": {
+        "activity": "Activity:",
+        "activityPeriod": "in the last 30 days"
+      },
+      "actions": {
+        "createOrganization": "Crea organizzazione"
+      },
+      "menuControls": {
+        "id": "Go to ID",
+        "transferOwner": "Change owner",
+        "delete": "Delete organization"
+      },
+      "modals": {
+        "delete": {
+          "title": "Delete organization",
+          "mainMessage": "The organization, its related applications, and settings will be removed. The owner user will remain in the system."
+        },
+        "transferOwner": {
+          "title": "Change owner",
+          "action": "Change",
+          "mainMessage": "Select a new organization owner. The current owner will remain in the member list with administrator rights.",
+          "select": "New owner",
+          "placeholder": "Start typing a name or login",
+          "helper": "You can select only a member who is already in the organization list."
+        }
+      },
+      "notices": {
+        "deleted": "Organizzazione eliminata"
+      }
     },
     "clientDetails": {
       "notFound": "Applicazione non trovata",
@@ -394,10 +522,36 @@
       "invitationModalTitle": "Invia invito",
       "emailsRequest": "Elenco degli indirizzi e-mail a cui verrà inviata la notifica di invito all'applicazione. Per aggiungere, inserisci l'indirizzo e-mail e premi Invio. Per aggiungerne diversi, separa gli indirizzi e-mail con uno spazio, una virgola o un punto e virgola",
       "emailsError": "Impossibile creare inviti per questi indirizzi e-mail. Errore di validazione",
+      "statistics": {
+        "title": "Pannello informativo",
+        "authCount": "Numero di autorizzazioni",
+        "uniqueUsers": "Utenti unici",
+        "period": "Periodo",
+        "maximum": "Massimo",
+        "authMethods": {
+          "title": "Popolarità dei metodi di accesso",
+          "total": "Autorizzazioni totali",
+          "noData": "Nessun dato per il periodo selezionato"
+        },
+        "loadError": "Impossibile caricare le statistiche"
+      },
       "modals": {
         "deleteClient": {
           "title": "Elimina applicazione",
           "mainMessage": "L'applicazione {{projectName}} verrà eliminata. Gli utenti non potranno più accedere alla tua applicazione. Questa azione non può essere annullata."
+        }
+      },
+      "groups": {
+        "title": "Gruppi di accesso",
+        "description": "Gli utenti appartenenti a questi gruppi potranno autenticarsi nell'applicazione",
+        "notices": {
+          "groupAdded": "Gruppo aggiunto all'applicazione.",
+          "groupRemoved": "Gruppo rimosso dall'applicazione."
+        },
+        "errors": {
+          "loadGroups": "Impossibile caricare i gruppi dell'applicazione.",
+          "addGroup": "Impossibile aggiungere il gruppo all'applicazione.",
+          "removeGroup": "Impossibile rimuovere il gruppo dall'applicazione."
         }
       }
     },
@@ -411,14 +565,20 @@
         "generalInfo": "Informazioni principali",
         "additionalInfo": "Informazioni aggiuntive",
         "emailTemplates": "Modelli e-mail",
+        "notifications": "Notifications",
         "appTypes": "Tipi di applicazioni",
         "trusted": "Provider attendibili",
-        "licenses": "Licenze",
         "sentry": "Sentry",
         "widgetAppearance": "Metodi di accesso e impostazioni del widget",
         "localization": "Localizzazione",
+        "additionalParams": "Parametri aggiuntivi",
+        "additionalModules": "Moduli aggiuntivi",
         "accessSettings": "Impostazioni di accesso",
-        "requiredFields": "Campi obbligatori"
+        "requiredFields": "Campi obbligatori",
+        "styling": "Personalizzazione",
+        "logging": "Log",
+        "winston": "Winston",
+        "integrations": "Integrazioni"
       },
       "trusted": {
         "localAutoMergeUsers": {
@@ -429,6 +589,7 @@
       },
       "labels": {
         "appName": "Nome dell'applicazione",
+        "catalogName": "Nome nel catalogo",
         "appDescription": "Descrizione dell'applicazione",
         "appType": "Tipo di applicazione",
         "displayInCatalog": "Mostra nel catalogo",
@@ -440,6 +601,7 @@
         "domain": "Indirizzo dell'applicazione",
         "restrictedAccess": "Accesso limitato",
         "onlyEmployees": "Divieto di accesso per utenti esterni",
+        "authorizeAutoBySession": "Accesso automatico tramite sessione",
         "redirectUri": "URL di reindirizzamento #",
         "postLogoutUri": "URL di post-logout #",
         "requestUri": "URL della richiesta di autenticazione o ripristino dopo l'autenticazione #",
@@ -457,22 +619,35 @@
       },
       "descriptions": {
         "appName": "Nome dell'applicazione visualizzato dagli utenti",
+        "catalogName": "Nome breve facoltativo per il catalogo. Se non specificato, viene usato il nome dell'applicazione",
         "appType": "Valore impostato dall'elenco dei tipi",
         "clientId": "Identificatore univoco dell'applicazione",
         "clientSecret": "Chiave di accesso all'applicazione",
         "domain": "Indirizzo dell'applicazione nel formato «protocollo://nome-dominio:porta»",
         "restrictedAccess": "L'accesso all'applicazione è disponibile solo per gli utenti con permessi di \"Amministratore\"",
         "onlyEmployees": "L'accesso all'applicazione è disponibile solo per i partecipanti all'applicazione",
+        "authorizeAutoBySession": "Se abilitato, l'accesso avviene automaticamente quando esiste una sola sessione attiva. Se disabilitato, il widget di autorizzazione viene sempre mostrato.",
         "redirectUri": "Indirizzo a cui l'utente viene reindirizzato dopo l'autorizzazione",
         "postLogoutUri": "Indirizzo a cui l'utente viene reindirizzato dopo il logout. Se non specificato, viene utilizzato l'«URL di reindirizzamento»",
         "requestUri": "Indirizzo a cui l'utente viene reindirizzato dopo il logout. Se non specificato, viene utilizzato l'«URL di reindirizzamento»",
         "accessTokenTtl": "Durata di access_token in secondi",
         "refreshTokenTtl": "Durata di refresh_token in secondi"
       },
+      "notices": {
+        "clientSecretRegenerated": "Il client secret è stato rigenerato"
+      },
+      "modals": {
+        "regenerateClientSecret": {
+          "title": "Rigenera client secret",
+          "mainMessage": "Dopo la rigenerazione, il precedente client_secret non funzionerà più.",
+          "secondaryMessage": "Tutti i token OIDC attivi di questa applicazione legati al client_secret corrente verranno revocati."
+        }
+      },
       "errors": {
         "allowedChars": "Può contenere lettere latine (a-z), numeri (0-9), trattini (-) e trattini bassi (_)"
       },
       "locale": {
+        "languages": "Altre lingue",
         "title": "Cambio lingua",
         "description": "Valore impostato dall'elenco delle lingue disponibili",
         "english": "English",
@@ -481,6 +656,22 @@
         "french": "Français",
         "german": "Deutsch",
         "italian": "Italiano"
+      },
+      "additionalParams": {
+        "copyright": "Copyright",
+        "copyrightDescription": "Viene mostrato nel footer del widget e del portale utente.",
+        "manualUrl": "URL del manuale utente",
+        "manualUrlDescription": "Si apre dal link \"{{helpLabel}}\" nella barra inferiore del portale utente. Se il campo e vuoto, si apre la documentazione interna del sistema.",
+        "prohibitRestoreDeletedUsers": "Vieta il ripristino degli account in stato DELETED",
+        "prohibitRestoreDeletedUsersDescription": "Se abilitato, il ripristino di un account eliminato tramite il portale utente verrà bloccato.",
+        "deleteProfileAfterDays": "Periodo prima dell'eliminazione definitiva dell'utente",
+        "deleteProfileAfterDaysDescription": "Numero di giorni prima che un utente contrassegnato per l'eliminazione venga rimosso definitivamente. 0 rimuove subito, -1 non rimuove mai automaticamente."
+      },
+      "additionalModules": {
+        "catalog": {
+          "title": "Catalogo",
+          "description": "Attiva la possibilità di utilizzare il catalogo delle applicazioni pubbliche. Ogni applicazione può essere aggiunta al catalogo per un accesso più comodo e veloce."
+        }
       },
       "access": {
         "twoFactorTitle": "Autenticazione a due fattori",
@@ -505,20 +696,167 @@
       "profileFieldsSubtitle": "Configura i parametri dei campi del profilo e aggiungi gli identificatori che l'utente deve avere nel profilo",
       "passwordPolicy": "Politica delle password",
       "otherType": "Altro",
-      "modals": {
-        "deleteOrg": {
-          "title": "Sei sicuro di voler eliminare l'organizzazione?",
-          "mainMessage": "L'area personale dell'organizzazione, le applicazioni e i provider verranno eliminati"
+      "notifications": {
+        "empty": "No notifications yet",
+        "readStats": "Read: {{read}} / {{total}}",
+        "targets": {
+          "ALL": "All users",
+          "NEW_USERS": "New users",
+          "EXISTING_USERS": "Existing users",
+          "USER_LIST": "User list"
         }
       },
-      "tariff": "Piano tariffario",
-      "plan": {
-        "free": "Gratuito",
-        "extended": "Esteso",
-        "full": "Completo"
+      "oidcScopes": {
+        "panel": {
+          "title": "Scope OIDC",
+          "description": "Gestisci gli scope di consenso e collegali ai campi profilo personalizzati dell'organizzazione."
+        },
+        "editor": {
+          "createTitle": "Crea scope OIDC",
+          "editTitle": "Modifica scope OIDC",
+          "description": "Configura uno scope di consenso. I campi profilo vengono associati nella bacheca drag-and-drop."
+        },
+        "labels": {
+          "scope": "Scope",
+          "title": "Titolo",
+          "description": "Descrizione",
+          "icon": "Icona Material",
+          "active": "Attivo"
+        },
+        "descriptions": {
+          "scope": "Nome dello scope OAuth, per esempio employee_profile",
+          "title": "Testo mostrato nella schermata di consenso",
+          "description": "Spiegazione facoltativa per la schermata di consenso"
+        },
+        "dropZones": {
+          "profile": {
+            "empty": "I nuovi campi personalizzati appaiono qui finché non li sposti in un gruppo di scope OIDC dedicato.",
+            "subtitle": "Profilo principale"
+          },
+          "scope": {
+            "empty": "Trascina qui un campo personalizzato per esporlo tramite questo scope."
+          }
+        },
+        "empty": {
+          "noFields": "Nessun campo collegato",
+          "noScopesYet": "Nessuno scope OIDC ancora presente",
+          "noGroupsYet": "Non ci sono ancora gruppi di scope OIDC. Creane uno qui sotto e trascinaci dentro i campi personalizzati."
+        },
+        "actions": {
+          "addGroup": "Aggiungi nuovo gruppo"
+        },
+        "modals": {
+          "deleteTitle": "Elimina scope OIDC",
+          "deleteMessage": "Lo scope \"{{name}}\" verrà rimosso. Continuare?",
+          "deleteFieldTitle": "Elimina campo personalizzato",
+          "deleteFieldMessage": "Il campo \"{{name}}\" verrà rimosso dal profilo e scollegato dagli scope OIDC correlati."
+        },
+        "validation": {
+          "scopeName": "Usa lettere, numeri, due punti, punto, trattino basso o trattino"
+        },
+        "status": {
+          "inactiveSuffix": " - inattivo"
+        },
+        "iconOptions": {
+          "badge": "Badge",
+          "work": "Lavoro",
+          "groups": "Gruppi",
+          "security": "Sicurezza",
+          "key": "Chiave",
+          "checklist": "Checklist",
+          "structure": "Struttura",
+          "category": "Categoria",
+          "settings": "Impostazioni"
+        }
       },
-      "balance": "Saldo",
-      "deleteOrg": "Elimina organizzazione"
+      "styling": {
+        "errors": {
+          "invalidJson": "JSON non valido"
+        },
+        "sections": {
+          "systemStyles": "Stili di sistema",
+          "lightTheme": "Tema chiaro",
+          "darkTheme": "Tema scuro"
+        },
+        "systemControls": {
+          "componentBorderRadius": "Raggio bordo componenti",
+          "buttonBorderRadius": "Raggio bordo pulsanti",
+          "surfaceBlockBorderWidth": "Spessore bordo SurfaceBlock",
+          "surfaceBlockHideBorder": "Nascondi bordo SurfaceBlock",
+          "surfaceBlockBoxShadow": "Ombra SurfaceBlock",
+          "contentPosition": "Posizione del contenuto",
+          "contentPositionOptions": {
+            "start": "A sinistra",
+            "center": "Al centro",
+            "end": "A destra"
+          }
+        },
+        "themeFields": {
+          "primaryMain": "Colore principale",
+          "primaryContrastText": "Colore testo a contrasto su principale",
+          "secondaryMain": "Colore secondario",
+          "secondaryContrastText": "Colore testo a contrasto su secondario",
+          "textPrimary": "Colore testo principale",
+          "textSecondary": "Colore testo secondario",
+          "backgroundDefault": "Sfondo predefinito",
+          "backgroundPaper": "Sfondo schede",
+          "actionHover": "Colore sfondo al passaggio del mouse",
+          "actionDisabled": "Colore sfondo stato disabilitato",
+          "actionSelected": "Colore sfondo stato selezionato",
+          "divider": "Colore divisore",
+          "errorMain": "Colore testo errore"
+        },
+        "preview": {
+          "description": "Risultato della modifica del tema prima del salvataggio. È possibile passare dal tema chiaro a quello scuro per verificare come le modifiche influiscano su entrambi gli stili.",
+          "tabs": {
+            "light": "Chiaro",
+            "dark": "Scuro"
+          },
+          "buttons": {
+            "primary": "Primario",
+            "secondary": "Secondario",
+            "outlined": "Contornato"
+          },
+          "textBlock": {
+            "title": "Colore testo principale",
+            "description": "Il testo secondario aiuta a verificare la leggibilità e il contrasto.",
+            "link": "Link"
+          },
+          "surfacesBlock": {
+            "title": "Finestre modali e pannelli",
+            "description": "Questo blocco mostra lo sfondo delle superfici per pannelli, finestre modali e contenitori di interfaccia annidati."
+          },
+          "controls": {
+            "switchLabel": "Interruttore di stato",
+            "switchDescription": "Descrizione per l'interruttore di stato",
+            "checkboxLabel": "Seleziona",
+            "radioOptions": {
+              "first": {
+                "title": "Prima opzione",
+                "description": "Descrizione per la prima opzione di scelta"
+              },
+              "second": {
+                "title": "Seconda opzione"
+              }
+            }
+          },
+          "input": {
+            "label": "Campo di input",
+            "description": "Il campo utilizza lo stesso elemento presente nell'interfaccia."
+          },
+          "selectOptions": {
+            "recent": "Recenti",
+            "active": "Attivi",
+            "archived": "Archiviati"
+          }
+        }
+      },
+      "logging": {
+        "sentryDescription": "Tracciamento degli errori. Registra le eccezioni e lo stack trace.",
+        "winstonDescription": "Logging strutturato con esportazione esterna. Raccoglie i log dell'applicazione, le richieste e gli eventi di audit in un formato strutturato.",
+        "logRetentionDaysLabel": "Periodo di conservazione dei log (giorni)",
+        "logRetentionDaysDescription": "Numero di giorni di conservazione dei log nel sistema. -1 — i log non vengono eliminati automaticamente"
+      }
     },
     "widget": {
       "title": "Configura l'aspetto del widget",
@@ -579,6 +917,276 @@
         "hideCreateAccount": "Nascondi il pulsante crea account",
         "hideFooter": "Nascondi il piè di pagina",
         "hideFooterDescription": "Il piè di pagina mostra solo il copyright"
+      },
+      "saveNoticeInfo": "Le informazioni nel campo aggiuntivo all'esterno del widget e all'interno del modulo sono state salvate correttamente"
+    },
+    "tokens": {
+      "title": "Token aggiuntivi",
+      "description": "Crea access token separati con un set limitato di permissions e utilizzali indipendentemente dalla sessione dell'area personale.",
+      "name": "Nome del token",
+      "ttl": "Periodo di validità",
+      "ttlDescription": "Il periodo per il quale verrà emesso l'access token.",
+      "createdAt": "Creato il:",
+      "expiresAt": "Scade il:",
+      "last4": "Ultimi 4 caratteri:",
+      "permissions": "Permissions:",
+      "searchPermission": "Trova e aggiungi permission",
+      "searchPermissionPlaceholder": "Inizia a digitare la permission",
+      "selectedPermissions": "Permissions selezionate",
+      "selectedPermissionsEmpty": "Nessuna permission ancora selezionata.",
+      "noPermissionsFound": "Nessuna permission corrispondente trovata",
+      "selectPermissions": "Seleziona permissions",
+      "emptyPermissions": "Non ci sono permissions disponibili per la tua sessione corrente per un token aggiuntivo.",
+      "tokenValue": "Access token",
+      "controls": {
+        "revoke": "Revoca token"
+      },
+      "modals": {
+        "create": {
+          "title": "Crea token aggiuntivo",
+          "mainMessage": "Scegli un nome e le permissions per il nuovo access token."
+        },
+        "created": {
+          "title": "Token creato",
+          "mainMessage": "Copia l'access token ora. Dopo la chiusura della finestra, non verrà più visualizzato."
+        },
+        "revoke": {
+          "title": "Revoca token",
+          "mainMessage": "Il token {{tokenName}} verrà revocato e smetterà di funzionare."
+        }
+      },
+      "ttlOptions": {
+        "one_hour": "1 ora",
+        "one_day": "1 giorno",
+        "seven_days": "7 giorni",
+        "thirty_days": "30 giorni"
+      },
+      "expirationMode": "Tipo di scadenza",
+      "expirationDateTime": "Data e ora di scadenza",
+      "expirationDateDescription": "Seleziona la data e l'ora esatte in cui il token smetterà di funzionare.",
+      "neverExpiresValue": "Fino alla revoca",
+      "neverExpiresDescription": "Il token rimarrà attivo finché non verrà revocato manualmente.",
+      "expirationModes": {
+        "preset": "Periodo",
+        "datetime": "Data e ora",
+        "never": "Fino alla revoca"
+      },
+      "errors": {
+        "invalidExpirationDate": "Inserisci una data e un'ora di scadenza valide.",
+        "expirationDateTooSoon": "La data di scadenza deve essere successiva di almeno 1 minuto rispetto all'ora attuale."
+      }
+    },
+    "directory": {
+      "shared": {
+        "warnings": {
+          "selectOrganizationForCatalogs": "Seleziona un'organizzazione per visualizzare i cataloghi",
+          "selectApplicationForResources": "Seleziona un'applicazione per visualizzare le risorse"
+        },
+        "emptyStates": {
+          "selectItemToViewInfo": "Seleziona un elemento per visualizzare le informazioni",
+          "selectedItemNotFound": "L'elemento selezionato non è stato trovato",
+          "noDescription": "Nessuna descrizione inserita"
+        },
+        "modals": {
+          "selectFolderTitle": "Seleziona cartella"
+        },
+        "actions": {
+          "addUser": "Aggiungi utente",
+          "addGroup": "Aggiungi gruppo"
+        },
+        "placeholders": {
+          "searchUser": "Inizia a digitare l'utente",
+          "searchGroup": "Inizia a digitare il gruppo"
+        },
+        "helper": {
+          "userSearch": "La ricerca dell'utente viene effettuata per id, login, email, email esterne, nickname, nome o cognome."
+        },
+        "common": {
+          "moveTargetFolder": " nella cartella {{name}}"
+        }
+      },
+      "folders": {
+        "title": "Cartella",
+        "current": "Nella cartella corrente",
+        "description": "Descrizione:",
+        "noDescription": "Nessuna descrizione",
+        "sections": {
+          "folders": "Cartelle"
+        },
+        "actions": {
+          "create": "Crea cartella",
+          "createUser": "Crea utente",
+          "createGroup": "Crea gruppo"
+        },
+        "fields": {
+          "name": {
+            "label": "Nome cartella"
+          }
+        },
+        "modals": {
+          "delete": {
+            "title": "Elimina cartella",
+            "message": "Sei sicuro di voler eliminare la cartella {{name}}?"
+          },
+          "edit": {
+            "title": "Modifica cartella"
+          },
+          "create": {
+            "title": "Crea cartella"
+          },
+          "createGroup": {
+            "title": "Crea gruppo"
+          }
+        },
+        "placeholders": {
+          "searchFolder": "Inizia a digitare il nome della cartella"
+        },
+        "loadingFolders": "Caricamento cartelle...",
+        "emptyStates": {
+          "users": "Non ci sono ancora utenti in questa cartella",
+          "groups": "Non ci sono ancora gruppi in questa cartella",
+          "folders": "Non ci sono ancora sottocartelle in questa cartella",
+          "foldersNotFound": "Nessuna cartella trovata"
+        },
+        "errors": {
+          "loadRootFolder": "Impossibile caricare la cartella root",
+          "rootFolderNotFound": "Cartella root non trovata.",
+          "loadUsers": "Impossibile caricare l'elenco degli utenti della cartella.",
+          "loadGroups": "Impossibile caricare l'elenco dei gruppi della cartella.",
+          "createGroup": "Impossibile creare il gruppo {{name}}."
+        },
+        "notices": {
+          "created": "Cartella {{name}} creata con successo.",
+          "updated": "Cartella {{name}} aggiornata con successo.",
+          "deleted": "Cartella {{name}} eliminata con successo.",
+          "moved": "Cartella {{name}} spostata con successo.",
+          "groupCreated": "Gruppo {{name}} creato con successo."
+        }
+      },
+      "users": {
+        "title": "Utente",
+        "loadingDetails": "Caricamento informazioni estese dell'utente",
+        "errors": {
+          "loadRelations": "Impossibile caricare il percorso del catalogo e i collegamenti con i sistemi",
+          "moveTargetRequired": "Seleziona una cartella per spostare l'utente.",
+          "statusUpdate": "Impossibile aggiornare lo stato.",
+          "removeFromGroup": "Impossibile rimuovere l'utente {{name}} dal gruppo.",
+          "delete": "Impossibile eliminare l'utente {{name}}.",
+          "block": "Impossibile bloccare l'utente {{name}}.",
+          "unblock": "Impossibile sbloccare l'utente {{name}}.",
+          "move": "Impossibile spostare l'utente {{name}}."
+        },
+        "fields": {
+          "id": "ID utente",
+          "login": "Login",
+          "givenName": "Nome",
+          "familyName": "Cognome",
+          "email": "Email",
+          "phone": "Telefono"
+        },
+        "emptyStates": {
+          "noSystemLinks": "Nessun collegamento con sistemi esterni trovato"
+        },
+        "actions": {
+          "removeFromGroup": "Rimuovi utente dal gruppo"
+        },
+        "modals": {
+          "delete": {
+            "title": "Elimina utente",
+            "message": "Sei sicuro di voler eliminare l'utente {{name}}?"
+          },
+          "block": {
+            "title": "Blocca utente",
+            "message": "Sei sicuro di voler bloccare l'utente {{name}}?",
+            "description": "Dopo il blocco, l'utente perderà l'accesso."
+          },
+          "unblock": {
+            "title": "Sblocca utente",
+            "message": "Sei sicuro di voler sbloccare l'utente {{name}}?",
+            "description": "Dopo lo sblocco, l'utente riavrà l'accesso."
+          },
+          "removeFromGroup": {
+            "title": "Rimuovi utente dal gruppo",
+            "message": "Sei sicuro di voler rimuovere l'utente {{name}} dal gruppo corrente?"
+          }
+        },
+        "labels": {
+          "statusActive": "Stato: attivo",
+          "statusBlocked": "Stato: bloccato"
+        },
+        "notices": {
+          "statusUpdated": "Stato aggiornato con successo.",
+          "removedFromGroup": "Utente {{name}} rimosso dal gruppo con successo.",
+          "deleted": "Utente {{name}} eliminato con successo.",
+          "blocked": "Utente {{name}} bloccato con successo.",
+          "unblocked": "Utente {{name}} sbloccato con successo.",
+          "moved": "Utente {{name}} spostato con successo{{target}}."
+        }
+      },
+      "groups": {
+        "title": "Gruppo",
+        "current": "Nel gruppo corrente",
+        "actions": {
+          "removeFromGroup": "Rimuovi dal gruppo"
+        },
+        "fields": {
+          "name": {
+            "label": "Nome gruppo"
+          }
+        },
+        "modals": {
+          "addMember": {
+            "userTitle": "Seleziona utente",
+            "groupTitle": "Seleziona gruppo"
+          },
+          "edit": {
+            "title": "Modifica gruppo"
+          },
+          "delete": {
+            "title": "Elimina gruppo",
+            "message": "Sei sicuro di voler eliminare il gruppo {{name}}?",
+            "warningAdminRole": "Se l'utente è stato aggiunto tramite questo gruppo, ma il suo ruolo nell'applicazione è stato modificato in amministratore, non verrà rimosso dall'applicazione."
+          },
+          "removeFromGroup": {
+            "title": "Rimuovi dal gruppo",
+            "message": "Sei sicuro di voler rimuovere il gruppo {{name}} dal gruppo corrente?"
+          }
+        },
+        "emptyStates": {
+          "users": "Non ci sono ancora utenti in questo gruppo",
+          "groups": "Non ci sono ancora gruppi in questo gruppo"
+        },
+        "errors": {
+          "loadUsers": "Impossibile caricare l'elenco degli utenti del gruppo.",
+          "loadNestedGroups": "Impossibile caricare l'elenco dei gruppi nidificati.",
+          "loadAutocomplete": "Impossibile caricare i risultati.",
+          "addMember": "Impossibile aggiungere l'elemento {{name}}.",
+          "removeFromGroup": "Impossibile rimuovere il gruppo {{name}} dal gruppo.",
+          "delete": "Impossibile eliminare il gruppo {{name}}.",
+          "update": "Impossibile aggiornare il gruppo {{name}}.",
+          "move": "Impossibile spostare il gruppo {{name}}."
+        },
+        "notices": {
+          "userAdded": "Utente {{name}} aggiunto con successo.",
+          "groupAdded": "Gruppo {{name}} aggiunto con successo.",
+          "removedFromGroup": "Gruppo {{name}} rimosso dal gruppo con successo.",
+          "deleted": "Gruppo {{name}} eliminato con successo.",
+          "updated": "Gruppo {{name}} aggiornato con successo.",
+          "moved": "Gruppo {{name}} spostato con successo{{target}}."
+        },
+        "labels": {
+          "usersCount": "Membri:"
+        },
+        "filters": {
+          "all": "Tutti",
+          "members": "Nel gruppo",
+          "nonMembers": "Non nel gruppo",
+          "added": "Aggiunti",
+          "others": "Altri"
+        }
+      },
+      "listClient": {
+        "owner": "Proprietario"
       }
     }
   },
@@ -588,9 +1196,18 @@
     "profile": "Profilo",
     "scopes": "Permessi",
     "settings": "Impostazioni",
+    "organizations": "Organizzazioni",
+    "system": "Sistema",
     "users": "Utenti",
     "widget": "Widget",
-    "request": "Richieste"
+    "request": "Richieste",
+    "tokens": "Token",
+    "folders": "Catalogo",
+    "connectors": "Connettori",
+    "rbac": "RBAC",
+    "groups": "Gruppi",
+    "roles": "Ruoli",
+    "resources": "Risorse"
   },
   "errors": {
     "valueNotAvailable": "Questo valore non può essere utilizzato",
@@ -606,9 +1223,12 @@
     "invalidEmailFormat": "Formato indirizzo email non valido",
     "invalidPhoneFormat": "Formato numero di telefono non valido",
     "mustBeNumber": "Deve essere un numero",
+    "invalidPort": "La porta deve essere un numero intero compreso tra 1 e 65535",
     "mustBePositiveNumber": "Deve essere un numero positivo",
+    "integerMinMinusOne": "Il valore deve essere un numero intero maggiore o uguale a -1",
     "noSpaces": "Il valore non può contenere spazi",
-    "hexColor": "Il colore deve essere in formato hex"
+    "hexColor": "Il colore deve essere in formato hex",
+    "invalidFieldNameFormat": "Il nome del campo può contenere solo lettere latine, numeri e i simboli _-"
   },
   "info": {
     "dataCopied": "Dati copiati negli appunti",
@@ -618,6 +1238,8 @@
     "saveError": "Impossibile salvare i dati",
     "updateError": "Impossibile aggiornare i dati",
     "deleteError": "Impossibile eliminare i dati",
+    "testEmailSent": "Email di test inviata",
+    "testEmailSendError": "Impossibile inviare l'email di test",
     "pasteError": "Errore durante l'inserimento dei parametri dagli appunti",
     "emptySearch": "Nessun risultato trovato per la tua ricerca",
     "requestCancel": "Richiesta rifiutata",
@@ -632,21 +1254,10 @@
     }
   },
   "panel": {
-    "license": {
-      "inputLabel": "Inserisci valore",
-      "deleteLicense": "Elimina licenza",
-      "expirationDate": "Data di scadenza",
-      "perpetual": "perpetua",
-      "keys": "Chiavi",
-      "deleteNotice": "I provider collegati alla licenza {{licenseName}} smetteranno di funzionare"
-    },
     "trusted": {
       "title": "Configura provider attendibili",
       "providers": "Provider",
       "publicOutlinedIcon": "Metodo di accesso pubblico di sistema",
-      "license": "Licenza",
-      "noLicense": "nessuna licenza",
-      "licenseDescription": "All'interno di una singola licenza è possibile utilizzare lo stesso indirizzo server",
       "localAutoMergeUsers": {
         "title": "Unione automatica degli utenti",
         "description": "Conversione degli utenti autoregistrati in utenti attendibili in caso di corrispondenza email",
@@ -666,6 +1277,8 @@
       "title": "Notifiche",
       "newNotifications": "Nuove notifiche:",
       "clear": "Cancella",
+      "empty": "Non ci sono ancora notifiche",
+      "delete": "Elimina notifica",
       "goToLog": "Vai al registro"
     },
     "chooseProviders": {
@@ -712,9 +1325,45 @@
       "edit": {
         "editTitle": "Modifica modello email",
         "editDescription": "Modifica il modello email per l'evento {{action}}",
+        "languageLabel": "Lingua del modello",
+        "templateLabel": "Modello email",
+        "typeLabel": "Tipo di email",
+        "listModeLocale": "Per lingua",
+        "listModeAction": "Per tipo di email",
+        "templatesListLabel": "Elenco modelli",
         "titleLabel": "Nome del modello",
         "subjectLabel": "Oggetto dell'email",
-        "contentLabel": "Contenuto dell'email"
+        "contentLabel": "Contenuto dell'email",
+        "variant1Button": "Variante 1",
+        "variant2Button": "Variante 2",
+        "variant3Button": "Variante 3",
+        "editTab": "Modifica",
+        "previewTab": "Anteprima",
+        "emptyState": "Nessun modello trovato",
+        "previewLabel": "Anteprima email"
+      }
+    },
+    "notifications": {
+      "title": "Manage notifications",
+      "description": "Create messages that will be shown to users after successful authorization in this application",
+      "modals": {
+        "archive": {
+          "title": "Archive notification",
+          "mainMessage": "The notification \"{{title}}\" will be moved to the archive and will no longer be shown to users. Continue?"
+        }
+      },
+      "edit": {
+        "createTitle": "Create notification",
+        "editTitle": "Edit notification",
+        "titleLabel": "Title",
+        "titleDescription": "Short notification title visible in the widget",
+        "contentLabel": "Content",
+        "contentDescription": "Main notification text shown to the user",
+        "targetLabel": "Audience",
+        "targetDescription": "Choose which users should see this notification",
+        "usersLabel": "Users",
+        "usersPlaceholder": "Select users",
+        "usersDescription": "Shown only for the \"User list\" audience"
       }
     },
     "profileFields": {
@@ -726,7 +1375,6 @@
         "allowedAsLogin": "Usa come login",
         "active": "Attività",
         "parameters": "Parametri",
-        "parametersDescription": "Specifica i parametri del campo",
         "editable": "Modificabile",
         "required": "Obbligatorio",
         "unique": "Univocità",
@@ -743,18 +1391,44 @@
         "validationRules": "Regole di validazione",
         "validationRulesPlaceholder": "Nessuna regola di validazione impostata",
         "agreementLink": "Link al file della politica di trattamento dati",
-        "agreementPlaceholder": "Inserisci link al file"
+        "agreementPlaceholder": "Inserisci link al file",
+        "parametersDescription": "Configura i parametri del campo",
+        "validateOnAuthorization": "Validazione email all'autorizzazione",
+        "validateOnAuthorizationDescription": "Durante l'autorizzazione, l'email esistente verrà verificata per validità. Se il campo non è valido, verrà richiesta l'aggiunta di una nuova email"
       },
       "descriptions": {
-        "field": "Nome del campo nel sistema",
-        "title": "Nome visualizzato del campo"
+        "title": "Nome visualizzato del campo",
+        "field": "Nome della chiave del campo nel sistema (lettere latine, numeri e trattini)"
       },
       "modals": {
         "deleteProvider": {
           "title": "Elimina provider",
           "message": "Il provider verrà eliminato insieme alle impostazioni correlate. Anche il metodo di accesso corrispondente verrà rimosso."
+        },
+        "deleteField": {
+          "title": "Elimina campo profilo",
+          "message": "Il campo \"{{fieldName}}\" verrà eliminato dal sistema. Continuare?"
         }
       }
+    },
+    "winston": {
+      "title": "Impostazioni di logging Winston",
+      "description": "Configurazione del logging strutturato e dell'esportazione dei log",
+      "enabledLabel": "Abilita logging",
+      "exportEnabledLabel": "Abilita esportazione log verso un servizio esterno",
+      "exportProviderLabel": "Provider di esportazione",
+      "exportProviderDescription": "Seleziona un servizio esterno per il logging",
+      "exportUrlLabel": "URL di esportazione",
+      "exportUrlDescription": "URL dell'endpoint per la ricezione dei log",
+      "exportApiKeyLabel": "Chiave API (opzionale)",
+      "exportApiKeyDescription": "Chiave di autenticazione per il servizio esterno",
+      "auditExportEnabledLabel": "Esporta eventi di audit",
+      "serviceNameLabel": "Nome del servizio",
+      "serviceNameDescription": "Identificativo del servizio nei log",
+      "logLevelLabel": "Livello di logging",
+      "logLevelDescription": "Livello minimo dei log (debug, info, warn, error)",
+      "redactHeadersLabel": "Intestazioni da mascherare",
+      "redactHeadersDescription": "Elenco delle intestazioni separate da virgola che verranno mascherate nei log"
     }
   },
   "providers": {
@@ -776,10 +1450,8 @@
     "nameDescription": "Nome visualizzato dagli utenti",
     "description": "Descrizione",
     "logo": "Logo",
-    "public": "Pubblicità",
-    "publicDescription": "Livello di visibilità del campo per i nuovi utenti",
     "publicMethods": "Metodo di accesso pubblico",
-    "publicMethodsDescription": "Il metodo di accesso sarà disponibile per l'aggiunta nelle applicazioni utente",
+    "publicMethodsDescription": "Disponibile solo per i metodi di accesso di sistema. Rende il metodo disponibile in tutte le organizzazioni e applicazioni e consente agli utenti di aggiungerlo al profilo come identificatore",
     "ethereum": {
       "contractAddress": "Indirizzo del contratto (contract address)",
       "contractAddressDescription": "Indirizzo univoco dello smart contract Ethereum",
@@ -833,8 +1505,11 @@
       "mailImage": "Immagine email",
       "mailCodeTtlSec": "Tempo di vita del codice di conferma",
       "mailCodeTtlSecDescription": "Tempo di vita del codice di conferma per il servizio email in secondi",
-      "useForLogin": "Usa per l'accesso tramite codice",
-      "useForLoginDescription": "Sarà disponibile nelle applicazioni come metodo di accesso tramite password monouso"
+      "alias": "Alias del mittente (alias)",
+      "aliasDescription": "Nome del mittente mostrato nel campo \"Da\"",
+      "sendTestEmail": "Invia email di test",
+      "postalService": "Modifica servizio di posta",
+      "sendTestEmailDescription": "Verifica la correttezza delle impostazioni del servizio di posta inviando un'e-mail di prova all'indirizzo e-mail principale"
     },
     "phone": {
       "issuer": "Indirizzo base di autorizzazione (issuer)",
@@ -863,11 +1538,18 @@
     "mtls": {
       "issuer": "Punto di ingresso della connessione mTLS (issuer)",
       "issuerDescription": "Indirizzo del punto di ingresso"
-    }
+    },
+    "webauthn": {
+      "typeAuthenticator": "Usa chiavi di sicurezza esterne",
+      "typeAuthenticatorDescription": "Per impostazione predefinita, viene utilizzata solo la biometria integrata del dispositivo (Face ID, Touch ID, Windows Hello, ecc.). Se abilitato, sono consentite solo chiavi esterne (NFC, QR, dispositivi USB, ecc.)"
+    },
+    "publicIdentity": "Visibilità",
+    "publicDescriptionIdentity": "Livello di visibilità predefinito dell'identificatore nel profilo utente"
   },
   "actionButtons": {
     "edit": "Modifica",
     "add": "Aggiungi",
+    "makePrimary": "Imposta come contatto",
     "deleteAccount": "Elimina account",
     "continue": "Continua",
     "cancel": "Annulla",
@@ -879,15 +1561,20 @@
     "apply": "Applica",
     "show": "Mostra",
     "hide": "Nascondi",
-    "resend": "Reinvia",
     "confirm": "Conferma",
+    "details": "Dettagli",
     "getCode": "Ottieni codice",
     "revoke": "Revoca",
     "configure": "Configura",
+    "regenerate": "Rigenera",
     "create": "Crea",
     "send": "Invia",
-    "replenish": "Ricarica saldo",
-    "connect": "Connetti"
+    "copy": "Copia",
+    "archive": "Archive",
+    "block": "Blocca",
+    "move": "Sposta",
+    "retry": "Riprova",
+    "unblock": "Sblocca"
   },
   "privacy": {
     "private": {
@@ -906,7 +1593,12 @@
   "statuses": {
     "active": "Attiva",
     "inactive": "Inattiva",
-    "expired": "Scaduta"
+    "expired": "Scaduta",
+    "error": "Errore",
+    "available": "Disponibile",
+    "inUse": "In uso",
+    "blocked": "Bloccato",
+    "deleted": "Eliminato"
   },
   "roles": {
     "owner": "Proprietario",
@@ -931,9 +1623,11 @@
     "download": "Esporta vCard",
     "close": "Chiudi",
     "generatePassword": "Genera password",
+    "regenerate": "Rigenera",
     "required": "Obbligatorio",
     "notActive": "Non attivo",
-    "confirm": "Conferma"
+    "confirm": "Conferma",
+    "details": "Dettagli"
   },
   "helperText": {
     "value": {
@@ -941,6 +1635,8 @@
     },
     "characterCount": "caratteri",
     "password": "Password",
+    "requirePasswordChangeOnNextAuthorization": "Require password change on next sign-in",
+    "requirePasswordChangeOnNextAuthorizationDescription": "The user will be redirected to the password change screen on the next widget sign-in",
     "lastChanged": "Data ultima modifica",
     "mainInfo": "Informazioni principali",
     "additionalInfo": "Informazioni aggiuntive",
@@ -950,7 +1646,32 @@
     "emptyList": "L'elenco è vuoto",
     "parameters": "Parametri",
     "send": "Inviato",
-    "recipient": "Destinatario"
+    "recipient": "Destinatario",
+    "cannotUndo": "Questa azione non può essere annullata.",
+    "initialLoadError": "Impossibile caricare l'elenco.",
+    "loadingResults": "Caricamento risultati...",
+    "nothingFound": "Nessun risultato",
+    "startTyping": "Inizia a digitare...",
+    "updateError": "Impossibile aggiornare l'elenco."
+  },
+  "dateTime": {
+    "schedule": {
+      "daily": "Giornaliero",
+      "weekly": "Settimanale"
+    },
+    "weekdays": {
+      "monday": "Lunedì",
+      "tuesday": "Martedì",
+      "wednesday": "Mercoledì",
+      "thursday": "Giovedì",
+      "friday": "Venerdì",
+      "saturday": "Sabato",
+      "sunday": "Domenica"
+    }
+  },
+  "search": {
+    "recentSearches": "Ricerche recenti",
+    "clearAll": "Cancella tutto"
   },
   "modals": {
     "uploadImage": {
@@ -975,5 +1696,8 @@
       "title": "Salvataggio modifiche",
       "mainMessage": "Le modifiche non sono state salvate. Continuare senza salvare?"
     }
+  },
+  "fields": {
+    "description": "Descrizione"
   }
 }

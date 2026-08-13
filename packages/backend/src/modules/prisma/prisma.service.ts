@@ -1,13 +1,15 @@
-import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
-import crypto from 'crypto';
 import fs from 'fs';
 import { join } from 'path';
 import * as constants from '../../constants';
 import { EProviderTypes, SortDirection, UserRoles } from '../../enums';
-import { createSha256Hash } from '../../helpers';
+import { createSha256Hash, generateRandomString } from '../../helpers';
+import { requireRuntimeDomain } from '../../runtime-domain';
+import { upsertLegacyUserProfileValues } from '../repository/user-profile-write';
+import { syncAllGuestsGroups } from './guests-group';
 
 export type TPrisma = Omit<
   PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
@@ -35,6 +37,9 @@ const setHashedMailOnCreateMiddleware = (params, next) => {
   return next(params);
 };
 
+const areStringArraysEqual = (actual: string[], expected: string[]): boolean =>
+  actual.length === expected.length && actual.every((value, index) => value === expected[index]);
+
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
@@ -46,13 +51,16 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
     this.$use(setHashedMailOnCreateMiddleware);
 
-    if (!constants.CLIENT_ID) {
-      throw new BadRequestException('CLIENT_ID not specified');
-    }
+    const generalClientSeed = await this.client.findFirst({
+      orderBy: {
+        created_at: SortDirection.ASC,
+      },
+      select: {
+        client_id: true,
+      },
+    });
 
-    if (!constants.CLIENT_SECRET) {
-      throw new BadRequestException('CLIENT_SECRET not specified');
-    }
+    constants.setClientId(generalClientSeed?.client_id || generateRandomString(22));
 
     const externalAccountImgPath = join(
       __dirname,
@@ -67,59 +75,85 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
     await this.$transaction(async (prisma) => {
       // Find the main application; it was created first
-      const generalClient = await prisma.client.findFirst({
+      let generalClient = await prisma.client.findFirst({
         orderBy: { created_at: SortDirection.ASC },
       });
 
       // Determine whether this is the first launch for the main application
       const initFlag = !generalClient;
 
-      // Determine whether the client_id needs to be updated in the database
-      const updateFlag = initFlag ? false : generalClient.client_id !== constants.CLIENT_ID;
+      const normalizedDomain = requireRuntimeDomain(constants.DOMAIN).replace(/\/+$/, '');
+      const normalizedGeneralClientDomain = generalClient?.domain.replace(/\/+$/, '');
+      const expectedRedirectUris = [normalizedDomain + '/code', normalizedDomain + '/login'];
+      const expectedPostLogoutRedirectUris = [normalizedDomain];
+
+      // Determine whether the base application needs to be updated in the database
+      const updateFlag = initFlag
+        ? false
+        : normalizedGeneralClientDomain !== normalizedDomain ||
+          !areStringArraysEqual(generalClient.redirect_uris, expectedRedirectUris) ||
+          !areStringArraysEqual(
+            generalClient.post_logout_redirect_uris,
+            expectedPostLogoutRedirectUris,
+          );
 
       //#region General CLIENT
       if (initFlag) {
-        await prisma.client.create({
+        generalClient = await prisma.client.create({
           data: {
             catalog: true,
             widget_colors: { button_color: '#4C6AD4', font_color: '#fff', link_color: '#000' },
             avatar: 'public/default/logo.png',
-            name: 'Encvoy ID',
-            domain: constants.DOMAIN,
+            name: 'ID',
+            domain: normalizedDomain,
             client_id: constants.CLIENT_ID,
-            client_secret: constants.CLIENT_SECRET,
+            client_secret: generateRandomString(87),
             token_endpoint_auth_method: 'none',
             introspection_endpoint_auth_method: 'none',
             revocation_endpoint_auth_method: 'none',
             grant_types: ['authorization_code', 'refresh_token'],
-            redirect_uris: [constants.DOMAIN + '/code', constants.DOMAIN + '/login'],
-            post_logout_redirect_uris: [constants.DOMAIN],
+            redirect_uris: expectedRedirectUris,
+            post_logout_redirect_uris: expectedPostLogoutRedirectUris,
           },
         });
       }
 
       if (updateFlag) {
-        await prisma.client.update({
+        generalClient = await prisma.client.update({
           where: { client_id: generalClient.client_id },
           data: {
-            domain: constants.DOMAIN,
-            client_id: constants.CLIENT_ID,
-            client_secret: constants.CLIENT_SECRET,
-            redirect_uris: [constants.DOMAIN + '/code', constants.DOMAIN + '/login'],
-            post_logout_redirect_uris: [constants.DOMAIN],
+            domain: normalizedDomain,
+            redirect_uris: expectedRedirectUris,
+            post_logout_redirect_uris: expectedPostLogoutRedirectUris,
           },
         });
       }
       //#endregion
 
-      //#region PROVIDERS
-      if (updateFlag) {
-        await prisma.provider.updateMany({
-          where: { client_id: generalClient.client_id },
-          data: { client_id: constants.CLIENT_ID },
+      let directoryFolder = await prisma.folder.findFirst({
+        where: {
+          client_id: generalClient.client_id,
+          name: 'Directory',
+          parent_id: null,
+        },
+      });
+
+      if (!directoryFolder) {
+        directoryFolder = await prisma.folder.create({
+          data: {
+            client_id: generalClient.client_id,
+            name: 'Directory',
+            description: 'System directory folder',
+          },
         });
       }
-      //#endregion
+
+      if (!generalClient.folder_id) {
+        await prisma.client.update({
+          where: { client_id: generalClient.client_id },
+          data: { folder_id: directoryFolder.id },
+        });
+      }
 
       //#region CREDENTIALS
       // Find the CREDENTIALS provider
@@ -132,11 +166,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         await prisma.provider.create({
           data: {
             type: EProviderTypes.CREDENTIALS,
-            name: 'Login/Password',
+            name: {
+              'ru-RU': 'Логин/пароль',
+              'en-US': 'Login/Password',
+              'es-ES': 'Inicio de sesión/Contraseña',
+              'fr-FR': 'Identifiant/Mot de passe',
+              'de-DE': 'Anmeldedaten/Passwort',
+              'it-IT': 'Credenziali/Password',
+            },
             avatar: 'public/default/credentials.svg',
             is_public: true,
             client_id: constants.CLIENT_ID,
-            Provider_relations: { create: { client_id: constants.CLIENT_ID } },
+            providerRelations: { create: { client_id: constants.CLIENT_ID } },
           },
         });
       }
@@ -149,49 +190,85 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       rootUserDate.setDate(15);
 
       await prisma.user.upsert({
-        where: { id: 1 },
-        update: {},
+        where: { id: '1' },
+        update: {
+          folder_id: directoryFolder.id,
+        },
         create: {
-          nickname: 'project owner',
-          birthdate: rootUserDate,
-          family_name: 'lastName',
-          given_name: 'firstName',
-          login: constants.ADMIN_LOGIN,
+          id: '1',
           hashed_password: await bcrypt.hash(constants.ADMIN_PASSWORD, 10),
           password_updated_at: new Date(),
-          email: constants.EMAIL_PROVIDER ? constants.EMAIL_PROVIDER.root_mail : undefined,
-          email_verified: !!constants.EMAIL_PROVIDER,
-          Role: {
+          folder_id: directoryFolder.id,
+          org_id: constants.CLIENT_ID,
+          roles: {
             create: {
               role: UserRoles.OWNER,
               client_id: constants.CLIENT_ID,
             },
           },
-          Scopes: {
+          scopes: {
             create: {
               scopes: '',
               client_id: constants.CLIENT_ID,
             },
           },
-          ExternalAccount: {
-            create: constants.EMAIL_PROVIDER
-              ? {
-                  sub: constants.EMAIL_PROVIDER.root_mail,
-                  type: EProviderTypes.EMAIL,
-                  hashed_email: crypto
-                    .createHash('sha256')
-                    .update(constants.EMAIL_PROVIDER.root_mail)
-                    .digest('hex'),
-                  hashed_email_md5: crypto
-                    .createHash('md5')
-                    .update(constants.EMAIL_PROVIDER.root_mail)
-                    .digest('hex'),
-                }
-              : undefined,
-          },
         },
       });
+
+      await upsertLegacyUserProfileValues(prisma, '1', {
+        nickname: 'project owner',
+        birthdate: rootUserDate.toISOString(),
+        family_name: 'lastName',
+        given_name: 'firstName',
+        login: constants.ADMIN_LOGIN,
+      });
+
+      if (initFlag) {
+        // Create a default admin user with the login "admin" and password "admin"
+        await prisma.user.upsert({
+          where: { id: '2' },
+          update: {},
+          create: {
+            id: '2',
+            hashed_password: await bcrypt.hash('admin', 10),
+            password_updated_at: new Date(),
+            folder_id: directoryFolder.id,
+            roles: {
+              create: {
+                role: UserRoles.EDITOR,
+                client_id: constants.CLIENT_ID,
+              },
+            },
+            scopes: {
+              create: {
+                scopes: '',
+                client_id: constants.CLIENT_ID,
+              },
+            },
+          },
+        });
+
+        await upsertLegacyUserProfileValues(prisma, '2', {
+          nickname: 'admin',
+          birthdate: rootUserDate.toISOString(),
+          family_name: 'lastName',
+          given_name: 'firstName',
+          login: constants.ADMIN_LOGIN !== 'admin' ? 'admin' : 'admin2',
+        });
+
+        // Fix old migrations
+        await prisma.profileField.updateMany({
+          where: { key: 'email' },
+          data: {
+            editable: true,
+            required: false,
+            active: true,
+            unique: true,
+          },
+        });
+      }
       //#endregion
+      await syncAllGuestsGroups(prisma);
     });
   }
 }

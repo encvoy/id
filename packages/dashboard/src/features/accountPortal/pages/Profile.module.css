@@ -1,6 +1,5 @@
 .panel {
   padding: 24px 24px 16px;
-  border: 1px solid var(--mui-palette-divider);
   margin-bottom: 32px;
 }
 
@@ -31,6 +30,15 @@
   margin-top: 12px;
   display: flex;
   gap: 12px;
+}
+
+.moreButtonWrapper {
+  align-content: center;
+}
+
+.moreButton {
+  min-width: auto;
+  padding: 8px;
 }
 
 @media screen and (max-width: 767px) {

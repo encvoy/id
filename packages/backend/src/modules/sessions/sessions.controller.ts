@@ -7,7 +7,6 @@ import Cookies from 'cookies';
 import { SessionsActions } from './sessions.roles';
 
 @common.Controller('v1')
-@swagger.ApiBasicAuth()
 @swagger.ApiBearerAuth()
 export class SessionsController {
   constructor(private readonly redis: RedisAdapter) {}

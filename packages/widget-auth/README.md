@@ -27,9 +27,3 @@ interface for user authentication, registration, password recovery, and other ac
 - **TypeScript**: Used for typing and improving code reliability.
 - **Redux Toolkit**: Application state management.
 - **Material-UI**: Component library for creating a modern interface.
-
-## Translations
-
-- [Deutsch](locale/README.de.md)
-- [Español](locale/README.es.md)
-- [Русский](locale/README.ru.md)

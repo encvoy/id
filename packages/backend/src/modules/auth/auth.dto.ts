@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsOptional } from 'class-validator';
-import { IsBooleanCustom } from '../../custom.dto';
 import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBooleanCustom } from '../../custom.dto';
 
 export class InitiateOauthDto {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty()
   provider_id: string;
@@ -13,6 +14,7 @@ export class InitiateOauthDto {
   @ApiPropertyOptional()
   client_id?: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty()
   state: string;
@@ -44,6 +46,7 @@ export class InitiateOauthDto {
 }
 
 export class IdentifierDto {
+  @IsNotEmpty()
   @IsString()
   @Transform(({ value }) => (value ? value.trim() : undefined))
   @ApiProperty({ example: 'Qwerty1234123' })

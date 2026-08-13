@@ -1,15 +1,15 @@
 ---
-title: "WebAuthn Login — Connecting in Encvoy ID"
-description: "Learn how to connect WebAuthn login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
+title: "WebAuthn Login — Connecting in {{projectName}}"
+description: "Learn how to connect WebAuthn login in {{projectName}}: create a login method and add it to the authorization widget. Connect in just a few steps."
+keywords: 
   - WebAuthn login
   - WebAuthn authentication
   - WebAuthn connection
   - WebAuthn setup
-  - WebAuthn Encvoy ID
-  - login via WebAuthn Encvoy ID
-  - configuring WebAuthn in Encvoy ID
-author: "Encvoy ID Team"
+  - WebAuthn {{projectName}}
+  - login via WebAuthn {{projectName}}
+  - configuring WebAuthn in {{projectName}}
+author: "{{projectName}} Team"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -17,11 +17,11 @@ region: [ru, en]
 menu_title: "Login via WebAuthn"
 ---
 
-# How to Connect WebAuthn Login in Encvoy ID
+# How to Connect WebAuthn Login in {{projectName}}
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
 
-In this guide, you will learn how to connect **WebAuthn** authentication to the **Encvoy ID** system.
+In this guide, you will learn how to connect **WebAuthn** authentication to the **{{projectName}}** system.
 
 **Table of Contents:**
 
@@ -47,17 +47,20 @@ In this guide, you will learn how to connect **WebAuthn** authentication to the 
 ### How WebAuthn Works
 
 1. **User Registration:**
+
    - The user creates an authentication key.
    - The device generates a key pair: the public key is stored in the system, while the private key remains only with the user.
 
 2. **Login Initiation:**
-   - The user selects the **WebAuthn** login method on the web resource.
-   - The server sends a challenge (`challenge`) to verify identity.
+
+    - The user selects the **WebAuthn** login method on the web resource.
+    - The server sends a challenge (`challenge`) to verify identity.
 
 3. **User Authentication:**
-   - The device or token signs the `challenge` with the private key.
-   - The server verifies the signature using the stored public key.
-   - If the signature is valid, the user is granted access.
+
+    - The device or token signs the `challenge` with the private key.
+    - The server verifies the signature using the stored public key.
+    - If the signature is valid, the user is granted access.
 
 4. **Establishing a Secure Channel:** After successful authentication, the user logs into the system without transmitting a password over the network.
 
@@ -77,14 +80,16 @@ In this guide, you will learn how to connect **WebAuthn** authentication to the 
 5. Select the **WebAuthn** template.
 6. Fill out the creation form:
 
-   **Basic Information**
-   - **Name** — The name that users will see.
-   - **Description** (optional) — A brief description.
-   - **Logo** (optional) — You can upload your own icon, or the default one will be used.
+    **Basic Information**
 
-   **Additional Settings**
-   - **Public login method** — Enable this so the login method can be added to the user profile as an [external service identifier](./docs-12-common-personal-profile.md#external-service-identifiers).
-   - **Publicity** — Set the default publicity level for the external service identifier in the user profile.
+    - **Name** — The name that users will see.
+    - **Description** (optional) — A brief description.
+    - **Logo** (optional) — You can upload your own icon, or the default one will be used.
+
+    **Additional Settings**
+
+    - **Public login method** — Enable this so the login method can be added to the user profile as an [external service identifier](./docs-12-common-personal-profile.md#external-service-identifiers).
+    - **Publicity** — Set the default publicity level for the external service identifier in the user profile.
 
 7. Click **Create**.
 
@@ -112,16 +117,16 @@ To use **WebAuthn** login, the user must first register a key—this can be a bu
 During the key addition process, a unique cryptographic pair is created—**public** and **private keys**.
 
 - The private key is securely stored on the user's device and is never transmitted over the network.
-- The public key is stored on the **Encvoy ID** server and is used for subsequent authentication verification during login.
+- The public key is stored on the **{{projectName}}** server and is used for subsequent authentication verification during login.
 
-After registering the key, the user needs to add the **WebAuthn** identifier to their **Encvoy ID** profile.
+After registering the key, the user needs to add the **WebAuthn** identifier to their **{{projectName}}** profile.
 
 ### Step 2. Adding the Identifier to the Profile
 
 1. Go to your **Profile**.
 2. Click **Add** in the **Identifiers** block.
 
-<img src="./images/personal-profile-12.webp" alt="Identifiers block in user profile" style="max-width:600px; width:100%">
+    <img src="./images/personal-profile-12.webp" alt="Identifiers block in user profile" style="max-width:600px; width:100%">
 
 3. In the window that opens, select the **WebAuthn** login method.
 4. In the system prompt, specify the previously registered key.
@@ -133,5 +138,5 @@ After registering the key, the user needs to add the **WebAuthn** identifier to 
 ## See Also { #see-also }
 
 - [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **{{projectName}}** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

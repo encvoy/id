@@ -9,7 +9,6 @@ import { LoggerActions } from './logger.roles';
 import { ListInputDto } from 'src/custom.dto';
 
 @common.Controller()
-@swagger.ApiBasicAuth()
 @swagger.ApiBearerAuth()
 export class LoggerController {
   constructor(private readonly service: CustomLogger) {}

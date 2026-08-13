@@ -15,6 +15,6 @@ ROLES.set(UserRoles.USER, [...(ROLES.get(UserRoles.USER) || []), LoggerActions.l
 
 ROLES.set(UserRoles.EDITOR, [...(ROLES.get(UserRoles.EDITOR) || []), LoggerActions.list]);
 
-ROLES.set(UserRoles.ADMIN, [...(ROLES.get(UserRoles.ADMIN) || []), LoggerActions.list]);
+ROLES.set(UserRoles.MANAGER, [...(ROLES.get(UserRoles.MANAGER) || []), LoggerActions.list]);
 
 ROLES.set(UserRoles.OWNER, [...(ROLES.get(UserRoles.OWNER) || []), LoggerActions.list]);

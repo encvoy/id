@@ -1,31 +1,31 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { ICreateProvider } from "src/features/adminPortal/settings/providers/createPanel/CreateProvider";
+import { IconsLibrary } from "@encvoy-id/components";
+import { InputField } from "@encvoy-id/components";
+import { EClaimPrivacyNumber } from "src/shared/utils/enums";
+import { APP_PUBLIC_URL } from "src/shared/utils/appBasePath";
 import * as yup from "yup";
-import { DOMAIN } from "../../../../../shared/utils/constants";
 import {
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "../../../../../shared/api/provider";
+import { PasswordTextField } from "@encvoy-id/components";
+import styles from "../BaseStylesProvider.module.css";
 import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "../components/BaseFormProvider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
-import styles from "../BaseStylesProvider.module.css";
-import { ProviderAvatars } from "../utils";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { ICreateProvider } from "src/features/adminPortal/settings/providers/createPanel/CreateProvider";
-import { useTranslation } from "react-i18next";
-import { EClaimPrivacyNumber } from "src/shared/utils/enums";
-import Typography from "@mui/material/Typography";
+import { ProviderAvatars } from "../utils";
 
 export const CreateEthereumProvider: FC<ICreateProvider> = ({
   isOpen,
@@ -59,10 +59,10 @@ export const CreateEthereumProvider: FC<ICreateProvider> = ({
     defaultValues: {
       name: "Ethereum",
       avatar: ProviderAvatars.ETHEREUM,
-      type: ProviderType.ETHEREUM,
+      type: EProviderType.ETHEREUM,
       params: {},
       default_public: EClaimPrivacyNumber.private,
-    },
+    } as IProvider,
     mode: "onChange",
     reValidateMode: "onBlur",
   });
@@ -117,10 +117,15 @@ export const CreateEthereumProvider: FC<ICreateProvider> = ({
         required
       />
 
-      <Typography className={clsx("text-14", styles.asterisk, styles.label)}>
+      <Typography className={clsx("text-14", "asterisk", styles.label)}>
         {translate("providers.ethereum.privateKey")}
       </Typography>
-      <PasswordTextField nameField="params.external_client_secret" />
+      <PasswordTextField
+        showText={translate("actionButtons.show")}
+        hideText={translate("actionButtons.hide")}
+        copyText={translate("actionButtons.copy")}
+        nameField="params.external_client_secret"
+      />
       <Typography
         className={clsx("text-14", styles.description)}
         color="text.secondary"
@@ -132,16 +137,19 @@ export const CreateEthereumProvider: FC<ICreateProvider> = ({
         {translate("providers.ethereum.callbackUrl")}
       </Typography>
       <TextField
-        value={DOMAIN + "/api/interaction/code"}
+        value={`${APP_PUBLIC_URL}/api/interaction/code`}
         disabled
         className="custom"
         fullWidth
         variant="standard"
       >
         <IconsLibrary
+          title={translate("toolTips.copy")}
           type="copy"
           onClick={() =>
-            navigator.clipboard.writeText(DOMAIN + "/api/interaction/code")
+            navigator.clipboard.writeText(
+              `${APP_PUBLIC_URL}/api/interaction/code`
+            )
           }
         />
       </TextField>

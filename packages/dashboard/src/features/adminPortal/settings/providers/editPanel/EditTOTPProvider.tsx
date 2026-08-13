@@ -6,7 +6,8 @@ import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "src/features/adminPortal/settings/providers/components/BaseFormProvider";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { OtpAlgorithmSelectField } from "src/features/adminPortal/settings/providers/components/OtpAlgorithmSelectField";
+import { InputField } from "@encvoy-id/components";
 import { isObjectEmpty } from "src/shared/utils/helpers";
 import {
   IProvider,
@@ -16,7 +17,12 @@ import {
 } from "src/shared/api/provider";
 import * as yup from "yup";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { ProviderAvatars } from "../utils";
+import {
+  OTP_ALGORITHM_DEFAULT,
+  OTP_ALGORITHM_OPTIONS,
+  buildProviderUpdatePayload,
+  ProviderAvatars,
+} from "../utils";
 import { useTranslation } from "react-i18next";
 
 export const EditTOTPProvider: FC<IEditProviderProps> = ({
@@ -39,8 +45,8 @@ export const EditTOTPProvider: FC<IEditProviderProps> = ({
         .default(30),
       algorithm: yup
         .string()
-        .oneOf(["SHA1", "SHA256", "SHA512"])
-        .default("SHA1"),
+        .oneOf([...OTP_ALGORITHM_OPTIONS])
+        .default(OTP_ALGORITHM_DEFAULT),
     }),
   });
   const methods = useForm<IProvider<IOTPParams>>({
@@ -66,12 +72,21 @@ export const EditTOTPProvider: FC<IEditProviderProps> = ({
 
   useEffect(() => {
     if (provider) {
-      reset(provider as IProvider<IOTPParams>);
+      reset({
+        ...(provider as IProvider<IOTPParams>),
+        params: {
+          ...(provider.params as IOTPParams | undefined),
+          algorithm:
+            (provider.params as IOTPParams | undefined)?.algorithm ||
+            OTP_ALGORITHM_DEFAULT,
+        },
+      });
     }
   }, [isOpen]);
 
   const onSubmit: SubmitHandler<IProvider<IOTPParams>> = (data) => {
-    updateProvider(data).then(() => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields);
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,
@@ -106,11 +121,10 @@ export const EditTOTPProvider: FC<IEditProviderProps> = ({
         placeholder="30"
       />
 
-      <InputField
-        name="params.algorithm"
+      <OtpAlgorithmSelectField<IProvider<IOTPParams>>
+        name={"params.algorithm"}
         label={translate("providers.otp.algorithm")}
         description={translate("providers.otp.algorithmDescription")}
-        placeholder="SHA1"
       />
     </BaseFormProvider>
   );

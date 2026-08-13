@@ -1,32 +1,65 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { Ei18nCodes, IdentifierType } from 'src/enums';
 import { getIdentifierType, prepareIdentifier } from '../../helpers';
 import { prisma } from '../prisma/prisma.client';
+import {
+  buildLegacyIdentifierWhere,
+  legacyUserInclude,
+  LegacyUserModel,
+  toLegacyUser,
+} from './user-compat';
+import {
+  legacyUserEmailExternalAccountTypes,
+  legacyUserPhoneExternalAccountTypes,
+} from './user-search';
 
-export type UserModel = Prisma.UserGetPayload<{ select: Prisma.UserSelect }>;
+export type UserModel = LegacyUserModel;
 
 @Injectable()
 export class UserRepository {
   public async findByIdentifier({
     identifier,
     identifierType,
-    select,
   }: {
     identifier: string | number;
     identifierType?: IdentifierType;
-    select?: Prisma.UserSelect;
   }): Promise<UserModel | null> {
     let type = identifierType;
     if (!type) {
       type = typeof identifier === 'string' ? getIdentifierType(identifier) : IdentifierType.ID;
     }
 
+    const preparedIdentifier =
+      typeof identifier === 'string' ? prepareIdentifier(identifier, type) : identifier;
+
+    const where =
+      type === IdentifierType.Email
+        ? {
+            externalAccounts: {
+              some: {
+                sub: String(preparedIdentifier),
+                type: {
+                  in: [...legacyUserEmailExternalAccountTypes],
+                },
+              },
+            },
+          }
+        : type === IdentifierType.PhoneNumber
+        ? {
+            externalAccounts: {
+              some: {
+                sub: String(preparedIdentifier),
+                type: {
+                  in: [...legacyUserPhoneExternalAccountTypes],
+                },
+              },
+            },
+          }
+        : buildLegacyIdentifierWhere(String(preparedIdentifier), type);
+
     if (type === IdentifierType.Email) {
       const count = await prisma.user.count({
-        where: {
-          email: identifier.toString(),
-        },
+        where,
       });
 
       if (count > 1) {
@@ -34,29 +67,20 @@ export class UserRepository {
       }
     }
 
-    const preparedIdentifier =
-      typeof identifier === 'string' ? prepareIdentifier(identifier, type) : identifier;
-
-    return prisma.user.findFirst({
-      where: {
-        [type]:
-          typeof preparedIdentifier === 'number'
-            ? preparedIdentifier
-            : { equals: preparedIdentifier },
-      },
-      select,
+    const user = await prisma.user.findFirst({
+      where,
+      include: legacyUserInclude,
     });
+
+    return toLegacyUser(user);
   }
 
-  public async findById(
-    user_id: number | string,
-    select?: Prisma.UserSelect,
-  ): Promise<UserModel | null> {
-    const id = typeof user_id === 'string' ? parseInt(user_id, 10) : user_id;
-
-    return prisma.user.findUnique({
-      where: { id },
-      select,
+  public async findById(user_id: string): Promise<UserModel | null> {
+    const user = await prisma.user.findUnique({
+      where: { id: String(user_id) },
+      include: legacyUserInclude,
     });
+
+    return toLegacyUser(user);
   }
 }

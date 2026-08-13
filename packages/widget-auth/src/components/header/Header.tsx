@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import styles from './Header.module.css';
@@ -7,34 +7,31 @@ import LanguageIcon from '@mui/icons-material/Language';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Popover } from '@/components/popover/Popover';
-import { useRouter } from 'next/navigation';
-import { INTERACTION_ID, WIDGET } from '@/lib/constant';
-import { getImageURL } from '@/lib/utils';
+import { INTERACTION_URL, PROJECT_NAME, WIDGET } from '@/lib/constant';
+import {
+  formatWidgetTitle,
+  getImageURL,
+  getLocalizedTextValue,
+  navigateToHash,
+  normalizeWidgetLocale,
+} from '@/lib/utils';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { TLocalizedTextCompatible } from '@/types/types';
 
 interface IHeaderProps {
-  title?: string;
+  title?: TLocalizedTextCompatible;
   isCancelAction?: boolean;
   backPath?: string;
 }
 
 export const Header: FC<IHeaderProps> = ({ title, backPath, isCancelAction }) => {
-  const router = useRouter();
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [src, setSrc] = useState('');
-  const [clientName, setClientName] = useState('');
-
-  useEffect(() => {
-    if (WIDGET?.LOGO) {
-      setSrc(getImageURL(WIDGET?.LOGO) || '');
-    }
-    if (WIDGET?.TITLE) {
-      setClientName(WIDGET?.TITLE || '');
-    }
-  }, []);
+  const src = getImageURL(WIDGET?.LOGO);
+  const localizedTitle = getLocalizedTextValue(title, i18n.language);
+  const clientName = formatWidgetTitle(WIDGET?.TITLE, PROJECT_NAME, i18n.language);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -50,13 +47,17 @@ export const Header: FC<IHeaderProps> = ({ title, backPath, isCancelAction }) =>
         )}
         <div className={styles.headerButtonLeft}>
           {isCancelAction ? (
-            <form action={`/api/interaction/${INTERACTION_ID}/clean`}>
-              <IconButton className={styles.button} type="submit">
+            <form action={`${INTERACTION_URL}/clean`}>
+              <IconButton type="submit" data-test-id="btn-modal-close">
                 <CloseIcon className={styles.icon} />
               </IconButton>
             </form>
           ) : backPath ? (
-            <IconButton className={styles.button} onClick={() => router.replace(backPath)}>
+            <IconButton
+              className={styles.button}
+              onClick={() => navigateToHash(backPath)}
+              data-test-id="btn-modal-back"
+            >
               <ArrowBackIcon className={styles.icon} />
             </IconButton>
           ) : (
@@ -66,15 +67,22 @@ export const Header: FC<IHeaderProps> = ({ title, backPath, isCancelAction }) =>
         </div>
         <Box className={styles.titleContainer}>
           <Typography className={styles.title} variant="h1">
-            {clientName || title}
+            {clientName || localizedTitle}
           </Typography>
-          {!!title && !!clientName && (
-            <Typography variant="h2" sx={{ fontWeight: 'normal' }}>
-              {title}
+          {!!localizedTitle && !!clientName && (
+            <Typography
+              variant="h2"
+              sx={{ fontWeight: 'normal', marginTop: '14px', textAlign: 'center' }}
+            >
+              {localizedTitle}
             </Typography>
           )}
         </Box>
-        <IconButton className={clsx(styles.button, styles.headerButtonRight)} onClick={handleClick}>
+        <IconButton
+          className={clsx(styles.button, styles.headerButtonRight)}
+          onClick={handleClick}
+          data-test-id="btn-lang-select"
+        >
           <LanguageIcon className={styles.icon} />
         </IconButton>
       </Box>
@@ -92,8 +100,11 @@ export const Header: FC<IHeaderProps> = ({ title, backPath, isCancelAction }) =>
               key={index}
               className={styles.itemLocale}
               onClick={() => {
-                i18n.changeLanguage(lang.code);
                 setAnchorEl(null);
+                const normalizedLocale = normalizeWidgetLocale(lang.code);
+
+                localStorage.setItem('i18nextLng', normalizedLocale);
+                void i18n.changeLanguage(normalizedLocale);
               }}
               style={{ cursor: 'pointer' }}
             >

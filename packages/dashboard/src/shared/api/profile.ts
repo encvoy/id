@@ -2,7 +2,7 @@ import { ETags, endPoints } from "src/shared/utils/enums";
 import { createFetchArgs, createFetchArgsWithBody } from "./helpers";
 import { emptySplitApi } from "./baseApi";
 import { IExternalAccount, IUserProfile } from "./users";
-import { TCustomFields } from "../lib/userSlice";
+import { TCustomFields } from "src/shared/slices/userSlice";
 import { ERoles } from "src/shared/utils/enums";
 import { TFileString } from "src/shared/api/types";
 
@@ -12,11 +12,13 @@ export interface IUpdateContact {
 }
 
 export interface ISettingsUser {
-  profile_privacy: boolean;
-  [key: string]: boolean | string | number | undefined;
+  profile_privacy?: boolean;
+  locale?: string | null;
+  [key: string]: boolean | string | number | null | undefined;
 }
 
 export interface IPublicProfile extends IUserProfile {
+  ExternalAccount?: IExternalAccount[];
   [key: string]:
     | string
     | undefined
@@ -42,7 +44,7 @@ export const profileApi = emptySplitApi.injectEndpoints({
           code,
           email: identifier,
         }),
-      invalidatesTags: [ETags.User],
+      invalidatesTags: [ETags.User, ETags.ExternalAccounts],
     }),
     addPhone: builder.mutation<void, IUpdateContact>({
       query: ({ identifier, code }) =>
@@ -50,11 +52,20 @@ export const profileApi = emptySplitApi.injectEndpoints({
           code,
           phone_number: identifier,
         }),
-      invalidatesTags: [ETags.User],
+      invalidatesTags: [ETags.User, ETags.ExternalAccounts],
+    }),
+    makePrimaryContact: builder.mutation<void, { contactId: string }>({
+      query: ({ contactId }) =>
+        createFetchArgs(
+          `${endPoints.profile}/contacts/${contactId}/make-primary`,
+          "POST"
+        ),
+      invalidatesTags: [ETags.User, ETags.ExternalAccounts, ETags.Claims],
     }),
     bindEthereumAccount: builder.mutation<
       { success: boolean; nickname?: string; binded_to_this_user: boolean },
       {
+        provider_id: string;
         userId: string;
         address: string;
         signature: string;
@@ -62,9 +73,9 @@ export const profileApi = emptySplitApi.injectEndpoints({
         client_id: string;
       }
     >({
-      query: (body) =>
+      query: ({ provider_id, ...body }) =>
         createFetchArgsWithBody(
-          `${endPoints.profile}/external_accounts?type=ETHEREUM`,
+          `${endPoints.profile}/external_accounts/${provider_id}`,
           "POST",
           body
         ),
@@ -72,11 +83,17 @@ export const profileApi = emptySplitApi.injectEndpoints({
     }),
     bindKloudAccount: builder.mutation<
       void,
-      { userId: string; issuer: string; code: string; rebind?: boolean }
+      {
+        provider_id: string;
+        userId: string;
+        issuer: string;
+        code: string;
+        rebind?: boolean;
+      }
     >({
-      query: (body) =>
+      query: ({ provider_id, ...body }) =>
         createFetchArgsWithBody(
-          `${endPoints.profile}/external_accounts?type=KLOUD`,
+          `${endPoints.profile}/external_accounts/${provider_id}`,
           "POST",
           body
         ),
@@ -100,7 +117,10 @@ export const profileApi = emptySplitApi.injectEndpoints({
     setSettingsUser: builder.mutation<void, Partial<ISettingsUser>>({
       query: (settings) =>
         createFetchArgsWithBody(`${endPoints.profile}/settings`, "PUT", {
-          profile_privacy: settings.profile_privacy,
+          ...(settings.profile_privacy !== undefined
+            ? { profile_privacy: settings.profile_privacy }
+            : {}),
+          ...(settings.locale !== undefined ? { locale: settings.locale } : {}),
         }),
       invalidatesTags: [ETags.User],
     }),
@@ -111,6 +131,7 @@ export const {
   useGetExternalAccountsQuery,
   useChangeEmailMutation,
   useAddPhoneMutation,
+  useMakePrimaryContactMutation,
   useBindEthereumAccountMutation,
   useLazyGetPublicProfileQuery,
   useLazyGetVCardQuery,

@@ -9,10 +9,13 @@
   width: 100%;
   display: grid;
   grid-gap: 20px;
-  grid-template-areas: "mainInfo role status";
-  grid-template-columns: minmax(100px, 240px) minmax(100px, 200px) minmax(
+  grid-template-areas: "mainInfo role groups status";
+  grid-template-columns: minmax(100px, 240px) minmax(100px, 180px) minmax(
+      100px,
+      160px
+    ) minmax(
       120px,
-      300px
+      220px
     );
 }
 
@@ -23,6 +26,11 @@
 
 .userRole {
   grid-area: role;
+  margin: auto 0;
+}
+
+.userGroups {
+  grid-area: groups;
   margin: auto 0;
 }
 
@@ -55,8 +63,9 @@
     grid-gap: 10px 20px;
     grid-template-areas:
       "mainInfo mainInfo"
-      "role status";
-    grid-template-columns: 100px 1fr;
+      "role groups"
+      "status status";
+    grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr);
   }
 }
 
@@ -70,6 +79,7 @@
   }
 
   .userRole,
+  .userGroups,
   .userStatus {
     margin-top: 10px;
   }

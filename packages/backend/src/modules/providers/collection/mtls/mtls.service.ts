@@ -6,6 +6,7 @@ import { IAuthResponse } from 'src/modules/providers/factory.service';
 import { ProviderBase } from 'src/modules/providers/provider.base';
 import { ProviderMethod } from 'src/modules/providers/providers.decorators';
 import { REDIS_PREFIXES, RedisAdapter } from 'src/modules/redis/redis.adapter';
+import { UsersService } from 'src/modules/users/users.service';
 import { v4 as uuid } from 'uuid';
 import { MtlsInfo } from './mtls.decorator';
 import {
@@ -16,6 +17,7 @@ import {
 } from './mtls.dto';
 import { prisma } from 'src/modules/prisma/prisma.client';
 import { Ei18nCodes } from 'src/enums';
+import { getCnFromString } from 'src/helpers';
 
 @Injectable()
 export class MtlsService extends ProviderBase {
@@ -24,6 +26,14 @@ export class MtlsService extends ProviderBase {
 
   mtlsAuth = new RedisAdapter(REDIS_PREFIXES.MtlsAuthorization);
   mtlsBind = new RedisAdapter(REDIS_PREFIXES.MtlsRegistration);
+  requiredAccountsInfoAdapter = new RedisAdapter(REDIS_PREFIXES.RequiredAccountsInfo);
+  bindData = new RedisAdapter(REDIS_PREFIXES.BindData);
+  mfa1 = new RedisAdapter(REDIS_PREFIXES.MFA1);
+  userData = new RedisAdapter(REDIS_PREFIXES.UserData);
+
+  get userService() {
+    return this.moduleRef.get(UsersService, { strict: false });
+  }
 
   syncUser(params: any, req: Request, res: Response): Promise<IAuthResponse> {
     throw new BadRequestException(Ei18nCodes.T3E0031);
@@ -51,6 +61,51 @@ export class MtlsService extends ProviderBase {
     return data;
   }
 
+  private async resolveBindUserId(
+    userId?: string | null,
+    requiredAccountsInfoUid?: string,
+    interactionId?: string,
+  ): Promise<string> {
+    if (userId) {
+      return userId;
+    }
+
+    if (requiredAccountsInfoUid) {
+      const { id } = (await this.requiredAccountsInfoAdapter.get(requiredAccountsInfoUid)) || {};
+      if (id) {
+        return `${id}`;
+      }
+    }
+
+    if (interactionId) {
+      const mfa1 = await this.mfa1.find(interactionId);
+      if (mfa1?.user_id) {
+        return `${mfa1.user_id}`;
+      }
+
+      const userData = await this.userData.find(interactionId);
+      if (userData?.id) {
+        return `${userData.id}`;
+      }
+    }
+
+    throw new BadRequestException(Ei18nCodes.T3E0003);
+  }
+
+  private async clearPendingBindAccount(interactionId: string, providerId: string) {
+    const bindAccounts = (await this.bindData.find(interactionId)) || [];
+    const updatedBindAccounts = bindAccounts.filter(
+      (account) => !(account?.type === this.type && String(account?.provider_id) === providerId),
+    );
+
+    if (updatedBindAccounts.length) {
+      await this.bindData.upsert(interactionId, updatedBindAccounts, 3600);
+      return;
+    }
+
+    await this.bindData.destroy(interactionId);
+  }
+
   async initiateBind(userId: string, providerId: string, mtlsInfo: MtlsInfo) {
     if (!mtlsInfo || !mtlsInfo.fingerprint) {
       throw new BadRequestException(
@@ -67,6 +122,16 @@ export class MtlsService extends ProviderBase {
     });
 
     return state;
+  }
+
+  async initiateInteractionBind(
+    providerId: string,
+    mtlsInfo: MtlsInfo,
+    interactionId: string,
+    requiredAccountsInfoUid?: string,
+  ) {
+    const userId = await this.resolveBindUserId(null, requiredAccountsInfoUid, interactionId);
+    return this.initiateBind(userId, providerId, mtlsInfo);
   }
 
   async initiateAuth(providerId: string, mtlsInfo: MtlsInfo) {
@@ -121,14 +186,20 @@ export class MtlsService extends ProviderBase {
 
     const mtlsInfo = bindData.mtlsInfo;
 
+    let label = mtlsInfo.cn;
+    if (label && mtlsInfo.issuer) {
+      label += ` (${getCnFromString(mtlsInfo.issuer)})`;
+    }
+
     return {
       sub: mtlsInfo.fingerprint,
       issuer: DOMAIN,
       type: this.type,
-      label: mtlsInfo.serial || mtlsInfo.fingerprint,
+      label: label || mtlsInfo.dn || mtlsInfo.serial || mtlsInfo.fingerprint,
       rest_info: {
         ...mtlsInfo,
         createdAt: new Date(),
+        provider_id: bindData.providerId || undefined,
       },
     };
   }
@@ -144,6 +215,27 @@ export class MtlsService extends ProviderBase {
     if (!params.state) {
       throw new BadRequestException(Ei18nCodes.T3E0039);
     }
+
+    const bindState = await this.mtlsBind.find(params.state);
+    if (bindState) {
+      if (bindState.providerId !== provider.id.toString()) {
+        throw new BadRequestException(Ei18nCodes.T3E0030);
+      }
+
+      const { required_accounts_info_uid } = req.cookies;
+      const storedUserId = await this.resolveBindUserId(null, required_accounts_info_uid, uid);
+
+      await this.userService.bindAccount(storedUserId, provider, params);
+      await this.clearPendingBindAccount(uid, provider.id);
+      res.clearCookie('required_accounts_info_uid');
+
+      return {
+        user: await prisma.user.findUnique({
+          where: { id: storedUserId },
+        }),
+      };
+    }
+
     const authData = await this.getAndDeleteAuthState(params.state);
     if (authData.providerId !== provider.id.toString()) {
       throw new BadRequestException(Ei18nCodes.T3E0030);
@@ -151,7 +243,10 @@ export class MtlsService extends ProviderBase {
 
     const externalAccount = await prisma.externalAccount.findFirst({
       where: {
-        sub: authData.fingerprint,
+        sub: {
+          equals: authData.fingerprint,
+          mode: 'insensitive',
+        },
         type: this.type,
         issuer: DOMAIN,
       },
@@ -166,6 +261,15 @@ export class MtlsService extends ProviderBase {
       );
     }
 
+    if (
+      externalAccount.rest_info &&
+      typeof externalAccount.rest_info === 'object' &&
+      !Array.isArray(externalAccount.rest_info) &&
+      (externalAccount.rest_info as Record<string, unknown>).authentication_enabled === false
+    ) {
+      throw new BadRequestException('Authentication with this certificate is disabled.');
+    }
+
     return {
       user: externalAccount.user,
     };
@@ -174,11 +278,24 @@ export class MtlsService extends ProviderBase {
   async findUserByThumbprint(thumbprint: string) {
     const externalAccount = await prisma.externalAccount.findFirst({
       where: {
-        sub: thumbprint,
+        sub: {
+          equals: thumbprint,
+          mode: 'insensitive',
+        },
         type: this.type,
+        issuer: DOMAIN,
       },
       include: { user: true },
     });
+
+    if (
+      externalAccount?.rest_info &&
+      typeof externalAccount.rest_info === 'object' &&
+      !Array.isArray(externalAccount.rest_info) &&
+      (externalAccount.rest_info as Record<string, unknown>).authentication_enabled === false
+    ) {
+      return null;
+    }
 
     return externalAccount?.user || null;
   }

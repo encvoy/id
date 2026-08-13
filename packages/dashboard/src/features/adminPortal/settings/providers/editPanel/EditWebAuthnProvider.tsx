@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { IEditProviderProps } from "src/features/adminPortal/settings/providers/editPanel/EditProvider";
 import { isObjectEmpty } from "src/shared/utils/helpers";
 import {
+  IWebAuthnParams,
   IProvider,
   useUpdateAvatarMutation,
   useUpdateProviderMutation,
@@ -15,7 +16,11 @@ import {
   createProviderBaseSchema,
 } from "../components/BaseFormProvider";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { ProviderAvatars } from "../utils";
+import {
+  buildProviderUpdatePayload,
+  ProviderAvatars,
+} from "../utils";
+import { SwitchBlock } from "@encvoy-id/components";
 export const EditWebAuthnProvider: FC<IEditProviderProps> = ({
   isOpen,
   onClose,
@@ -24,8 +29,11 @@ export const EditWebAuthnProvider: FC<IEditProviderProps> = ({
   const { t: translate } = useTranslation();
   const schema = yup.object({
     ...createProviderBaseSchema(translate),
+    params: yup.object({
+      authenticatorAttachment: yup.boolean().default(false),
+    }),
   });
-  const methods = useForm<IProvider>({
+  const methods = useForm<IProvider<IWebAuthnParams>>({
     resolver: yupResolver(schema) as any,
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -48,12 +56,21 @@ export const EditWebAuthnProvider: FC<IEditProviderProps> = ({
 
   useEffect(() => {
     if (provider) {
-      reset(provider as IProvider);
+      reset(
+        {
+          ...(provider as IProvider<IWebAuthnParams>),
+          params: {
+            authenticatorAttachment: false,
+            ...((provider?.params as IWebAuthnParams | undefined) || {}),
+          },
+        } as IProvider<IWebAuthnParams>
+      );
     }
   }, [isOpen]);
 
-  const onSubmit: SubmitHandler<IProvider> = (data) => {
-    updateProvider(data).then(() => {
+  const onSubmit: SubmitHandler<IProvider<IWebAuthnParams>> = (data) => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields);
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,
@@ -65,7 +82,7 @@ export const EditWebAuthnProvider: FC<IEditProviderProps> = ({
   };
 
   return (
-    <BaseFormProvider<IProvider>
+    <BaseFormProvider<IProvider<IWebAuthnParams>>
       isOpen={isOpen}
       onClose={onClose}
       methods={methods}
@@ -73,6 +90,15 @@ export const EditWebAuthnProvider: FC<IEditProviderProps> = ({
       disabled={updateResult.isLoading || isObjectEmpty(dirtyFields)}
     >
       <ProviderHeader defaultAvatar={ProviderAvatars.WEBAUTHN} />
+      <SwitchBlock
+        name="params.authenticatorAttachment"
+        label={translate("providers.webauthn.typeAuthenticator")}
+        description={translate(
+          "providers.webauthn.typeAuthenticatorDescription"
+        )}
+        dataTestId="btn-settings-security-external-keys-use"
+        defaultValue={false}
+      />
     </BaseFormProvider>
   );
 };

@@ -33,11 +33,6 @@
   margin-bottom: 8px;
 }
 
-.asterisk::after {
-  content: '*';
-  color: red;
-}
-
 .typeButton {
   flex-shrink: 0;
   height: 36.5px;

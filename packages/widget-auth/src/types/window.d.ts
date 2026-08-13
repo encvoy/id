@@ -1,6 +1,7 @@
 interface IWidgetData {
   envVars: any;
   initialRoute: string;
+  authStage?: 'second-factor-challenge' | 'second-factor-enrollment';
   interactionId: string;
   externalAccountInfo: any;
   publicProfileClaims: string;

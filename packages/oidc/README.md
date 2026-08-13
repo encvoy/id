@@ -83,6 +83,15 @@ Reset database to initial state:
 npx prisma migrate reset
 ```
 
+On the next OIDC startup, the server compares the database installation
+fingerprint with its Redis marker and removes stale ID/OIDC authorization
+state before becoming ready. A normal restart with the same database keeps
+sessions intact, so a separate Redis flush is not required. Redis ACLs must
+allow `SCAN`, `EVAL`, `UNLINK`, and `PUBLISH` for this synchronization.
+
+The first startup after upgrading from a version without the marker performs
+a one-time cleanup and signs out existing sessions.
+
 ## Testing
 
 The server includes a pre-configured test client for development:

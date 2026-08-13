@@ -1,29 +1,48 @@
 import { IntersectionType } from '@nestjs/mapped-types';
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { applyDecorators } from '@nestjs/common';
+import { Type } from 'class-transformer';
 import * as cv from 'class-validator';
 import { TransformToArray } from 'src/decorators';
-import { IsBooleanCustom } from '../../custom.dto';
-import { EProviderGroups } from 'src/enums';
+import { IsBooleanCustom, IsLocalizedText } from '../../custom.dto';
+import { EProviderGroups, ELocales } from 'src/enums';
 import { Transform } from 'class-transformer';
+import { TLocalizedTextDto } from 'src/utils/localized-text-dto';
 
 export class TypeProviderDTO {
+  @cv.IsNotEmpty()
   @cv.IsString()
   @ApiProperty({ example: 'EMAIL' })
   type: string;
 }
 
 export class BindProviderDto {
-  @cv.IsArray()
-  @ApiProperty({ type: [Number] })
-  providers: number[];
+  @cv.IsString()
+  @ApiProperty({ type: String })
+  provider_id: string;
+
+  @cv.IsNumber()
+  @cv.IsOptional()
+  @ApiPropertyOptional({ type: Number })
+  index?: number;
 }
 
 export class GetProviderResDto {
   @ApiProperty()
   id: number;
 
-  @ApiProperty()
-  name: string;
+  @cv.IsNotEmpty()
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      type: 'string',
+    },
+    example: {
+      'ru-RU': 'Email',
+      'en-US': 'Email',
+    },
+  })
+  name: TLocalizedTextDto;
 
   @ApiPropertyOptional()
   description?: string;
@@ -31,27 +50,34 @@ export class GetProviderResDto {
   @ApiProperty()
   is_active: boolean;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   redirect_uri: string;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   issuer: string;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   client_id: string;
 
   @ApiPropertyOptional()
   avatar?: string | null;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   external_client_id: string;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   external_client_secret: string;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   authorization_endpoint: string;
 
+  @cv.IsNotEmpty()
   @ApiProperty()
   token_endpoint: string;
 
@@ -60,6 +86,7 @@ export class GetProviderResDto {
 }
 
 export class GetExternalClientSecretResDto {
+  @cv.IsNotEmpty()
   @ApiProperty()
   client_secret: string;
 }
@@ -67,16 +94,32 @@ export class GetExternalClientSecretResDto {
 export class BaseParamsProviderDto {}
 
 export class BaseCreateProviderDto<T = BaseParamsProviderDto> {
+  @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase() : value))
+  @cv.IsNotEmpty()
   @cv.IsString()
   type: string;
 
-  @cv.Matches(/[^ ]+/, { message: 'The name cannot consist only of spaces' })
-  @cv.Matches(/^[^ ]+( *[^ ]+)*?$/, { message: 'The name cannot begin or end with spaces' })
-  @cv.MaxLength(50)
-  @cv.MinLength(1)
-  @cv.IsString()
-  @ApiProperty()
-  name: string;
+  @cv.IsNotEmpty()
+  @cv.IsObject()
+  @IsLocalizedText(Object.values(ELocales), {
+    fallbackLocale: ELocales.ru,
+    requireAtLeastOne: true,
+    maxPerLang: 50,
+    validationOptions: {
+      message: 'name must contain at least one non-empty localized value, each up to 50 chars',
+    },
+  })
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      type: 'string',
+    },
+    example: {
+      'ru-RU': 'Провайдер',
+      'en-US': 'Provider',
+    },
+  })
+  name: TLocalizedTextDto;
 
   @cv.Matches(/^$|[^ ]+/, { message: 'The description cannot consist only of spaces' })
   @cv.MaxLength(255)
@@ -115,6 +158,15 @@ export class BaseCreateProviderDto<T = BaseParamsProviderDto> {
   @cv.IsOptional()
   @ApiPropertyOptional()
   index?: number;
+}
+
+export function ProviderParamsDto<T>(paramsDto: new () => T): PropertyDecorator {
+  return applyDecorators(
+    cv.IsOptional(),
+    cv.ValidateNested(),
+    Type(() => paramsDto),
+    ApiPropertyOptional({ type: paramsDto }),
+  ) as PropertyDecorator;
 }
 
 export class BaseUpdateProviderDto extends IntersectionType(

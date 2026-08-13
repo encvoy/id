@@ -5,9 +5,14 @@ export const getImageURL = (
   backendURL?: string
 ): string | undefined => {
   if (!path || typeof path !== "string") return undefined;
-  return path.startsWith("http://") || path.startsWith("https://")
-    ? path
-    : `${backendURL}/${path}`;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  const publicImagesIndex = path.indexOf("public/images/");
+  if (publicImagesIndex >= 0 && backendURL) {
+    return `${backendURL.replace(/\/+$/, "")}/${path.slice(publicImagesIndex)}`;
+  }
+  return `${backendURL}/${path}`;
 };
 
 export const generateStyles = ({

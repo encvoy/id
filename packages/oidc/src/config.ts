@@ -3,6 +3,8 @@ import { getJwks, getPublicJwks } from "./utils/jwks.js";
 import { createInteractionPolicy } from "./policies/interaction.policy.js";
 import { Adapter } from "./adapter.js";
 import { Account } from "./account.js";
+import { ensureAuthorizationAllowed } from "./client-authorization.js";
+import { getPermissionsByRole } from "./permissions.js";
 import { prisma } from "./prisma.js";
 import {
   CLIENT_ID,
@@ -12,6 +14,7 @@ import {
 } from "./constants.js";
 
 const interactionPolicy = createInteractionPolicy();
+const oidcCookiePath = new URL(DOMAIN).pathname.replace(/\/+$/, "") || "/";
 
 /**
  * Normalizes scope string by removing duplicates and ensuring openid is present
@@ -36,12 +39,57 @@ export function addScopeToGrant(grant: any, scopeString: string): void {
   grant.addOIDCScope(normalizedScope);
 }
 
+function normalizePermissions(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      value.filter(
+        (permission): permission is string =>
+          typeof permission === "string" && !!permission,
+      ),
+    ),
+  ).sort();
+}
+
+function getOriginFromValue(value: unknown): string | null {
+  if (typeof value !== "string" || !value.trim()) {
+    return null;
+  }
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
 export async function createOidcConfiguration(): Promise<Configuration> {
   // Initializing JWKS
   const jwks = await getJwks();
 
   return {
-    // Supported scopes (as in the old OIDC)
+    // Keep the protocol endpoints below /oidc while allowing the provider's
+    // issuer pathname (for example /id) to remain part of every public URL.
+    // Mounting the Koa app at /oidc would replace that issuer pathname.
+    routes: {
+      authorization: "/oidc/auth",
+      backchannel_authentication: "/oidc/backchannel",
+      code_verification: "/oidc/device",
+      device_authorization: "/oidc/device/auth",
+      end_session: "/oidc/session/end",
+      introspection: "/oidc/token/introspection",
+      jwks: "/oidc/jwks",
+      pushed_authorization_request: "/oidc/request",
+      registration: "/oidc/reg",
+      revocation: "/oidc/token/revocation",
+      token: "/oidc/token",
+      userinfo: "/oidc/me",
+    },
+
+    // Supported scopes
     scopes: [
       "openid",
       "offline_access",
@@ -49,15 +97,16 @@ export async function createOidcConfiguration(): Promise<Configuration> {
       "phone",
       "profile",
       "accounts",
-      "lk",
-      "catalog",
-      "locale",
+      "internal", // Unified scope for internal system data (lk, catalog, locale)
+      "lk", // @deprecated Use 'internal' instead
+      "catalog", // @deprecated Use 'internal' instead
+      "locale", // @deprecated Use 'internal' instead
     ],
 
-    // Claims configuration (as in the old OIDC)
+    // Claims configuration
     claims: {
-      openid: ["sub"],
-      email: ["email", "email_public", "email_verified"],
+      openid: ["sub", "scopes", "permissions"],
+      email: ["email", "email_verified"],
       phone: ["phone_number", "phone_number_verified"],
       profile: [
         "name", // Composite field of given_name and family_name
@@ -71,29 +120,35 @@ export async function createOidcConfiguration(): Promise<Configuration> {
         "password_change_required",
         "deleted",
         "picture",
-        "custom_fields",
       ],
       accounts: ["publicExternalAccounts"],
-      lk: ["lk", "systemClient", "orgClient"],
-      catalog: ["catalog"],
-      locale: ["locale"],
+      internal: [
+        "lk",
+        "systemClient",
+        "orgClient",
+        "orgClients",
+        "catalog",
+        "catalogClients",
+        "locale",
+      ], // Unified internal system data
+      lk: ["lk", "systemClient", "orgClient", "orgClients"], // @deprecated Use 'internal' instead
+      catalog: ["catalog", "catalogClients"], // @deprecated Use 'internal' instead
+      locale: ["locale"], // @deprecated Use 'internal' instead
     },
 
-    // Client-based CORS configuration (as in the old OIDC)
+    // Client-based CORS configuration
     clientBasedCORS: (ctx: any, origin: string, client: any) => {
-      if (
-        client.applicationType === "native" &&
-        origin.startsWith("cryptoarm://")
-      ) {
-        return true; // Allow cryptoarm://
+      if (client.applicationType !== "native") {
+        return false;
       }
-      return false; // Check other cases as usual
+
+      return getOriginFromValue(client?.domain) === origin;
     },
 
     // Conform ID Token Claims
     conformIdTokenClaims: false,
 
-    // Supported response types (as in the old OIDC)
+    // Supported response types
     responseTypes: [
       "code token",
       "code id_token token",
@@ -153,7 +208,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
       },
     },
 
-    // List of additional client fields (as in the old OIDC)
+    // List of additional client fields
     // Required for widget rendering
     extraClientMetadata: {
       properties: [
@@ -172,6 +227,9 @@ export async function createOidcConfiguration(): Promise<Configuration> {
     // Cookies configuration
     cookies: {
       keys: [OIDC_COOKIE_SECRET],
+      long: {
+        path: oidcCookiePath,
+      },
     },
 
     // JWKS configuration
@@ -179,7 +237,12 @@ export async function createOidcConfiguration(): Promise<Configuration> {
 
     ttl: {
       Grant: 24 * 60 * 60, // 1 day in seconds
-      IdToken: 1800, // 30 minutes in seconds
+      IdToken: function IdTokenTTL(ctx, token, client) {
+        return client.access_token_ttl &&
+          typeof client.access_token_ttl === "number"
+          ? client.access_token_ttl
+          : 1800; // 30 minutes in seconds
+      },
       Interaction: 60 * 60 * 24, // 1 day in seconds
       AccessToken: function AccessTokenTTL(ctx, token, client) {
         return client.access_token_ttl &&
@@ -224,6 +287,50 @@ export async function createOidcConfiguration(): Promise<Configuration> {
     // Redis adapter for sessions and tokens
     adapter: Adapter,
 
+    extraTokenClaims: async (ctx: any, token: any) => {
+      const accountId = token?.accountId;
+      const clientId = token?.clientId;
+      const hasCustomPermissions = Array.isArray(token?.extra?.permissions);
+      const customPermissions = normalizePermissions(token?.extra?.permissions);
+      const tokenKind =
+        typeof token?.extra?.token_kind === "string" && token.extra.token_kind
+          ? token.extra.token_kind
+          : "session";
+
+      if (typeof accountId !== "string" || !accountId || !clientId) {
+        return {
+          permissions: [],
+          token_kind: tokenKind,
+        };
+      }
+
+      await ensureAuthorizationAllowed(accountId, clientId);
+
+      if (hasCustomPermissions) {
+        return {
+          permissions: customPermissions,
+          token_kind: tokenKind,
+        };
+      }
+
+      const roleItem = await prisma.role.findUnique({
+        where: {
+          user_id_client_id: {
+            user_id: accountId,
+            client_id: clientId,
+          },
+        },
+        select: {
+          role: true,
+        },
+      });
+
+      return {
+        permissions: await getPermissionsByRole(roleItem?.role),
+        token_kind: tokenKind,
+      };
+    },
+
     // Interactions configuration with a custom policy
     interactions: {
       url: async function interactionsUrl(ctx: any, interaction: any) {
@@ -241,19 +348,30 @@ export async function createOidcConfiguration(): Promise<Configuration> {
         ctx.request?.query?.scope ||
         ctx.oidc.authorization?.scope ||
         ctx.oidc.params.scope;
+      const requestedScope =
+        typeof originalScope === "string" ? originalScope : "openid";
+      const accountId = ctx.oidc.session?.accountId;
 
       const grantId =
         (ctx.oidc.result &&
           ctx.oidc.result.consent &&
           ctx.oidc.result.consent.grantId) ||
-        ctx.oidc.session.grantIdFor(ctx.oidc.client.clientId);
+        ctx.oidc.session?.grantIdFor?.(ctx.oidc.client.clientId);
       const isFirstParty = ctx.oidc.params.redirect_uri === DOMAIN + "/code";
+
+      if (typeof accountId !== "string" || !accountId) {
+        return grantId
+          ? await ctx.oidc.provider.Grant.find(grantId)
+          : undefined;
+      }
+
+      await ensureAuthorizationAllowed(accountId, ctx.oidc.client.clientId);
 
       // Get user scopes from the database
       const scopesRecord = await prisma.scopes.findUnique({
         where: {
           user_id_client_id: {
-            user_id: parseInt(ctx.oidc.session.accountId, 10),
+            user_id: accountId,
             client_id: ctx.oidc.client.clientId,
           },
         },
@@ -261,29 +379,31 @@ export async function createOidcConfiguration(): Promise<Configuration> {
       });
 
       const givenScopes = scopesRecord?.scopes || "";
-      const requestedScopesArr = (originalScope as string).split(" ");
+      const requestedScopesArr = requestedScope.split(" ").filter(Boolean);
       let missingScopes = "";
 
       // offline_access is a special scope that doesn't need to be saved
       const SPECIAL_SCOPES = ["openid", "offline_access"];
 
       if (Array.isArray(requestedScopesArr)) {
+        const givenScopesSet = new Set(givenScopes.split(" ").filter(Boolean));
         for (const scope of requestedScopesArr) {
-          if (!SPECIAL_SCOPES.includes(scope) && !givenScopes.includes(scope)) {
+          if (!SPECIAL_SCOPES.includes(scope) && !givenScopesSet.has(scope)) {
             missingScopes += scope + " ";
           }
         }
       }
 
-      const uid = ctx.oidc.entities.Interaction
-        ? ctx.oidc.entities.Interaction.uid
-        : ctx.oidc.entities.Session.uid;
+      const uid =
+        ctx.oidc.entities.Interaction?.uid || ctx.oidc.entities.Session?.uid;
 
       const trimmedMissingScopes = missingScopes.trim();
 
       // If there are missing scopes and this is NOT a trusted client, redirect to consent
       if (trimmedMissingScopes && ctx.oidc.client.clientId !== CLIENT_ID) {
-        ctx.redirect(`${DOMAIN}/interaction/${uid}?prompt=consent`);
+        if (uid) {
+          ctx.redirect(`${DOMAIN}/api/interaction/${uid}?prompt=consent`);
+        }
         return;
       }
 
@@ -301,15 +421,18 @@ export async function createOidcConfiguration(): Promise<Configuration> {
         }
 
         // Filter out special scopes before saving to database
-        const scopesToSave = (givenScopes + " " + trimmedMissingScopes)
-          .split(" ")
-          .filter((s) => s && !s.includes("offline_access"))
-          .join(" ");
+        const scopesToSave = Array.from(
+          new Set(
+            (givenScopes + " " + trimmedMissingScopes)
+              .split(" ")
+              .filter((s) => s && s !== "offline_access"),
+          ),
+        ).join(" ");
 
         await prisma.scopes.upsert({
           where: {
             user_id_client_id: {
-              user_id: parseInt(ctx.oidc.session.accountId, 10),
+              user_id: accountId,
               client_id: ctx.oidc.client.clientId,
             },
           },
@@ -317,7 +440,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
             scopes: scopesToSave,
           },
           create: {
-            user_id: parseInt(ctx.oidc.session.accountId, 10),
+            user_id: accountId,
             client_id: ctx.oidc.client.clientId,
             scopes: scopesToSave,
           },
@@ -325,10 +448,10 @@ export async function createOidcConfiguration(): Promise<Configuration> {
 
         const grant = new ctx.oidc.provider.Grant({
           clientId: ctx.oidc.client.clientId,
-          accountId: ctx.oidc.session.accountId,
+          accountId,
         });
 
-        addScopeToGrant(grant, originalScope as string);
+        addScopeToGrant(grant, requestedScope);
         await grant.save();
 
         return grant;
@@ -337,10 +460,10 @@ export async function createOidcConfiguration(): Promise<Configuration> {
       if (isFirstParty) {
         const grant = new ctx.oidc.provider.Grant({
           clientId: ctx.oidc.client.clientId,
-          accountId: ctx.oidc.session.accountId,
+          accountId,
         });
 
-        addScopeToGrant(grant, originalScope as string);
+        addScopeToGrant(grant, requestedScope);
 
         await grant.save();
         return grant;
@@ -352,7 +475,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
 
       if (grant) {
         // Check if new scopes are requested (e.g., offline_access)
-        const requestedScopes = (originalScope as string).split(" ");
+        const requestedScopes = requestedScope.split(" ").filter(Boolean);
         const grantScopes = grant.getOIDCScope();
         const grantScopesSet = new Set(grantScopes.split(" "));
         let needsUpdate = false;
@@ -373,7 +496,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
 
           const newGrant = new ctx.oidc.provider.Grant({
             clientId: ctx.oidc.client.clientId,
-            accountId: ctx.oidc.session.accountId,
+            accountId,
           });
           addScopeToGrant(newGrant, allScopes);
           await newGrant.save();
@@ -382,7 +505,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
 
         // IMPORTANT: Use ONLY requested scopes
         // refresh_token should be issued ONLY if offline_access is explicitly requested
-        const requestedScopesArray = (originalScope as string).split(" ");
+        const requestedScopesArray = requestedScope.split(" ").filter(Boolean);
         // Use only requested scopes (don't auto-add offline_access from grant)
         const finalScopes = requestedScopesArray.join(" ");
 
@@ -392,7 +515,7 @@ export async function createOidcConfiguration(): Promise<Configuration> {
         const updatedScopesRecord = await prisma.scopes.findUnique({
           where: {
             user_id_client_id: {
-              user_id: parseInt(ctx.oidc.session.accountId, 10),
+              user_id: accountId,
               client_id: ctx.oidc.client.clientId,
             },
           },
@@ -402,14 +525,14 @@ export async function createOidcConfiguration(): Promise<Configuration> {
         const currentUserScopes = updatedScopesRecord?.scopes || "";
 
         // Merge saved scopes with requested scopes (to include special scopes like offline_access)
-        const requestedScopes = originalScope as string;
+        const requestedScopes = requestedScope;
         const mergedScopes = currentUserScopes
           ? `${currentUserScopes} ${requestedScopes}`
           : requestedScopes;
 
         const grant = new ctx.oidc.provider.Grant({
           clientId: ctx.oidc.client.clientId,
-          accountId: ctx.oidc.session.accountId,
+          accountId,
         });
         addScopeToGrant(grant, mergedScopes);
 

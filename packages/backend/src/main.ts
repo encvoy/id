@@ -4,137 +4,147 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
-import { json, Request, Response } from 'express';
+import { json } from 'express';
 import { join } from 'path';
 import * as constants from './constants';
-import { ExtensionsLoader } from './loader';
 import { CustomLogger, RootModule } from './modules';
+import { runWithBootstrapRetry } from './utils/bootstrap-retry';
+import { annotateRequiredScopes } from './utils/swagger-scopes';
 
-export let app: NestExpressApplication;
+let app: NestExpressApplication;
+let shutdownHandlersRegistered = false;
 
-async function initializeApp() {
-  // Load extensions
-  const extensionsModules = [
-    ...(await ExtensionsLoader.load('./extensions')),
-    ...(await ExtensionsLoader.load('./modules/providers/collection')),
-  ];
+const sendHealth = (_req: any, res: any) => {
+  res.status(200).json({ status: 'ok', service: 'backend', timestamp: new Date().toISOString() });
+};
 
-  // Dynamically register modules
-  const AppDynamicModule = RootModule.register(extensionsModules);
-
-  app = await NestFactory.create<NestExpressApplication>(AppDynamicModule, {
-    logger: constants.CONSOLE_LOG_LEVELS as LogLevel[],
+const collectValidationMessages = (validationErrors: ValidationError[] = []): string[] => {
+  return validationErrors.flatMap((validationError) => {
+    const ownErrors = Object.values(validationError.constraints || {});
+    const nestedErrors = collectValidationMessages(validationError.children || []);
+    return [...ownErrors, ...nestedErrors];
   });
+};
 
-  const staticPath = join(process.cwd(), 'views');
-  app.useStaticAssets(staticPath);
-  app.useStaticAssets(join(__dirname, '..', 'public'), {
-    prefix: '/public/',
-  });
-  app.useStaticAssets(join(__dirname, '..', 'auth'), {
-    prefix: '/auth/',
-  });
-  app.useStaticAssets(join(__dirname, '..', 'views', 'docs'), {
-    prefix: '/docs/',
-  });
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
-  app.use(json({ limit: '2mb' }));
-  app.use(cookieParser());
-  app.useLogger(app.get(CustomLogger));
-  app.setGlobalPrefix('/api');
-  app.useGlobalPipes(
-    new ValidationPipe({
-      forbidNonWhitelisted: true,
-      whitelist: true,
-      transform: true,
-      exceptionFactory: (validationErrors: ValidationError[] = []) => {
-        return new HttpException(
-          validationErrors.reduce((acc, validationError) => {
-            let childrenErrors: string;
-            if (validationError.children) {
-              childrenErrors = validationError.children.reduce((acc, validationError, index) => {
-                return (acc +=
-                  (index ? ', ' : '') +
-                  Object.values(validationError.constraints || {}).join(', '));
-              }, '');
-            }
+async function initializeApp(): Promise<NestExpressApplication> {
+  let nextApp: NestExpressApplication | undefined;
 
-            const errors = Object.values(validationError.constraints || {});
-            if (childrenErrors) errors.push(childrenErrors);
+  try {
+    const AppDynamicModule = RootModule.register();
 
-            if (errors.length) {
-              acc += acc ? ', ' : '';
-              acc += errors.join(', ');
-            }
-
-            return acc;
-          }, ''),
-          HttpStatus.BAD_REQUEST,
-        );
-      },
-    }),
-  );
-
-  app.enableCors({
-    origin: [constants.DOMAIN],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-    exposedHeaders: [
-      'Access-Control-Allow-Origin',
-      'X-Total-Count',
-      'X-Per-Page',
-      'X-Current-Offset',
-      'X-Next-Offset',
-    ],
-    credentials: true,
-    maxAge: 3600,
-  });
-
-  app.enableShutdownHooks();
-
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Trusted')
-    .setDescription('Trusted service')
-    .setVersion(`v${constants.VERSION}`)
-    .addBasicAuth()
-    .addBearerAuth()
-    .addOAuth2()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, document, {
-    swaggerOptions: {
-      defaultModelsExpandDepth: -1, // Disables displaying the list of all types
-      docExpansion: 'none', // Swagger UI collapsed by default
-      filter: true, // Enable filtering
-      showRequestDuration: true, // Show request duration
-    },
-  });
-
-  // Документация
-  const expressApp = app.getHttpAdapter().getInstance();
-  expressApp.get('/docs', (_req: Request, res: Response): void => {
-    res.render('docs', {
-      version: constants.VERSION,
+    nextApp = await NestFactory.create<NestExpressApplication>(AppDynamicModule, {
+      logger: constants.CONSOLE_LOG_LEVELS as LogLevel[],
     });
-  });
 
-  if (constants.NODE_ENV === 'development') {
-    console.warn('Server is running in development mode');
+    nextApp.getHttpAdapter().get('/health', sendHealth);
+    nextApp.getHttpAdapter().get('/api/health', sendHealth);
+
+    const staticPath = join(process.cwd(), 'views');
+    nextApp.useStaticAssets(staticPath);
+    nextApp.useStaticAssets(join(__dirname, '..', 'public'), {
+      prefix: '/public/',
+    });
+    nextApp.useStaticAssets(join(__dirname, '..', 'auth'), {
+      prefix: '/auth/',
+    });
+    nextApp.setBaseViewsDir(join(__dirname, '..', 'views'));
+    nextApp.setViewEngine('hbs');
+    nextApp.use(json({ limit: '2mb' }));
+    nextApp.use(cookieParser());
+    nextApp.useLogger(nextApp.get(CustomLogger));
+    nextApp.setGlobalPrefix('/api');
+    nextApp.useGlobalPipes(
+      new ValidationPipe({
+        forbidNonWhitelisted: true,
+        whitelist: true,
+        transform: true,
+        exceptionFactory: (validationErrors: ValidationError[] = []) => {
+          return new HttpException(
+            collectValidationMessages(validationErrors).join(', '),
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    );
+
+    nextApp.enableCors({
+      origin: [new URL(constants.DOMAIN).origin],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+      exposedHeaders: [
+        'Access-Control-Allow-Origin',
+        'X-Total-Count',
+        'X-Per-Page',
+        'X-Current-Offset',
+        'X-Next-Offset',
+      ],
+      credentials: true,
+      maxAge: 3600,
+    });
+
+    nextApp.enableShutdownHooks();
+
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Trusted')
+      .setDescription('Trusted service')
+      .setVersion(`v${constants.VERSION}`)
+      .addBasicAuth()
+      .addBearerAuth()
+      .addOAuth2()
+      .build();
+
+    const document = SwaggerModule.createDocument(nextApp, swaggerConfig);
+    annotateRequiredScopes(document);
+    SwaggerModule.setup('api', nextApp, document, {
+      swaggerOptions: {
+        defaultModelsExpandDepth: -1, // Disables displaying the list of all types
+        docExpansion: 'none', // Swagger UI collapsed by default
+        filter: true, // Enable filtering
+        showRequestDuration: true, // Show request duration
+      },
+    });
+
+    if (constants.NODE_ENV === 'development') {
+      console.warn('Server is running in development mode');
+    }
+
+    await nextApp.listen(3005);
+    app = nextApp;
+    return nextApp;
+  } catch (error) {
+    if (nextApp) {
+      await nextApp.close().catch(() => undefined);
+    }
+
+    throw error;
+  }
+}
+
+const registerShutdownHandlers = () => {
+  if (shutdownHandlersRegistered) {
+    return;
   }
 
-  await app.listen(3005);
+  shutdownHandlersRegistered = true;
 
-  // Graceful shutdown handlers
   const gracefulShutdown = async (signal: string) => {
-    console.log(`\n[BACKEND] Received ${signal}, closing server gracefully...`);
-    await app.close();
-    console.log('[BACKEND] Shutdown complete');
+    console.info(`[Shutdown] Received ${signal}`);
+    await app?.close().catch(() => undefined);
     process.exit(0);
   };
 
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
   process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+};
+
+async function bootstrap() {
+  await runWithBootstrapRetry({
+    taskName: 'backend startup',
+    task: async () => {
+      await initializeApp();
+      registerShutdownHandlers();
+    },
+  });
 }
-initializeApp();
+
+void bootstrap();

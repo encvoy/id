@@ -12,9 +12,10 @@
     "data_processing_consent": "Consenso al trattamento dei dati personali",
     "password": "Password"
   },
+  "widget": {
+    "passkey_bind_message": "Per aggiungere una passkey, scegli prima un account esistente o creane uno nuovo."
+  },
   "errors": {
-    "T3LE0001": "Licenza non valida",
-    "T3LE0002": "La licenza è già presente nel sistema",
     "T3E0001": "Credenziali errate",
     "T3E0002": "Identificatore non compilato",
     "T3E0003": "Utente non trovato",
@@ -34,6 +35,7 @@
     "T3E0017": "Campo non modificabile",
     "T3E0018": "Parametri non corretti",
     "T3E0019": "Email non univoca",
+    "T3E0020": "È richiesta una riautenticazione tramite un provider di fiducia",
     "T3E0021": "Email dell'utente non specificata",
     "T3E0022": "Operazione non disponibile per se stessi",
     "T3E0023": "Utente eliminato",
@@ -115,6 +117,10 @@
     "T3E00": "",
     "T3E0000": "Errore sconosciuto",
     "T3E0099": "L'utente esiste già",
-    "T3E0100": "La nuova password non deve coincidere con quella precedente"
+    "T3E0100": "La nuova password non deve coincidere con quella precedente",
+    "T3E0103": "Il ripristino degli account eliminati è vietato dalle impostazioni di sistema",
+    "T3E0104": "Limite di organizzazioni superato: {{limit}}",
+    "T3E0101": "Numero di serie e impronta digitale (fingerprint) del certificato client mancanti",
+    "T3E0102": "Impossibile aggiungere questo numero di telefono"
   }
 }

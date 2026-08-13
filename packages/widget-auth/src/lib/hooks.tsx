@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { ALLOWED_LOGIN_FIELDS } from '@/lib/constant';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +36,7 @@ export function HtmlContent({ html }: { html: string }) {
     });
   }, [html]);
 
-  if (!cleanHtml) <div>Загрузка...</div>;
+  if (!cleanHtml) <div>Loading...</div>;
 
   return <div dangerouslySetInnerHTML={{ __html: cleanHtml }}></div>;
 }
@@ -48,7 +47,6 @@ interface HashParams {
 }
 
 export function useHashParams(): HashParams {
-  const pathname = usePathname();
   const [hashParams, setHashParams] = useState<HashParams>({});
 
   useLayoutEffect(() => {
@@ -72,7 +70,7 @@ export function useHashParams(): HashParams {
     updateHash();
 
     return () => window.removeEventListener('hashchange', updateHash);
-  }, [pathname]);
+  }, []);
 
   return hashParams;
 }

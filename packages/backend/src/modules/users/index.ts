@@ -1,4 +1,5 @@
 export * from './profile.controller';
+export * from './users-contacts.service';
 export * from './users.controller';
 export * from './users.dto';
 export * from './users.module';

@@ -1,8 +1,3 @@
-.asterisk::after {
-  content: "*";
-  color: red;
-}
-
 .label {
   margin-bottom: 8px;
 }

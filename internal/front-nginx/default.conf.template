@@ -1,0 +1,179 @@
+upstream backend {
+  server ${BACKEND_HOST}:${BACKEND_PORT};
+}
+
+upstream oidc {
+  server ${OIDC_HOST}:${OIDC_PORT};
+}
+
+upstream auth {
+  server ${AUTH_HOST}:${AUTH_PORT};
+}
+
+map $http_x_forwarded_proto $proxy_forwarded_proto {
+  default $http_x_forwarded_proto;
+  "" $scheme;
+}
+
+map $http_x_forwarded_host $proxy_forwarded_host {
+  default $http_x_forwarded_host;
+  "" $host;
+}
+
+map $http_x_forwarded_port $proxy_forwarded_port {
+  default $http_x_forwarded_port;
+  "" $server_port;
+}
+
+server {
+  server_name ${FRONT_SERVER_NAME};
+  listen ${FRONT_PLAIN_PORT};
+
+  client_header_buffer_size 512k;
+  large_client_header_buffers 4 512k;
+  client_max_body_size 12m;
+  proxy_buffer_size 64k;
+  proxy_buffers 8 64k;
+  proxy_busy_buffers_size 128k;
+
+  # Widget HTML is returned both from /widget/ and from dynamic backend routes
+  # such as /api/interaction/:uid. Next/Turbopack also embeds the same prefix
+  # in JavaScript for lazy chunks. Rewrite at the server boundary so every
+  # relevant response follows the runtime mount path. Matching the opening
+  # quote prevents already-prefixed paths from being prefixed twice.
+  sub_filter_types text/javascript application/javascript;
+  sub_filter_once off;
+  sub_filter '"/widget/' '"${FRONT_BASE_PATH}/widget/';
+  sub_filter "'/widget/" "'${FRONT_BASE_PATH}/widget/";
+
+  root /usr/share/nginx/html;
+  index index.html index.htm;
+
+  # Keep cookies scoped to the configured public mount point. The first rule
+  # protects paths that are already prefixed; the second prefixes upstream
+  # paths such as /, /auth and /oidc when FRONT_BASE_PATH is non-empty.
+  proxy_cookie_path ~^${FRONT_BASE_PATH}(/.*)?$ ${FRONT_BASE_PATH}$1;
+  proxy_cookie_path ~^/(.*)$ ${FRONT_BASE_PATH}/$1;
+
+  location = ${FRONT_BASE_PATH}/.well-known/openid-configuration {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+    proxy_pass http://oidc/.well-known/openid-configuration;
+    proxy_redirect off;
+  }
+
+  location ^~ ${FRONT_BASE_PATH}/api/oidc {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+
+    rewrite ^${FRONT_BASE_PATH}/api(/oidc.*)$ $1 break;
+    proxy_pass http://oidc;
+    proxy_redirect off;
+  }
+
+  location ${FRONT_BASE_PATH}/oidc {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+
+    rewrite ^${FRONT_BASE_PATH}(/oidc.*)$ $1 break;
+    proxy_pass http://oidc;
+    proxy_redirect off;
+  }
+
+  location ${FRONT_BASE_PATH}/auth {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+
+    rewrite ^${FRONT_BASE_PATH}(/auth.*)$ $1 break;
+    proxy_pass http://auth;
+    proxy_redirect off;
+  }
+
+  # The exported Next.js widget uses /widget/ as its build-time asset prefix.
+  # Rewrite it at the ingress boundary so the same image works both at the
+  # domain root and below a runtime mount path such as /id.
+  location = ${FRONT_BASE_PATH}/widget {
+    absolute_redirect off;
+    return 308 ${FRONT_BASE_PATH}/widget/;
+  }
+
+  location ^~ ${FRONT_BASE_PATH}/widget/ {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+
+    rewrite ^${FRONT_BASE_PATH}(/widget/.*)$ $1 break;
+    proxy_pass http://backend;
+    proxy_redirect off;
+  }
+
+  location ~ ^${FRONT_BASE_PATH}/(api|public|widget|docs)(/|$) {
+    proxy_set_header Host $proxy_forwarded_host;
+    proxy_set_header X-Forwarded-Host $proxy_forwarded_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_forwarded_proto;
+    proxy_set_header X-Forwarded-Port $proxy_forwarded_port;
+    proxy_set_header X-SSL-Client-Verify $http_x_ssl_client_verify;
+    proxy_set_header X-SSL-Client-DN $http_x_ssl_client_dn;
+    proxy_set_header X-SSL-Client-CN $http_x_ssl_client_cn;
+    proxy_set_header X-SSL-Client-Serial $http_x_ssl_client_serial;
+    proxy_set_header X-SSL-Client-Fingerprint $http_x_ssl_client_fingerprint;
+    proxy_set_header X-SSL-Client-Issuer $http_x_ssl_client_issuer;
+    proxy_set_header X-SSL-Client-Cert $http_x_ssl_client_cert;
+    proxy_set_header X-SSL-Client-Cert-Escaped $http_x_ssl_client_cert_escaped;
+    proxy_set_header Cookie $http_cookie;
+    proxy_pass_header Set-Cookie;
+
+    rewrite ^${FRONT_BASE_PATH}(/.*)$ $1 break;
+    proxy_pass http://backend;
+    proxy_redirect off;
+  }
+
+  # /id -> /id/ in path-prefix mode. With an empty base path the expression
+  # is ^$ and cannot match a normal HTTP request URI.
+  location ~ ^${FRONT_BASE_PATH}$ {
+    absolute_redirect off;
+    return 308 ${FRONT_BASE_PATH}/;
+  }
+
+  location ${FRONT_BASE_PATH}/ {
+    rewrite ^${FRONT_BASE_PATH}/$ /index.html break;
+    rewrite ^${FRONT_BASE_PATH}(/.*)$ $1 break;
+    try_files $uri /index.html =404;
+
+    # Production assets are relative. A runtime base keeps them correct on
+    # deep SPA routes without rebuilding the frontend for each mount point.
+    sub_filter_once on;
+    sub_filter '<head>' '<head><base href="${FRONT_BASE_PATH}/">';
+  }
+}

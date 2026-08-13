@@ -8,8 +8,9 @@ import {
   createProviderBaseSchema,
 } from "src/features/adminPortal/settings/providers/components/BaseFormProvider";
 import {
+  IWebAuthnParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "src/shared/api/provider";
@@ -18,6 +19,7 @@ import { ProviderAvatars } from "src/features/adminPortal/settings/providers/uti
 import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
 import { useTranslation } from "react-i18next";
 import { EClaimPrivacyNumber } from "src/shared/utils/enums";
+import { SwitchBlock } from "@encvoy-id/components";
 
 export const CreateWebAuthnProvider: FC<ICreateProvider> = ({
   isOpen,
@@ -29,16 +31,22 @@ export const CreateWebAuthnProvider: FC<ICreateProvider> = ({
 
   const schema = yup.object({
     ...createProviderBaseSchema(translate),
+    params: yup.object({
+      authenticatorAttachment: yup.boolean().default(false),
+    }),
   });
 
-  const methods = useForm<IProvider>({
+  const methods = useForm<IProvider<IWebAuthnParams>>({
     resolver: yupResolver(schema) as any,
     defaultValues: {
       name: "WebAuthn",
       avatar: ProviderAvatars.WEBAUTHN,
-      type: ProviderType.WEBAUTHN,
+      type: EProviderType.WEBAUTHN,
       default_public: EClaimPrivacyNumber.private,
-    },
+      params: {
+        authenticatorAttachment: false,
+      },
+    } as IProvider<IWebAuthnParams>,
     mode: "onChange",
     reValidateMode: "onBlur",
   });
@@ -56,7 +64,7 @@ export const CreateWebAuthnProvider: FC<ICreateProvider> = ({
     if (createResult.isSuccess) onClose(true);
   }, [createResult]);
 
-  const onSubmit: SubmitHandler<IProvider> = (data) => {
+  const onSubmit: SubmitHandler<IProvider<IWebAuthnParams>> = (data) => {
     createProvider({
       body: data,
       clientId: clientId || appId,
@@ -76,7 +84,7 @@ export const CreateWebAuthnProvider: FC<ICreateProvider> = ({
   };
 
   return (
-    <BaseFormProvider<IProvider>
+    <BaseFormProvider<IProvider<IWebAuthnParams>>
       isOpen={isOpen}
       onClose={onClose}
       methods={methods}
@@ -86,6 +94,14 @@ export const CreateWebAuthnProvider: FC<ICreateProvider> = ({
       disabled={createResult.isLoading}
     >
       <ProviderHeader defaultAvatar={ProviderAvatars.WEBAUTHN} />
+      <SwitchBlock
+        name="params.authenticatorAttachment"
+        label={translate("providers.webauthn.typeAuthenticator")}
+        description={translate(
+          "providers.webauthn.typeAuthenticatorDescription"
+        )}
+        defaultValue={false}
+      />
     </BaseFormProvider>
   );
 };

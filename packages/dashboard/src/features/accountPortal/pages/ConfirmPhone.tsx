@@ -5,7 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
 import * as yup from "yup";
 import { routes, tabs } from "src/shared/utils/enums";
 import { IUpdateContact, useAddPhoneMutation } from "src/shared/api/profile";
@@ -14,9 +14,10 @@ import {
   useLazyCheckPhoneExistsQuery,
 } from "../../../shared/api/phone";
 import { RootState } from "../../../app/store/store";
-import { TUserSlice } from "../../../shared/lib/userSlice";
-import { ActionButtons } from "../../../shared/ui/components/ActionButtons";
-import { InputPhone } from "../../../shared/ui/InputPhone";
+import { TUserSlice } from "src/shared/slices/userSlice";
+import { ActionButtons } from "@encvoy-id/components";
+import { InputPhone } from "@encvoy-id/components";
+import { SurfaceBlock } from "@encvoy-id/components";
 import styles from "./ConfirmPhone.module.css";
 
 const mapStateToProps = ({ user }: RootState) => ({
@@ -57,6 +58,8 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
   const [codeType, setCodeType] = useState("");
   const [codeLength, setCodeLength] = useState(0);
   const { action } = useParams<{ action: string }>();
+  const shouldAddAdditionalPhone =
+    action === "add" && Boolean(profile?.phone_number);
 
   useEffect(() => {
     const timerID = setInterval(() => {
@@ -90,9 +93,12 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
 
   useEffect(() => {
     reset({
-      identifier: updatePhoneNumber(profile?.phone_number),
+      identifier: shouldAddAdditionalPhone
+        ? ""
+        : updatePhoneNumber(profile?.phone_number),
+      code: "",
     });
-  }, [profile]);
+  }, [profile, shouldAddAdditionalPhone, reset]);
 
   const requestVerificationCode = async (phoneNumber: string) => {
     try {
@@ -162,21 +168,30 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
   return (
     <div className="page-container">
       <div className="content">
-        <div className={styles.container}>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography style={{ marginBottom: 24 }} className="title-medium">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SurfaceBlock className={styles.container}>
+              <Typography
+                style={{ marginBottom: "24px" }}
+                className="text-20-medium"
+              >
                 {translate(
                   `pages.confirmPhone.titles.${
-                    action === "change" ? "change" : "add"
+                    action === "confirm"
+                      ? "confirm"
+                      : action === "change"
+                      ? "change"
+                      : "add"
                   }`
                 )}
               </Typography>
               <InputPhone
                 label={translate("pages.confirmPhone.phoneLabel")}
                 name="identifier"
+                required
                 description={translate("pages.confirmPhone.phoneDescription")}
                 disabled={isPhoneCalled}
+                dataTestId="txt-profile-phone"
               >
                 {isPhoneCalled && (
                   <Button
@@ -195,6 +210,7 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
               <InputField
                 label={translate("pages.confirmPhone.codeLabel")}
                 name="code"
+                required
                 description={
                   minute !== 0 || second !== 0
                     ? translate("pages.confirmPhone.codeDescriptionTimer", {
@@ -204,6 +220,7 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
                     : ""
                 }
                 disabled={!isPhoneCalled}
+                dataTestId="txt-confirm-email-code"
               >
                 {isPhoneCalled && (
                   <Button
@@ -214,7 +231,7 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
                       requestVerificationCode(getValues("identifier"))
                     }
                   >
-                    {translate("actionButtons.resend")}
+                    {translate("actionButtons.retry")}
                   </Button>
                 )}
               </InputField>
@@ -224,6 +241,8 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
                 </Typography>
               )}
               <ActionButtons
+                cancelText={translate("actionButtons.cancel")}
+                submitButtonDataTestId="btn-profile-contact-getcode"
                 onCancel={() => navigate(`/${routes.profile}/${tabs.profile}`)}
                 submitText={translate(
                   isPhoneCalled
@@ -231,9 +250,9 @@ export const ConfirmPhoneComponent: FC<IConfirmPhoneProps> = ({ profile }) => {
                     : "actionButtons.getCode"
                 )}
               />
-            </form>
-          </FormProvider>
-        </div>
+            </SurfaceBlock>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

@@ -3,16 +3,30 @@
 import { Button } from '@/components/button/Button';
 import { Section } from '@/components/section/Section';
 import { Container } from '@/components/container/Container';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Form } from '@/components/form/Form';
-import { INTERACTION_ID, PROVIDERS, MESSAGE, FIELD, CLIENT_ID } from '@/lib/constant';
+import {
+  CLIENT_ID,
+  buildPublicUrl,
+  FIELD,
+  INTERACTION_ID,
+  INTERACTION_URL,
+  MESSAGE,
+  PROVIDERS,
+} from '@/lib/constant';
 import { EHashPages, IFieldEnv, IProvider } from '@/types/types';
 import { useForm, useWatch } from 'react-hook-form';
 import { useHashParams, useTimer } from '@/lib/hooks';
 import { useTranslation } from 'react-i18next';
 import { InputField } from '@/components/input/InputField';
+import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { getTimezoneOffsetInHours, isNotValidValue, isValidEmail } from '@/lib/utils';
+import {
+  getLocalizedTextValue,
+  getTimezoneOffsetInHours,
+  isNotValidValue,
+  isValidEmail,
+} from '@/lib/utils';
 import { ValidationRuleList } from '@/components/listItem/listItem';
 
 interface IEmailFormData {
@@ -27,10 +41,11 @@ export enum EMailCodeTypes {
 
 interface IEmailPageProps {
   isStep?: boolean;
+  isReplaceEmail?: boolean;
 }
 
-const Page: FC<IEmailPageProps> = ({ isStep }) => {
-  const { t: translate } = useTranslation();
+const Page: FC<IEmailPageProps> = ({ isStep, isReplaceEmail }) => {
+  const { t: translate, i18n } = useTranslation();
   const hashParams = useHashParams();
   const { minute, second, setTime } = useTimer();
   const [provider, setProvider] = useState<IProvider>();
@@ -39,6 +54,7 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [mailUsed, setMailUsed] = useState('');
   const [currentField, setCurrentField] = useState<IFieldEnv>();
+  const isStepFlow = Boolean(isStep || isReplaceEmail);
 
   useEffect(() => {
     setCurrentField(FIELD);
@@ -53,15 +69,19 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
   const watchEmail = useWatch({ control, name: 'email' });
 
   useEffect(() => {
-    setError('code', { message: MESSAGE });
-  }, []);
+    const resolvedMessage = getLocalizedTextValue(MESSAGE, i18n.language);
+
+    if (resolvedMessage) {
+      setError('code', { message: resolvedMessage });
+    }
+  }, [i18n.language, setError]);
 
   useEffect(() => {
     setProvider(PROVIDERS.find((provider) => provider.id.toString() === hashParams?.id));
   }, [hashParams?.id]);
 
   const checkStatusVerification = (email?: string): Promise<{ status: boolean }> => {
-    return fetch('/api/v1/verification/status?email=' + (email || ''))
+    return fetch(buildPublicUrl('/api/v1/verification/status?email=' + (email || '')))
       .then((response) => response.json())
       .then((data) => ({ status: data.status }));
   };
@@ -92,20 +112,20 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
       return;
     }
 
-    if (isStep && isNotValidValue(email, 'email', setError, currentField)) {
+    if (isStepFlow && isNotValidValue(email, 'email', setError, currentField, i18n.language)) {
       return;
     }
     setMailUsed(email);
 
     setIsLoading(true);
     try {
-      const response = await fetch(window.location.origin + '/api/v1/verification/code', {
+      const response = await fetch(buildPublicUrl('/api/v1/verification/code'), {
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'POST',
         body: JSON.stringify({
-          type: isStep ? 'EMAIL' : provider?.type,
+          type: isStepFlow ? 'EMAIL' : provider?.type,
           email,
           code_type: EMailCodeTypes.confirmEmail,
           uid: INTERACTION_ID,
@@ -134,7 +154,7 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
   const confirmVerificationCode = async ({ email, code }: IEmailFormData) => {
     try {
       const response = await fetch(
-        `/api/interaction/${INTERACTION_ID}/email/confirm?email=${email}&code=${code || ''}`,
+        `${INTERACTION_URL}/email/confirm?email=${email}&code=${code || ''}`,
       );
 
       if (!response?.ok) {
@@ -165,20 +185,40 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
 
   return (
     <Section>
-      <Container title="Email" isCancelAction={isStep} backPath={EHashPages.LOGIN}>
+      <Container
+        title={
+          isReplaceEmail ? translate('pages.replaceEmail.title') : translate('helperText.email')
+        }
+        isCancelAction={isStepFlow}
+        backPath={EHashPages.LOGIN}
+      >
         <Form<IEmailFormData>
           methodsForm={methods}
           fnSubmit={modeForm === 'request' ? requestVerificationCode : confirmVerificationCode}
           mode={modeForm === 'action' ? 'action' : 'hookForm'}
-          action={`/api/interaction/${INTERACTION_ID}/${isStep ? 'steps' : `auth?type=${provider?.type}&provider_id=${provider?.id}`}`}
+          action={`${INTERACTION_URL}/${isStepFlow ? 'steps' : `auth?type=${provider?.type}&provider_id=${provider?.id}`}`}
           method="POST"
         >
-          <InputField autoFocus fieldName="email" placeholder={translate('helperText.email')} />
+          {isReplaceEmail && (
+            <Typography color="text.secondary">
+              {translate('pages.replaceEmail.description')}
+            </Typography>
+          )}
+          <InputField
+            autoFocus
+            fieldName="email"
+            placeholder={translate('helperText.email')}
+            dataTestId="txt-auth-add-email"
+            autoComplete="section-email-verification email"
+            type="email"
+          />
           <Box sx={{ display: 'flex', gap: 8 }}>
             <InputField
               fieldName="code"
               disabled={modeForm === 'request'}
               placeholder={translate('helperText.code')}
+              autoComplete="section-email-verification one-time-code"
+              ignorePasswordManagers
               requiredFiled={!(mailUsed !== watchEmail || modeForm === 'request')}
               endPosition={
                 <Button
@@ -190,17 +230,20 @@ const Page: FC<IEmailPageProps> = ({ isStep }) => {
                     }
                   }}
                   type={mailUsed !== watchEmail || modeForm === 'request' ? 'submit' : undefined}
+                  data-test-id="btn-auth-get-code"
                 />
               }
+              dataTestId="txt-auth-code-confirm"
             />
           </Box>
           <Button
             variant="contained"
             label={translate('actionButtons.confirm')}
+            data-test-id="btn-auth-confirm-code"
             disabled={mailUsed !== watchEmail || modeForm === 'request'}
             type={mailUsed === watchEmail && modeForm !== 'request' ? 'submit' : undefined}
           />
-          {isStep && <ValidationRuleList />}
+          {isStepFlow && <ValidationRuleList />}
         </Form>
       </Container>
     </Section>

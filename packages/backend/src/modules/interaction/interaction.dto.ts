@@ -1,19 +1,22 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsISO8601 } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IsBooleanCustom, IsEmailCustom, IsPhoneNumberCustom } from '../../custom.dto';
 import { TransformFromEncodeURI } from '../../decorators';
-import { Transform } from 'class-transformer';
+import { ELocales } from '../../enums';
 
 export class InteractionLoginDto {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Qwerty1234123' })
   identifier: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Qwerty1234123' })
-  @Transform(({ value }) => (!value ? undefined : value))
   password: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ enum: ['login', 'consent'] })
   prompt: 'login' | 'consent';
@@ -86,6 +89,11 @@ export class InteractionRegDto extends FillMissingRequiredFieldsDto {
   @IsOptional()
   @ApiPropertyOptional({ example: 'Qwerty123' })
   password?: string;
+
+  @IsEnum(ELocales)
+  @IsOptional()
+  @ApiPropertyOptional({ enum: ELocales })
+  locale?: ELocales;
 }
 
 export class AuthByKloudDto {
@@ -105,21 +113,23 @@ export class AuthByKloudDto {
 }
 
 export class ChangePasswordDto {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Qwerty1234123' })
   identifier: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Qwerty123' })
-  @Transform(({ value }) => (!value ? undefined : value))
   current_password: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Qwerty123' })
-  @Transform(({ value }) => (!value ? undefined : value))
   new_password: string;
 
   @IsString()
-  @ApiProperty({ example: '1' })
-  provider_id: string;
+  @IsOptional()
+  @ApiPropertyOptional({ example: '1' })
+  provider_id?: string;
 }

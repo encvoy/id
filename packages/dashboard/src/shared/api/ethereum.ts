@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { DOMAIN } from "../utils/constants";
+import {APP_PUBLIC_URL} from "src/shared/utils/appBasePath";
 
 export const ethereumApi = createApi({
   reducerPath: "ethereumApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${DOMAIN}/api/eth/v1`,
+    baseUrl: `${APP_PUBLIC_URL}/api/eth/v1`,
   }),
 
   endpoints: (builder) => ({

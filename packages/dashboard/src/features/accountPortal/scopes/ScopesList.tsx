@@ -4,14 +4,11 @@ import { Order } from "src/shared/utils/enums";
 import { IScope, useLazyGetUserScopesQuery } from "src/shared/api/users";
 import { IQueryPropsWithId } from "src/shared/api/types";
 import { RootState } from "../../../app/store/store";
-import {
-  SubmitModal,
-  ISubmitModalProps,
-} from "src/shared/ui/modal/SubmitModal";
-import { ListItems } from "../../../shared/ui/listElements";
+import { SubmitModal, ISubmitModalProps } from "@encvoy-id/components";
+import { ListItems } from "../../../shared/ui/CardsList.tsx";
 import CardScope, { ICardScopeProps } from "./ScopeCard";
 import Box from "@mui/material/Box";
-import { TUserSlice } from "src/shared/lib/userSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
 import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
 
@@ -40,7 +37,7 @@ const ScopesListComponent: FC<IScopesListProps> = ({ UserProfile }) => {
       query: {
         sortBy: "created_at",
         sortDirection: Order.DESC,
-        limit: "10",
+        limit: 10,
         offset,
         search: search || "",
       },
@@ -57,12 +54,15 @@ const ScopesListComponent: FC<IScopesListProps> = ({ UserProfile }) => {
               query={query}
               getItems={getScopes}
               RowElement={CardScope}
+              searchContext="scopes"
               rowElementProps={{
                 userId,
                 setModalProps: setModalProps,
               }}
             />
             <SubmitModal
+              cancelText={translate("actionButtons.cancel")}
+              deleteText={translate("actionButtons.delete")}
               isOpen={modalProps.isOpen}
               onSubmit={modalProps.onSubmit}
               onClose={modalProps.onClose}

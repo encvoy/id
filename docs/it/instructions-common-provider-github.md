@@ -1,18 +1,18 @@
 ---
-title: "Login GitHub — Connessione e Configurazione in Encvoy ID"
-description: "Scopri come abilitare il login GitHub in Encvoy ID: crea un metodo di accesso e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - login GitHub
-  - configurazione GitHub in Encvoy ID
-  - autenticazione GitHub
+title: "Login GitHub — Connessione e Configurazione in {{projectName}}"
+description: "Scopri come abilitare il login GitHub in {{projectName}}: crea un metodo di accesso e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
+keywords: 
+  - login GitHub 
+  - configurazione GitHub in {{projectName}}
+  - autenticazione GitHub 
   - connessione GitHub
-  - login GitHub Encvoy ID
-  - GitHub OAuth Encvoy ID
+  - login GitHub {{projectName}}
+  - GitHub OAuth {{projectName}}
   - accesso GitHub
   - autorizzazione GitHub
-  - GitHub Encvoy ID
-  - login tramite GitHub Encvoy ID
-author: "Team Encvoy ID"
+  - GitHub {{projectName}}
+  - login tramite GitHub {{projectName}}
+author: "Team {{projectName}}"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -20,11 +20,11 @@ region: [it]
 menu_title: "Login GitHub"
 ---
 
-# Come connettere il Login GitHub in Encvoy ID
+# Come connettere il Login GitHub in {{projectName}}
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di accesso. Per maggiori dettagli, consulta la guida [Metodi di Accesso e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
 
-In questa guida imparerai come connettere l'autenticazione tramite un account **GitHub** al sistema **Encvoy ID**. Questo metodo di accesso consente agli utenti di accedere alle applicazioni utilizzando il proprio account del servizio **GitHub**.
+In questa guida imparerai come connettere l'autenticazione tramite un account **GitHub** al sistema **{{projectName}}**. Questo metodo di accesso consente agli utenti di accedere alle applicazioni utilizzando il proprio account del servizio **GitHub**.
 
 La configurazione del login **GitHub** consiste in tre passaggi chiave eseguiti in due sistemi diversi.
 
@@ -36,25 +36,27 @@ La configurazione del login **GitHub** consiste in tre passaggi chiave eseguiti 
 
 ## Passaggio 1. Configura l'App GitHub { #step-1-configure-github-app }
 
-Prima di configurare il metodo di accesso in **Encvoy ID**, devi registrare la tua applicazione nella console sviluppatori di **GitHub** e ottenere le chiavi di accesso:
+Prima di configurare il metodo di accesso in **{{projectName}}**, devi registrare la tua applicazione nella console sviluppatori di **GitHub** e ottenere le chiavi di accesso:
 
 1. Vai alle impostazioni di **GitHub** tramite il link:
    [https://github.com/settings/developers](https://github.com/settings/developers)
 
 2. Nella sezione **OAuth Apps**, clicca su **New OAuth App**.
 3. Compila le impostazioni dell'applicazione richieste:
-   - **Application name** - il nome dell'applicazione,
-   - **Homepage URL** - l'indirizzo dell'installazione del servizio,
-   - **Authorization callback URL** - l'indirizzo nel formato `https://<indirizzo_installazione>/api/interaction/code`.
 
-   <img src="./images/instructions-provider-github-01.webp" alt="Creazione di un metodo di login GitHub OAuth nella console sviluppatori del servizio" style="max-width:400px; width:100%">
+    - **Application name** - il nome dell'applicazione,
+    - **Homepage URL** - l'indirizzo dell'installazione del servizio,
+    - **Authorization callback URL** - l'indirizzo nel formato `https://<indirizzo_installazione>/api/interaction/code`.
+
+    <img src="./images/instructions-provider-github-01.webp" alt="Creazione di un metodo di login GitHub OAuth nella console sviluppatori del servizio" style="max-width:400px; width:100%">
 
 4. Clicca su **Register application**.
 5. Dopo aver creato l'applicazione, apri le sue impostazioni e copia:
-   - **Client ID**
-   - **Client Secret** (creato tramite il pulsante **Generate a new client secret**)
 
-   <img src="./images/instructions-provider-github-02.webp" alt="Creazione di un metodo di login GitHub OAuth nella console sviluppatori del servizio" style="max-width:700px; width:100%">
+    - **Client ID**
+    - **Client Secret** (creato tramite il pulsante **Generate a new client secret**)
+
+    <img src="./images/instructions-provider-github-02.webp" alt="Creazione di un metodo di login GitHub OAuth nella console sviluppatori del servizio" style="max-width:700px; width:100%">
 
 Questi valori saranno necessari nel passaggio successivo.
 
@@ -64,7 +66,7 @@ Questi valori saranno necessari nel passaggio successivo.
 
 1. Vai alla Console di Amministrazione → scheda **Impostazioni**.
 
-   > 💡 Per creare un metodo di accesso per un'organizzazione, apri la **Console dell'Organizzazione**. Se il metodo di accesso è necessario per un'applicazione specifica, apri le **impostazioni di quell'applicazione**.
+    > 💡 Per creare un metodo di accesso per un'organizzazione, apri la **Console dell'Organizzazione**. Se il metodo di accesso è necessario per un'applicazione specifica, apri le **impostazioni di quell'applicazione**.
 
 2. Trova il blocco **Metodi di accesso** e clicca su **Configura**.
 3. Nella finestra che si apre, clicca sul pulsante **Crea** ![Pulsante Crea](./images/button-create.webp "Pulsante Crea").
@@ -72,19 +74,22 @@ Questi valori saranno necessari nel passaggio successivo.
 5. Seleziona il template **GitHub**.
 6. Compila il modulo di creazione:
 
-   **Informazioni di Base**
-   - **Nome** — Il nome che gli utenti visualizzeranno.
-   - **Descrizione** (opzionale) — Una breve descrizione.
-   - **Logo** (opzionale) — Puoi caricare la tua icona, altrimenti verrà utilizzata quella standard.
+    **Informazioni di Base**
 
-   **Parametri di Autenticazione**
-   - **Identificativo risorsa (client_id)** — Incolla il **Client ID** copiato.
-   - **Chiave segreta (client_secret)** — Incolla il **Client Secret** copiato.
-   - **URL di reindirizzamento (Redirect URI)** — Questo campo verrà compilato automaticamente in base al tuo dominio.
+    - **Nome** — Il nome che gli utenti visualizzeranno.
+    - **Descrizione** (opzionale) — Una breve descrizione.
+    - **Logo** (opzionale) — Puoi caricare la tua icona, altrimenti verrà utilizzata quella standard.
 
-   **Impostazioni Aggiuntive**
-   - **Metodo di accesso pubblico** — Abilita questa opzione se desideri che questo metodo di accesso sia disponibile per l'aggiunta ad altre applicazioni nel sistema (o organizzazione), nonché al profilo utente come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers).
-   - **Pubblicità** — Configura il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente.
+    **Parametri di Autenticazione**
+
+    - **Identificativo risorsa (client_id)** — Incolla il **Client ID** copiato.
+    - **Chiave segreta (client_secret)** — Incolla il **Client Secret** copiato.
+    - **URL di reindirizzamento (Redirect URI)** — Questo campo verrà compilato automaticamente in base al tuo dominio.
+
+    **Impostazioni Aggiuntive**
+
+    - **Metodo di accesso pubblico** — Abilita questa opzione se desideri che questo metodo di accesso sia disponibile per l'aggiunta ad altre applicazioni nel sistema (o organizzazione), nonché al profilo utente come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers).
+    - **Pubblicità** — Configura il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente.
 
 7. Clicca su **Crea**.
 
@@ -105,33 +110,33 @@ Per rendere visibile il pulsante **Accedi con GitHub** nel modulo di autorizzazi
 
 ## Descrizione dei Parametri
 
-### Informazioni di Base
+### Informazioni di Base  
 
-| Nome            | Descrizione                                                                                           | Tipo                 | Vincoli              |
-| --------------- | ----------------------------------------------------------------------------------------------------- | -------------------- | -------------------- |
-| **Nome**        | Il nome che verrà visualizzato nell'interfaccia del servizio **Encvoy ID**                            | Testo                | Max. 50 caratteri    |
-| **Descrizione** | Una breve descrizione che verrà visualizzata nell'interfaccia del servizio **Encvoy ID**              | Testo                | Max. 255 caratteri   |
-| **Logo**        | L'immagine che verrà visualizzata nell'interfaccia del servizio **Encvoy ID** e nel widget di accesso | JPG, GIF, PNG o WEBP | Dimensione max: 1 MB |
+| Nome | Descrizione | Tipo | Vincoli |
+|---|---|---|---|
+| **Nome** | Il nome che verrà visualizzato nell'interfaccia del servizio **{{projectName}}** | Testo | Max. 50 caratteri |
+| **Descrizione** | Una breve descrizione che verrà visualizzata nell'interfaccia del servizio **{{projectName}}** | Testo | Max. 255 caratteri |
+| **Logo** | L'immagine che verrà visualizzata nell'interfaccia del servizio **{{projectName}}** e nel widget di accesso | JPG, GIF, PNG o WEBP | Dimensione max: 1 MB |    
 
-### Parametri di Autenticazione
+### Parametri di Autenticazione  
 
-| Nome                                                          | Parametro       | Descrizione                                                                                                       |
-| ------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Identificativo risorsa (client_id)**                        | `Client_id`     | L'ID dell'applicazione creata in **GitHub**                                                                       |
-| **Chiave segreta (client_secret)**                            | `Client_secret` | La chiave di accesso al servizio dell'applicazione creata in **GitHub**                                           |
-| **URL di reindirizzamento (Redirect URI)** (non modificabile) | `Redirect URI`  | L'indirizzo **Encvoy ID** al quale l'utente viene reindirizzato dopo l'autenticazione nel servizio di terze parti |
+| Nome | Parametro | Descrizione |
+|---|---|---|
+| **Identificativo risorsa (client_id)** | `Client_id` | L'ID dell'applicazione creata in **GitHub** |
+| **Chiave segreta (client_secret)** | `Client_secret` | La chiave di accesso al servizio dell'applicazione creata in **GitHub** |
+| **URL di reindirizzamento (Redirect URI)** (non modificabile) | `Redirect URI` | L'indirizzo **{{projectName}}** al quale l'utente viene reindirizzato dopo l'autenticazione nel servizio di terze parti |
 
 ### Impostazioni Aggiuntive
 
-| Nome                           | Descrizione                                                                                                                                                                                                                                                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Metodo di accesso pubblico** | Quando attivato: <br> - Il metodo di accesso diventa disponibile per l'aggiunta ad altre applicazioni del servizio. <br> - Il metodo di accesso diventa disponibile per l'aggiunta come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers) nel profilo utente. |
-| **Pubblicità**                 | Imposta il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente                                                                                                                                                                                                           |
+| Nome | Descrizione |
+|---|---|
+| **Metodo di accesso pubblico**| Quando attivato: <br> - Il metodo di accesso diventa disponibile per l'aggiunta ad altre applicazioni del servizio. <br> - Il metodo di accesso diventa disponibile per l'aggiunta come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers) nel profilo utente. |
+| **Pubblicità** | Imposta il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente |
 
 ---
 
 ## Vedi Anche
 
 - [Metodi di Accesso e Configurazione del Widget di Accesso](./docs-06-github-en-providers-settings.md) — una guida ai metodi di accesso e alla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **{{projectName}}**.
 - [Profilo Personale e Gestione dei Permessi delle Applicazioni](./docs-12-common-personal-profile.md) — una guida alla gestione del profilo personale.

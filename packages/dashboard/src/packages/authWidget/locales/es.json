@@ -1,7 +1,21 @@
 {
   "button": {
     "avatar": "Cuenta personal",
+    "id": "ID",
     "profile": "Perfil",
+    "system": "Sistema",
+    "systemSettings": "Configuración del sistema",
+    "catalog": "Catálogo",
     "exit": "Salir"
+  },
+  "labels": {
+    "organization": "Organización",
+    "mainServices": "Servicios principales",
+    "user": "Usuario"
+  },
+  "catalog": {
+    "favorite": "Favoritos",
+    "noServices": "No hay servicios disponibles",
+    "other": "Otros"
   }
 }

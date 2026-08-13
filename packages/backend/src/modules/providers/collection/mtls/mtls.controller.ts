@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { DOMAIN } from 'src/constants';
 import { Scope, UserId } from 'src/decorators';
 import { Mtls, MtlsInfo } from './mtls.decorator';
@@ -23,6 +23,25 @@ export class MtlsController {
     @Query('provider_id') providerId: string,
   ) {
     const state = await this.mtlsService.initiateAuth(providerId, mtlsInfo);
+    const redirectUrl = `${DOMAIN}/api/interaction/${uid}/auth?type=MTLS&provider_id=${providerId}&state=${state}`;
+    return res.redirect(redirectUrl);
+  }
+
+  @Get('mtls/bind')
+  @ApiOperation({ summary: 'Bind mTLS certificate to current interaction user account' })
+  async bindCertificateToInteractionUser(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Mtls() mtlsInfo: MtlsInfo,
+    @Query('uid') uid: string,
+    @Query('provider_id') providerId: string,
+  ) {
+    const state = await this.mtlsService.initiateInteractionBind(
+      providerId,
+      mtlsInfo,
+      uid,
+      req.cookies?.required_accounts_info_uid,
+    );
     const redirectUrl = `${DOMAIN}/api/interaction/${uid}/auth?type=MTLS&provider_id=${providerId}&state=${state}`;
     return res.redirect(redirectUrl);
   }

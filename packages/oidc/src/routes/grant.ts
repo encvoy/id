@@ -1,10 +1,11 @@
 import Router from "@koa/router";
 import { OIDC_PROVIDER } from "../main.js";
 import { addScopeToGrant } from "../config.js";
+import { requireInternalRequest } from "../internal-auth.js";
 
 const grantRouter = new Router({ prefix: "/oidc/api" });
 
-grantRouter.get("/grants/:grantId", async (ctx) => {
+grantRouter.get("/grants/:grantId", requireInternalRequest(), async (ctx) => {
   try {
     const { grantId } = ctx.params;
     if (!OIDC_PROVIDER || !OIDC_PROVIDER.Grant) {
@@ -29,7 +30,7 @@ grantRouter.get("/grants/:grantId", async (ctx) => {
 });
 
 // POST /oidc/api/grants
-grantRouter.post("/grants", async (ctx) => {
+grantRouter.post("/grants", requireInternalRequest(), async (ctx) => {
   try {
     if (!OIDC_PROVIDER || !OIDC_PROVIDER.Grant) {
       ctx.status = 500;
@@ -54,7 +55,7 @@ grantRouter.post("/grants", async (ctx) => {
 });
 
 // PATCH /oidc/api/grants/:grantId/scopes
-grantRouter.patch("/grants/:grantId/scopes", async (ctx) => {
+grantRouter.patch("/grants/:grantId/scopes", requireInternalRequest(), async (ctx) => {
   try {
     const { grantId } = ctx.params;
     if (!OIDC_PROVIDER || !OIDC_PROVIDER.Grant) {

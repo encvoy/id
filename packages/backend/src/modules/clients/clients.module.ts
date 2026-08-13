@@ -6,6 +6,9 @@ import { UsersModule } from '../users/users.module';
 import { RepositoryModule } from '../repository/repository.module';
 import { RedisModule } from '../redis/redis.module';
 import { SettingsModule } from '../settings/settings.module';
+import { MailModule } from '../providers/collection/email/email.module';
+import { BrandingController } from './branding.controller';
+import { BrandingIconsService } from './branding-icons.service';
 
 @Module({
   imports: [
@@ -14,9 +17,10 @@ import { SettingsModule } from '../settings/settings.module';
     RepositoryModule,
     RedisModule,
     SettingsModule,
+    MailModule,
   ],
-  controllers: [ClientsController],
-  providers: [ClientService],
-  exports: [ClientService],
+  controllers: [ClientsController, BrandingController],
+  providers: [ClientService, BrandingIconsService],
+  exports: [ClientService, BrandingIconsService],
 })
 export class ClientModule {}

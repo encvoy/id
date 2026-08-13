@@ -1,15 +1,15 @@
 ---
-title: "Installazione di Encvoy ID tramite Docker — Distribuzione SSO"
-description: "Installa Encvoy ID tramite Docker: requisiti, configurazione e primo accesso. Guida passo-passo alla distribuzione SSO per amministratori e DevOps."
+title: "Installazione di {{projectName}} tramite Docker — Distribuzione SSO"
+description: "Installa {{projectName}} tramite Docker: requisiti, configurazione e primo accesso. Guida passo-passo alla distribuzione SSO per amministratori e DevOps."
 keywords:
-  - installare Encvoy ID
-  - installazione Encvoy ID
+  - installare {{projectName}}
+  - installazione {{projectName}}
   - distribuzione sistema SSO
-  - deploy Encvoy ID
-  - installazione docker Encvoy ID
-  - docker compose Encvoy ID
+  - deploy {{projectName}}
+  - installazione docker {{projectName}}
+  - docker compose {{projectName}}
   - sistema SSO enterprise
-author: "Team Encvoy ID"
+author: "Team {{projectName}}"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -18,9 +18,9 @@ menu_title: "Installazione e Primo Avvio"
 order: 2
 ---
 
-# Come installare Encvoy ID
+# Come installare {{projectName}}
 
-In questa guida imparerai come installare il sistema SSO **Encvoy ID** tramite Docker sul tuo server. Attraverseremo l'intero processo: dalla preparazione dell'ambiente al primo accesso dell'amministratore.
+In questa guida imparerai come installare il sistema SSO **{{projectName}}** tramite Docker sul tuo server. Attraverseremo l'intero processo: dalla preparazione dell'ambiente al primo accesso dell'amministratore.
 
 **Contenuti:**
 
@@ -36,27 +36,27 @@ In questa guida imparerai come installare il sistema SSO **Encvoy ID** tramite D
 
 ### Requisiti di sistema del server
 
-Prima di installare il sistema **Encvoy ID**, assicurati che la tua infrastruttura soddisfi i requisiti.
+Prima di installare il sistema **{{projectName}}**, assicurati che la tua infrastruttura soddisfi i requisiti.
 
 I requisiti di sistema dipendono dal carico previsto. Una configurazione minima è sufficiente per gli ambienti di test, mentre i parametri consigliati dovrebbero essere utilizzati per gli ambienti di produzione.
 
 #### Configurazione minima
 
-| Componente              | Requisiti     |
-| ----------------------- | ------------- |
-| **RAM**                 | 4 GB          |
-| **Spazio su disco**     | 50 GB SSD     |
-| **Processore (CPU)**    | 2 core x86_64 |
-| **Interfaccia di rete** | 1 Gbps        |
+| Componente                   | Requisiti     |
+| ---------------------------- | ------------- |
+| **RAM**                      | 4 GB          |
+| **Spazio su disco**          | 50 GB SSD     |
+| **Processore (CPU)**         | 2 core x86_64 |
+| **Interfaccia di rete**      | 1 Gbps        |
 
 #### Configurazione consigliata
 
-| Componente              | Requisiti          |
-| ----------------------- | ------------------ |
-| **RAM**                 | 8 GB o superiore   |
-| **Spazio su disco**     | 100 GB SSD/NVMe    |
-| **Processore (CPU)**    | 4+ core x86_64     |
-| **Interfaccia di rete** | 1 Gbps e superiore |
+| Componente                   | Requisiti         |
+| ---------------------------- | ----------------- |
+| **RAM**                      | 8 GB o superiore  |
+| **Spazio su disco**          | 100 GB SSD/NVMe   |
+| **Processore (CPU)**         | 4+ core x86_64    |
+| **Interfaccia di rete**      | 1 Gbps e superiore|
 
 > 💡 **Suggerimento:** Per sistemi ad alto carico con migliaia di utenti, si consiglia di utilizzare: <br>
 >
@@ -68,16 +68,16 @@ I requisiti di sistema dipendono dal carico previsto. Una configurazione minima 
 
 #### Software
 
-| Componente            | Versioni supportate                                                                             | Informazioni aggiuntive                           |
-| --------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Componente | Versioni supportate | Informazioni aggiuntive |
+| --- | --- | --- |
 | **Sistema Operativo** | Ubuntu 18.04 LTS (Bionic Beaver), <br> Ubuntu 20.04 LTS (Focal Fossa),<br> Debian 11 (Bullseye) | Qualsiasi distribuzione Linux con supporto Docker |
-| **Docker Engine**     | 19.03+                                                                                          | -                                                 |
-| **Docker Compose**    | 1.27+                                                                                           | -                                                 |
-| **Nginx/Apache**      | Qualsiasi versione moderna                                                                      | -                                                 |
+| **Docker Engine**        | 19.03+   | -  |
+| **Docker Compose**       | 1.27+ | - |
+| **Nginx/Apache**         | Qualsiasi versione moderna  | -  |
 
 #### Requisiti generali
 
-Per una corretta installazione e funzionamento di **Encvoy ID**, devono essere soddisfatte diverse condizioni:
+Per una corretta installazione e funzionamento di **{{projectName}}**, devono essere soddisfatte diverse condizioni:
 
 - Un server con un indirizzo IP statico.
 - Accesso a tutte le workstation tramite la porta che verrà utilizzata per accedere al sistema.
@@ -88,7 +88,7 @@ Per una corretta installazione e funzionamento di **Encvoy ID**, devono essere s
 
 ## Installazione di Docker e Docker Compose { #install-docker-and-docker-compose }
 
-**Encvoy ID** viene distribuito come un insieme di container Docker e può essere utilizzato come Server di Autorizzazione OAuth 2.0 aziendale e Provider OpenID Connect (IdP).
+**{{projectName}}** viene distribuito come un insieme di container Docker e può essere utilizzato come Server di Autorizzazione OAuth 2.0 aziendale e Provider OpenID Connect (IdP).
 
 > 📚 [Documentazione Docker](https://docs.docker.com/engine/install/)
 
@@ -185,12 +185,12 @@ ls -la
 
 **File scaricati:**
 
-| File                    | Scopo                               |
-| ----------------------- | ----------------------------------- |
-| **docker-compose.yaml** | Configurazione dei container Docker |
-| **nginx.conf**          | Impostazioni del server web Nginx   |
-| **build.sh**            | Script di configurazione e build    |
-| **.env**                | Variabili d'ambiente e impostazioni |
+| File                    | Scopo                                      |
+| ----------------------- | ------------------------------------------ |
+| **docker-compose.yaml** | Configurazione dei container Docker        |
+| **nginx.conf**          | Impostazioni del server web Nginx          |
+| **build.sh**            | Script di configurazione e build           |
+| **.env**                | Variabili d'ambiente e impostazioni        |
 
 ### Passaggio 3. Impostazione dei permessi
 
@@ -204,7 +204,7 @@ chmod +x ./build.sh
 ls -l build.sh
 ```
 
-> ⚙️ Dopo l'installazione, si consiglia di eseguire la configurazione di base. Una descrizione dettagliata di tutti i parametri è disponibile nella sezione [Variabili d'ambiente di Encvoy ID](./docs-03-box-system-configuration.md).
+> ⚙️ Dopo l'installazione, si consiglia di eseguire la configurazione di base. Una descrizione dettagliata di tutti i parametri è disponibile nella sezione [Variabili d'ambiente di {{projectName}}](./docs-03-box-system-configuration.md).
 
 ### Passaggio 4. Configurazione delle impostazioni
 
@@ -245,13 +245,13 @@ docker compose up -d
 
 ### Comandi utili di Docker Compose
 
-| Comando            | Descrizione                       | Esempio di utilizzo      |
-| ------------------ | --------------------------------- | ------------------------ |
-| **Visualizza log** | Monitora i log in tempo reale     | `docker compose logs -f` |
-| **Ferma**          | Ferma tutti i container           | `docker compose stop`    |
-| **Avvia**          | Avvia i container fermati         | `docker compose start`   |
-| **Riavvia**        | Riavvia tutti i container         | `docker compose restart` |
-| **Stato**          | Visualizza lo stato dei container | `docker compose ps`      |
+| Comando            | Descrizione                           | Esempio di utilizzo      |
+| ------------------ | ------------------------------------- | ------------------------ |
+| **Visualizza log** | Monitora i log in tempo reale         | `docker compose logs -f` |
+| **Ferma**          | Ferma tutti i container               | `docker compose stop`    |
+| **Avvia**          | Avvia i container fermati             | `docker compose start`   |
+| **Riavvia**        | Riavvia tutti i container             | `docker compose restart` |
+| **Stato**          | Visualizza lo stato dei container     | `docker compose ps`      |
 
 ---
 
@@ -269,7 +269,7 @@ Dopo l'installazione, viene creato un account amministrativo con diritti di **Am
 
 ### Primo accesso
 
-Per accedere all'interfaccia web di **Encvoy ID**, naviga su: `https://ID_HOST`.
+Per accedere all'interfaccia web di **{{projectName}}**, naviga su: `https://ID_HOST`.
 
 1. Nel primo passaggio del widget di accesso, inserisci il login e clicca su **Accedi**.
 2. Inserisci la password nel secondo passaggio e clicca su **Accedi**.
@@ -283,13 +283,13 @@ Le impostazioni di amministrazione si trovano nel Pannello di Amministrazione.
 Per accedere al pannello:
 
 1. Clicca sul tuo nome nell'angolo in alto a destra della finestra.
-2. Nel mini-widget che si apre, clicca sul nome del servizio **Encvoy ID**.
+2. Nel mini-widget che si apre, clicca sul nome del servizio **{{projectName}}**.
 3. Sarai reindirizzato al **Pannello di Amministrazione**.
 
 ---
 
 ## Vedi anche { #see-also }
 
-- [Descrizione del sistema Encvoy ID](./docs-01-box-about.md) — panoramica delle funzionalità di **Encvoy ID**.
-- [Variabili d'ambiente di Encvoy ID](./docs-03-box-system-configuration.md) — guida per la preparazione della configurazione prima dell'avvio.
+- [Descrizione del sistema {{projectName}}](./docs-01-box-about.md) — panoramica delle funzionalità di **{{projectName}}**.
+- [Variabili d'ambiente di {{projectName}}](./docs-03-box-system-configuration.md) — guida per la preparazione della configurazione prima dell'avvio.
 - [Configurazione del sistema](./docs-04-box-system-settings.md) — guida per la configurazione dell'interfaccia e dell'accesso degli utenti al sistema.

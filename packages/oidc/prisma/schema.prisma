@@ -13,71 +13,113 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-
-  // Profile fields
-  sub                       String?
-  email                     String?
-  email_verified            Boolean?  @default(false)
-  birthdate                 DateTime?
-  family_name               String?
-  given_name                String?
-  login                     String    @unique
-  middle_name               String?
-  nickname                  String?
-  phone_number              String?   @unique
-  phone_number_verified     Boolean?
-  picture                   String?
-  custom_fields             Json?     @db.JsonB
-  data_processing_agreement Boolean   @default(false)
-
-  // Publicity
-  email_public                   Boolean?
-  profile_privacy                Boolean  @default(true)
-  public_profile_claims_gravatar String   @default("")
-  public_profile_claims_oauth    String   @default("id")
-
-  // Business card
-  /// Additional path for business card URL
-  card_url    String  @unique @default(uuid())
-  /// Business card availability
-  card_active Boolean @default(false)
+  id String @id @default(cuid())
 
   // Password
-  hashed_password     String
-  password_updated_at DateTime @default(now())
+  hashed_password          String
+  password_updated_at      DateTime @default(now())
+  password_change_required Boolean?
 
   // Settings
-  locale String?
+  locale          String?
+  profile_privacy Boolean @default(true)
+  card_url        String  @unique @default(cuid())
+  card_active     Boolean @default(false)
 
   // Service fields
-  password_change_required Boolean?
-  updated_at               DateTime?
-  deleted                  DateTime?
-  blocked                  Boolean   @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted    DateTime?
+
+  profile_values       UserProfileValue[]
 
   // Relations
-  Role            Role[]
-  Scopes          Scopes[]
-  ExternalAccount ExternalAccount[]
-  SearchHistory   SearchHistory[]
+  roles            Role[]
+  scopes           Scopes[]
+  externalAccounts ExternalAccount[]
+  searchHistories  SearchHistory[]
+
+  org_id       String?
+  organization Client? @relation(fields: [org_id], references: [client_id], onUpdate: Cascade, onDelete: SetNull)
+
+  folder_id         String
+  folder            Folder             @relation(fields: [folder_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  notificationReads NotificationRead[]
 
   /// Favorite applications
   favorite_clients FavoriteClients[]
+
+  // RBAC
+  rbacGroupMembers RbacGroupMember[]
+  rbacAssignments  RbacAssignment[]
+
+  @@index([folder_id])
+  @@index([org_id])
 }
 
-model CustomField {
-  id            Int     @id @default(autoincrement())
-  field         String  @unique
-  title         String  @unique
-  mapping_vcard String?
+model ProfileField {
+  id                        String                @id @default(cuid())
+  key                       String                @unique
+  organization_id           String?
+  organization              Client?               @relation("ClientProfileFields", fields: [organization_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  title                     Json                  @db.JsonB
+  value_type                ProfileFieldValueType @default(STRING)
+  mapping_vcard             String?
+  default_value             Json?                 @db.JsonB
+  default_public            Int                   @default(0)
+  editable                  Boolean               @default(true)
+  required                  Boolean               @default(false)
+  unique                    Boolean               @default(false)
+  validate_on_authorization Boolean               @default(false)
+  active                    Boolean               @default(true)
+  created_at                DateTime              @default(now())
+  updated_at                DateTime              @updatedAt
+
+  values                    UserProfileValue[]
+  validations               ProfileFieldValidation[]
+  required_by_clients       ClientRequiredProfileField[]
+  oidc_scope_group_fields   OidcScopeGroupField[]
+
+  @@index([organization_id, active])
+  @@index([organization_id, key])
+}
+
+model UserProfileValue {
+  id String @id @default(cuid())
+
+  user_id          String
+  user             User         @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  profile_field_id String
+  profile_field    ProfileField @relation(fields: [profile_field_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  value      Json?    @db.JsonB
+  public     Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([user_id, profile_field_id])
+  @@index([user_id])
+  @@index([profile_field_id])
+  @@index([profile_field_id, public])
+}
+
+model ProfileFieldValidation {
+  profile_field_id   String
+  profile_field      ProfileField   @relation(fields: [profile_field_id], references: [id], onDelete: Cascade)
+  rule_validation_id String
+  rule_validation    RuleValidation @relation(fields: [rule_validation_id], references: [id], onDelete: Cascade)
+
+  @@id([profile_field_id, rule_validation_id])
 }
 
 model ClientType {
-  id   String @id @default(uuid())
-  name String @unique
+  id   String @id @default(cuid())
+  name Json   @db.JsonB
 
-  Client Client[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  clients Client[]
 }
 
 model Client {
@@ -85,26 +127,29 @@ model Client {
   cover                         String?
   cover_mode                    String   @default("")
   created_at                    DateTime @default(now())
+  updated_at                    DateTime @updatedAt
   description                   String?
   domain                        String?
-  name                          String?
+  name                          Json?    @db.JsonB
+  catalog_name                  Json?    @db.JsonB
   catalog                       Boolean  @default(false)
   mini_widget                   Boolean  @default(false)
   authorize_only_admins         Boolean  @default(false)
   authorize_only_employees      Boolean  @default(false)
+  authorize_auto_by_session     Boolean  @default(false)
   show_avatar_in_widget         Boolean  @default(false)
   hide_avatars_of_big_providers Boolean  @default(false)
   hide_widget_header            Boolean  @default(false)
   hide_widget_footer            Boolean  @default(false)
   hide_widget_create_account    Boolean  @default(false)
-  widget_title                  String   @default("WIDGET_APP_NAME")
+  widget_title                  Json     @default("{\"ru-RU\":\"WIDGET_APP_NAME\"}") @db.JsonB
   widget_colors                 Json     @default("{}") @db.JsonB
   widget_info                   String   @default("")
   widget_info_out               String   @default("")
   required_providers_ids        String[] @default([])
 
   //oidc
-  client_id                          String   @id @unique
+  client_id                          String   @id @unique @default(cuid())
   client_secret                      String
   redirect_uris                      String[]
   post_logout_redirect_uris          String[]
@@ -122,12 +167,13 @@ model Client {
   access_token_ttl                   Int      @default(1800)
   refresh_token_ttl                  Int      @default(86400)
 
-  Role               Role[]
-  Scopes             Scopes[]
-  Provider_relations Provider_relations[]
-  Provider           Provider[]
-  favorite_clients   FavoriteClients[]
-  rules              ClientRule[] // Relation to application rules
+  roles                   Role[]
+  scopes                  Scopes[]
+  providerRelations       Provider_relations[]
+  providers               Provider[]
+  favorite_clients        FavoriteClients[]
+  required_profile_fields ClientRequiredProfileField[]
+  notifications           Notification[]
 
   // Application type
   type_id String?
@@ -139,11 +185,60 @@ model Client {
   children  Client[] @relation("ClientParent")
 
   clientInvitations ClientInvitation[]
+
+  // Folder
+  folder_id String?
+  folder    Folder? @relation("ClientFolder", fields: [folder_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  // RBAC
+  rbacResources           RbacResource[]
+  rbacRoles               RbacRole[]
+  rbacGroups              RbacGroup[]
+  applicationAccessGroups ApplicationAccessGroup[] @relation("ApplicationAccessGroupApplication")
+  users                   User[]
+  folders                 Folder[]                 @relation("FolderOwner")
+  oidc_scope_groups       OidcScopeGroup[]         @relation("ClientOidcScopeGroups")
+  profile_fields          ProfileField[]           @relation("ClientProfileFields")
+  rule_validations        RuleValidation[]         @relation("ClientRuleValidations")
+
+  @@unique([client_id, parent_id])
+}
+
+model OidcScopeGroup {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    Client @relation("ClientOidcScopeGroups", fields: [organization_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+
+  name        String
+  icon        String?
+  title       Json     @db.JsonB
+  description Json?    @db.JsonB
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  fields OidcScopeGroupField[]
+
+  @@unique([organization_id, name])
+  @@index([organization_id, active])
+}
+
+model OidcScopeGroupField {
+  scope_group_id   String
+  scope_group      OidcScopeGroup @relation(fields: [scope_group_id], references: [id], onDelete: Cascade)
+  profile_field_id String
+  profile_field    ProfileField   @relation(fields: [profile_field_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  claim_name String?
+  order      Int     @default(0)
+
+  @@id([scope_group_id, profile_field_id])
+  @@unique([profile_field_id])
 }
 
 model FavoriteClients {
-  id        String @id @default(uuid())
-  user_id   Int
+  id        String @id @default(cuid())
+  user_id   String
   user      User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   client_id String
   client    Client @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
@@ -152,10 +247,12 @@ model FavoriteClients {
 }
 
 model SearchHistory {
-  user_id Int                @id
-  user    User               @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  type    SearchHistoryTypes
-  list    String[]
+  user_id    String             @id
+  user       User               @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  type       SearchHistoryTypes
+  list       String[]
+  created_at DateTime           @default(now())
+  updated_at DateTime           @updatedAt
 
   @@unique([user_id, type])
 }
@@ -167,96 +264,114 @@ enum SearchHistoryTypes {
 }
 
 model EmailTemplates {
-  id      Int    @id @default(autoincrement())
-  title   String
-  action  String
-  subject String
-  content String
-  locale  String
+  id          String    @id @default(cuid())
+  provider_id String?
+  provider    Provider? @relation(fields: [provider_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  title       String
+  action      String
+  subject     String
+  content     String
+  locale      String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
 
-  @@unique([action, locale])
+  @@unique([provider_id, action, locale])
+  @@index([provider_id, locale])
 }
 
 model Settings {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  title  String  @unique
-  value  Json    @db.JsonB
-  public Boolean @default(false)
+  id         String   @id @default(cuid())
+  name       String   @unique
+  title      String   @unique
+  value      Json     @db.JsonB
+  public     Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Role {
-  id        Int    @id @default(autoincrement())
-  user_id   Int
-  user      User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  client_id String
-  client    Client @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
-  role      String
+  id         String   @id @default(cuid())
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  client_id  String
+  client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  role       String
+  blocked    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@unique([user_id, client_id])
+  @@index([client_id, role])
 }
 
 model Scopes {
-  id         Int      @id @default(autoincrement())
-  user_id    Int
+  id         String   @id @default(cuid())
+  user_id    String
   user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   client_id  String
   client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
   scopes     String
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@unique([user_id, client_id])
 }
 
 model ExternalAccount {
-  id               Int     @id @default(autoincrement())
+  id               String   @id @default(cuid())
   sub              String
   issuer           String?
   type             String
-  user_id          Int
-  user             User    @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user_id          String
+  user             User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   avatar           String?
   hashed_email     String?
   hashed_email_md5 String?
   label            String?
   profile_link     String?
-  rest_info        Json?   @db.JsonB
-  public           Int     @default(0)
+  rest_info        Json?    @db.JsonB
+  public           Int      @default(0)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 
   // Service marks
-  last_active_provider_id Int?
+  last_active_provider_id String?
   last_active_provider    Provider? @relation(fields: [last_active_provider_id], references: [id], onUpdate: Cascade, onDelete: SetNull)
 }
 
 model Provider {
-  id                Int     @id @default(autoincrement())
+  id                String   @id @default(cuid())
   type              String
-  is_public         Boolean @default(false)
-  password_required Boolean @default(false)
+  is_public         Boolean  @default(false)
+  password_required Boolean  @default(false)
   avatar            String?
   description       String?
-  name              String
-  params            Json?   @db.JsonB
-  default_public    Int     @default(0)
+  name              Json     @db.JsonB
+  params            Json?    @db.JsonB
+  default_public    Int      @default(0)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 
   // Relation to Provider_relations
-  Provider_relations Provider_relations[]
+  providerRelations Provider_relations[]
 
   // Relation to Client
-  client_id String
-  Client    Client? @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  client_id  String
+  client     Client?  @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
 
-  ExternalAccount ExternalAccount[]
+  externalAccounts ExternalAccount[]
+  email_templates  EmailTemplates[]
 }
 
 // Many-to-many relation table for Client and Provider
 model Provider_relations {
-  id          Int      @id @default(autoincrement())
-  provider_id Int
+  id          String   @id @default(cuid())
+  provider_id String
   provider    Provider @relation(fields: [provider_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   client_id   String
   client      Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
   created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
   index       Int      @default(0)
   groupe      String   @default("SMALL")
 
@@ -264,7 +379,7 @@ model Provider_relations {
 }
 
 model Log {
-  id          String   @id @default(uuid())
+  id          String   @id @default(cuid())
   date        DateTime @default(now()) @db.Timestamptz
   ip_address  String?
   user_id     String?
@@ -275,71 +390,78 @@ model Log {
   details     Json     @db.JsonB
 }
 
-model Rule {
-  id         Int         @id @default(autoincrement())
-  target     TargetTypes
-  field_name String
-  default    String?
-  editable   Boolean     @default(true)
-  required   Boolean     @default(false)
-  unique     Boolean     @default(false)
-  active     Boolean     @default(false)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt()
-
-  validations  RuleRuleValidation[] // Relation to intermediate table
-  client_rules ClientRule[] // Relation to applications using this rule
-
-  @@unique([target, field_name])
-}
-
 model RuleValidation {
-  id         Int      @id @default(autoincrement())
-  active     Boolean  @default(true)
-  title      String   @unique
-  error      String
-  regex      String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt()
+  id              String   @id @default(cuid())
+  organization_id String?
+  organization    Client?  @relation("ClientRuleValidations", fields: [organization_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  active          Boolean  @default(true)
+  title           Json     @db.JsonB
+  error           Json     @db.JsonB
+  regex           String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt()
 
-  rules RuleRuleValidation[] // Relation to intermediate table
+  profile_fields ProfileFieldValidation[]
+
+  @@unique([organization_id, title])
+  @@index([organization_id])
 }
 
-// Many-to-many relation table for Rule and RuleValidation
-model RuleRuleValidation {
-  rule_id Int
-  rule    Rule @relation(fields: [rule_id], references: [id], onDelete: Cascade)
+// Many-to-many relation table for Client and ProfileField
+model ClientRequiredProfileField {
+  id               String       @id @default(cuid())
+  client_id        String
+  client           Client       @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  profile_field_id String
+  profile_field    ProfileField @relation(fields: [profile_field_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  created_at       DateTime     @default(now())
 
-  rule_validation_id Int
-  rule_validation    RuleValidation @relation(fields: [rule_validation_id], references: [id], onDelete: Cascade)
-
-  @@id([rule_id, rule_validation_id])
-}
-
-// Many-to-many relation table for Client and Rule
-model ClientRule {
-  id         Int      @id @default(autoincrement())
-  client_id  String
-  client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
-  rule_id    Int
-  rule       Rule     @relation(fields: [rule_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  created_at DateTime @default(now())
-
-  @@unique([client_id, rule_id])
+  @@unique([client_id, profile_field_id])
 }
 
 model ClientInvitation {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   email      String
   client_id  String
   client     Client   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
   created_at DateTime @default(now())
+
+  @@unique([client_id, email])
 }
 
-enum TargetTypes {
-  USER
-  CLIENT
-  PROVIDER
+enum NotificationTarget {
+  ALL
+  NEW_USERS
+  EXISTING_USERS
+  USER_LIST
+}
+
+model Notification {
+  id         String             @id @default(cuid())
+  created_at DateTime           @default(now())
+  updated_at DateTime           @updatedAt
+  title      Json               @db.JsonB
+  content    Json               @db.JsonB
+  is_active  Boolean            @default(true)
+  target     NotificationTarget @default(ALL)
+  user_ids   String[]           @default([])
+  client_id  String?
+  client     Client?            @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  reads      NotificationRead[]
+
+  @@index([client_id, is_active, created_at])
+  @@index([client_id, created_at])
+}
+
+model NotificationRead {
+  id              String       @id @default(cuid())
+  read_at         DateTime     @default(now())
+  notification_id String
+  notification    Notification @relation(fields: [notification_id], references: [id], onDelete: Cascade)
+  user_id         String
+  user            User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([notification_id, user_id])
 }
 
 enum AuthMethodTypes {
@@ -370,4 +492,154 @@ enum RegistrationPolicyVariants {
   allowed
   allowed_autoregistration_only
   disabled
+}
+
+enum ProfileFieldValueType {
+  STRING
+  TEXT
+  BOOLEAN
+  DATE
+  DATETIME
+  INTEGER
+  NUMBER
+  ENUM
+  MULTI_ENUM
+  JSON
+  EMAIL
+  PHONE
+  URL
+  IMAGE
+}
+
+model RbacResource {
+  id          String   @id @default(cuid())
+  client_id   String
+  name        String
+  description String?
+  parent_id   String? // Resource hierarchy.
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  client      Client           @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  parent      RbacResource?    @relation("ResourceHierarchy", fields: [parent_id], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  children    RbacResource[]   @relation("ResourceHierarchy")
+  assignments RbacAssignment[]
+}
+
+model RbacRole {
+  id          String   @id @default(cuid())
+  client_id   String
+  name        String
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  client      Client               @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  assignments RbacAssignment[]
+  permissions RbacRolePermission[]
+}
+
+model RbacGroup {
+  id          String   @id @default(cuid())
+  client_id   String
+  name        String
+  description String?
+  folder_id   String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  client                  Client                   @relation(fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  folder                  Folder                   @relation(fields: [folder_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  members                 RbacGroupMember[]        @relation("RbacGroupMembers")
+  parent_groups           RbacGroupMember[]        @relation("RbacGroupParentGroups")
+  assignments             RbacAssignment[]
+  applicationAccessGroups ApplicationAccessGroup[]
+
+  @@unique([id, client_id])
+}
+
+model ApplicationAccessGroup {
+  organization_id String
+  application_id  String
+  group_id        String
+  created_at      DateTime @default(now())
+  created_by      String?
+
+  application Client    @relation("ApplicationAccessGroupApplication", fields: [application_id, organization_id], references: [client_id, parent_id], onUpdate: Cascade, onDelete: Cascade)
+  group       RbacGroup @relation(fields: [group_id, organization_id], references: [id, client_id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([organization_id, application_id, group_id])
+  @@index([organization_id, group_id])
+}
+
+model RbacGroupMember {
+  id              String  @id @default(cuid())
+  parent_group_id String
+  member_user_id  String?
+  member_group_id String?
+
+  parent_group RbacGroup  @relation("RbacGroupMembers", fields: [parent_group_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  member_user  User?      @relation(fields: [member_user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  member_group RbacGroup? @relation("RbacGroupParentGroups", fields: [member_group_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@unique([parent_group_id, member_user_id])
+  @@unique([parent_group_id, member_group_id])
+}
+
+model RbacAssignment {
+  id          String   @id @default(cuid())
+  resource_id String
+  role_id     String
+  user_id     String?
+  group_id    String?
+  created_at  DateTime @default(now())
+
+  resource RbacResource @relation(fields: [resource_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  role     RbacRole     @relation(fields: [role_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user     User?        @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  group    RbacGroup?   @relation(fields: [group_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index([resource_id, user_id])
+  @@index([resource_id, group_id])
+}
+
+model RbacPermission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  rolePermissions RbacRolePermission[]
+}
+
+model RbacRolePermission {
+  role_id       String
+  permission_id String
+
+  role       RbacRole       @relation(fields: [role_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  permission RbacPermission @relation(fields: [permission_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([role_id, permission_id])
+}
+
+model Folder {
+  id          String   @id @default(cuid())
+  client_id   String
+  name        String
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  parent_id String?
+  parent    Folder?  @relation("FolderHierarchy", fields: [parent_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  children  Folder[] @relation("FolderHierarchy")
+
+  client  Client      @relation("FolderOwner", fields: [client_id], references: [client_id], onUpdate: Cascade, onDelete: Cascade)
+  clients Client[]    @relation("ClientFolder")
+  groups  RbacGroup[]
+  users   User[]
+
+  @@unique([client_id, parent_id, name])
+  @@index([client_id, parent_id])
 }

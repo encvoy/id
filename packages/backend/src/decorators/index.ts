@@ -1,5 +1,6 @@
 export * from './base_validation.pipe';
 export * from './basic_auth.decorator';
+export * from './negotiate_auth.key';
 export * from './role.decorator';
 export * from './scope.decorator';
 export * from './transform.decorators';

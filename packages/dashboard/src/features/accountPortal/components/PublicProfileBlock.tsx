@@ -39,6 +39,7 @@ export const PublicProfileBlock = ({
           {translate("pages.profile.publicProfile.title")}
         </Typography>
         <Switch
+          data-test-id="chk-profile-private-profile"
           checked={settingsUser?.profile_privacy || false}
           onChange={handlePrivacyChange}
           color="secondary"
@@ -50,7 +51,8 @@ export const PublicProfileBlock = ({
       </Typography>
       {!settingsUser?.profile_privacy && (
         <Button
-          variant="text"
+          data-test-id="btn-profile-private-public-data"
+          variant="contained"
           color="secondary"
           sx={{
             marginTop: "8px",

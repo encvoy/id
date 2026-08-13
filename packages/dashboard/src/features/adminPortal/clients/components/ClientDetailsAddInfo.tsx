@@ -15,18 +15,19 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import { ElementType, FC } from "react";
 import { useDispatch } from "react-redux";
 import { getImageURL } from "src/shared/utils/helpers";
-import { setNoticeInfo } from "src/shared/lib/noticesSlice";
+import { setNoticeInfo } from "src/shared/slices/noticesSlice";
 import { IClientFull } from "src/shared/api/clients";
 import {
   EGetProviderAction,
   useGetProvidersQuery,
 } from "src/shared/api/provider";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
-import { IconWithTooltip } from "src/shared/ui/components/IconWithTooltip";
+import { CustomIcon } from "@encvoy-id/components";
+import { IconWithTooltip } from "@encvoy-id/components";
+import { SurfaceBlock } from "@encvoy-id/components";
 import { useTranslation } from "react-i18next";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 import styles from "./ClientDetailsAddInfo.module.css";
 import Typography from "@mui/material/Typography";
-import { componentBorderRadius } from "src/shared/theme/Theme";
 
 interface IAddInfoProps {
   client: IClientFull;
@@ -97,8 +98,8 @@ const AddInfoComponent: FC<IAddInfoProps> = ({ client, totalCount }) => {
     {
       condition: parent,
       icon: HomeWorkOutlinedIcon,
-      text: parent?.name,
-      copyValue: parent?.name,
+      text: getLocalizedTextValue(parent?.name, i18n.language),
+      copyValue: getLocalizedTextValue(parent?.name, i18n.language),
     },
   ];
 
@@ -123,15 +124,17 @@ const AddInfoComponent: FC<IAddInfoProps> = ({ client, totalCount }) => {
   const handleCopy = (value: string, text: string) => {
     navigator.clipboard.writeText(value);
     dispatch(
-      setNoticeInfo(translate("pages.clientDetails.copiedMessage", { text }))
+      setNoticeInfo(
+        translate("pages.clientDetails.copiedMessage", {
+          text,
+          interpolation: { escapeValue: false },
+        })
+      )
     );
   };
 
   return (
-    <Box
-      className={styles.addInfoContent}
-      sx={{ borderRadius: componentBorderRadius }}
-    >
+    <SurfaceBlock className={styles.addInfoContent}>
       <div>
         {items.map((item, index) => (
           <div key={index} className={styles.addInfoItem}>
@@ -166,7 +169,10 @@ const AddInfoComponent: FC<IAddInfoProps> = ({ client, totalCount }) => {
           {providers?.length ? (
             providers.map((item) => (
               <div key={item?.id}>
-                <IconWithTooltip title={item?.name} staticHover>
+                <IconWithTooltip
+                  title={getLocalizedTextValue(item?.name, i18n.language)}
+                  staticHover
+                >
                   {item?.avatar ? (
                     <Avatar
                       src={getImageURL(item?.avatar)}
@@ -191,7 +197,7 @@ const AddInfoComponent: FC<IAddInfoProps> = ({ client, totalCount }) => {
           )}
         </Box>
       </Box>
-    </Box>
+    </SurfaceBlock>
   );
 };
 

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../../../repository/repository.module';
-import { KloudModule } from '../kloud';
+import { KloudModule } from '../kloud/kloud.module';
 import { PhoneController } from './phone.controller';
 import { PhoneService } from './phone.service';
 

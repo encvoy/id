@@ -1,11 +1,20 @@
 import { Components, createTheme } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 import '@mui/material/Avatar';
+import '@mui/material/Chip';
 import { WIDGET } from '@/lib/constant';
 
 declare module '@mui/material/Avatar' {
   interface AvatarPropsVariantOverrides {
     custom: true;
+  }
+}
+
+declare module '@mui/material/Chip' {
+  interface ChipPropsVariantOverrides {
+    important: true;
+    info: true;
+    neutral: true;
   }
 }
 
@@ -60,6 +69,7 @@ const sharedComponents: Components<Theme> = {
         fontSize: 14,
         transition: 'background-color 0.2s ease',
         backgroundColor: theme.palette.primary.secondary,
+        textTransform: 'none',
         '&:hover': {
           backgroundColor: theme.palette.action.hover,
         },
@@ -96,6 +106,46 @@ const sharedComponents: Components<Theme> = {
         }),
       },
     ],
+  },
+  MuiChip: {
+    variants: [
+      {
+        props: { variant: 'important' },
+        style: {
+          backgroundColor: '#FFE7E9',
+          border: '1px solid #FFB8C0',
+          color: '#E14D5A',
+        },
+      },
+      {
+        props: { variant: 'info' },
+        style: {
+          backgroundColor: '#DFECFF',
+          border: '1px solid #BED7FF',
+          color: '#3B6FF6',
+        },
+      },
+      {
+        props: { variant: 'neutral' },
+        style: {
+          backgroundColor: '#EEF1F4',
+          border: '1px solid #D7DEE7',
+          color: '#6B7280',
+        },
+      },
+    ],
+    styleOverrides: {
+      root: {
+        borderRadius: 12,
+        fontSize: 10,
+        fontWeight: 600,
+        height: 'auto',
+        textTransform: 'uppercase',
+      },
+      label: {
+        padding: '6px 12px',
+      },
+    },
   },
 
   //#region Input

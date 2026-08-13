@@ -8,17 +8,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { routes, tabs } from "src/shared/utils/enums";
 import styles from "./TopTabs.module.css";
-import { useSelector } from "react-redux";
-import { RootState } from "src/app/store/store";
-import { CLIENT_ID } from "src/shared/utils/constants";
+import { useSystemClientId } from "src/shared/hooks/useSystemClientId";
 
 export const TopTabsAdmin: FC = () => {
   const navigate = useNavigate();
   const { t: translate } = useTranslation();
   const { pathname } = useLocation();
+  const systemClientId = useSystemClientId();
 
   const [tab, setTab] = useState<string>(tabs.settings);
-  const orgId = useSelector(({ user }: RootState) => user.orgId);
 
   useEffect(() => {
     const segments = pathname.split("/").filter(Boolean);
@@ -48,24 +46,26 @@ export const TopTabsAdmin: FC = () => {
       >
         <Tab
           icon={<LayersOutlinedIcon />}
+          data-test-id="tab-applications"
           iconPosition="start"
           className={styles.tab}
           label={translate("tabs.clients")}
           id="0"
           value={tabs.clients}
           onClick={() =>
-            navigate(`/${routes.admin}/${orgId || CLIENT_ID}/${tabs.clients}`)
+            navigate(`/${routes.admin}/${systemClientId}/${tabs.clients}`)
           }
         />
         <Tab
           icon={<TocOutlinedIcon />}
+          data-test-id="tab-logs"
           iconPosition="start"
           className={styles.tab}
           label={translate("tabs.eventLog")}
           id="1"
           value={tabs.eventLog}
           onClick={() =>
-            navigate(`/${routes.admin}/${orgId || CLIENT_ID}/${tabs.eventLog}`)
+            navigate(`/${routes.admin}/${systemClientId}/${tabs.eventLog}`)
           }
         />
       </Tabs>

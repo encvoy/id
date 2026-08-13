@@ -1,7 +1,6 @@
 .addInfoContent {
   overflow: auto;
   padding: 20px;
-  border: 1px solid var(--mui-palette-divider);
 }
 
 .addInfoItem {

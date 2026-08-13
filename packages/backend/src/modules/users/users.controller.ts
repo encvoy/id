@@ -1,10 +1,11 @@
 import * as common from '@nestjs/common';
-import * as sw from '@nestjs/swagger/dist';
+import * as sw from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import Cookies from 'cookies';
 import { Request, Response } from 'express';
-import { BasicAuth, Scope } from 'src/decorators';
-import { FilesInterceptor } from 'src/middlewares';
+import { Scope } from 'src/decorators';
+import { prepareListResponse } from 'src/helpers';
+import { FilesInterceptor } from 'src/middlewares/interceptors/files.interceptor';
 import { Role } from '../../decorators/role.decorator';
 import { UserId } from '../../decorators/userId.decorator';
 import { Actions, Ei18nCodes, UserRoles } from '../../enums';
@@ -12,20 +13,29 @@ import { updateLoggedUserSession } from '../interaction/interaction.helpers';
 import { CustomLogger } from '../logger/logger.service';
 import { EmailService } from '../providers/collection/email/email.service';
 import { NotificationAction } from '../providers/collection/email/email.types';
+import { getLegacyUserPrimaryExternalAccountEmail } from '../repository/user-search';
 import { REDIS_PREFIXES, RedisAdapter } from '../redis/redis.adapter';
+import { ClientActions } from '../clients/clients.roles';
+import { UsersContactsService } from './users-contacts.service';
 import * as userDto from './users.dto';
 import { UsersActions } from './users.roles';
 import { UsersService } from './users.service';
+import { toUserProfileResponse } from './user-visibility';
 import path from 'path';
 import { CLIENT_ID } from 'src/constants';
 
+const getDefinedKeys = <T extends object>(payload: T, excludedKeys: string[] = []) =>
+  Object.entries(payload as Record<string, unknown>)
+    .filter(([key, value]) => value !== undefined && !excludedKeys.includes(key))
+    .map(([key]) => key);
+
 @common.Controller('v1')
-@sw.ApiBasicAuth()
 @sw.ApiBearerAuth()
 export class UsersController {
   constructor(
     private readonly mailService: EmailService,
     private readonly userService: UsersService,
+    private readonly usersContactsService: UsersContactsService,
     readonly redis: RedisAdapter,
     private readonly logger: CustomLogger,
   ) {}
@@ -33,26 +43,47 @@ export class UsersController {
   loggedUsersInfo = new RedisAdapter(REDIS_PREFIXES.LoggedUserInfoCode);
   loggedUsersTokens = new RedisAdapter(REDIS_PREFIXES.LoggedUserToken);
 
+  private async logUserEvent(
+    req: Request,
+    userId: string | null | undefined,
+    event: Actions,
+    details: object,
+  ) {
+    await this.logger.logEvent({
+      ip_address: req.ip,
+      device: req.headers['user-agent'],
+      user_id: userId,
+      client_id: CLIENT_ID,
+      event,
+      description: '',
+      details,
+    });
+  }
+
   @common.Post('users')
   @sw.ApiOperation({ summary: 'Creating a new user' })
-  @BasicAuth()
+  @Scope(UsersActions.create)
   async createUser(
     @common.Req() req: Request,
     @common.Body() createUserDTO: userDto.CreateUserDTO,
-    @Role() role: UserRoles,
     @UserId() userId?: string,
   ) {
-    const user = await this.userService.create({
-      ...createUserDTO,
-      createByOwner: role === UserRoles.OWNER || role === UserRoles.EDITOR,
+    const { send_account_create_email: sendAccountCreateEmail = false, ...createUserPayload } =
+      createUserDTO;
+    const createdUser = await this.userService.create({
+      ...createUserPayload,
+      org_id: null,
     });
+    const user = await this.userService.userRepo.findById(createdUser.id);
 
-    if ((role === UserRoles.OWNER || role === UserRoles.EDITOR) && createUserDTO.email) {
+    const confirmedEmail = getLegacyUserPrimaryExternalAccountEmail(user);
+
+    if (sendAccountCreateEmail && confirmedEmail && createUserPayload.password) {
       try {
-        await this.mailService.sendMail(user.email, {
+        await this.mailService.sendMail(confirmedEmail, {
           action: NotificationAction.account_create,
-          password: createUserDTO.password,
-          user_id: user.id.toString(),
+          password: createUserPayload.password,
+          user_id: user.id,
         });
       } catch (e) {
         const error = e as Error;
@@ -67,17 +98,17 @@ export class UsersController {
       client_id: CLIENT_ID,
       event: Actions.USER_CREATE,
       description: '',
-      details: { target: user.id },
+      details: { target: createdUser.id },
     });
 
-    return { id: user.id, nickname: user.nickname };
+    return { id: createdUser.id, nickname: user?.nickname };
   }
 
   @common.Get('users/me')
   @sw.ApiOperation({ summary: 'Getting your user profile' })
   @Scope(UsersActions.profile)
   async getById(@UserId() id: string) {
-    return this.userService.getById(id);
+    return toUserProfileResponse(await this.userService.getById(id));
   }
 
   @common.Get('users/is-login-available')
@@ -106,13 +137,62 @@ export class UsersController {
   @common.UseGuards(ThrottlerGuard)
   async checkUniqueFieldAvailability(
     @common.Query()
-    { field_name, value }: userDto.CheckUniqueFieldAvailabilityDto,
+    {
+      field_name,
+      value,
+      user_id,
+      client_id,
+      organization_id,
+    }: userDto.CheckUniqueFieldAvailabilityDto,
   ) {
-    return this.userService.checkUniqueFieldAvailability(field_name, value);
+    return this.userService.checkUniqueFieldAvailability(field_name, value, user_id, {
+      clientId: client_id,
+      organizationId: organization_id,
+    });
+  }
+
+  @common.Get('users/check-field-availability')
+  @sw.ApiOperation({
+    summary: 'Checking field availability and validation rules before save',
+  })
+  @sw.ApiOkResponse({ type: userDto.CheckFieldAvailabilityResponseDto })
+  @Scope(UsersActions.checkFieldAvailability)
+  @common.UseGuards(ThrottlerGuard)
+  async checkFieldAvailability(
+    @common.Query()
+    {
+      field_name,
+      value,
+      user_id,
+      client_id,
+      organization_id,
+    }: userDto.CheckUniqueFieldAvailabilityDto,
+  ) {
+    return this.userService.checkFieldAvailability(field_name, value, user_id, {
+      clientId: client_id,
+      organizationId: organization_id,
+    });
+  }
+
+  @common.Get('clients/:client_id/users/autocomplete')
+  @sw.ApiOperation({ summary: 'Get client users for autocomplete' })
+  @Scope(ClientActions.users_list)
+  async getClientAutocompleteUsers(
+    @common.Param('client_id') client_id: string,
+    @common.Query() params: userDto.ListUsersAutocompleteDto,
+    @UserId() actorUserId: string,
+    @common.Res() res: Response,
+  ) {
+    const { users, totalCount } = await this.userService.getClientAutocompleteUsers(
+      client_id,
+      params,
+      actorUserId,
+    );
+
+    return prepareListResponse(res, users, totalCount, params);
   }
 
   @common.Put('users/:user_id')
-  @common.HttpCode(common.HttpStatus.NO_CONTENT)
   @sw.ApiOperation({ summary: 'Editing a user profile' })
   @Scope(UsersActions.update)
   async update(
@@ -122,10 +202,10 @@ export class UsersController {
     @UserId() userId: string,
     @Role() role: UserRoles,
   ) {
-    await this.userService.update(user_id, updateUserDTO, role);
+    const updatedUser = await this.userService.update(user_id, updateUserDTO, role, userId);
     await updateLoggedUserSession(
       req,
-      { id: parseInt(user_id, 10), ...updateUserDTO },
+      { id: user_id, ...updateUserDTO } as any,
       this.loggedUsersInfo,
     );
 
@@ -136,8 +216,46 @@ export class UsersController {
       client_id: CLIENT_ID,
       event: Actions.USER_UPDATE,
       description: '',
-      details: { target: user_id, params: updateUserDTO },
+      details: {
+        target: user_id,
+        changed_fields: getDefinedKeys(updateUserDTO),
+      },
     });
+
+    return toUserProfileResponse(updatedUser);
+  }
+
+  @common.Post('users/:user_id/contacts/:contact_type/confirm')
+  @sw.ApiOperation({ summary: 'Confirm a user contact from the admin profile' })
+  @Scope(UsersActions.confirmContact)
+  async confirmContact(
+    @common.Param('user_id') targetUserId: string,
+    @common.Param('contact_type', new common.ParseEnumPipe(userDto.UserContactField))
+    contactType: userDto.UserContactField,
+    @common.Req() req: Request,
+    @UserId() userId: string,
+    @Role() role: UserRoles,
+  ) {
+    const updatedUser = await this.usersContactsService.confirmContact(
+      targetUserId,
+      contactType,
+      role,
+      userId,
+    );
+
+    await updateLoggedUserSession(req, updatedUser as any, this.loggedUsersInfo);
+
+    await this.logger.logEvent({
+      ip_address: req.ip,
+      device: req.headers['user-agent'],
+      user_id: userId,
+      client_id: CLIENT_ID,
+      event: Actions.USER_UPDATE,
+      description: '',
+      details: { target: targetUserId, confirm_contact: contactType },
+    });
+
+    return toUserProfileResponse(updatedUser);
   }
 
   @common.Put('users/:user_id/avatar')
@@ -149,7 +267,8 @@ export class UsersController {
   async updateAvatar(
     @common.Body() updateUserDTO: userDto.UpdateUserAvatarDTO,
     @common.Req() req: Request,
-    @common.Param('user_id') userId: string,
+    @common.Param('user_id') targetUserId: string,
+    @UserId() actorUserId: string,
     @Role() role: UserRoles,
     @common.UploadedFiles()
     files: { picture?: Express.Multer.File[] },
@@ -158,12 +277,18 @@ export class UsersController {
       updateUserDTO.picture = files.picture[0].path.replaceAll(path.sep, path.posix.sep);
     }
 
-    await this.userService.updateAvatar(userId, updateUserDTO, role);
+    await this.userService.updateAvatar(targetUserId, updateUserDTO, role, actorUserId);
     await updateLoggedUserSession(
       req,
-      { id: parseInt(userId, 10), ...updateUserDTO },
+      { id: targetUserId, ...updateUserDTO },
       this.loggedUsersInfo,
     );
+
+    await this.logUserEvent(req, actorUserId, Actions.USER_UPDATE, {
+      target: targetUserId,
+      action: 'user_avatar_updated',
+      changed_fields: getDefinedKeys(updateUserDTO),
+    });
   }
 
   @common.Delete('users/:user_id')
@@ -177,8 +302,12 @@ export class UsersController {
     @common.Req() req: Request,
     @common.Res() res: Response,
   ) {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    await this.userService.delete(userId, user_id, token, role, updateUserDTO.password);
+    const deleteResult = await this.userService.delete(
+      userId,
+      user_id,
+      role,
+      updateUserDTO.password,
+    );
 
     const cookie = new Cookies(req, res);
     await this.redis.deleteLoggedSessionsByUserId(user_id, cookie);
@@ -212,72 +341,60 @@ export class UsersController {
       details: { target: user_id },
     });
 
-    return res.status(common.HttpStatus.NO_CONTENT).send();
+    return res.status(common.HttpStatus.OK).send(deleteResult);
   }
 
   @common.Put('users/:user_id/restore')
   @sw.ApiOperation({ summary: 'Restoring a deleted profile' })
   @Scope(UsersActions.restore)
-  async restoreProfile(@common.Req() req: Request, @common.Param('user_id') user_id: string) {
-    await this.userService.restoreProfile(user_id);
+  async restoreProfile(
+    @common.Req() req: Request,
+    @common.Param('user_id') user_id: string,
+    @UserId() actorUserId: string,
+  ) {
+    await this.userService.restoreProfile(user_id, undefined, actorUserId);
 
     await this.logger.logEvent({
       ip_address: req.ip,
       device: req.headers['user-agent'],
-      user_id: user_id,
+      user_id: actorUserId,
       client_id: CLIENT_ID,
       event: Actions.USER_RESTORE,
       description: '',
-      details: {},
-    });
-  }
-
-  @common.Put('users/:user_id/block')
-  @sw.ApiOperation({ summary: 'Blocking a user' })
-  @Scope(UsersActions.block)
-  async block(
-    @common.Req() req: Request,
-    @common.Param('user_id') user_id: string,
-    @UserId() u_id: string,
-  ) {
-    if (user_id === u_id) {
-      throw new common.BadRequestException(Ei18nCodes.T3E0022);
-    }
-    await this.userService.block(user_id);
-
-    await this.logger.logEvent({
-      ip_address: req.ip,
-      device: req.headers['user-agent'],
-      user_id: u_id,
-      client_id: CLIENT_ID,
-      event: Actions.USER_BLOCK,
-      description: '',
       details: { target: user_id },
     });
   }
 
-  @common.Put('users/:user_id/unblock')
-  @sw.ApiOperation({ summary: 'Unblocking a user' })
-  @Scope(UsersActions.unblock)
-  async unblock(
+  @common.Put('users/:user_id/mark-delete')
+  @sw.ApiOperation({ summary: 'Mark a user for deletion' })
+  @Scope(UsersActions.markDelete)
+  async markForDeletion(
     @common.Req() req: Request,
     @common.Param('user_id') user_id: string,
-    @UserId() u_id: string,
+    @UserId() actorUserId: string,
+    @Role() role: UserRoles,
   ) {
-    if (user_id === u_id) {
+    if (user_id === actorUserId) {
       throw new common.BadRequestException(Ei18nCodes.T3E0022);
     }
-    await this.userService.unblock(user_id);
+
+    const deletedAt = await this.userService.markForDeletion(actorUserId, user_id, role);
 
     await this.logger.logEvent({
       ip_address: req.ip,
       device: req.headers['user-agent'],
-      user_id: u_id,
+      user_id: actorUserId,
       client_id: CLIENT_ID,
-      event: Actions.USER_UNBLOCK,
+      event: Actions.USER_UPDATE,
       description: '',
-      details: { target: user_id },
+      details: {
+        target: user_id,
+        action: 'user_marked_for_deletion',
+        deleted_at: deletedAt,
+      },
     });
+
+    return { deleted: deletedAt };
   }
 
   //#region Roles
@@ -302,19 +419,45 @@ export class UsersController {
     @common.Req() req: Request,
     @common.Res() res: Response,
   ) {
-    const user = await this.userService.changePassword(params, user_id, u_id);
+    const user = await this.userService.changePassword(
+      params,
+      user_id,
+      u_id,
+      req.headers['x-lang'] as string,
+    );
+    const legacyUser = await this.userService.userRepo.findById(user.id);
 
     const cookie = new Cookies(req, res);
     await this.redis.revokeAllTokensByUserId(user_id, cookie);
 
-    if (u_id !== user_id && user.email) {
-      await this.mailService.sendMail(user.email, {
-        action: NotificationAction.password_change,
-        login: user.login,
-        password: params.password,
-        user_id,
-      });
+    if (u_id !== user_id && legacyUser?.email) {
+      try {
+        await this.mailService.sendMail(legacyUser.email, {
+          action: NotificationAction.password_change,
+          login: legacyUser.login,
+          password: params.password,
+          user_id,
+        });
+      } catch (e) {
+        const error = e as Error;
+        this.logger.warn(
+          {
+            description: error.message,
+            details: {
+              target: user_id,
+              email: legacyUser.email,
+              action: 'password_change_email_failed',
+            },
+          },
+          'WARNING',
+        );
+      }
     }
+
+    await this.logUserEvent(req, u_id, Actions.USER_PASSWORD_CHANGE, {
+      target: user_id,
+      action: 'user_password_changed',
+    });
 
     return res.status(common.HttpStatus.NO_CONTENT).send();
   }
@@ -323,20 +466,33 @@ export class UsersController {
   @sw.ApiOperation({ summary: 'Get public accounts' })
   async getPublicExternalAccounts(
     @common.Query('user_id') user_id: string,
+    @common.Query('client_id') client_id: string | undefined,
     @Role() role: UserRoles,
+    @UserId() actorUserId: string,
   ) {
-    return this.userService.getPublicExternalAccounts(user_id, role);
+    return this.userService.getPublicExternalAccounts(user_id, role, actorUserId, client_id);
   }
 
   @common.Put('/users/:user_id/external_accounts/:id')
   @sw.ApiOperation({ summary: 'Update external account' })
   @Scope(UsersActions.externalAccounts)
   async updateAccount(
-    @common.Param('id') id: number,
+    @common.Param('id') id: string,
     @common.Param('user_id') user_id: string,
     @common.Body() body: userDto.UpdateExternalAccountDTO,
+    @UserId() actorUserId: string,
+    @common.Req() req: Request,
   ) {
-    return this.userService.updateAccount(user_id, id, body);
+    const result = await this.userService.updateAccount(user_id, id, body, actorUserId);
+
+    await this.logUserEvent(req, actorUserId, Actions.USER_UPDATE, {
+      target: user_id,
+      action: 'user_external_account_updated',
+      account_id: id,
+      changed_fields: getDefinedKeys(body),
+    });
+
+    return result;
   }
 
   @common.Put('users/:user_id/private_scopes')
@@ -345,8 +501,17 @@ export class UsersController {
   async setPrivateScopes(
     @common.Body() setPrivateScopesDTO: userDto.SetPrivateScopesDTO,
     @common.Param('user_id') user_id: string,
+    @UserId() actorUserId: string,
+    @common.Req() req: Request,
   ) {
-    await this.userService.setPrivateScopes(setPrivateScopesDTO, user_id);
+    await this.userService.setPrivateScopes(setPrivateScopesDTO, user_id, actorUserId);
+
+    await this.logUserEvent(req, actorUserId, Actions.USER_UPDATE, {
+      target: user_id,
+      action: 'user_private_scopes_updated',
+      field: setPrivateScopesDTO.field,
+      claim_privacy: setPrivateScopesDTO.claim_privacy,
+    });
   }
 
   @common.Get('users/:user_id/private_scopes')
@@ -363,12 +528,18 @@ export class UsersController {
     @common.Param('account_id') accountId: string,
     @common.Param('user_id') userId: string,
     @UserId() u_id: string,
+    @Role() role: UserRoles,
+    @common.Req() req: Request,
   ) {
-    return this.userService.deleteExternalAccount(
-      parseInt(userId, 10),
-      parseInt(accountId, 10),
-      u_id,
-    );
+    const result = await this.userService.deleteExternalAccount(userId, accountId, u_id, role);
+
+    await this.logUserEvent(req, u_id, Actions.USER_UPDATE, {
+      target: userId,
+      action: 'user_external_account_deleted',
+      account_id: accountId,
+    });
+
+    return result;
   }
 
   //#region Favorite clients
@@ -378,8 +549,16 @@ export class UsersController {
   async addFavoriteClients(
     @common.Query('client_id') client_id: string,
     @common.Param('user_id') user_id: string,
+    @UserId() actorUserId: string,
+    @common.Req() req: Request,
   ) {
     await this.userService.addFavoriteClients(user_id, client_id);
+
+    await this.logUserEvent(req, actorUserId, Actions.USER_UPDATE, {
+      target: user_id,
+      action: 'user_favorite_client_added',
+      client_id,
+    });
   }
 
   @common.Delete('users/:user_id/favorite_clients')
@@ -388,8 +567,16 @@ export class UsersController {
   async deleteFavoriteClients(
     @common.Query('client_id') client_id: string,
     @common.Param('user_id') user_id: string,
+    @UserId() actorUserId: string,
+    @common.Req() req: Request,
   ) {
     await this.userService.deleteFavoriteClients(user_id, client_id);
+
+    await this.logUserEvent(req, actorUserId, Actions.USER_UPDATE, {
+      target: user_id,
+      action: 'user_favorite_client_deleted',
+      client_id,
+    });
   }
   //#endregion
 }

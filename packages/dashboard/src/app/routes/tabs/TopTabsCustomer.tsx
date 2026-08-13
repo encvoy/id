@@ -1,4 +1,5 @@
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import TocOutlinedIcon from "@mui/icons-material/TocOutlined";
 import Box from "@mui/material/Box";
@@ -18,12 +19,17 @@ export const TopTabsCustomer: FC = () => {
   const orgId = useSelector(({ user }: RootState) => user.orgId);
   const { pathname } = useLocation();
   const [tab, setTab] = useState<string>(tabs.settings);
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const routeOrgId = pathSegments[1];
+  const activeOrgId = routeOrgId || orgId;
 
   useEffect(() => {
-    const segments = pathname.split("/").filter(Boolean);
-    const thirdSegment = segments[2];
+    const thirdSegment = pathSegments[2];
 
     switch (thirdSegment) {
+      case tabs.users:
+        setTab(tabs.users);
+        break;
       case tabs.clients:
         setTab(tabs.clients);
         break;
@@ -51,6 +57,7 @@ export const TopTabsCustomer: FC = () => {
         value={tab}
       >
         <Tab
+          data-test-id="tab-settings"
           icon={<SettingsOutlinedIcon />}
           iconPosition="start"
           className={styles.tab}
@@ -58,10 +65,11 @@ export const TopTabsCustomer: FC = () => {
           id="0"
           value={tabs.settings}
           onClick={() =>
-            navigate(`/${routes.customer}/${orgId}/${tabs.settings}`)
+            navigate(`/${routes.customer}/${activeOrgId}/${tabs.settings}`)
           }
         />
         <Tab
+          data-test-id="tab-applications"
           icon={<LayersOutlinedIcon />}
           iconPosition="start"
           className={styles.tab}
@@ -69,18 +77,31 @@ export const TopTabsCustomer: FC = () => {
           id="1"
           value={tabs.clients}
           onClick={() =>
-            navigate(`/${routes.customer}/${orgId}/${tabs.clients}`)
+            navigate(`/${routes.customer}/${activeOrgId}/${tabs.clients}`)
           }
         />
         <Tab
+          data-test-id="tab-users"
+          icon={<PeopleAltOutlinedIcon />}
+          iconPosition="start"
+          className={styles.tab}
+          label={t("tabs.users")}
+          id="2"
+          value={tabs.users}
+          onClick={() =>
+            navigate(`/${routes.customer}/${activeOrgId}/${tabs.users}`)
+          }
+        />
+        <Tab
+          data-test-id="tab-logs"
           icon={<TocOutlinedIcon />}
           iconPosition="start"
           className={styles.tab}
           label={t("tabs.eventLog")}
-          id="2"
+          id="3"
           value={tabs.eventLog}
           onClick={() =>
-            navigate(`/${routes.customer}/${orgId}/${tabs.eventLog}`)
+            navigate(`/${routes.customer}/${activeOrgId}/${tabs.eventLog}`)
           }
         />
       </Tabs>

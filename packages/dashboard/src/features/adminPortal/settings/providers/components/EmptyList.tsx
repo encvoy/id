@@ -2,7 +2,7 @@ import { FC } from "react";
 import Button from "@mui/material/Button";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
+import { CustomIcon } from "@encvoy-id/components";
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";

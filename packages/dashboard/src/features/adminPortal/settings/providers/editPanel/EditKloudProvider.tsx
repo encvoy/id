@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import clsx from "clsx";
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
 import { isObjectEmpty } from "src/shared/utils/helpers";
 import {
   IKloudParams,
@@ -15,11 +15,11 @@ import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "../components/BaseFormProvider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
+import { PasswordTextField } from "@encvoy-id/components";
 import { IEditProviderProps } from "./EditProvider";
 import { ProviderHeader } from "../components/ProviderHeader";
 import styles from "./EditProvider.module.css";
-import { ProviderAvatars } from "../utils";
+import { buildProviderUpdatePayload, ProviderAvatars } from "../utils";
 import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
 
@@ -84,7 +84,8 @@ export const EditKloudProvider: FC<IEditProviderProps> = ({
   }, [isOpen]);
 
   const onSubmit: SubmitHandler<IProvider<IKloudParams>> = (data) => {
-    updateProvider(data).then(() => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields);
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,
@@ -111,10 +112,15 @@ export const EditKloudProvider: FC<IEditProviderProps> = ({
         required
       />
 
-      <Typography className={clsx("text-14", styles.asterisk, styles.label)}>
+      <Typography className={clsx("text-14", "asterisk", styles.label)}>
         {translate("providers.kloud.clientSecret")}
       </Typography>
-      <PasswordTextField nameField="params.external_client_secret" />
+      <PasswordTextField
+        showText={translate("actionButtons.show")}
+        hideText={translate("actionButtons.hide")}
+        copyText={translate("actionButtons.copy")}
+        nameField="params.external_client_secret"
+      />
       <Typography
         className={clsx("text-14", styles.description)}
         color="text.secondary"

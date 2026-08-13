@@ -12,9 +12,10 @@
     "data_processing_consent": "Consent to personal data processing",
     "password": "Password"
   },
+  "widget": {
+    "passkey_bind_message": "To add a passkey, first choose an existing account or create a new one."
+  },
   "errors": {
-    "T3LE0001": "Invalid license",
-    "T3LE0002": "License already exists in the system",
     "T3E0001": "Invalid credentials",
     "T3E0002": "Identifier not provided",
     "T3E0003": "User not found",
@@ -34,6 +35,7 @@
     "T3E0017": "Field is not editable",
     "T3E0018": "Invalid parameters",
     "T3E0019": "Email is not unique",
+    "T3E0020": "Re-authorization via a trusted provider is required",
     "T3E0021": "User email not specified",
     "T3E0022": "Operation not available for self",
     "T3E0023": "User deleted",
@@ -115,6 +117,10 @@
     "T3E00": "",
     "T3E0000": "Unknown error",
     "T3E0099": "User already exists",
-    "T3E0100": "The new password must not be the same as the old one"
+    "T3E0100": "The new password must not be the same as the old one",
+    "T3E0103": "Restoring deleted accounts is prohibited by system settings",
+    "T3E0104": "Organization limit exceeded: {{limit}}",
+    "T3E0101": "Client certificate serial number and fingerprint are missing",
+    "T3E0102": "Unable to add this phone number"
   }
 }

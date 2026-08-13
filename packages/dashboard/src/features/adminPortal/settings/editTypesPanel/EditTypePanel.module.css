@@ -6,5 +6,5 @@
 }
 
 .item:hover {
-  background-color: var(--mui-palette-background-hover);
+  background-color: var(--mui-palette-action-hover);
 }

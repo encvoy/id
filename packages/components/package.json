@@ -1,0 +1,76 @@
+{
+  "name": "@encvoy-id/components",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "watch": "npm run build && concurrently -k -n bundle,types \"npm:watch:bundle\" \"npm:watch:types\"",
+    "watch:bundle": "vite build --watch --emptyOutDir=false",
+    "watch:types": "tsc -p tsconfig.build.json --emitDeclarationOnly --watch --preserveWatchOutput",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json --emitDeclarationOnly && vite build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "dependencies": {
+    "clsx": "^1.1.1",
+    "react-colorful": "^5.5.1"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.3.0",
+    "@mui/material": "^7.3.0",
+    "@mui/x-date-pickers": "^8.22.0",
+    "date-fns": "^3.6.0 || ^4.0.0",
+    "libphonenumber-js": "^1.12.0",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "react-hook-form": "^7.82.0",
+    "react-phone-number-input": "^3.4.0"
+  },
+  "devDependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "7.3.5",
+    "@mui/material": "7.3.5",
+    "@mui/x-date-pickers": "8.22.0",
+    "@storybook/addon-docs": "^10.4.0",
+    "@storybook/react-vite": "^10.4.0",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@vitejs/plugin-react": "5.1.0",
+    "clsx": "1.1.1",
+    "concurrently": "^9.2.1",
+    "date-fns": "3.6.0",
+    "libphonenumber-js": "1.12.27",
+    "react": "19.2.3",
+    "react-colorful": "5.5.1",
+    "react-dom": "19.2.3",
+    "react-hook-form": "7.82.0",
+    "react-phone-number-input": "3.4.13",
+    "storybook": "^10.4.0",
+    "typescript": "5.9.2",
+    "vite": "7.2.4",
+    "vitest": "^4.0.6"
+  }
+}

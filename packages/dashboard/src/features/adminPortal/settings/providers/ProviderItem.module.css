@@ -6,7 +6,6 @@
   flex-wrap: wrap;
   background-color: var(--mui-palette-background-default);
   align-items: center;
-  border: 1px solid var(--mui-palette-divider);
   padding: 12px 12px 12px 38px;
   transition: background-color 0.2s;
 }

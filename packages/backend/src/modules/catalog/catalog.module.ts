@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ClientModule } from '../clients';
+import { ClientModule } from '../clients/clients.module';
 import { RedisModule } from '../redis/redis.module';
 import { SettingsModule } from '../settings/settings.module';
 import { CatalogController } from './catalog.controller';

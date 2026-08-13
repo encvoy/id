@@ -1,11 +1,13 @@
-import { parsePhoneNumberWithError } from "libphonenumber-js";
 import { ReactElement } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { TFileString } from "src/shared/api/types";
 import * as yup from "yup";
-import { ProviderType } from "../api/provider";
-import { IRuleWithValidation } from "../api/settings";
 import { EClaimPrivacy, ERoles } from "./enums";
+import { EProviderType } from "../api/provider";
+import { IRuleWithValidation } from "../api/settings";
+import { UseFormReturn } from "react-hook-form";
+import { parsePhoneNumberWithError } from "libphonenumber-js";
+import { TFileString } from "src/shared/api/types";
+import { DEFAULT_SYSTEM_LANGUAGE, getLocalizedTextValue } from "./locales";
+import { APP_PUBLIC_URL, withAppBase } from "./appBasePath";
 
 export const isObjectEmpty = (
   object: Record<string, unknown>,
@@ -15,17 +17,55 @@ export const isObjectEmpty = (
     .length;
 };
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+export const getDirtyFieldsValues = <T extends Record<string, any>>(
+  values: T,
+  dirtyFields: Partial<Record<keyof T, unknown>>
+): Partial<T> => {
+  return Object.keys(dirtyFields).reduce((acc, key) => {
+    const field = key as keyof T;
+    const dirtyValue = dirtyFields[field];
+
+    if (!dirtyValue) return acc;
+
+    const currentValue = values[field];
+
+    if (isPlainObject(dirtyValue) && isPlainObject(currentValue)) {
+      const nestedValues = getDirtyFieldsValues(
+        currentValue,
+        dirtyValue as Partial<Record<keyof typeof currentValue, unknown>>
+      );
+
+      if (Object.keys(nestedValues).length) {
+        acc[field] = nestedValues as T[keyof T];
+      }
+
+      return acc;
+    }
+
+    acc[field] = currentValue;
+    return acc;
+  }, {} as Partial<T>);
+};
+
 export const isOwnerOrEditor = (role?: string): boolean =>
   role === ERoles.OWNER || role === ERoles.EDITOR;
 
 export const isAdministrator = (role?: string): boolean =>
-  role === ERoles.OWNER || role === ERoles.ADMIN || role === ERoles.EDITOR;
+  role === ERoles.OWNER || role === ERoles.EDITOR;
 
 export const getImageURL = (path?: TFileString): string | undefined => {
   if (!path || typeof path !== "string") return undefined;
-  return path.startsWith("http://") || path.startsWith("https://")
-    ? path
-    : `${window.location.origin}/${path}`;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  const publicImagesIndex = path.indexOf("public/images/");
+  if (publicImagesIndex >= 0) {
+    return `${APP_PUBLIC_URL}/${path.slice(publicImagesIndex)}`;
+  }
+  return `${APP_PUBLIC_URL}/${path.replace(/^\/+/, "")}`;
 };
 
 export const exportToJson = (
@@ -86,15 +126,15 @@ export type ProviderTypeConfig = {
 };
 
 export const providerTitleMapping: ProviderTypeConfig = {
-  [ProviderType.EMAIL]: "",
-  [ProviderType.CREDENTIALS]: "",
-  [ProviderType.PHONE]: "",
-  [ProviderType.ETHEREUM]: "ETHEREUM",
-  [ProviderType.MTLS]: "mTLS",
-  [ProviderType.WEBAUTHN]: "WebAuthn",
-  [ProviderType.EMAIL_CUSTOM]: "Email",
-  [ProviderType.TOTP]: "TOTP",
-  [ProviderType.HOTP]: "HOTP",
+  [EProviderType.EMAIL]: "",
+  [EProviderType.CREDENTIALS]: "",
+  [EProviderType.PHONE]: "",
+  [EProviderType.ETHEREUM]: "ETHEREUM",
+  [EProviderType.MTLS]: "mTLS",
+  [EProviderType.WEBAUTHN]: "WebAuthn",
+  [EProviderType.EMAIL_CUSTOM]: "Email",
+  [EProviderType.TOTP]: "TOTP",
+  [EProviderType.HOTP]: "HOTP",
 };
 
 export const isValidEmail = (value: string) => {
@@ -113,7 +153,7 @@ export const getProviderTitleByType = (
 
   return type && mapping[type] !== undefined
     ? mapping[type]
-    : ProviderType.OAUTH;
+    : EProviderType.OAUTH;
 };
 
 export const isUrl = (value: string | undefined | null) => {
@@ -178,24 +218,28 @@ export const formatPhoneNumber = (phoneNumber: string) => {
   try {
     const parsed = parsePhoneNumberWithError(phoneNumber);
     if (parsed) {
-      // Форматируем в международном формате с пробелами
+      // Format the number internationally with spaces.
       return parsed.formatInternational();
     }
   } catch (error) {
-    // Если не удалось распарсить, возвращаем как есть
+    // Return the input unchanged when parsing fails.
     console.error("Failed to parse phone number:", error);
   }
   return phoneNumber;
 };
 
 export const editProfileSchema = (
-  rules: IRuleWithValidation[]
+  rules: IRuleWithValidation[],
+  locale: string = DEFAULT_SYSTEM_LANGUAGE
 ): yup.AnyObjectSchema => {
   if (!rules) return yup.object();
-  return generateValidationSchema(rules);
+  return generateValidationSchema(rules, locale);
 };
 
-const generateValidationSchema = (rules: IRuleWithValidation[]) => {
+const generateValidationSchema = (
+  rules: IRuleWithValidation[],
+  locale: string
+) => {
   const schemaFields: any = {};
 
   rules.forEach((field) => {
@@ -203,18 +247,14 @@ const generateValidationSchema = (rules: IRuleWithValidation[]) => {
 
     let fieldValidations = yup.mixed().nullable().notRequired();
 
-    if (field.field_name === "password") {
-      fieldValidations = fieldValidations.nullable(false).required();
-    }
-
     // Apply all active validation rules for the field
     field.validations.forEach((validation) => {
       if (validation.active) {
         fieldValidations = fieldValidations.test({
           name: `${field.field_name}-regex`,
           message: field.editable
-            ? validation.error
-            : "Ошибка значения, обратитесь к администратору",
+            ? getLocalizedTextValue(validation.error, locale)
+            : "Invalid value. Contact your administrator.",
           test: (value) => {
             if (
               field.required &&
@@ -259,10 +299,14 @@ const generateValidationSchema = (rules: IRuleWithValidation[]) => {
   const buildSchema = (obj: any): yup.AnyObjectSchema => {
     const shape: any = {};
     for (const key in obj) {
-      if (typeof obj[key] === "object" && !obj[key].test) {
-        shape[key] = buildSchema(obj[key]);
+      const value = obj[key];
+
+      if (yup.isSchema(value)) {
+        shape[key] = value;
+      } else if (value && typeof value === "object" && !Array.isArray(value)) {
+        shape[key] = buildSchema(value);
       } else {
-        shape[key] = obj[key];
+        shape[key] = value;
       }
     }
     return yup.object().shape(shape);
@@ -375,4 +419,29 @@ export const findDuplicateIndex = (arr: string[]): number => {
     seen.add(item);
   });
   return result;
+};
+
+export const refreshDashboardFavicon = async () => {
+  const response = await fetch(withAppBase("/api/v1/public/branding/icon/32"), {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load the dashboard favicon");
+  }
+
+  let favicon = document.querySelector<HTMLLinkElement>(
+    "link#dashboard-favicon"
+  );
+
+  if (!favicon) {
+    favicon = document.createElement("link");
+    favicon.id = "dashboard-favicon";
+    favicon.rel = "icon";
+    favicon.type = "image/png";
+    favicon.sizes = "32x32";
+    document.head.appendChild(favicon);
+  }
+
+  favicon.href = response.url;
 };

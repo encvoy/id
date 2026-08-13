@@ -1,0 +1,57 @@
+.layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.settingsColumn {
+  width: 100%;
+  padding: 24px;
+}
+
+.previewColumn {
+  width: 360px;
+  flex-shrink: 0;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section > p {
+  margin-bottom: 16px;
+}
+
+.systemControls {
+  max-width: 300px;
+  width: 100%;
+}
+
+.selectField {
+  margin-bottom: 24px;
+}
+
+.select {
+  width: 100%;
+}
+
+.limitedControl {
+  max-width: 300px;
+  width: 100%;
+}
+
+.buttonWrapper {
+  margin-left: auto;
+  width: fit-content;
+}
+
+@media screen and (max-width: 980px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .previewColumn {
+    width: 100%;
+    min-width: 0;
+  }
+}

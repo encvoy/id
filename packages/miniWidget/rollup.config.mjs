@@ -1,3 +1,4 @@
+import fs from "fs";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
@@ -11,6 +12,69 @@ import postcss from "rollup-plugin-postcss";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dashboardCompilerOptions = {
+  baseUrl: ".",
+  paths: {
+    "~/*": ["../dashboard/src/packages/authWidget/*"],
+    "src/*": ["../dashboard/src/*"],
+  },
+};
+const dashboardSourceInclude = [
+  "src/**/*.ts",
+  "src/**/*.tsx",
+  "../dashboard/src/**/*.ts",
+  "../dashboard/src/**/*.tsx",
+];
+const aliasExtensions = [".ts", ".tsx", ".js", ".jsx", ".json"];
+
+const resolveAliasTarget = (targetPath) => {
+  if (fs.existsSync(targetPath) && fs.statSync(targetPath).isFile()) {
+    return targetPath;
+  }
+
+  for (const extension of aliasExtensions) {
+    const filePath = `${targetPath}${extension}`;
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      return filePath;
+    }
+  }
+
+  for (const extension of aliasExtensions) {
+    const indexPath = path.join(targetPath, `index${extension}`);
+    if (fs.existsSync(indexPath) && fs.statSync(indexPath).isFile()) {
+      return indexPath;
+    }
+  }
+
+  return null;
+};
+
+const resolveDashboardAlias = (id) => {
+  for (const [pattern, targets] of Object.entries(dashboardCompilerOptions.paths)) {
+    const prefix = pattern.replace("*", "");
+    if (!id.startsWith(prefix)) {
+      continue;
+    }
+
+    const suffix = id.slice(prefix.length);
+    for (const targetPattern of targets) {
+      const aliasedPath = targetPattern.replace("*", suffix);
+      const resolvedPath = resolveAliasTarget(path.resolve(__dirname, aliasedPath));
+      if (resolvedPath) {
+        return resolvedPath;
+      }
+    }
+  }
+
+  return null;
+};
+
+const dashboardAliasPlugin = {
+  name: "dashboard-alias",
+  resolveId(id) {
+    return resolveDashboardAlias(id);
+  },
+};
 
 const processPolyfill = {
   name: "process-polyfill",
@@ -75,6 +139,7 @@ const jsConfig = {
       force: true,
     }),
     peerDepsExternal(),
+    dashboardAliasPlugin,
     resolve({
       browser: true,
       preferBuiltins: false,
@@ -112,9 +177,10 @@ const jsConfig = {
     }),
     typescript({
       tsconfig: "./tsconfig.json",
+      compilerOptions: dashboardCompilerOptions,
       declaration: false,
       noEmitOnError: true,
-      include: ["src/**/*", "../dashboard/src/packages/authWidget/**/*"],
+      include: dashboardSourceInclude,
       exclude: ["node_modules/**", "dist/**"],
     }),
     !process.env.ROLLUP_WATCH &&
@@ -131,12 +197,7 @@ const typesConfig = {
   },
   plugins: [
     dts({
-      compilerOptions: {
-        baseUrl: ".",
-        paths: {
-          "~/*": ["../dashboard/src/packages/authWidget/*"],
-        },
-      },
+      compilerOptions: dashboardCompilerOptions,
     }),
   ],
   external: [
@@ -176,6 +237,7 @@ const umdConfig = {
       force: true,
     }),
     processPolyfill,
+    dashboardAliasPlugin,
     resolve({
       browser: true,
       preferBuiltins: false,
@@ -184,8 +246,9 @@ const umdConfig = {
     commonjs(),
     typescript({
       tsconfig: "./tsconfig.json",
+      compilerOptions: dashboardCompilerOptions,
       declaration: false,
-      include: ["src/**/*", "../dashboard/src/packages/authWidget/**/*"],
+      include: dashboardSourceInclude,
       exclude: ["node_modules/**", "dist/**", "build/**"],
     }),
     postcss({

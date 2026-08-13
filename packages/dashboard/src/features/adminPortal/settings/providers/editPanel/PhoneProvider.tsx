@@ -1,28 +1,30 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
+import { TFunction } from "i18next";
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
-import { InputField } from "src/shared/ui/components/InputBlock";
-import { SwitchBlock } from "src/shared/ui/components/SwitchBlock";
-import { UploadAndDisplayImage } from "src/shared/ui/UploadAndDisplayImage";
-import * as yup from "yup";
-import { isObjectEmpty } from "src/shared/utils/helpers";
+import { useParams } from "react-router-dom";
 import {
   IPhoneParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
   useUpdateProviderMutation,
 } from "src/shared/api/provider";
-import { BaseFormProvider } from "../components/BaseFormProvider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
+import { InputField } from "@encvoy-id/components";
+import { isObjectEmpty } from "src/shared/utils/helpers";
+import * as yup from "yup";
+import { PasswordTextField } from "@encvoy-id/components";
 import styles from "../BaseStylesProvider.module.css";
-import { ProviderAvatars } from "../utils";
-import Typography from "@mui/material/Typography";
+import {
+  BaseFormProvider,
+  createProviderBaseSchema,
+} from "../components/BaseFormProvider";
+import { buildProviderUpdatePayload, ProviderAvatars } from "../utils";
+import { ProviderHeader } from "../components/ProviderHeader";
 
 interface IPhoneProviderProps {
   isOpen: boolean;
@@ -32,7 +34,7 @@ interface IPhoneProviderProps {
 
 const schema = (translate: TFunction) =>
   yup.object({
-    is_public: yup.boolean(),
+    ...createProviderBaseSchema(translate),
     params: yup.object({
       issuer: yup
         .string()
@@ -73,7 +75,7 @@ export const PhoneProvider: FC<IPhoneProviderProps> = ({
     defaultValues: {
       name: "Phone",
       avatar: ProviderAvatars.PHONE,
-    },
+    } as IProvider<IPhoneParams>,
     reValidateMode: "onBlur",
   });
 
@@ -102,7 +104,8 @@ export const PhoneProvider: FC<IPhoneProviderProps> = ({
 
   const onSubmit: SubmitHandler<IProvider<IPhoneParams>> = (data) => {
     if (provider) {
-      updateProvider(data).then(() => {
+      const payload = buildProviderUpdatePayload(data, dirtyFields);
+      updateProvider(payload).then(() => {
         setTimeout(() => {
           updateAvatar({
             clientId: data.client_id,
@@ -115,7 +118,7 @@ export const PhoneProvider: FC<IPhoneProviderProps> = ({
       createProvider({
         body: {
           ...data,
-          type: ProviderType.PHONE,
+          type: EProviderType.PHONE,
         },
         clientId: clientId || appId,
       })
@@ -146,6 +149,7 @@ export const PhoneProvider: FC<IPhoneProviderProps> = ({
         isObjectEmpty(dirtyFields)
       }
     >
+      <ProviderHeader defaultAvatar={ProviderAvatars.PHONE} />
       <InputField
         name="params.issuer"
         label={translate("providers.phone.issuer")}
@@ -158,28 +162,21 @@ export const PhoneProvider: FC<IPhoneProviderProps> = ({
         required
       />
 
-      <Typography className={clsx("text-14", styles.label, styles.asterisk)}>
+      <Typography className={clsx("text-14", styles.label, "asterisk")}>
         {translate("providers.phone.clientSecret")}
       </Typography>
-      <PasswordTextField nameField="params.external_client_secret" />
+      <PasswordTextField
+        showText={translate("actionButtons.show")}
+        hideText={translate("actionButtons.hide")}
+        copyText={translate("actionButtons.copy")}
+        nameField="params.external_client_secret"
+      />
       <Typography
         className={clsx("text-14", styles.description)}
         color="text.secondary"
       >
         {translate("providers.phone.clientSecretDescription")}
       </Typography>
-
-      <UploadAndDisplayImage
-        title={translate("providers.phone.phoneImage")}
-        defaultIconSrc={ProviderAvatars.PHONE}
-      />
-
-      <SwitchBlock
-        name="is_public"
-        label={translate("providers.phone.useForLogin")}
-        description={translate("providers.phone.useForLoginDescription")}
-        defaultValue={false}
-      />
     </BaseFormProvider>
   );
 };

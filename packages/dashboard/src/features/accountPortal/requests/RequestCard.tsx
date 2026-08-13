@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Card, ICardProps } from "src/shared/ui/components/Card";
+import { Card, ICardProps } from "@encvoy-id/components";
 import { useTranslation } from "react-i18next";
 import {
   IInvitation,
@@ -7,18 +7,19 @@ import {
   useDeleteUserInvitationMutation,
 } from "src/shared/api/invitation";
 import styles from "./RequestCard.module.css";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
+import { CustomIcon } from "@encvoy-id/components";
 import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined";
 import clsx from "clsx";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
+import { IconsLibrary } from "@encvoy-id/components";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import { getImageURL } from "src/shared/utils/helpers";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import Link from "@mui/material/Link";
-import { setNoticeInfo } from "src/shared/lib/noticesSlice";
+import { setNoticeInfo } from "src/shared/slices/noticesSlice";
 import { useDispatch } from "react-redux";
 import { Typography } from "@mui/material";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 
 export interface IRequestCardProps extends ICardProps {
   items: IInvitation[];
@@ -34,6 +35,7 @@ export const RequestCard: FC<IRequestCardProps> = (props) => {
   const { items, index, updateItems, userId } = props;
   const request = items[index] || {};
   const date = new Date(request.created_at).toLocaleDateString(i18n.language);
+  const clientName = getLocalizedTextValue(request.client?.name, i18n.language);
 
   const [deleteInvitation] = useDeleteUserInvitationMutation();
   const [confirmInvitation] = useConfirmUserInvitationMutation();
@@ -83,7 +85,7 @@ export const RequestCard: FC<IRequestCardProps> = (props) => {
               </Typography>
               <Box>
                 <Typography className={clsx("text-14", styles.inviteText)}>
-                  {request.client?.name}
+                  {clientName}
                 </Typography>
                 <Typography className={clsx("text-14", styles.hideText)}>
                   <Link
@@ -121,8 +123,18 @@ export const RequestCard: FC<IRequestCardProps> = (props) => {
             </Typography>
           </div>
           <Box sx={{ display: "flex", gap: "16px" }}>
-            <IconsLibrary type="confirm" onClick={handleConfirm} />
-            <IconsLibrary type="delete" onClick={handleDelete} />
+            <IconsLibrary
+              title={translate("toolTips.confirm")}
+              dataTestId={`btn-profile-request-approve`}
+              type="confirm"
+              onClick={handleConfirm}
+            />
+            <IconsLibrary
+              title={translate("toolTips.delete")}
+              dataTestId={`btn-profile-request-delete`}
+              type="delete"
+              onClick={handleDelete}
+            />
           </Box>
         </Box>
       }

@@ -8,7 +8,7 @@ export class RoleRepository {
     if (!user_id) return undefined;
 
     const role = await prisma.role.findUnique({
-      where: { user_id_client_id: { user_id: parseInt(user_id, 10), client_id } },
+      where: { user_id_client_id: { user_id, client_id } },
       select: {
         role: true,
       },

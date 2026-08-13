@@ -1,21 +1,11 @@
-import { Injectable, NotFoundException, Type } from '@nestjs/common';
+import { Injectable, NotFoundException, OnApplicationBootstrap, Type } from '@nestjs/common';
+import { DiscoveryService } from '@nestjs/core';
 import { Prisma, Provider, User } from '@prisma/client';
 import { Request, Response } from 'express';
-import path from 'path';
-import { decodedBase64ImageData, loadModules } from 'src/helpers';
+import { decodedBase64ImageData } from 'src/helpers';
 import { InitiateOauthDto } from '../auth/auth.dto';
-import { EmailService } from './collection/email/email.service';
-import { EthereumService } from './collection/ethereum/ethereum.service';
-import { KloudService } from './collection/kloud/kloud.service';
-import { MtlsService } from './collection/mtls';
-import { CustomService, GoogleService } from './collection/oauth';
-import { PhoneService } from './collection/phone';
-import { HotpService, OtpService } from './collection/otp';
-import { WebAuthnService } from './collection/webauthn';
 import { PROVIDER_METADATA } from './providers.decorators';
 import { BaseCreateProviderDto, BaseUpdateProviderDto } from './providers.dto';
-import { GithubService } from './collection/oauth/github.service';
-import { EmailCustomService } from './collection/emailc';
 
 export interface IProviderSchema {
   models: Type<any>[];
@@ -46,10 +36,16 @@ export interface IExternalAccountInfo {
 export interface IUserInfo {
   userMapping: IUserMapping;
   externalAccountInfo: IExternalAccountInfo;
+  certificateImport?: {
+    certificates: unknown[];
+    sourceEntryId: string;
+    sourceDn?: string;
+  };
 }
 
 export interface IAuthResponse {
   user: User | undefined;
+  loginEmail?: string;
   renderWidgetParams?: {
     initialRoute: string;
     externalAccountInfo?: string;
@@ -60,7 +56,6 @@ export interface IProvider {
   type: string;
   defaultUrlAvatar: string;
 
-  getMethodDTO(methodName: string): Type<any> | null;
   onCreate(
     params: BaseCreateProviderDto,
     client_id: string,
@@ -95,6 +90,12 @@ export interface IProvider {
     req: Request,
     res: Response,
   ): Promise<IAuthResponse>;
+  onSilentAuth?(
+    uid: string,
+    provider: Provider,
+    req: Request,
+    res: Response,
+  ): Promise<IAuthResponse | null>;
   syncUser(params: any, req: Request, res: Response): Promise<IAuthResponse>;
   confirm(device: string, code: string): Promise<void>;
   onActivate(provider: Provider): Promise<void>;
@@ -102,56 +103,29 @@ export interface IProvider {
 }
 
 @Injectable()
-export class ProviderFactory {
+export class ProviderFactory implements OnApplicationBootstrap {
   private providers = new Map<string, IProvider>();
 
-  constructor(
-    private readonly emailService: EmailService,
-    private readonly ethereumService: EthereumService,
-    private readonly kloudService: KloudService,
-    private readonly emailCustomService: EmailCustomService,
-    private readonly phoneService: PhoneService,
-    private readonly customService: CustomService,
-    private readonly githubService: GithubService,
-    private readonly googleService: GoogleService,
-    private readonly totpService: OtpService,
-    private readonly webauthnService: WebAuthnService,
-    private readonly mtlsService: MtlsService,
-    private readonly hotpService: HotpService,
-    private readonly otpService: OtpService,
-  ) {
-    this.providers.set(emailService.type, emailService);
-    this.providers.set(ethereumService.type, ethereumService);
-    this.providers.set(kloudService.type, kloudService);
-    this.providers.set(emailCustomService.type, emailCustomService);
-    this.providers.set(phoneService.type, phoneService);
-    this.providers.set(customService.type, customService);
-    this.providers.set(githubService.type, githubService);
-    this.providers.set(googleService.type, googleService);
-    this.providers.set(totpService.type, totpService);
-    this.providers.set(hotpService.type, hotpService);
-    this.providers.set(webauthnService.type, webauthnService);
-    this.providers.set(mtlsService.type, mtlsService);
+  constructor(private readonly discoveryService: DiscoveryService) {}
 
-    // Loading additional providers
-    this.loadExtensionProviders('../../extensions');
+  onApplicationBootstrap() {
+    this.registerDiscoveredProviders();
   }
 
-  private async loadExtensionProviders(pathFolder: string) {
-    const fullPath = path.join(__dirname, pathFolder);
-    await loadModules(fullPath, async (module) => {
-      // Get all services with the "Service" suffix from the module
-      const serviceKeys = Object.keys(module).filter((key) => key.endsWith('Service'));
-      for (const serviceKey of serviceKeys) {
-        const ServiceClass = module[serviceKey];
+  private registerDiscoveredProviders() {
+    this.providers.clear();
 
-        // Check the metadata for the provider marker
-        if (Reflect.hasMetadata(PROVIDER_METADATA, ServiceClass)) {
-          const provider = new ServiceClass();
-          this.registerProvider(provider);
-        }
+    for (const wrapper of this.discoveryService.getProviders()) {
+      if (!wrapper?.instance || !wrapper?.metatype) {
+        continue;
       }
-    });
+
+      if (!Reflect.hasMetadata(PROVIDER_METADATA, wrapper.metatype)) {
+        continue;
+      }
+
+      this.registerProvider(wrapper.instance as IProvider);
+    }
   }
 
   /**

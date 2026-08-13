@@ -1,13 +1,5 @@
 declare global {
   interface Window {
-    ENV_CONFIG?: {
-      CLIENT_ID?: string;
-      DOMAIN?: string;
-      CUSTOM_STYLES?: string;
-      MANUAL_URL?: string;
-      COPYRIGHT?: string;
-      GOOGLE_METRICA_ID?: string;
-    };
     ethereum?: TEthereum;
   }
 }

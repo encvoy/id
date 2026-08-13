@@ -1,48 +1,62 @@
 import { InternalServerErrorException } from '@nestjs/common/exceptions/internal-server-error.exception';
-import { Client, Rule, User } from '@prisma/client';
+import { Client } from '@prisma/client';
+import { JsonValue } from '@prisma/client/runtime/library';
 import Cookies from 'cookies';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import { I18nService } from 'nestjs-i18n';
 import path from 'path';
-import { ECoverModes, Ei18nCodes, RegistrationPolicyVariants } from 'src/enums';
-import { app } from 'src/main';
+import { ECoverModes, Ei18nCodes, ELocales, RegistrationPolicyVariants } from 'src/enums';
 import { v4 as uuidv4 } from 'uuid';
 import * as constants from '../../constants';
 import { getObjectKeys, isEmpty } from '../../helpers';
 import { TPrompt } from '../oidc/oidc.types';
 import { prisma } from '../prisma/prisma.client';
 import { RedisAdapter } from '../redis/redis.adapter';
+import { UserModel } from '../repository';
 import { ESettingsNames } from '../settings/settings.dto';
-import { SettingsService } from '../settings/settings.service';
+import { TLocalizedTextValue } from 'src/utils/localized-text';
+import { sanitizeResponseBody } from 'src/utils/response-sanitizer';
+
+export type TWidgetLocalizedText = string | TLocalizedTextValue;
 
 export interface IValidation {
   created_at: Date;
-  id: number;
+  id: string;
   updated_at: Date;
   active: boolean;
-  error: string;
-  title: string;
+  error: TWidgetLocalizedText;
+  title: TWidgetLocalizedText;
   regex: string;
+}
+
+interface MissingRequiredField {
+  field_name: string;
+  title?: TWidgetLocalizedText;
+  default?: string;
+  validations?: IValidation[];
 }
 
 export interface IWidget {
   res: Response;
   initialRoute: string;
+  authStage?: 'second-factor-challenge' | 'second-factor-enrollment';
   client: Client;
   details?: TPrompt['details'];
   uid?: string;
-  user?: Pick<User, 'id' | 'email_verified' | 'login' | 'given_name' | 'nickname'>;
+  user?: Pick<UserModel, 'id' | 'email_verified' | 'login' | 'given_name' | 'nickname'>;
   login?: string;
+  username?: string;
   externalAccountInfo?: any;
   loggedUsers?: string;
   publicProfileClaims?: string;
   missingProviderIds?: string[];
-  missingRequiredFields?: Rule[];
-  privateRequiredFields?: string[];
+  missingRequiredFields?: MissingRequiredField[];
+  privateRequiredFields?: TWidgetLocalizedText[];
   field?: {
     type: string;
-    title: string;
+    title: TWidgetLocalizedText;
+    unique?: boolean;
     field_name: string;
     default_value: string | undefined;
     validations: IValidation[];
@@ -50,23 +64,75 @@ export interface IWidget {
   providers?: {
     avatar: string;
     description: string;
-    id: number;
-    name: string;
+    id: string;
+    name: JsonValue;
     type: string;
     is_public: boolean;
   }[];
-  message?: string;
+  message?: TWidgetLocalizedText;
   messageDetail?: string;
+  formErrors?: Record<string, string>;
+  notifications?: {
+    id: string;
+    title: TWidgetLocalizedText;
+    content: TWidgetLocalizedText;
+    type: 'system' | 'organization' | 'client';
+  }[];
 }
+
+const resolveDefaultLanguage = (i18nSettings: unknown) => {
+  if (i18nSettings && typeof i18nSettings === 'object' && !Array.isArray(i18nSettings)) {
+    const defaultLanguage = (i18nSettings as Record<string, unknown>).default_language;
+    if (typeof defaultLanguage === 'string') {
+      return defaultLanguage;
+    }
+  }
+
+  return ELocales.ru;
+};
+
+const getWidgetFaviconUrl = (favicon?: string | null) => {
+  if (!favicon) {
+    return undefined;
+  }
+
+  if (favicon.startsWith('http://') || favicon.startsWith('https://')) {
+    return favicon;
+  }
+
+  return `${constants.DOMAIN.replace(/\/$/, '')}/${favicon.replace(/^\//, '')}`;
+};
+
+const escapeHtmlAttribute = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+const injectWidgetFavicon = (html: string, favicon?: string | null) => {
+  const faviconUrl = getWidgetFaviconUrl(favicon);
+  if (!faviconUrl) {
+    return html;
+  }
+
+  const faviconTag = `<link id="widget-favicon" rel="icon" href="${escapeHtmlAttribute(
+    faviconUrl,
+  )}"/>`;
+  return html.replace('</head>', `${faviconTag}</head>`);
+};
 
 export const renderWidget = async ({
   res,
   initialRoute,
+  authStage,
   client,
   details,
   uid,
   user,
   login,
+  username,
   externalAccountInfo,
   loggedUsers,
   publicProfileClaims,
@@ -76,10 +142,12 @@ export const renderWidget = async ({
   providers,
   message,
   messageDetail,
+  formErrors,
   field,
+  notifications,
 }: IWidget) => {
   const settings = await prisma.settings.findMany();
-  const settingsObject: { [key: string]: string | number | boolean } = settings.reduce(
+  const settingsObject: { [key: string]: string | number | boolean | object } = settings.reduce(
     (acc, setting) => {
       acc[setting.name] = setting.value;
       return acc;
@@ -90,12 +158,9 @@ export const renderWidget = async ({
   const prohibit_identifier_binding = settingsObject.prohibit_identifier_binding;
   const allowed_login_fields = settingsObject.allowed_login_fields;
   const i18n = settingsObject[ESettingsNames.i18n];
+  const defaultLanguage = resolveDefaultLanguage(i18n);
+  const copyright = settingsObject[ESettingsNames.copyright] || {};
 
-  const avatar = (() => {
-    if (client.show_avatar_in_widget) {
-      return client.avatar;
-    }
-  })();
   // Read Next.js generated HTML and inject variables
   // Use process.cwd() to get the backend root directory
   const htmlPath = path.join(process.cwd(), 'views', 'widget', 'index.html');
@@ -130,22 +195,21 @@ export const renderWidget = async ({
 
   const envVarsNew = {
     WIDGET: {
-      TITLE: client.widget_title
-        .replace('WIDGET_APP_NAME', client.name)
-        .replace('APP_NAME', client.name),
+      TITLE: client.widget_title,
       INFO: client.widget_info,
       INFO_OUT: client.widget_info_out,
       HIDE_BIND_ACCOUNT: prohibit_identifier_binding,
       HIDE_CREATE_ACCOUNT:
         client.hide_widget_create_account ||
         registration_policy !== RegistrationPolicyVariants.allowed,
-      LOGO: client.show_avatar_in_widget ? avatar : undefined,
+      LOGO: client.show_avatar_in_widget ? client.avatar : undefined,
+      FAVICON: client.avatar ?? undefined,
       COLORS: isEmpty(client.widget_colors) ? undefined : client.widget_colors,
       HIDE_FOOTER: client.hide_widget_footer,
       HIDE_HEADER: client.hide_widget_header,
       HIDE_AVATARS_OF_BIG_PROVIDERS: client.hide_avatars_of_big_providers,
       COVER: client.cover,
-      LANG: i18n['default_language'] || 'en-US',
+      LANG: defaultLanguage,
     },
 
     FIELD: field,
@@ -159,17 +223,18 @@ export const renderWidget = async ({
 
     MESSAGE: message || '',
     MESSAGE_DETAIL: messageDetail || '',
+    FORM_ERRORS: formErrors || {},
 
     TIME_TO_RESEND: constants.TIME_TO_RESEND,
     CLIENT_ID: client.client_id,
     REDIRECT_URI: client.redirect_uris,
     POST_LOGOUT_REDIRECT_URIS: client.post_logout_redirect_uris,
     GOOGLE_METRICA_ID: constants.GOOGLE_METRICA_ID,
-    PROJECT_NAME: client.name,
-    APP_NAME: client.name,
+    PROJECT_NAME: client.name ?? '',
+    APP_NAME: client.name ?? '',
     USER_ID: user?.id,
-    USERNAME: user?.given_name || user?.nickname,
-    COPYRIGHT: constants.COPYRIGHT,
+    USERNAME: username || login || user?.given_name || user?.nickname || '',
+    COPYRIGHT: copyright,
     DOMAIN: constants.DOMAIN,
     MISSING_PROVIDER_IDS: missingProviderIds,
     MISSING_REQUIRED_FIELDS: missingRequiredFields,
@@ -178,18 +243,21 @@ export const renderWidget = async ({
 
   // Inject script with backend data at the very start of <body> before React hydration
   const scriptTag = `<script id="__WIDGET_DATA__">window.__WIDGET_DATA__=${JSON.stringify({
-    envVars: envVarsNew,
+    envVars: sanitizeResponseBody(envVarsNew),
     initialRoute: initialRoute,
+    authStage,
     interactionId: uid || '',
     externalAccountInfo: externalAccountInfo ?? null,
     publicProfileClaims: publicProfileClaims || '',
     loggedUsers: loggedUsers || '',
     login: login || '',
     details: details || {},
+    notifications: notifications || [],
     version: constants.VERSION,
   })}</script>`;
 
   html = html.replace('<body>', `<body>${scriptTag}`);
+  html = injectWidgetFavicon(html, client.avatar);
 
   res.setHeader('Content-Type', 'text/html');
   return res.send(html);
@@ -200,9 +268,10 @@ export const showSuccessWidget = async (
   successMessage?: string,
   uid?: string,
   client?: Client,
+  i18nService?: Pick<I18nService<Record<string, string>>, 'translate'>,
 ) => {
   const settings = await prisma.settings.findMany();
-  const settingsObject: { [key: string]: string | number | boolean } = settings.reduce(
+  const settingsObject: { [key: string]: string | number | boolean | object } = settings.reduce(
     (acc, setting) => {
       acc[setting.name] = setting.value;
       return acc;
@@ -211,6 +280,9 @@ export const showSuccessWidget = async (
   );
   const registration_policy = settingsObject.registration_policy;
   const prohibit_identifier_binding = settingsObject.prohibit_identifier_binding;
+  const i18n = settingsObject[ESettingsNames.i18n];
+  const copyright = settingsObject[ESettingsNames.copyright] || {};
+  const defaultLanguage = resolveDefaultLanguage(i18n);
 
   const avatar = (() => {
     if (client?.show_avatar_in_widget) {
@@ -249,22 +321,15 @@ export const showSuccessWidget = async (
   }
 
   let msg = successMessage || '';
-  if (msg) {
-    const settingsService = app.get(SettingsService, { strict: false });
-    const i18n = app.get(I18nService<Record<string, any>>, { strict: false });
-    const locale = await settingsService.getSettingsByName<{ default_language: string }>(
-      ESettingsNames.i18n,
-    );
-    msg = i18n.translate(successMessage, {
-      lang: locale.default_language,
+  if (msg && i18nService) {
+    msg = i18nService.translate(successMessage, {
+      lang: defaultLanguage,
     });
   }
 
   const envVarsNew = JSON.stringify({
     WIDGET: {
-      TITLE: client?.widget_title
-        ?.replace('WIDGET_APP_NAME', client.name)
-        ?.replace('APP_NAME', client.name),
+      TITLE: client?.widget_title,
       INFO: client?.widget_info,
       INFO_OUT: client?.widget_info_out,
       HIDE_BIND_ACCOUNT: prohibit_identifier_binding,
@@ -272,10 +337,12 @@ export const showSuccessWidget = async (
         client?.hide_widget_create_account ||
         registration_policy !== RegistrationPolicyVariants.allowed,
       LOGO: client?.show_avatar_in_widget ? avatar : undefined,
+      FAVICON: client?.avatar ?? undefined,
       COLORS: isEmpty(client?.widget_colors) ? undefined : client?.widget_colors,
       HIDE_FOOTER: client?.hide_widget_footer,
       HIDE_HEADER: client?.hide_widget_header,
       COVER: client?.cover,
+      LANG: defaultLanguage,
     },
 
     SETTINGS: {
@@ -290,16 +357,16 @@ export const showSuccessWidget = async (
     REDIRECT_URI: client?.redirect_uris,
     POST_LOGOUT_REDIRECT_URIS: client?.post_logout_redirect_uris,
     GOOGLE_METRICA_ID: constants.GOOGLE_METRICA_ID,
-    PROJECT_NAME: client?.name,
-    APP_NAME: client?.name,
+    PROJECT_NAME: client?.name ?? '',
+    APP_NAME: client?.name ?? '',
     USER_ID: undefined,
     USERNAME: undefined,
-    COPYRIGHT: constants.COPYRIGHT,
+    COPYRIGHT: copyright,
     DOMAIN: constants.DOMAIN,
   });
 
   const scriptTag = `<script id="__WIDGET_DATA__">window.__WIDGET_DATA__=${JSON.stringify({
-    envVars: JSON.parse(envVarsNew),
+    envVars: sanitizeResponseBody(JSON.parse(envVarsNew)),
     initialRoute: 'success',
     interactionId: uid || '',
     externalAccountInfo: null,
@@ -311,6 +378,7 @@ export const showSuccessWidget = async (
   })}</script>`;
 
   html = html.replace('<body>', `<body>${scriptTag}`);
+  html = injectWidgetFavicon(html, client?.avatar);
 
   res.setHeader('Content-Type', 'text/html');
   return res.send(html);
@@ -323,9 +391,10 @@ export const showErrorWidget = async (
   client?: Client,
   errorMessageDetail?: string,
   hideButtons?: boolean,
+  i18nService?: Pick<I18nService<Record<string, string>>, 'translate'>,
 ) => {
   const settings = await prisma.settings.findMany();
-  const settingsObject: { [key: string]: string | number | boolean } = settings.reduce(
+  const settingsObject: { [key: string]: string | number | boolean | object } = settings.reduce(
     (acc, setting) => {
       acc[setting.name] = setting.value;
       return acc;
@@ -334,6 +403,9 @@ export const showErrorWidget = async (
   );
   const registration_policy = settingsObject.registration_policy;
   const prohibit_identifier_binding = settingsObject.prohibit_identifier_binding;
+  const i18n = settingsObject[ESettingsNames.i18n];
+  const copyright = settingsObject[ESettingsNames.copyright] || {};
+  const defaultLanguage = resolveDefaultLanguage(i18n);
 
   const avatar = (() => {
     if (client?.show_avatar_in_widget) {
@@ -372,22 +444,15 @@ export const showErrorWidget = async (
   }
 
   let msg = errorMessage;
-  if (msg) {
-    const settingsService = app.get(SettingsService, { strict: false });
-    const i18n = app.get(I18nService<Record<string, any>>, { strict: false });
-    const locale = await settingsService.getSettingsByName<{ default_language: string }>(
-      ESettingsNames.i18n,
-    );
-    msg = i18n.translate(errorMessage, {
-      lang: locale.default_language,
+  if (msg && i18nService) {
+    msg = i18nService.translate(errorMessage, {
+      lang: defaultLanguage,
     });
   }
 
   const envVarsNew = JSON.stringify({
     WIDGET: {
-      TITLE: client?.widget_title
-        ?.replace('WIDGET_APP_NAME', client.name)
-        ?.replace('APP_NAME', client.name),
+      TITLE: client?.widget_title,
       INFO: client?.widget_info,
       INFO_OUT: client?.widget_info_out,
       HIDE_BIND_ACCOUNT: prohibit_identifier_binding,
@@ -395,10 +460,12 @@ export const showErrorWidget = async (
         client?.hide_widget_create_account ||
         registration_policy !== RegistrationPolicyVariants.allowed,
       LOGO: client?.show_avatar_in_widget ? avatar : undefined,
+      FAVICON: client?.avatar ?? undefined,
       COLORS: isEmpty(client?.widget_colors) ? undefined : client?.widget_colors,
       HIDE_FOOTER: client?.hide_widget_footer,
       HIDE_HEADER: client?.hide_widget_header,
       COVER: client?.cover,
+      LANG: defaultLanguage,
     },
 
     SETTINGS: {
@@ -414,16 +481,16 @@ export const showErrorWidget = async (
     REDIRECT_URI: client?.redirect_uris,
     POST_LOGOUT_REDIRECT_URIS: client?.post_logout_redirect_uris,
     GOOGLE_METRICA_ID: constants.GOOGLE_METRICA_ID,
-    PROJECT_NAME: client?.name,
-    APP_NAME: client?.name,
+    PROJECT_NAME: client?.name ?? '',
+    APP_NAME: client?.name ?? '',
     USER_ID: undefined,
     USERNAME: undefined,
-    COPYRIGHT: constants.COPYRIGHT,
+    COPYRIGHT: copyright,
     DOMAIN: constants.DOMAIN,
   });
 
   const scriptTag = `<script id="__WIDGET_DATA__">window.__WIDGET_DATA__=${JSON.stringify({
-    envVars: JSON.parse(envVarsNew),
+    envVars: sanitizeResponseBody(JSON.parse(envVarsNew)),
     initialRoute: 'error',
     interactionId: uid || '',
     externalAccountInfo: null,
@@ -435,6 +502,7 @@ export const showErrorWidget = async (
   })}</script>`;
 
   html = html.replace('<body>', `<body>${scriptTag}`);
+  html = injectWidgetFavicon(html, client?.avatar);
 
   res.setHeader('Content-Type', 'text/html');
   return res.send(html);
@@ -451,7 +519,7 @@ export const saveLoggedUserSession = async (
     picture,
     email,
   }: Pick<
-    User,
+    UserModel,
     'id' | 'email_verified' | 'login' | 'given_name' | 'nickname' | 'picture' | 'email'
   >,
 ) => {
@@ -490,7 +558,7 @@ export const saveLoggedUserSession = async (
 
 export const updateLoggedUserSession = async (
   req: Request,
-  user: Partial<Omit<User, 'birthdate' | 'email_public'> & { email_public: string | boolean }>,
+  user: Partial<UserModel>,
   loggedUsersInfo: RedisAdapter,
 ) => {
   const userInfoCodes = req.cookies._sess?.split(' ');
@@ -555,8 +623,16 @@ export async function findUserAndExternalAccount(
   insensitive: boolean,
   ...sub: string[]
 ) {
+  // Remove undefined values from the subject array.
+  const filteredSub = sub.filter((s) => s !== undefined && s !== null);
+
+  // Return an empty result when no subjects remain.
+  if (filteredSub.length === 0) {
+    return { user: undefined };
+  }
+
   const externalAccount = await prisma.externalAccount.findFirst({
-    where: { sub: { in: sub, mode: insensitive ? 'insensitive' : undefined }, issuer },
+    where: { sub: { in: filteredSub, mode: insensitive ? 'insensitive' : undefined }, issuer },
     select: {
       user_id: true,
       id: true,

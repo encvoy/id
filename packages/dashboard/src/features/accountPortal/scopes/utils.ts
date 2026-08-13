@@ -9,6 +9,7 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import BookmarksOutlinedIcon from "@mui/icons-material/BookmarksOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { TFunction } from "i18next";
 
 const getScopePropsObject = (translate: TFunction) => ({
@@ -38,9 +39,19 @@ const getScopePropsObject = (translate: TFunction) => ({
     description: translate("pages.scopes.scopesProfileDescription.openid"),
     icon: PersonOutlineOutlinedIcon,
   },
+  internal: {
+    description: translate("pages.scopes.scopesProfileDescription.internal"),
+    icon: SettingsOutlinedIcon,
+  },
   lk: {
     description: translate("pages.scopes.scopesProfileDescription.lk"),
     icon: BiotechOutlinedIcon,
+    isDeprecated: true,
+  },
+  catalog: {
+    description: translate("pages.scopes.scopesProfileDescription.catalog"),
+    icon: BookmarksOutlinedIcon,
+    isDeprecated: true,
   },
   catalog: {
     description: translate("pages.scopes.scopesProfileDescription.catalog"),
@@ -49,6 +60,7 @@ const getScopePropsObject = (translate: TFunction) => ({
   locale: {
     description: translate("pages.scopes.scopesProfileDescription.locale"),
     icon: LanguageOutlinedIcon,
+    isDeprecated: true,
   },
 });
 

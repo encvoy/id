@@ -1,50 +1,69 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Typography } from "@mui/material";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { routes, RuleFieldNames, tabs } from "src/shared/utils/enums";
-import { IUserProfile, useUpdatePictureMutation } from "src/shared/api/users";
-import { editProfileSchema } from "src/shared/utils/helpers";
+import { RootState } from "src/app/store/store";
+import { useGetExternalAccountsQuery } from "src/shared/api/profile";
 import {
   useGetProfileFieldsQuery,
   useGetRulesQuery,
 } from "src/shared/api/settings";
-import { useUpdateUserMutation } from "src/shared/api/users";
-import { RootState } from "src/app/store/store";
-import { TUserSlice } from "src/shared/lib/userSlice";
-import { checkIdentifier } from "src/shared/requests/user";
-import { Box, Typography } from "@mui/material";
-import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
+import {
+  IUserProfile,
+  useLazyCheckUniqueFieldAvailabilityQuery,
+  useUpdatePictureMutation,
+  useUpdateUserMutation,
+} from "src/shared/api/users";
+import { TAppSlice } from "src/shared/slices/appSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
+import { SurfaceBlock } from "@encvoy-id/components";
+import { SubmitModal } from "@encvoy-id/components";
 import { ProfileFields } from "src/shared/ui/ProfileFields";
-import { SearchAvatarsModal } from "src/shared/ui/SearchAvatarsModal";
-import { useGetExternalAccountsQuery } from "src/shared/api/profile";
-import { useTranslation } from "react-i18next";
-import { componentBorderRadius } from "src/shared/theme/Theme";
+import { SearchAvatarsModal } from "src/shared/ui/modal/SearchAvatarsModal.tsx";
+import { checkIdentifier } from "src/shared/utils/auth";
+import { routes, RuleFieldNames, tabs } from "src/shared/utils/enums";
+import { editProfileSchema } from "src/shared/utils/helpers";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
+import { findUnavailableUniqueCustomField } from "src/shared/utils/uniqueCustomFields";
 
-const mapStateToProps = ({ user }: RootState) => ({
-  profile: user.profile,
+const mapStateToProps = (state: RootState) => ({
+  profile: state.user.profile,
+  systemClientId: state.app.systemClientId,
 });
 
 interface IEditProfileProps {
   profile: TUserSlice["profile"];
+  systemClientId: TAppSlice["systemClientId"];
 }
 
-const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
+const EditProfileComponent: FC<IEditProfileProps> = ({
+  profile,
+  systemClientId,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSearchModal, setIsOpenSearchModal] = useState(false);
   const [dataList, setDataList] = useState<ReactNode[] | undefined>(undefined);
 
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
 
-  const { data: rules } = useGetRulesQuery();
-  const { data: profileFields } = useGetProfileFieldsQuery();
+  const profileFieldScope = {
+    organization_id: profile.org_id || systemClientId || "",
+  };
+  const { data: rules } = useGetRulesQuery(profileFieldScope);
+  const { data: profileFields } = useGetProfileFieldsQuery(profileFieldScope);
   const { data: externalAccounts } = useGetExternalAccountsQuery(
     profile.id?.toString() || ""
   );
 
   const [updateUser] = useUpdateUserMutation();
   const [updatePicture] = useUpdatePictureMutation();
+  const [
+    checkUniqueFieldAvailability,
+    { isFetching: checkUniqueFieldAvailabilityFetching },
+  ] = useLazyCheckUniqueFieldAvailabilityQuery();
 
   const navigate = useNavigate();
   const accountsWithAvatars = externalAccounts?.filter(
@@ -61,7 +80,9 @@ const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
     );
 
   const methods = useForm<IUserProfile>({
-    resolver: yupResolver(editProfileSchema(filteredRules || [])),
+    resolver: yupResolver(
+      editProfileSchema(filteredRules || [], i18n.language)
+    ),
     defaultValues: {
       birthdate: "",
       custom_fields: {},
@@ -96,6 +117,10 @@ const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
       (acc, field) => ({ ...acc, [field]: data[field] }),
       {} as Partial<IUserProfile>
     );
+    const isPictureChanged = Object.prototype.hasOwnProperty.call(
+      payload,
+      "picture"
+    );
 
     try {
       if (payload.login) {
@@ -109,11 +134,36 @@ const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
         }
       }
 
+      const unavailableUniqueCustomField =
+        await findUnavailableUniqueCustomField({
+          customFields: payload.custom_fields,
+          profileFields,
+          userId: profile.id,
+          checkAvailability: async (params) =>
+            checkUniqueFieldAvailability({
+              ...params,
+              ...(profileFieldScope || {}),
+            }).unwrap(),
+        });
+
+      if (unavailableUniqueCustomField) {
+        const fieldPath =
+          `custom_fields.${unavailableUniqueCustomField.field}` as const;
+
+        setError(fieldPath, {
+          message: translate("errors.valueNotAvailable"),
+        });
+        setFocus(fieldPath);
+        return;
+      }
+
       await updateUser({ body: payload, userId: data?.id || "" }).unwrap();
-      await updatePicture({
-        picture: payload.picture,
-        userId: data?.id || "",
-      }).unwrap();
+      if (isPictureChanged) {
+        await updatePicture({
+          picture: payload.picture,
+          userId: data?.id || "",
+        }).unwrap();
+      }
       navigate(`/${routes.profile}/${tabs.profile}`);
     } catch (e) {
       console.error(e);
@@ -146,7 +196,11 @@ const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
 
     if (unfilledFields.length > 0) {
       setDataList(
-        unfilledFields.map((rule) => <div key={rule.field}>• {rule.title}</div>)
+        unfilledFields.map((rule) => (
+          <div key={rule.field}>
+            • {getLocalizedTextValue(rule.title, i18n.language)}
+          </div>
+        ))
       );
       setIsOpen(true);
     } else {
@@ -166,46 +220,43 @@ const EditProfileComponent: FC<IEditProfileProps> = ({ profile }) => {
   return (
     <div className="page-container">
       <div className="content">
-        <Typography className={"title-medium"} sx={{ marginBottom: "24px" }}>
+        <Typography className={"title-medium"} sx={{ margin: "32px 0" }}>
           {translate("pages.editProfile.title")}
         </Typography>
         <FormProvider {...methods}>
-          <Box
-            sx={{
-              borderRadius: componentBorderRadius,
-              border: 1,
-              borderColor: "divider",
-              padding: "32px",
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              checkRequiredFields();
             }}
           >
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                checkRequiredFields();
-              }}
-            >
+            <SurfaceBlock sx={{ padding: "32px" }}>
               <ProfileFields
                 userProfile={profile}
+                profileFields={profileFields}
                 rules={rules}
+                isLoading={checkUniqueFieldAvailabilityFetching}
                 onUploadPictureExternalAccounts={
                   accountsWithAvatars?.length
                     ? () => setIsOpenSearchModal(true)
                     : undefined
                 }
               />
-            </form>
+            </SurfaceBlock>
+          </form>
 
-            {accountsWithAvatars && (
-              <SearchAvatarsModal
-                isOpen={isOpenSearchModal}
-                onClose={() => setIsOpenSearchModal(false)}
-                accountsWithAvatars={accountsWithAvatars}
-              />
-            )}
-          </Box>
+          {accountsWithAvatars && (
+            <SearchAvatarsModal
+              isOpen={isOpenSearchModal}
+              onClose={() => setIsOpenSearchModal(false)}
+              accountsWithAvatars={accountsWithAvatars}
+            />
+          )}
         </FormProvider>
 
         <SubmitModal
+          cancelText={translate("actionButtons.cancel")}
+          deleteText={translate("actionButtons.delete")}
           isOpen={isOpen}
           onClose={handleModalClose}
           title={translate("modals.confirmSave.title")}

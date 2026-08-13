@@ -4,12 +4,14 @@ import { FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import styles from "./ProviderHeader.module.css";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
+import { MultiLanguageModalInputField } from "src/shared/ui/components/MultiLanguageModalInputField";
 import { UploadAndDisplayImage } from "src/shared/ui/UploadAndDisplayImage";
-import { SwitchBlock } from "src/shared/ui/components/SwitchBlock";
+import { SwitchBlock } from "@encvoy-id/components";
 import { PublicStatusPopover } from "src/shared/ui/PublicStatusPopover";
 import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
+import { useSystemClientId } from "src/shared/hooks/useSystemClientId";
 
 interface IProviderHeaderProps {
   defaultAvatar?: string;
@@ -20,28 +22,39 @@ export const ProviderHeader: FC<IProviderHeaderProps> = ({
   defaultAvatar,
   withoutPublicStatus,
 }) => {
-  const { clientId = "" } = useParams<{ clientId: string }>();
+  const { clientId = "", appId = "" } = useParams<{
+    clientId: string;
+    appId: string;
+  }>();
   const { t: translate } = useTranslation();
+  const systemClientId = useSystemClientId();
 
   const { setValue, control } = useFormContext();
   const uploadedPrivacy = useWatch({ control, name: "default_public" });
   const uploadedAvatar = useWatch({ control, name: "avatar" });
+  const currentScopeId = clientId || appId;
+  const canManagePublicVisibility =
+    !clientId && currentScopeId === systemClientId;
 
   return (
     <>
       <Typography className={clsx("text-17", styles.subtitle)}>
         {translate("helperText.mainInfo")}
       </Typography>
-      <InputField
+      <MultiLanguageModalInputField
         name="name"
         label={translate("providers.name")}
         required
+        dataTestId="txt-settings-login-method-name"
         description={translate("providers.nameDescription")}
       />
       <InputField
         name="description"
         label={translate("providers.description")}
+        dataTestId="txt-settings-login-method-description"
         watchLength
+        characterCountLabel={translate("helperText.characterCount")}
+        maxCharacterCount={255}
       />
 
       <UploadAndDisplayImage
@@ -56,11 +69,12 @@ export const ProviderHeader: FC<IProviderHeaderProps> = ({
       <Typography className={clsx("text-17", styles.subtitle)}>
         {translate("helperText.parameters")}
       </Typography>
-      {!clientId && (
+      {canManagePublicVisibility && (
         <SwitchBlock
           name="is_public"
           label={translate("providers.publicMethods")}
           description={translate("providers.publicMethodsDescription")}
+          dataTestId="chk-settings-login-method-public"
         />
       )}
 
@@ -68,13 +82,14 @@ export const ProviderHeader: FC<IProviderHeaderProps> = ({
         <div className={styles.fieldRow}>
           <div>
             <Typography className="text-14">
-              {translate("providers.public")}
+              {translate("providers.publicIdentity")}
             </Typography>
             <Typography className="text-14" color="text.secondary">
-              {translate("providers.publicDescription")}
+              {translate("providers.publicDescriptionIdentity")}
             </Typography>
           </div>
           <PublicStatusPopover
+            dataTestId="btn-settings-trusted-available"
             claimPrivacy={uploadedPrivacy}
             mode="number"
             setStatus={(status) => {

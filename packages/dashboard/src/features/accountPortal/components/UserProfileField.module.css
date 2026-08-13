@@ -13,6 +13,7 @@
   flex-flow: nowrap;
   align-items: center;
   width: 100%;
+  min-width: 0;
 }
 
 .fieldText {
@@ -20,11 +21,19 @@
 }
 
 .fieldValue {
-  min-width: 105px;
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.avatarContainer {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 1px solid var(--mui-palette-divider);
 }
 
 .actions {

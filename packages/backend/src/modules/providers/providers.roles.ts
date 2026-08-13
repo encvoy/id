@@ -19,10 +19,6 @@ export enum ProviderActions {
   delete = 'providers:delete',
 }
 
-ROLES.set(UserRoles.USER, [...(ROLES.get(UserRoles.USER) || [])]);
-
-ROLES.set(UserRoles.ADMIN, [...(ROLES.get(UserRoles.ADMIN) || [])]);
-
 ROLES.set(UserRoles.EDITOR, [
   ...(ROLES.get(UserRoles.EDITOR) || []),
   ProviderActions.write,

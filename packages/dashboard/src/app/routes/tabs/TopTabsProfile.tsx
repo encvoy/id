@@ -38,6 +38,7 @@ export const TopTabsProfile: FC = () => {
           label={translate("tabs.profile")}
           id="0"
           value={tabs.profile}
+          data-test-id="tab-profile-main"
           onClick={() => navigate(`/${routes.profile}/${tabs.profile}`)}
         />
         <Tab
@@ -47,6 +48,7 @@ export const TopTabsProfile: FC = () => {
           label={translate("tabs.scopes")}
           id="1"
           value={tabs.scopes}
+          data-test-id="tab-profile-scopes"
           onClick={() => navigate(`/${routes.profile}/${tabs.scopes}`)}
         />
         <Tab
@@ -56,6 +58,7 @@ export const TopTabsProfile: FC = () => {
           label={translate("tabs.eventLog")}
           id="2"
           value={tabs.eventLog}
+          data-test-id="tab-profile-logs"
           onClick={() => navigate(`/${routes.profile}/${tabs.eventLog}`)}
         />
         <Tab
@@ -65,6 +68,7 @@ export const TopTabsProfile: FC = () => {
           label={translate("tabs.request")}
           id="3"
           value={tabs.request}
+          data-test-id="tab-profile-requests"
           onClick={() => navigate(`/${routes.profile}/${tabs.request}`)}
         />
       </Tabs>

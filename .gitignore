@@ -1,14 +1,44 @@
 # OS
 .DS_Store
+.idea
+.opencode
 
 /certs
 /dist
 /logs
+/scripts/local/*
 
 node_modules
 
 # Local env
 .local.env
+.local.docs.env
 
 # Build
 package-lock.json
+.idea
+
+# Mkdocs build
+/docs/box/site
+/docs/box/ru
+/docs/box/en
+
+# MCP-server files and tests files
+/.playwright-mcp
+/.vscode/mcp.json
+/packages/e2e-tests
+
+# Mkdocs build (site dirs are generated, not committed)
+/docs/generated/**/site/
+
+# Staging directory for publishing documentation to external repositories.
+/docs/publish/
+
+# Temporary overlay-merge directory used by documentation generation.
+/.tmp-docs-merge/
+
+
+#configs
+opencode.json
+opencode.jsonc
+/data/jwks

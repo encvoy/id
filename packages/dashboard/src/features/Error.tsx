@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 
-export const Error: FC = () => {
+export const Error: FC<{ message?: string }> = ({ message }) => {
   const { text } = useParams<{ text: string }>();
 
   return (
@@ -20,7 +20,7 @@ export const Error: FC = () => {
       <SentimentDissatisfiedOutlinedIcon
         sx={{ width: "120px", height: "120px" }}
       />
-      {text}
+      {message ?? text}
     </Box>
   );
 };

@@ -1,11 +1,15 @@
-import AppsIcon from "@mui/icons-material/Apps";
 import PersonIcon from "@mui/icons-material/Person";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import clsx from "clsx";
-import { changeLanguage } from "i18next";
-import { FC, MouseEventHandler, useEffect, useState } from "react";
+import AppsIcon from "@mui/icons-material/Apps";
+import {
+  FC,
+  MouseEventHandler,
+  isValidElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
-import { CatalogPopover } from "src/packages/authWidget/components/CatalogPopover";
 import {
   decodeJWT,
   getTokenByRefreshToken,
@@ -13,25 +17,122 @@ import {
   getUrlParams,
   isTokenValid,
   login,
+  logout,
+  onTrustedWidgetProfileRefresh,
   setDataToLocalStorage,
 } from "../helpers/auth";
 import { generateStyles, getImageURL } from "../helpers/utils";
 import {
   EBaseColors,
+  EButtonTypes,
   EDefaultConfigValues,
+  BaseWidgetConfig,
   InfoWidgetConfig,
+  ICustomMenuButton,
   IUserProfile,
-  WidgetConfig,
+  TrustedWidgetConfig,
 } from "../types";
 import { AccountPopover } from "./AccountPopover";
 import { CustomButton } from "./CustomButton";
 import styles from "./Widget.module.css";
+import { CatalogPopover } from "./CatalogPopover";
+import { normalizeSystemLanguage } from "src/shared/utils/locales";
 
 interface WidgetProps {
-  config: WidgetConfig;
+  config: TrustedWidgetConfig;
 }
 
-export const Widget: FC<WidgetProps> = ({ config }) => {
+interface IHeaderActionButtonProps {
+  config: BaseWidgetConfig;
+  button: ICustomMenuButton;
+}
+
+const HeaderActionButton: FC<IHeaderActionButtonProps> = ({
+  config,
+  button,
+}) => {
+  const buttonTitle = button.text || button.link || "";
+  const icon = (() => {
+    if (typeof button.icon === "string") {
+      return (
+        <img
+          src={button.icon}
+          className={styles.headerActionIcon}
+          alt={buttonTitle}
+        />
+      );
+    }
+
+    if (isValidElement(button.icon)) {
+      return button.icon;
+    }
+
+    if (typeof button.avatar === "string") {
+      return (
+        <img
+          src={button.avatar}
+          className={styles.headerActionIcon}
+          alt={buttonTitle}
+        />
+      );
+    }
+
+    return null;
+  })();
+
+  const handleClick = () => {
+    if (button.onClick) {
+      button.onClick();
+      return;
+    }
+
+    if (button.type === EButtonTypes.logout) {
+      logout();
+      return;
+    }
+
+    if (
+      config.routerMainFn &&
+      button.type &&
+      (button.type === EButtonTypes.personal ||
+        button.type === EButtonTypes.system ||
+        button.type === EButtonTypes.org ||
+        button.type === EButtonTypes.admin)
+    ) {
+      config.routerMainFn(button.type, button.link);
+      return;
+    }
+
+    if (button.link) {
+      window.location.href = button.link;
+      return;
+    }
+
+    window.location.href = config.issuer || EDefaultConfigValues.issuer;
+  };
+
+  return (
+    <Tooltip title={buttonTitle} arrow>
+      <button
+        type="button"
+        className={styles.button}
+        onClick={handleClick}
+        aria-label={buttonTitle}
+        data-test-id={`btn-mini-widget-header-${button.text}`}
+        style={{
+          color:
+            button.customStyles?.color.text ||
+            config?.profile?.button?.color.background ||
+            EBaseColors.hover,
+        }}
+      >
+        {icon}
+      </button>
+    </Tooltip>
+  );
+};
+
+export const TrustedWidget: FC<WidgetProps> = ({ config }) => {
   const [token, setToken] = useState<string>("");
   const [profile, setProfile] = useState<IUserProfile | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -43,6 +144,9 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
   const isOpen = Boolean(anchorEl);
   const isOpenCatalog = Boolean(anchorCatalog);
   const customStyles = generateStyles(config);
+  const issuer = config?.issuer || EDefaultConfigValues.issuer;
+  const userInfoEndPoint =
+    config?.userInfoEndPoint || EDefaultConfigValues.userInfoEndPoint;
 
   useEffect(() => {
     const auth = async () => {
@@ -55,6 +159,10 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
         if (isValidToken && isDecodeJWT) {
           setToken(access_token);
           setDataToLocalStorage(access_token, expires_in);
+          if (expires_in) {
+            const expiresAt = Date.now() + expires_in * 1000;
+            setExp(expiresAt);
+          }
           if (config.customRoute) {
             config.customRoute(access_token);
           } else {
@@ -72,7 +180,8 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
     const expiresIn = localStorage.getItem("expiresIn");
 
     if (expiresIn) {
-      setExp(Number(expiresIn));
+      const parsedExp = Number(expiresIn);
+      setExp(parsedExp);
     }
 
     if (accessToken && !token) {
@@ -94,49 +203,51 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
     }
   }, []);
 
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(
-        (config?.issuer || EDefaultConfigValues.issuer) +
-          (config?.userInfoEndPoint || EDefaultConfigValues.userInfoEndPoint),
-        {
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    const loadUserData = async () => {
+      try {
+        const response = await fetch(issuer + userInfoEndPoint, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            "fetchUserData: HTTP error response:",
+            response.status,
+            errorText
+          );
+          return;
         }
-      );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          "fetchUserData: HTTP error response:",
-          response.status,
-          errorText
-        );
-        return;
+        const data = await response.json();
+
+        const normalizedLocale = normalizeSystemLanguage(data.locale);
+
+        if (localStorage.getItem("locale") !== normalizedLocale) {
+          localStorage.setItem("locale", normalizedLocale);
+        }
+
+        setProfile(data);
+      } catch (error) {
+        console.error("fetchUserData: Network/Parse error:", error);
       }
+    };
 
-      const data = await response.json();
+    void loadUserData();
 
-      //verify and update language to localStorage
-      if (localStorage.getItem("locale") !== data.locale) {
-        changeLanguage(data.locale || "ru-RU");
-      }
-      localStorage.setItem("locale", data.locale || "ru-RU");
-
-      setProfile(data);
-    } catch (error) {
-      console.error("fetchUserData: Network/Parse error:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (token) {
-      fetchUserData();
-    }
-  }, [token]);
+    return onTrustedWidgetProfileRefresh(() => {
+      void loadUserData();
+    });
+  }, [issuer, token, userInfoEndPoint]);
 
   const updateAccessToken = async () => {
     const { access_token, expires_in } = await getTokenByRefreshToken(
@@ -186,28 +297,44 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
   const getUserDisplayName = (profile?: IUserProfile | null) => {
     if (!profile || config.profile?.isHideText) return undefined;
     if (profile.given_name) {
-      return `${profile.given_name} ${profile.family_name ?? ""}`.trim();
+      return `${profile?.given_name ?? ""} ${
+        profile?.family_name ?? ""
+      }`.trim();
     }
-    return profile.nickname;
+    return profile?.nickname || "";
   };
 
   if (token && profile) {
     return (
       <>
-        {profile.catalog && (
-          <IconButton
-            className={styles.button}
-            sx={{ marginRight: "8px" }}
-            onClick={(event) => setAnchorCatalog(event.currentTarget)}
-          >
-            <AppsIcon
-              sx={{
-                color:
-                  config?.profile?.button?.color.background ||
-                  EBaseColors.hover,
-              }}
-            />
-          </IconButton>
+        {(config.headerButtons?.length || profile.catalog) && (
+          <div className={styles.headerActions}>
+            {config.headerButtons?.map((item) => (
+              <HeaderActionButton
+                key={`${item.text}-${item.link || item.type || "header"}`}
+                config={config}
+                button={item}
+              />
+            ))}
+
+            {profile.catalog && (
+              <IconButton
+                data-test-id="btn-app-catalog"
+                className={styles.button}
+                onClick={(event) => setAnchorCatalog(event.currentTarget)}
+                title={translate("button.catalog", { ns: "trusted-widget" })}
+              >
+                <AppsIcon
+                  sx={{
+                    color:
+                      config.catalogButton?.color.text ||
+                      config?.profile?.button?.color.background ||
+                      EBaseColors.hover,
+                  }}
+                />
+              </IconButton>
+            )}
+          </div>
         )}
 
         <div
@@ -232,8 +359,12 @@ export const Widget: FC<WidgetProps> = ({ config }) => {
               {getUserDisplayName(profile)}
             </p>
           )}
-          <Tooltip title={translate("button.avatar", { ns: "widget" })} arrow>
+          <Tooltip
+            title={translate("button.avatar", { ns: "trusted-widget" })}
+            arrow
+          >
             <button
+              data-test-id="btn-profile-account"
               onClick={handleClick}
               className={styles.button}
               onMouseEnter={() => setIsHovered(true)}
@@ -350,20 +481,34 @@ export const InfoWidget: FC<InfoWidgetProps> = ({ config }) => {
   if (config?.data) {
     return (
       <>
-        {config?.data.catalog && (
-          <IconButton
-            className={styles.button}
-            sx={{ marginRight: "8px" }}
-            onClick={(event) => setAnchorCatalog(event.currentTarget)}
-          >
-            <AppsIcon
-              sx={{
-                color:
-                  config?.profile?.button?.color.background ||
-                  EBaseColors.hover,
-              }}
-            />
-          </IconButton>
+        {(config.headerButtons?.length || config?.data.catalog) && (
+          <div className={styles.headerActions}>
+            {config.headerButtons?.map((item) => (
+              <HeaderActionButton
+                key={`${item.text}-${item.link || item.type || "header"}`}
+                config={config}
+                button={item}
+              />
+            ))}
+
+            {config?.data.catalog && (
+              <IconButton
+                data-test-id="btn-app-catalog"
+                className={styles.button}
+                onClick={(event) => setAnchorCatalog(event.currentTarget)}
+                title={translate("button.catalog", { ns: "trusted-widget" })}
+              >
+                <AppsIcon
+                  sx={{
+                    color:
+                      config.catalogButton?.color.text ||
+                      config?.profile?.button?.color.background ||
+                      EBaseColors.hover,
+                  }}
+                />
+              </IconButton>
+            )}
+          </div>
         )}
         <div
           className={clsx(
@@ -387,7 +532,10 @@ export const InfoWidget: FC<InfoWidgetProps> = ({ config }) => {
               {getUserDisplayName(config?.data)}
             </p>
           )}
-          <Tooltip title={translate("button.avatar", { ns: "widget" })} arrow>
+          <Tooltip
+            title={translate("button.avatar", { ns: "trusted-widget" })}
+            arrow
+          >
             <button
               onClick={handleClick}
               className={styles.button}

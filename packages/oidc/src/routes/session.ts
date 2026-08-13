@@ -13,15 +13,15 @@ sessionRouter.get("/session/end", async (ctx) => {
     const sessionCookie = ctx.cookies.get("_session");
     if (sessionCookie) {
       try {
-        await redisClient.del(`oidc:session:${sessionCookie}`);
+        await redisClient.del(`Session:${sessionCookie}`);
         ctx.cookies.set("_session", null, { httpOnly: true });
         console.info(
-          `[OIDC-SERVER] Session ${sessionCookie} deleted from Redis`
+          `[OIDC-SERVER] Session ${sessionCookie} deleted from Redis`,
         );
       } catch (error) {
         console.error(
           "[OIDC-SERVER] Failed to delete session from Redis:",
-          error
+          error,
         );
       }
     }

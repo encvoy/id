@@ -1,6 +1,6 @@
 ---
-title: "Inicio de sesión mediante HOTP — Conexión y configuración en Encvoy ID"
-description: "Aprenda cómo habilitar el inicio de sesión HOTP en Encvoy ID: cree un método de inicio de sesión, agréguelo al widget de autorización y garantice un acceso seguro para los usuarios."
+title: "Inicio de sesión mediante HOTP — Conexión y configuración en {{projectName}}"
+description: "Aprenda cómo habilitar el inicio de sesión HOTP en {{projectName}}: cree un método de inicio de sesión, agréguelo al widget de autorización y garantice un acceso seguro para los usuarios."
 keywords:
   - inicio de sesión mediante HOTP
   - autenticación HOTP
@@ -8,9 +8,9 @@ keywords:
   - conexión HOTP
   - login HOTP
   - autenticación de dos factores HOTP
-  - HOTP Encvoy ID
-  - inicio de sesión vía HOTP Encvoy ID
-  - configuración de HOTP en Encvoy ID
+  - HOTP {{projectName}}
+  - inicio de sesión vía HOTP {{projectName}}
+  - configuración de HOTP en {{projectName}}
   - HOTP
   - HMAC-based One-Time Password
   - contraseña de un solo uso
@@ -21,11 +21,11 @@ region: [ru, en]
 menu_title: "Inicio de sesión mediante HOTP"
 ---
 
-# Cómo conectar el inicio de sesión mediante HOTP en Encvoy ID
+# Cómo conectar el inicio de sesión mediante HOTP en {{projectName}}
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, consulte la guía de [Métodos de inicio de sesión y configuración del Widget](./docs-06-github-en-providers-settings.md).
 
-En esta guía, aprenderá cómo conectar la autenticación por contraseña de un solo uso **HOTP** al sistema **Encvoy ID**.
+En esta guía, aprenderá cómo conectar la autenticación por contraseña de un solo uso **HOTP** al sistema **{{projectName}}**.
 
 A quién va dirigida esta guía:
 
@@ -128,7 +128,7 @@ Las opciones más populares son:
 1. Vaya a su **Perfil**.
 2. Haga clic en **Agregar** en el bloque **Identificadores**.
 
-<img src="./images/personal-profile-12.webp" alt="Bloque de identificadores en el perfil de usuario de Encvoy ID" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Bloque de identificadores en el perfil de usuario de {{projectName}}" style="max-width:600px; width:100%">
 
 3. En la ventana que se abre, seleccione el método de inicio de sesión **HOTP**.
 
@@ -142,7 +142,7 @@ Las opciones más populares son:
 1. Vaya a la página de inicio de sesión donde el método de inicio de sesión **HOTP** está habilitado.
 2. Seleccione el icono del método de inicio de sesión **HOTP**.
 3. Se abrirá un formulario para ingresar el código. Sin cerrar la página, abra la aplicación de autenticación en su teléfono.
-4. Busque el servicio correspondiente a **Encvoy ID** (o el nombre de la aplicación) e ingrese su nombre de usuario y el código de 6 dígitos en el campo del formulario de inicio de sesión.
+4. Busque el servicio correspondiente a **{{projectName}}** (o el nombre de la aplicación) e ingrese su nombre de usuario y el código de 6 dígitos en el campo del formulario de inicio de sesión.
 5. Haga clic en el botón **Confirmar**.
 
 ---
@@ -150,5 +150,5 @@ Las opciones más populares son:
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del Widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
-- [Gestión de la Organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de la Organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **{{projectName}}**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar su perfil personal.

@@ -7,14 +7,17 @@ import { Button } from '@/components/button/Button';
 import { useForm } from 'react-hook-form';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { FIELD, INTERACTION_ID, MESSAGE } from '@/lib/constant';
+import { FIELD, INTERACTION_URL, MESSAGE } from '@/lib/constant';
 import { IFieldEnv } from '@/types/types';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
+import { getLocalizedTextValue } from '@/lib/utils';
+import { useUniqueFieldValidation } from '@/hooks/useUniqueFieldValidation';
+import { useWatch } from 'react-hook-form';
 
 export const DateField: FC = () => {
-  const { t: translate } = useTranslation();
-  const actionUrl = `/api/interaction/${INTERACTION_ID}/steps`;
+  const { t: translate, i18n } = useTranslation();
+  const actionUrl = `${INTERACTION_URL}/steps`;
   const [currentField, setCurrentField] = useState<IFieldEnv>();
   const [modeForm, setModeForm] = useState<'hookForm' | 'action'>('hookForm');
 
@@ -27,17 +30,51 @@ export const DateField: FC = () => {
     setValue,
     setError,
     clearErrors,
-    watch,
+    control,
+    getFieldState,
     formState: { errors },
   } = methods;
+  const fieldName = currentField?.field_name || '';
+  const fieldValue = useWatch({ control, name: fieldName });
+  const validateUniqueValue = useUniqueFieldValidation({
+    fieldName,
+    unique: currentField?.unique,
+    value: fieldValue,
+    errorMessage: translate('errors.valueNotAvailable'),
+    setError,
+    clearErrors,
+    getFieldState,
+  });
 
   useEffect(() => {
-    if (currentField?.field_name && MESSAGE) {
-      setError(currentField?.field_name, { message: MESSAGE });
-    }
-  }, [currentField?.field_name]);
+    if (currentField?.field_name) {
+      if (currentField.default_value !== undefined) {
+        setValue(currentField.field_name, currentField.default_value);
+      }
 
-  const onSubmit = () => {
+      const resolvedMessage = getLocalizedTextValue(MESSAGE, i18n.language);
+
+      if (resolvedMessage) {
+        setError(currentField?.field_name, { message: resolvedMessage });
+      }
+    }
+  }, [currentField?.default_value, currentField?.field_name, i18n.language, setError, setValue]);
+
+  const onSubmit = async () => {
+    try {
+      if (!(await validateUniqueValue(fieldValue))) {
+        return;
+      }
+    } catch (error) {
+      console.error('Unique field availability check failed:', error);
+      if (currentField?.field_name) {
+        setError(currentField.field_name, {
+          message: translate('errors.errorOccurred'),
+        });
+      }
+      return;
+    }
+
     setModeForm('action');
   };
 
@@ -47,14 +84,19 @@ export const DateField: FC = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             sx={{ width: '100%' }}
-            value={
-              watch(currentField?.field_name) ? new Date(watch(currentField?.field_name)) : null
-            }
+            value={fieldValue ? new Date(fieldValue) : null}
             onChange={(newValue) => {
               clearErrors();
               setValue(currentField?.field_name, newValue ? newValue.toISOString() : '', {
                 shouldDirty: true,
               });
+            }}
+            slotProps={{
+              textField: {
+                inputProps: {
+                  'data-test-id': `txt-auth-add-${currentField?.field_name}`,
+                },
+              },
             }}
           />
         </LocalizationProvider>
@@ -67,7 +109,9 @@ export const DateField: FC = () => {
         action={actionUrl}
         method="POST"
       >
-        <Typography color="text.secondary">{currentField?.title}</Typography>
+        <Typography color="text.secondary">
+          {getLocalizedTextValue(currentField?.title, i18n.language)}
+        </Typography>
         {currentField?.field_name && errors[currentField?.field_name] && (
           <Typography color="error.main">
             {errors[currentField?.field_name]?.message as string}
@@ -76,9 +120,14 @@ export const DateField: FC = () => {
         <input
           hidden
           name={currentField?.field_name}
-          value={watch(currentField?.field_name || '')}
+          value={fieldValue || ''}
         />
-        <Button variant="contained" label={translate('actionButtons.save')} type="submit" />
+        <Button
+          variant="contained"
+          label={translate('actionButtons.save')}
+          type="submit"
+          data-test-id="btn-auth-form-save"
+        />
       </Form>
     </Box>
   );

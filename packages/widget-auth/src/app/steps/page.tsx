@@ -4,32 +4,37 @@ import { Container } from '@/components/container/Container';
 import { Section } from '@/components/section/Section';
 import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { ImageField } from '@/app/steps/imageField';
 import { DateField } from '@/app/steps/dateField';
 import { CheckBoxField } from '@/app/steps/checkBoxField';
 import { EHashPages, IFieldEnv } from '@/types/types';
 import dynamic from 'next/dynamic';
 import { FIELD } from '@/lib/constant';
-import { useRouter } from 'next/navigation';
+import { getLocalizedTextValue, navigateToHash } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 const TextField = dynamic(() => import('./textField'), { ssr: false });
 
 const Page: FC = () => {
-  const router = useRouter();
-  const { t: translate } = useTranslation();
-  const [fieldType, setFieldType] = useState<IFieldEnv['type']>('');
+  const { t: translate, i18n } = useTranslation();
+  const [fieldType, setFieldType] = useState<IFieldEnv['type'] | null>(null);
+  const [fieldTitle, setFieldTitle] = useState('');
 
   useEffect(() => {
+    setFieldTitle(getLocalizedTextValue(FIELD?.title, i18n.language));
+
     if (FIELD?.type === 'email') {
-      router.replace(EHashPages.EMAILSTEP);
+      navigateToHash(EHashPages.EMAILSTEP);
+      setFieldType('email');
       return;
     }
     if (FIELD?.type === 'phone') {
-      router.replace(EHashPages.PHONESTEP);
+      navigateToHash(EHashPages.PHONESTEP);
+      setFieldType('phone');
       return;
     }
     setFieldType(FIELD?.type ?? '');
-  }, []);
+  }, [i18n.language]);
 
   const renderField = (type: string) => {
     switch (type) {
@@ -41,13 +46,22 @@ const Page: FC = () => {
         return <DateField />;
       case 'boolean':
         return <CheckBoxField />;
+      case 'email':
+      case 'phone':
+        return (
+          <Typography color="text.secondary">
+            {fieldTitle || translate('pages.steps.title')}
+          </Typography>
+        );
+      default:
+        return <Typography color="text.secondary">{translate('errors.errorOccurred')}</Typography>;
     }
   };
 
   return (
     <Section>
       <Container title={translate('pages.steps.title')} isCancelAction>
-        <Box>{renderField(fieldType)}</Box>
+        <Box>{fieldType === null ? null : renderField(fieldType)}</Box>
       </Container>
     </Section>
   );

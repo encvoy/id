@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common/decorators';
 import { Prisma, Provider } from '@prisma/client';
 import { Request, Response } from 'express';
 import { prisma } from 'src/modules/prisma';
+import { legacyUserInclude, toLegacyUser } from 'src/modules/repository/user-compat';
 import { v4 as uuidv4 } from 'uuid';
 import { isEmpty } from '../../../../helpers';
 import { REDIS_PREFIXES, RedisAdapter } from '../../../redis';
@@ -32,20 +33,24 @@ export class EthereumService extends ProviderBase {
   ethNonceAdapter = new RedisAdapter(REDIS_PREFIXES.EthereumNonce);
 
   async onAuth(params: AuthByEthereumDto) {
-    const { user, ...externalAccount } = await this.getUserAndExternalAccountByEthereumSign(
+    const accountData = await this.getUserAndExternalAccountByEthereumSign(
       params.address,
       params.signature,
     );
+    const user = accountData?.user;
+    const externalAccount = accountData
+      ? (({ user: _, ...rest }) => rest)(accountData)
+      : {};
 
-    const providerIdInt = parseInt(params.provider_id, 10);
-    const provider = await prisma.provider.findUnique({ where: { id: providerIdInt } });
+    const providerId = params.provider_id;
+    const provider = await prisma.provider.findUnique({ where: { id: providerId } });
 
     if (isEmpty(externalAccount)) {
       const externalAccountInfo = JSON.stringify({
         provider_name: provider.name,
         type: provider.type,
         issuer: this.type,
-        provider_id: providerIdInt,
+        provider_id: providerId,
         label: params.address,
         sub: params.address,
       });
@@ -104,12 +109,21 @@ export class EthereumService extends ProviderBase {
 
   // @ProviderMethod(AddEthereumAccountDto)
   async onBindAccount(params: AddEthereumAccountDto, userId: string) {
-    const { user, ...externalAccount } =
-      (await this.getUserAndExternalAccountByEthereumSign(params.address, params.signature)) || {};
+    const accountData = await this.getUserAndExternalAccountByEthereumSign(
+      params.address,
+      params.signature,
+    );
+    const user = accountData?.user;
+    const externalAccount = accountData
+      ? (({ user: _, ...rest }) => rest)(accountData)
+      : {};
 
-    if (!isEmpty(externalAccount) && 'id' in externalAccount) {
-      if (user.id === parseInt(userId, 10)) return { success: false, binded_to_this_user: true };
-      return { success: false, nickname: user.nickname };
+    if (!isEmpty(externalAccount) && 'id' in externalAccount && user) {
+      if (user.id === userId) return { success: false, binded_to_this_user: true };
+      return {
+        success: false,
+        nickname: 'nickname' in user ? user.nickname : undefined,
+      };
     }
 
     return {
@@ -135,14 +149,20 @@ export class EthereumService extends ProviderBase {
 
     const data = await prisma.externalAccount.findFirst({
       where: { sub: signerAddress, issuer: this.type },
-      select: {
-        user: true,
-        avatar: true,
-        label: true,
-        id: true,
+      include: {
+        user: {
+          include: legacyUserInclude,
+        },
       },
     });
 
-    return data;
+    if (!data) {
+      return data;
+    }
+
+    return {
+      ...data,
+      user: toLegacyUser(data.user),
+    };
   }
 }

@@ -15,33 +15,67 @@ import {
   IQueryIdProps,
   IQueryPropsWithId,
   IQuerySortParams,
-  responseListItems,
+  IResponseListItems,
   TFileString,
-  TQueryId,
+  IQueryId,
 } from "./types";
-import { TCustomFields } from "../lib/userSlice";
+import { TCustomFields } from "src/shared/slices/userSlice";
 import { emptySplitApi } from "./baseApi";
 import { IShortClient } from "./clients";
-import { ProviderType } from "./provider";
+import { EProviderType } from "./provider";
 import { imagesToFormData } from "src/shared/utils/helpers.ts";
+import { IUserAutocompleteOption } from "src/shared/utils/userAutocomplete";
+import { TLocalizedText } from "src/shared/utils/locales";
 
-export type AccountTypes = ProviderType;
+export type { IUserAutocompleteOption } from "src/shared/utils/userAutocomplete";
 
-export interface IMTLSProps {
-  dn: string;
-  cert: string;
-  issuer: string;
-  serial: string;
-  verify: string;
-  createdAt: string;
-  fingerprint: string;
+export type AccountTypes = EProviderType;
+
+export interface ICertificateSourceInfo {
+  kind?: string;
+  id?: string;
+  entry_id?: string;
+  dn?: string;
+  [key: string]: unknown;
+}
+
+export interface ICertificateRestInfo {
+  cn?: string;
+  dn?: string;
+  cert?: string;
+  issuer?: string;
+  serial?: string;
+  verify?: string | boolean;
+  createdAt?: string;
+  created_at?: string;
+  fingerprint?: string;
+  valid_from?: string;
+  valid_to?: string;
+  verified_at?: string;
+  is_valid?: boolean;
+  is_revoked?: boolean;
+  is_expired?: boolean;
+  verification_passed?: boolean;
+  is_cert_chain_valid?: boolean;
+  is_accredited_ca?: boolean;
+  authentication_enabled?: boolean;
+  imported?: boolean;
+  signature_algorithm?: string;
+  signature_digest_algorithm?: string;
+  public_key_algorithm?: string;
+  key_algorithm?: string;
+  issuer_friendly_name?: string;
+  certificate_content_hash?: string;
+  schema_version?: number;
+  source?: ICertificateSourceInfo;
+  [key: string]: unknown;
 }
 
 export interface IExternalAccount {
   id: string;
   sub: string;
   label?: string;
-  rest_info?: string | IMTLSProps;
+  rest_info?: string | ICertificateRestInfo | null;
   type: AccountTypes;
   issuer: string;
   avatar?: string;
@@ -61,6 +95,7 @@ export interface IRoleClients {
 export interface IRole {
   role: ERoles;
   client_id: string;
+  parent_id: string | null;
 }
 
 export interface IPrivateClaims {
@@ -73,14 +108,18 @@ export interface IUserShort {
   given_name: string;
   nickname: string;
   picture: string;
-  id: number;
+  id: string;
+  groupsCount: number;
   blocked: boolean;
   deleted?: string;
+  org_id?: string | null;
+  organization_name?: string | TLocalizedText | null;
 }
 
 export interface IUserProfile extends IPrivateClaims {
   id?: string;
   login?: string;
+  locale?: string | null;
   nickname?: string;
   given_name?: string;
   family_name?: string;
@@ -91,21 +130,50 @@ export interface IUserProfile extends IPrivateClaims {
   picture?: TFileString;
   password_change_required?: boolean;
   custom_fields?: TCustomFields;
-  ExternalAccount?: IExternalAccount[];
   Role?: IRole[];
   deleted?: string | null;
-  email_public?: string | null;
   email_verified?: boolean;
   phone_number_verified?: boolean | null;
   profile_privacy?: boolean;
+  org_id?: string;
+}
+
+export interface IDeleteUserResult {
+  mode: "deleted" | "scheduled" | "archived";
+  retention_days: number;
+  restore_allowed: boolean;
+  deleted_at: string | null;
+  tokens_revoked: boolean;
+  sessions_revoked: boolean;
+}
+
+export type TUserContactField = "email" | "phone_number";
+
+export interface IClientUsersAutocompleteQuery {
+  client_id: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+  sortDirection?: string;
+  sortBy?: string;
+  user_ids?: string[];
+}
+
+export interface ICheckUniqueFieldAvailabilityQuery {
+  field_name: string;
+  value: string;
+  user_id?: string;
+  client_id?: string;
+  organization_id?: string;
 }
 
 export interface IUserProfileWithPassword extends IUserProfile {
   password?: string;
+  send_account_create_email?: boolean;
 }
 
 export interface IScope {
-  id: number;
+  id: string;
   client_id: string;
   scopes: string[];
   created_at: string;
@@ -121,18 +189,41 @@ export const usersApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getMeInfo: builder.query<IUserProfile, void>({
       query: () => `${endPoints.users}/me`,
-      providesTags: [ETags.User, ETags.Organization],
+      providesTags: [ETags.User],
     }),
 
     updateUser: builder.mutation<
-      void,
+      IUserProfile,
       { userId: string; body: Partial<IUserProfile> }
     >({
       // field avatar do not put body
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       query: ({ userId, body: { picture, ...body } }) =>
         createFetchArgsWithBody(`${endPoints.users}/${userId}`, "PUT", body),
-      invalidatesTags: [ETags.User, ETags.ClientUser],
+      invalidatesTags: [
+        ETags.User,
+        ETags.ClientUser,
+        ETags.ExternalAccounts,
+        ETags.PublicExternalAccounts,
+      ],
+    }),
+
+    confirmUserContact: builder.mutation<
+      IUserProfile,
+      { userId: string; contactType: TUserContactField }
+    >({
+      query: ({ userId, contactType }) =>
+        createFetchArgs(
+          `${endPoints.users}/${userId}/contacts/${contactType}/confirm`,
+          "POST"
+        ),
+      invalidatesTags: (_result, _error, { userId }) => [
+        ETags.User,
+        ETags.ClientUser,
+        ETags.ExternalAccounts,
+        ETags.PublicExternalAccounts,
+        { type: ETags.DirectoryUser, id: `directory-user-${userId}` },
+      ],
     }),
 
     updatePicture: builder.mutation({
@@ -146,7 +237,7 @@ export const usersApi = emptySplitApi.injectEndpoints({
     }),
 
     getUserScopes: builder.query<
-      responseListItems<IScope[]>,
+      IResponseListItems<IScope[]>,
       IQueryPropsWithId
     >({
       query: ({ id, query }) =>
@@ -161,35 +252,27 @@ export const usersApi = emptySplitApi.injectEndpoints({
     }),
 
     revokeScopes: builder.mutation<boolean, IQueryIdProps>({
-      query: ({ userId, clientId }) =>
+      query: ({ id, client_id }) =>
         createFetchArgs<{ client_id: string }>(
-          `${endPoints.users}/${userId}/scopes`,
+          `${endPoints.users}/${id}/scopes`,
           "DELETE",
           {
-            client_id: clientId,
+            client_id: client_id,
           }
         ),
       invalidatesTags: [ETags.Scopes],
     }),
 
-    getUserRoles: builder.query<IRoleClients[], TQueryId>({
+    getUserRoles: builder.query<IRoleClients[], IQueryId>({
       query: ({ id }) => `${endPoints.users}/${id}/roles`,
-      providesTags: [ETags.Organization],
     }),
 
-    deleteUser: builder.mutation<void, { id: string; password?: string }>({
+    deleteUser: builder.mutation<
+      IDeleteUserResult,
+      { id: string; password?: string }
+    >({
       query: ({ id, ...body }) =>
         createFetchArgsWithBody(`${endPoints.users}/${id}`, "DELETE", body),
-    }),
-
-    blockUser: builder.mutation<void, TQueryId>({
-      query: ({ id }) =>
-        createFetchArgs(`${endPoints.users}/${id}/block`, "PUT"),
-    }),
-
-    unblockUser: builder.mutation<void, TQueryId>({
-      query: ({ id }) =>
-        createFetchArgs(`${endPoints.users}/${id}/unblock`, "PUT"),
     }),
 
     createUser: builder.mutation<
@@ -214,12 +297,40 @@ export const usersApi = emptySplitApi.injectEndpoints({
         ),
     }),
 
-    deleteUsers: builder.mutation<{ errors: string[] }, { checked_id: number }>(
-      {
-        query: ({ checked_id }) =>
-          createFetchArgs(`${endPoints.users}/${checked_id}`, "DELETE"),
-      }
-    ),
+    checkUniqueFieldAvailability: builder.query<
+      boolean,
+      ICheckUniqueFieldAvailabilityQuery
+    >({
+      query: (params) =>
+        createFetchArgs(
+          `${endPoints.users}/check-unique-field-availability`,
+          "GET",
+          params
+        ),
+    }),
+
+    getClientAutocompleteUsers: builder.query<
+      IResponseListItems<IUserAutocompleteOption[]>,
+      IClientUsersAutocompleteQuery
+    >({
+      query: ({ client_id, user_ids, ...query }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/${endPoints.users}/autocomplete`,
+          "GET",
+          {
+            ...query,
+            ...(user_ids?.length ? { user_ids: JSON.stringify(user_ids) } : {}),
+          }
+        ),
+      transformResponse: (
+        items: IUserAutocompleteOption[],
+        meta: FetchBaseQueryMeta
+      ) => parseResponse<IUserAutocompleteOption[]>(items, meta),
+    }),
+
+    deleteUsers: builder.mutation<{ errors: string[] }, { id: string }>({
+      query: ({ id }) => createFetchArgs(`${endPoints.users}/${id}`, "DELETE"),
+    }),
 
     changePassword: builder.mutation<
       void,
@@ -238,12 +349,12 @@ export const usersApi = emptySplitApi.injectEndpoints({
     }),
 
     addFavoriteClient: builder.mutation<void, IQueryIdProps>({
-      query: ({ userId, clientId }) =>
+      query: ({ id, client_id }) =>
         createFetchArgs<{ client_id: string }>(
-          `${endPoints.users}/${userId}/favorite_clients`,
+          `${endPoints.users}/${id}/favorite_clients`,
           "POST",
           {
-            client_id: clientId,
+            client_id: client_id,
           }
         ),
       invalidatesTags: [ETags.Catalog],
@@ -252,43 +363,65 @@ export const usersApi = emptySplitApi.injectEndpoints({
     deleteFavoriteClient: builder.mutation({
       query: (params: IQueryIdProps) =>
         createFetchArgs<{ client_id: string }>(
-          `${endPoints.users}/${params.userId}/favorite_clients`,
+          `${endPoints.users}/${params.id}/favorite_clients`,
           "DELETE",
           {
-            client_id: params.clientId,
+            client_id: params.client_id,
           }
         ),
       invalidatesTags: [ETags.Catalog],
     }),
 
-    restoreProfile: builder.mutation<void, TQueryId>({
+    restoreProfile: builder.mutation<void, IQueryId>({
       query: ({ id }) =>
         createFetchArgs(`${endPoints.users}/${id}/restore`, "PUT"),
+      invalidatesTags: (_result, _error, { id }) => [
+        ETags.User,
+        ETags.ClientUser,
+        { type: ETags.DirectoryUser, id: `directory-user-${id}` },
+      ],
     }),
+
+    markUserForDeletion: builder.mutation<{ deleted: string | null }, IQueryId>(
+      {
+        query: ({ id }) =>
+          createFetchArgs(`${endPoints.users}/${id}/mark-delete`, "PUT"),
+        invalidatesTags: (_result, _error, { id }) => [
+          ETags.User,
+          ETags.ClientUser,
+          { type: ETags.DirectoryUser, id: `directory-user-${id}` },
+        ],
+      }
+    ),
 
     deleteExternalAccount: builder.mutation<
       void,
-      { userId: number; accountId: string }
+      { userId: string; accountId: string }
     >({
       query: ({ userId, accountId }) =>
         createFetchArgs(
           `${endPoints.users}/${userId}/external_accounts/${accountId}`,
           "DELETE"
         ),
-      invalidatesTags: [ETags.ExternalAccounts, ETags.PublicExternalAccounts],
+      invalidatesTags: [
+        ETags.User,
+        ETags.ClientUser,
+        ETags.ExternalAccounts,
+        ETags.PublicExternalAccounts,
+      ],
     }),
     getPublicExternalAccounts: builder.query<
       IExternalAccount[],
-      { client_id: string; user_id: string }
+      IQueryId & { client_id?: string }
     >({
-      query: ({ user_id }) => ({
+      query: ({ id, client_id }) => ({
         url: `${endPoints.users}/public_external_accounts`,
-        params: { user_id },
+        params: { user_id: id, client_id },
       }),
       providesTags: [ETags.PublicExternalAccounts],
     }),
-    getPrivateClaims: builder.query<IPrivateClaims, string>({
-      query: (user_id) => `${endPoints.users}/${user_id}/private_scopes`,
+    getPrivateClaims: builder.query<IPrivateClaims, IQueryId>({
+      query: ({ id }) => `${endPoints.users}/${id}/private_scopes`,
       providesTags: [ETags.Claims],
     }),
     changeClaimPrivacy: builder.mutation<
@@ -310,7 +443,7 @@ export const usersApi = emptySplitApi.injectEndpoints({
     changeExternalAccount: builder.mutation<
       void,
       {
-        id: number;
+        id: string;
         userId: string;
         claim_privacy: EClaimPrivacyNumber;
       }
@@ -335,20 +468,23 @@ export const {
   useLazyGetMeInfoQuery,
   useGetPublicExternalAccountsQuery,
   useUpdateUserMutation,
+  useConfirmUserContactMutation,
   useLazyGetUserScopesQuery,
   useRevokeScopesMutation,
   useGetUserRolesQuery,
   useDeleteUserMutation,
-  useBlockUserMutation,
-  useUnblockUserMutation,
   useCreateUserMutation,
   useCreateClientUserMutation,
+  useLazyCheckUniqueFieldAvailabilityQuery,
+  useGetClientAutocompleteUsersQuery,
+  useLazyGetClientAutocompleteUsersQuery,
   useDeleteUsersMutation,
   useChangePasswordMutation,
   useAddFavoriteClientMutation,
   useDeleteFavoriteClientMutation,
   useDeleteExternalAccountMutation,
   useRestoreProfileMutation,
+  useMarkUserForDeletionMutation,
   useGetPrivateClaimsQuery,
   useChangeClaimPrivacyMutation,
   useChangeExternalAccountMutation,

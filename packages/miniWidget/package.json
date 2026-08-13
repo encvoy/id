@@ -1,7 +1,7 @@
 {
   "name": "encvoy-widget",
-  "version": "1.0.20",
-  "description": "EncvoyWidget - React виджет для аутентификации и управления пользователем",
+  "version": "1.2.0",
+  "description": "EncvoyWidget - React widget for authentication and user account controls",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -13,8 +13,13 @@
   ],
   "author": "Encvoy",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/trusted-widget.git"
+  },
   "scripts": {
     "dev": "rollup -c -w",
+    "dev:cjs-esm-types": "BUILD_TYPE=cjs-esm-types rollup -c -w",
     "dev:umd": "BUILD_TYPE=umd rollup -c -w",
     "build": "rollup -c",
     "build:umd": "BUILD_TYPE=umd rollup -c",
@@ -27,8 +32,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.0.0",
-    "@mui/material": "^6.0.0",
+    "@mui/icons-material": "^6.0.0 || ^7.0.0",
+    "@mui/material": "^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -39,8 +44,8 @@
     "@rollup/plugin-node-resolve": "^15.3.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",

@@ -1,14 +1,5 @@
-.container {
-  border: 1px solid var(--mui-palette-divider);
-  border-radius: 6px;
-}
-
 .content {
   padding: 32px;
-}
-
-.title {
-  margin-bottom: 32px;
 }
 
 .subtitle {

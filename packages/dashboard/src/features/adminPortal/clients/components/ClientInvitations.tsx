@@ -1,8 +1,8 @@
 import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import clsx from "clsx";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -18,30 +18,23 @@ import {
 } from "src/shared/api/invitation";
 import { useGetRuleValidationsByFieldNameQuery } from "src/shared/api/settings";
 import { IQueryPropsWithId } from "src/shared/api/types";
-import { AccordionBlock } from "src/shared/ui/components/AccordionBlock";
-import { Card, ICardProps } from "src/shared/ui/components/Card";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
-import { ListItems } from "src/shared/ui/listElements";
-import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
+import { AccordionBlock } from "@encvoy-id/components";
+import { Card, ICardProps } from "@encvoy-id/components";
+import { CustomIcon } from "@encvoy-id/components";
+import { IconsLibrary } from "@encvoy-id/components";
+import { ListItems } from "src/shared/ui/CardsList.tsx";
+import { SubmitModal } from "@encvoy-id/components";
 import { getRulesIcon } from "src/shared/ui/ProfileFields";
 import { Order } from "src/shared/utils/enums";
 import { isValidEmail, randomString } from "src/shared/utils/helpers";
-import styles from "./ClientInvitations.module.css";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 
-interface IClientInvitationsProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-export const ClientInvitations: FC<IClientInvitationsProps> = ({
-  isOpen,
-  setIsOpen,
-}) => {
+export const ClientInvitations: FC = () => {
   const { clientId = "" } = useParams<{ clientId: string }>();
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
 
   const [chips, setChips] = useState<IChipProps[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
   const [errorEmails, setErrorEmails] = useState<{
     [key: string]: string[];
   }>({});
@@ -49,7 +42,15 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
   const [update, setUpdate] = useState(false);
 
   const { data: emailValidationRules = [] } =
-    useGetRuleValidationsByFieldNameQuery("email");
+    useGetRuleValidationsByFieldNameQuery(
+      {
+        client_id: clientId,
+        field_name: "email",
+      },
+      {
+        skip: !clientId,
+      }
+    );
   const [getClientInvitation] = useLazyGetInvitationsQuery();
   const [createInvite] = useCreateInvitationMutation();
 
@@ -58,7 +59,7 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
       query: {
         sortBy: "created_at",
         sortDirection: Order.DESC,
-        limit: "10",
+        limit: 10,
         offset,
       },
       id: clientId,
@@ -121,21 +122,37 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
 
   return (
     <>
-      <div className={styles.inviteBlock}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "16px",
+          alignItems: "flex-start",
+          marginBottom: "16px",
+        }}
+      >
         <AccordionBlock
+          dataTestId="ddl-application-users-invite"
           titleBlock={
-            <div className={styles.inviteTitle}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "2px" }}>
               <CustomIcon
                 Icon={SendOutlinedIcon}
-                className={styles.inviteIcon}
                 color="textSecondary"
+                sx={{
+                  width: "24px",
+                  height: "24px",
+                  marginRight: "6px",
+                  borderRadius: "12px",
+                  flexShrink: 0,
+                  background: "var(--hover-background-color)",
+                  padding: "2px",
+                }}
               />
               <Typography className="text-15-medium">
                 {translate("pages.clientDetails.invitationTitle", {
                   value: count,
                 })}
               </Typography>
-            </div>
+            </Box>
           }
         >
           <ListItems<IInvitation, IQueryPropsWithId, IInvitationCardProps>
@@ -150,9 +167,19 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
             isSearchActive={false}
           />
         </AccordionBlock>
-      </div>
+        <Button
+          sx={{ padding: "18px" }}
+          variant="contained"
+          data-test-id="btn-application-invite"
+          onClick={() => setIsOpen(true)}
+        >
+          Invite
+        </Button>
+      </Box>
 
       <SubmitModal
+        cancelText={translate("actionButtons.cancel")}
+        deleteText={translate("actionButtons.delete")}
         title={translate("pages.clientDetails.invitationModalTitle")}
         isOpen={isOpen}
         onClose={onClose}
@@ -161,6 +188,7 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
         actionButtonText={translate("actionButtons.send")}
       >
         <ScopeChips
+          inputDataTestId="txt-user-email"
           chips={chips}
           setChips={setChips}
           description={translate("pages.clientDetails.emailsRequest")}
@@ -169,8 +197,12 @@ export const ClientInvitations: FC<IClientInvitationsProps> = ({
           errors={errorEmails}
           children={getRulesIcon(
             "email",
+            translate,
+            i18n.language,
             [],
-            emailValidationRules.map((item) => item.title)
+            emailValidationRules.map((item) =>
+              getLocalizedTextValue(item.title, i18n.language)
+            )
           )}
         />
       </SubmitModal>
@@ -213,8 +245,23 @@ const InvitationCard: FC<IInvitationCardProps> = (props) => {
       {...props}
       cardId={invitation.id}
       content={
-        <Box className={styles.invite}>
-          <Box className={styles.inviteHeader}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px 18px",
+              flexWrap: "wrap",
+            }}
+          >
             <CustomIcon
               Icon={MarkEmailReadOutlinedIcon}
               color="textSecondary"
@@ -223,7 +270,8 @@ const InvitationCard: FC<IInvitationCardProps> = (props) => {
               {translate("helperText.send")}:
               <Typography
                 component="span"
-                className={clsx("text-14", styles.inviteText)}
+                className="text-14"
+                sx={{ display: "inline-block" }}
               >
                 {date}
               </Typography>
@@ -233,13 +281,19 @@ const InvitationCard: FC<IInvitationCardProps> = (props) => {
               {translate("helperText.recipient")}:
               <Typography
                 component="span"
-                className={clsx("text-14", styles.inviteText)}
+                className="text-14"
+                sx={{ display: "inline-block" }}
               >
                 {invitation.email}
               </Typography>
             </Typography>
           </Box>
-          <IconsLibrary type="delete" onClick={handleDelete} />
+          <IconsLibrary
+            title={translate("toolTips.delete")}
+            type="delete"
+            dataTestId="btn-application-user-delete"
+            onClick={handleDelete}
+          />
         </Box>
       }
     />

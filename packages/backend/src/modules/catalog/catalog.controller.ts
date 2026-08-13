@@ -2,13 +2,13 @@ import * as common from '@nestjs/common';
 import * as swagger from '@nestjs/swagger';
 import { Response } from 'express';
 import { ListInputDto } from 'src/custom.dto';
+import { OrgId } from 'src/decorators/orgId.decorator';
 import { Scope, UserId } from '../../decorators';
 import { prepareListResponse } from '../../helpers';
 import { CatalogActions } from './catalog.roles';
 import { CatalogService } from './catalog.service';
 
 @common.Controller('v1')
-@swagger.ApiBasicAuth()
 @swagger.ApiBearerAuth()
 export class CatalogController {
   constructor(private readonly service: CatalogService) {}
@@ -19,9 +19,10 @@ export class CatalogController {
   async getCatalog(
     @common.Query() params: ListInputDto,
     @UserId() userId: string,
+    @OrgId() orgId: string | null,
     @common.Res() res: Response,
   ) {
-    const { clients, totalCount } = await this.service.catalog(params, userId);
+    const { clients, totalCount } = await this.service.catalog(params, userId, orgId);
     return prepareListResponse(res, clients, totalCount, params);
   }
 

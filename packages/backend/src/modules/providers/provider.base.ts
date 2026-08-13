@@ -1,21 +1,23 @@
-import { BadRequestException, Type } from '@nestjs/common';
+import { BadRequestException, Inject, Type } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { ExternalAccount, Prisma, Provider } from '@prisma/client';
 import { Request, Response } from 'express';
-import { app } from 'src/main';
 import { prisma } from '../prisma/prisma.client';
-import { SettingsService } from '../settings';
-import { IAuthResponse, IProvider, IUserInfo } from './factory.service';
-import { IsProvider, PROVIDER_METHOD_METADATA } from './providers.decorators';
+import { SettingsService } from '../settings/settings.service';
+import type { IAuthResponse, IProvider, IUserInfo } from './factory.service';
+import { IsProvider } from './providers.decorators';
 import { BaseCreateProviderDto, BaseUpdateProviderDto } from './providers.dto';
 import { Ei18nCodes } from 'src/enums';
 
 @IsProvider()
 export abstract class ProviderBase implements IProvider {
-  protected _settingsService: SettingsService;
+  @Inject(ModuleRef)
+  protected readonly moduleRef!: ModuleRef;
+
   abstract defaultUrlAvatar: string;
 
   get settingsService() {
-    return app.get(SettingsService, { strict: false });
+    return this.moduleRef.get(SettingsService, { strict: false });
   }
 
   getUserInfo?(login: string, password: string, provider: Provider): Promise<IUserInfo> {
@@ -43,17 +45,11 @@ export abstract class ProviderBase implements IProvider {
   }
   type: string;
 
-  getMethodDTO(methodName: string): Type<any> | null {
-    return Reflect.hasMetadata(PROVIDER_METHOD_METADATA, this, methodName)
-      ? Reflect.getMetadata(PROVIDER_METHOD_METADATA, this, methodName)
-      : null;
-  }
-
   prepareProviderCreateInput(
     client_id: string,
     paramsUpdate: BaseCreateProviderDto,
   ): Prisma.ProviderCreateInput {
-    return { Client: { connect: { client_id } }, ...paramsUpdate };
+    return { client: { connect: { client_id } }, ...paramsUpdate };
   }
 
   prepareProviderUpdateInput(paramsUpdate: BaseUpdateProviderDto): Prisma.ProviderUpdateInput {

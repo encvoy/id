@@ -4,7 +4,9 @@ const { Check, base } = interactionPolicy;
 
 /**
  * Creates a custom interaction policy with an additional check
- * for the _interaction_resume cookie to enhance authentication security
+ * that always starts a backend interaction for fresh authorization requests,
+ * but allows the resumed authorization request to continue after backend
+ * finishes its business checks.
  */
 export function createInteractionPolicy() {
   const policy = base();
@@ -13,24 +15,26 @@ export function createInteractionPolicy() {
   const loginPolicy = policy.get("login");
   if (loginPolicy && loginPolicy.checks) {
     loginPolicy.checks.remove("no_session");
-    // Add a custom check with additional cookie validation
+    // Fresh /oidc/auth requests must go through backend interaction so it can
+    // decide whether to auto-authorize the user or require additional steps.
+    // Resumed /oidc/auth/:uid requests should not prompt again, otherwise the
+    // flow loops forever after a successful widget submission.
     loginPolicy.checks.add(
       new Check("no_session", "End-User authentication is required", (ctx) => {
         const { oidc } = ctx;
 
-        // Secure check for object existence
-        if (!oidc || !oidc.session || !oidc.cookies) {
-          return true; // Authentication is required if there are no base objects
+        if (!oidc || !oidc.session) {
+          return true;
         }
 
-        const interactionResumeCookie = oidc.cookies.get("_interaction_resume");
+        const isResumeRequest =
+          typeof ctx.params?.uid === "string" && ctx.params.uid.length > 0;
 
-        // Double check: both the session and the cookie must exist
-        if (oidc.session.accountId && interactionResumeCookie) {
-          return false; // Authentication is not required
+        if (!isResumeRequest) {
+          return true;
         }
 
-        return true; // Authentication is required
+        return !oidc.session.accountId;
       })
     );
   }

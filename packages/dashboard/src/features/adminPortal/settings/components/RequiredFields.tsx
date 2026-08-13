@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Chip } from "src/shared/ui/components/Chip";
+import { Chip } from "@encvoy-id/components";
 import styles from "./RequiredFields.module.css";
 import {
   IClientFull,
@@ -8,6 +8,7 @@ import {
   useDeleteClientRuleMutation,
 } from "src/shared/api/clients";
 import { IRuleWithValidation, useGetRulesQuery } from "src/shared/api/settings";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 import Typography from "@mui/material/Typography";
 
 interface IRequiredFieldsProps {
@@ -20,8 +21,13 @@ export const RequiredFields: FC<IRequiredFieldsProps> = ({ client }) => {
   const [addClientRule] = useAddClientRuleMutation();
   const [deleteClientRule] = useDeleteClientRuleMutation();
 
-  const { data: rules } = useGetRulesQuery();
-  const { t: translate } = useTranslation();
+  const { data: rules } = useGetRulesQuery(
+    client?.client_id ? { client_id: client.client_id } : undefined
+  );
+  const { t: translate, i18n } = useTranslation();
+
+  const getRequiredFieldDataTestId = (fieldName: string) =>
+    `btn-settings-required-fields-${fieldName.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 
   useEffect(() => {
     const clientRuleIds = client?.rules?.map((rule) => rule.id);
@@ -85,15 +91,21 @@ export const RequiredFields: FC<IRequiredFieldsProps> = ({ client }) => {
               <div
                 className={styles.chipWrapper}
                 key="name-family-chip"
+                data-test-id={getRequiredFieldDataTestId("name_and_surname")}
                 onClick={() => {
                   nameRuleIds.forEach((id) => updateClientRule(id));
                 }}
               >
                 <Chip
                   status={isActive ? "active" : "default"}
-                  customText={translate(
-                    "pages.settings.requiredFields.nameAndSurname"
-                  )}
+                  customText={{
+                    active: translate(
+                      "pages.settings.requiredFields.nameAndSurname"
+                    ),
+                    default: translate(
+                      "pages.settings.requiredFields.nameAndSurname"
+                    ),
+                  }}
                 />
               </div>
             );
@@ -113,11 +125,15 @@ export const RequiredFields: FC<IRequiredFieldsProps> = ({ client }) => {
             <div
               className={styles.chipWrapper}
               key={rule.id}
+              data-test-id={getRequiredFieldDataTestId(rule.field_name)}
               onClick={() => updateClientRule(rule.id)}
             >
               <Chip
                 status={clientRules.includes(rule.id) ? "active" : "default"}
-                customText={rule.title}
+                customText={{
+                  active: getLocalizedTextValue(rule.title, i18n.language),
+                  default: getLocalizedTextValue(rule.title, i18n.language),
+                }}
               />
             </div>
           ))}
@@ -133,11 +149,15 @@ export const RequiredFields: FC<IRequiredFieldsProps> = ({ client }) => {
               <div
                 className={styles.chipWrapper}
                 key={rule.id}
+                data-test-id={getRequiredFieldDataTestId(rule.field_name)}
                 onClick={() => updateClientRule(rule.id)}
               >
                 <Chip
                   status={clientRules.includes(rule.id) ? "active" : "default"}
-                  customText={rule.title}
+                  customText={{
+                    active: getLocalizedTextValue(rule.title, i18n.language),
+                    default: getLocalizedTextValue(rule.title, i18n.language),
+                  }}
                 />
               </div>
             ))}
