@@ -1,31 +1,31 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import { FC, useEffect, useState } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
+import { IconsLibrary } from "@encvoy-id/components";
+import { InputField } from "@encvoy-id/components";
 import { EClaimPrivacyNumber } from "src/shared/utils/enums";
+import { APP_PUBLIC_URL } from "src/shared/utils/appBasePath";
 import * as yup from "yup";
-import { DOMAIN } from "../../../../../shared/utils/constants";
 import {
   IOauthParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "../../../../../shared/api/provider";
-import {
-  createProviderBaseSchema,
-  BaseFormProvider,
-} from "../components/BaseFormProvider";
-import { PasswordTextField } from "../../../../../shared/ui/components/PasswordTextField";
+import { PasswordTextField } from "@encvoy-id/components";
 import styles from "../BaseStylesProvider.module.css";
-import { InputField } from "src/shared/ui/components/InputBlock";
-import { IChipProps, ScopeChips } from "../components/ScopeChips";
+import {
+  BaseFormProvider,
+  createProviderBaseSchema,
+} from "../components/BaseFormProvider";
 import { ProviderHeader } from "../components/ProviderHeader";
-import { useTranslation } from "react-i18next";
-import Typography from "@mui/material/Typography";
+import { IChipProps, ScopeChips } from "../components/ScopeChips";
 
 const schema = (translate: (key: string, options?: any) => string) =>
   yup.object({
@@ -85,7 +85,7 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
   const methods = useForm<IProvider<IOauthParams>>({
     resolver: yupResolver(schema(translate)) as any,
     defaultValues: {
-      type: ProviderType.CUSTOM,
+      type: EProviderType.CUSTOM,
       default_public: EClaimPrivacyNumber.private,
     },
     mode: "onChange",
@@ -148,14 +148,21 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
       <InputField
         name="params.external_client_id"
         label={translate("providers.custom.clientId")}
+        dataTestId="txt-settings-login-method-resource-id"
         description={translate("providers.custom.clientIdDescription")}
         required
       />
 
-      <Typography className={clsx("text-14", styles.asterisk, styles.label)}>
+      <Typography className={clsx("text-14", "asterisk", styles.label)}>
         {translate("providers.custom.clientSecret")}
       </Typography>
-      <PasswordTextField nameField="params.external_client_secret" />
+      <PasswordTextField
+        showText={translate("actionButtons.show")}
+        hideText={translate("actionButtons.hide")}
+        copyText={translate("actionButtons.copy")}
+        nameField="params.external_client_secret"
+        dataTestId="txt-settings-login-method-secret-key"
+      />
       <Typography
         className={clsx("text-14", styles.description)}
         color="text.secondary"
@@ -167,16 +174,19 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
         {translate("providers.custom.redirectUri")}
       </Typography>
       <TextField
-        value={DOMAIN + "/api/interaction/code"}
+        value={`${APP_PUBLIC_URL}/api/interaction/code`}
         disabled
         className="custom"
         fullWidth
         variant="standard"
       >
         <IconsLibrary
+          title={translate("toolTips.copy")}
           type="copy"
           onClick={() =>
-            navigator.clipboard.writeText(DOMAIN + "/api/interaction/code")
+            navigator.clipboard.writeText(
+              `${APP_PUBLIC_URL}/api/interaction/code`
+            )
           }
         />
       </TextField>
@@ -190,11 +200,13 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
       <InputField
         name="params.issuer"
         label={translate("providers.custom.issuer")}
+        dataTestId="txt-settings-login-method-server-base-url"
         required
       />
       <InputField
         name="params.authorization_endpoint"
         label={translate("providers.custom.authorizationEndpoint")}
+        dataTestId="txt-settings-login-method-auth-url"
         description={translate(
           "providers.custom.authorizationEndpointDescription"
         )}
@@ -203,12 +215,14 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
       <InputField
         name="params.token_endpoint"
         label={translate("providers.custom.tokenEndpoint")}
+        dataTestId="txt-settings-login-method-token-url"
         description={translate("providers.custom.tokenEndpointDescription")}
         required
       />
       <InputField
         name="params.userinfo_endpoint"
         label={translate("providers.custom.userinfoEndpoint")}
+        dataTestId="txt-settings-login-method-userinfo-url"
         description={translate("providers.custom.userinfoEndpointDescription")}
         required
       />
@@ -218,6 +232,7 @@ export const CreateProvider: FC<ICreateProvider> = ({ isOpen, onClose }) => {
         setChips={setChips}
         title={translate("providers.custom.scopes")}
         description={translate("providers.custom.scopesDescription")}
+        inputDataTestId="txt-settings-login-method-scopes"
       />
     </BaseFormProvider>
   );

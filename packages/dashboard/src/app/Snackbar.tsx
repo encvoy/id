@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ENoticeType } from "src/shared/utils/enums";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Typography } from "@mui/material";
-import { setIsNotificationPanelOpen } from "../shared/lib/appSlice";
+import { setIsNotificationPanelOpen } from "src/shared/slices/appSlice";
 import { RootState } from "./store/store";
 
 interface ISnackbarProps extends CustomContentProps {

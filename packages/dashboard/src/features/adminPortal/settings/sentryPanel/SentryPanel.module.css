@@ -1,6 +1,6 @@
 .container {
   padding-right: 6px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .inputWrapper {

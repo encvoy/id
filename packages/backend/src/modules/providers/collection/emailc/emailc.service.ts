@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, Provider } from '@prisma/client';
 import { Request, Response } from 'express';
+import * as constants from 'src/constants';
 import { prisma } from 'src/modules/prisma/prisma.client';
 import { ProviderMethod } from '../../providers.decorators';
 import { EmailService, MailCodeTypes, TEmailProvider } from '../email';
@@ -10,6 +11,7 @@ import {
   VerificationSendCodeEmailCustomDTO,
 } from './emailc.dto';
 import { Ei18nCodes } from 'src/enums';
+import { legacyUserEmailExternalAccountTypes } from 'src/modules/repository/user-search';
 
 export const PROVIDER_TYPE_EMAIL_CUSTOM = 'EMAIL_CUSTOM';
 
@@ -47,26 +49,36 @@ export class EmailCustomService extends EmailService {
       where: { client_id: params.client_id },
     });
 
-    const { provider } = await prisma.provider_relations.findFirst({
+    const relation = await prisma.provider_relations.findFirst({
       where: {
         client_id: params.client_id,
-        provider_id: parseInt(params.provider_id, 10),
+        provider_id: params.provider_id,
         provider: {
           type: this.type,
         },
       },
       include: { provider: true },
     });
+    const provider = relation?.provider;
     if (!provider) throw new BadRequestException(Ei18nCodes.T3E0030);
 
     const users = await prisma.user.findMany({
-      where: { email: params.email },
+      where: {
+        externalAccounts: {
+          some: {
+            sub: params.email,
+            type: {
+              in: [...legacyUserEmailExternalAccountTypes],
+            },
+          },
+        },
+      },
     });
     if (users.length > 1) {
       throw new BadRequestException(Ei18nCodes.T3E0032);
     }
 
-    await this.sendCodeByType(
+    const result = await this.sendCodeByType(
       {
         ...params,
         app_name,
@@ -74,6 +86,14 @@ export class EmailCustomService extends EmailService {
       },
       provider as TEmailProvider,
     );
+
+    if (constants.NODE_ENV === 'development') {
+      return {
+        success: true,
+        code: result.code,
+        expires: result.expires,
+      };
+    }
 
     return;
   }

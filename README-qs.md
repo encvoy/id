@@ -48,10 +48,8 @@ cp .example.env .local.env
 Add or override local variables:
 
 ```env
-VITE_CLIENT_DOMAIN=
-VITE_CLIENT_SECRET=
-VITE_CLIENT_ID=
-VITE_CUSTOM_STYLES=
+ID_HOST=local.encvoy.com
+CLIENT_ID=<generated-uuid>
 ```
 
 ### 8. Windows only --- specify bash path for npm scripts

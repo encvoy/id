@@ -4,7 +4,7 @@ import {
   MiddlewareAPI,
 } from "@reduxjs/toolkit";
 import { ENoticeType } from "src/shared/utils/enums";
-import { setNotice } from "src/shared/lib/noticesSlice";
+import { setNotice } from "src/shared/slices/noticesSlice";
 
 export const rtkQueryErrorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {

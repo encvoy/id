@@ -1,8 +1,3 @@
-.asterisk::after {
-  content: "*";
-  color: red;
-}
-
 .label {
   margin-bottom: 8px;
 }
@@ -10,4 +5,38 @@
 .description {
   margin-bottom: 32px;
   margin-top: 8px;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.iconButton {
+  overflow: hidden;
+}
+
+.iconSend {
+  transform: translateX(0);
+  will-change: transform;
+}
+
+.iconAnimate {
+  animation: sendIconSlide 0.5s linear;
+}
+
+@keyframes sendIconSlide {
+  0% {
+    transform: translateX(0);
+  }
+  49% {
+    transform: translateX(44px);
+  }
+  50% {
+    transform: translateX(-44px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

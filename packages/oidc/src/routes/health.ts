@@ -1,8 +1,12 @@
 import Router from "@koa/router";
 
 const healthRouter = new Router();
-healthRouter.get("/health", async (ctx) => {
-  ctx.body = { status: "ok", timestamp: new Date().toISOString() };
-});
+const sendHealth = async (ctx: any) => {
+  ctx.body = { status: "ok", service: "oidc", timestamp: new Date().toISOString() };
+};
+
+healthRouter.get("/health", sendHealth);
+healthRouter.get("/oidc/health", sendHealth);
+healthRouter.get("/api/oidc/health", sendHealth);
 
 export default healthRouter;

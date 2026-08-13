@@ -13,6 +13,10 @@ export enum ScopesActions {
    * Revoking a permission
    */
   delete = 'scopes:delete',
+  /**
+   * Managing dynamic OIDC scopes
+   */
+  manageOidc = 'scopes:manage-oidc',
 }
 
 ROLES.set(UserRoles.USER, [
@@ -25,10 +29,11 @@ ROLES.set(UserRoles.EDITOR, [
   ...(ROLES.get(UserRoles.EDITOR) || []),
   ScopesActions.list,
   ScopesActions.delete,
+  ScopesActions.manageOidc,
 ]);
 
-ROLES.set(UserRoles.ADMIN, [
-  ...(ROLES.get(UserRoles.ADMIN) || []),
+ROLES.set(UserRoles.MANAGER, [
+  ...(ROLES.get(UserRoles.MANAGER) || []),
   ScopesActions.list,
   ScopesActions.delete,
 ]);
@@ -37,4 +42,5 @@ ROLES.set(UserRoles.OWNER, [
   ...(ROLES.get(UserRoles.OWNER) || []),
   ScopesActions.list,
   ScopesActions.delete,
+  ScopesActions.manageOidc,
 ]);

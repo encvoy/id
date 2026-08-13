@@ -1,10 +1,10 @@
 export interface IQueryIdProps {
-  userId: string;
-  clientId: string;
+  id: string;
+  client_id: string;
 }
 
 export interface IQuerySortParams {
-  limit: string;
+  limit: number;
   offset: number;
   sortDirection?: string;
   sortBy?: string;
@@ -17,16 +17,16 @@ export interface IQueryPropsWithId {
   id: string;
 }
 
-export type TQueryId = {
+export interface IQueryId {
   id: string;
-};
+}
 
-export type responseListItems<T> = {
+export interface IResponseListItems<T> {
   items: T;
   totalCount: number;
   perPage: number;
   currentOffset: number;
   nextOffset: number;
-};
+}
 
 export type TFileString = File | null | string | undefined;

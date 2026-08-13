@@ -15,9 +15,6 @@ import { SentryService } from './sentry.service';
 export class SentryModule {
   constructor(private readonly sentryService: SentryService) {}
   async onModuleInit() {
-    await this.sentryService.get();
-    if (this.sentryService.enabled) {
-      await this.sentryService.turnOnSentry();
-    }
+    await this.sentryService.syncRuntimeWithStoredConfig();
   }
 }

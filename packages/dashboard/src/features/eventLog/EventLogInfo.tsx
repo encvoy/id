@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
 import { FC, useRef } from "react";
 import { ILogEvent } from "../../shared/api/logger";
-import { Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { getEventSpecific } from "src/features/eventLog/EventLogList";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
 
 interface IEventLogInfoProps {
   selectedEvent: ILogEvent | null;
@@ -16,6 +15,7 @@ const EventLogInfoComponent: FC<IEventLogInfoProps> = ({ selectedEvent }) => {
   const date = selectedEvent?.date ? new Date(selectedEvent?.date) : null;
 
   const infoSpecific = getEventSpecific(translate, selectedEvent?.event);
+  const ChipIcon = infoSpecific.icon;
 
   return (
     <Box
@@ -33,14 +33,11 @@ const EventLogInfoComponent: FC<IEventLogInfoProps> = ({ selectedEvent }) => {
       <Box sx={{ marginBottom: "32px", wordWrap: "break-word" }}>
         <Typography className="text-20-medium">{infoSpecific.tag}</Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <CustomIcon
-            colorHex={infoSpecific.color}
-            Icon={infoSpecific?.icon}
-            color="custom"
+          <Chip
+            icon={<ChipIcon fontSize="small" />}
+            color={infoSpecific.chipColor}
+            label={selectedEvent?.event}
           />
-          <Typography component="span" className="text-12">
-            {selectedEvent?.event}
-          </Typography>
         </Box>
       </Box>
       {date && (

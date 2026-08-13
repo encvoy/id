@@ -15,6 +15,6 @@ ROLES.set(UserRoles.USER, [...(ROLES.get(UserRoles.USER) || []), SessionsActions
 
 ROLES.set(UserRoles.EDITOR, [...(ROLES.get(UserRoles.EDITOR) || []), SessionsActions.delete]);
 
-ROLES.set(UserRoles.ADMIN, [...(ROLES.get(UserRoles.ADMIN) || []), SessionsActions.delete]);
+ROLES.set(UserRoles.MANAGER, [...(ROLES.get(UserRoles.MANAGER) || []), SessionsActions.delete]);
 
 ROLES.set(UserRoles.OWNER, [...(ROLES.get(UserRoles.OWNER) || []), SessionsActions.delete]);

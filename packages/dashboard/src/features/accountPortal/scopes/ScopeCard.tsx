@@ -15,14 +15,18 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDeleteSessionMutation } from "src/shared/api/clients";
 import { IScope, useRevokeScopesMutation } from "src/shared/api/users";
-import { CustomIcon } from "../../../shared/ui/components/CustomIcon";
-import { ISubmitModalProps } from "src/shared/ui/modal/SubmitModal";
-import { Card, ICardProps } from "../../../shared/ui/components/Card";
-import { IconWithTooltip } from "../../../shared/ui/components/IconWithTooltip";
-import { MenuControls } from "../../../shared/ui/components/MenuControls";
+import { CustomIcon } from "@encvoy-id/components";
+import { ISubmitModalProps } from "@encvoy-id/components";
+import { Card, ICardProps } from "@encvoy-id/components";
+import { IconWithTooltip } from "@encvoy-id/components";
+import { MenuControls } from "@encvoy-id/components";
+import { getImageURL } from "src/shared/utils/helpers";
 import styles from "./ScopeCard.module.css";
 import { getScopeProps } from "./utils";
 import Typography from "@mui/material/Typography";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
+
+const testIds = ["btn-profile-scope-sessions-end", "btn-profile-scope-revoke"];
 
 export interface ICardScopeProps extends ICardProps {
   userId: string;
@@ -45,6 +49,7 @@ const CardScope: FC<ICardScopeProps> = (props) => {
   const id = client?.client_id;
   const loading = translate("helperText.loading");
   const currentLanguage = i18n.language;
+  const localizedClientName = getLocalizedTextValue(client?.name, currentLanguage);
   const date = created_at ? new Date(created_at) : null;
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -62,7 +67,7 @@ const CardScope: FC<ICardScopeProps> = (props) => {
 
   const handleDeleteScopes = async () => {
     try {
-      await revokeScopes({ userId, clientId: id }).unwrap();
+      await revokeScopes({ id: userId, client_id: id }).unwrap();
       const newItems = [...items];
       newItems.splice(index, 1);
       updateItems(newItems, newItems.length);
@@ -73,7 +78,7 @@ const CardScope: FC<ICardScopeProps> = (props) => {
 
   const handleDeleteSessions = async () => {
     try {
-      await deleteSession({ userId, clientId: id }).unwrap();
+      await deleteSession({ id: userId, client_id: id }).unwrap();
     } catch (error) {
       console.error("rejected", error);
     }
@@ -87,11 +92,11 @@ const CardScope: FC<ICardScopeProps> = (props) => {
       },
       title: translate("pages.scopes.modals.deleteSessions.title"),
       actionButtonText: translate("actionButtons.delete"),
-      mainMessage: [
-        translate("pages.scopes.modals.deleteSessions.mainMessage", {
-          clientName: client?.name,
-        }),
-      ],
+        mainMessage: [
+          translate("pages.scopes.modals.deleteSessions.mainMessage", {
+            clientName: localizedClientName,
+          }),
+        ],
     },
     {
       onSubmit: () => {
@@ -100,11 +105,11 @@ const CardScope: FC<ICardScopeProps> = (props) => {
       },
       title: translate("pages.scopes.modals.revokeScopes.title"),
       actionButtonText: translate("actionButtons.revoke"),
-      mainMessage: [
-        translate("pages.scopes.modals.revokeScopes.mainMessage", {
-          clientName: client?.name,
-        }),
-      ],
+        mainMessage: [
+          translate("pages.scopes.modals.revokeScopes.mainMessage", {
+            clientName: localizedClientName,
+          }),
+        ],
     },
   ];
 
@@ -140,15 +145,19 @@ const CardScope: FC<ICardScopeProps> = (props) => {
     <Card
       {...props}
       cardId={id}
-      avatarUrl={client?.avatar}
+      avatarUrl={getImageURL(client?.avatar)}
       isImage
       content={
         <div className={styles.contentWrapper}>
           <div className={styles.content}>
             <div className={styles.clientInfo}>
               <Box className={styles.clientMainInfo}>
-                <Link className={styles.clientTitle} href={client?.domain}>
-                  {client?.name || loading}
+                <Link
+                  className={styles.clientTitle}
+                  href={client?.domain}
+                  data-test-id={`lnk-profile-scope-client-${id}`}
+                >
+                  {localizedClientName || loading}
                 </Link>
                 <Typography color="text.secondary" className="text-12">
                   {date?.toLocaleDateString(currentLanguage) || loading}
@@ -191,14 +200,15 @@ const CardScope: FC<ICardScopeProps> = (props) => {
             <Button
               variant="text"
               color="secondary"
-              data-id="open-menu-controls-button"
               aria-describedby={id}
               onClick={handleClick}
               className={styles.moreButton}
+              data-test-id={`btn-profile-scope-more-${id}`}
             >
               <CustomIcon Icon={MoreHorizOutlinedIcon} color="textSecondary" />
             </Button>
             <MenuControls
+              dataTestId={testIds}
               anchorEl={anchorEl}
               onClose={handleClose}
               controls={scopeControls}

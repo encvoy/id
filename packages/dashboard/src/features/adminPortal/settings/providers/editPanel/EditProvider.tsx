@@ -6,13 +6,13 @@ import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "src/features/adminPortal/settings/providers/components/BaseFormProvider";
-import { InputField } from "src/shared/ui/components/InputBlock";
-import { PasswordTextField } from "src/shared/ui/components/PasswordTextField";
+import { InputField } from "@encvoy-id/components";
+import { PasswordTextField } from "@encvoy-id/components";
 import { isObjectEmpty } from "src/shared/utils/helpers";
 import {
   IOauthParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useUpdateAvatarMutation,
   useUpdateProviderMutation,
 } from "src/shared/api/provider";
@@ -22,7 +22,12 @@ import styles from "./EditProvider.module.css";
 import { IChipProps, ScopeChips } from "../components/ScopeChips";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
-import { ProviderAvatars } from "src/features/adminPortal/settings/providers/utils";
+import {
+  buildProviderUpdatePayload,
+  chipsToScopes,
+  ProviderAvatars,
+  scopesToChips,
+} from "src/features/adminPortal/settings/providers/utils";
 import Typography from "@mui/material/Typography";
 
 const schema = (translate: TFunction) =>
@@ -61,7 +66,8 @@ const schema = (translate: TFunction) =>
         .max(255, translate("errors.valueMaxLength", { maxLength: 255 }))
         .matches(/^[^\n ]*$/, {
           message: translate("errors.noSpaces"),
-        }),
+        })
+        .required(translate("errors.requiredField")),
     }),
   });
 
@@ -103,19 +109,24 @@ export const EditProvider: FC<IEditProviderProps> = ({
   useEffect(() => {
     if (provider && isOpen) {
       reset(provider as IProvider<IOauthParams>);
-      setChips([]);
+      setChips(
+        scopesToChips((provider.params as IOauthParams | undefined)?.scopes)
+      );
     }
   }, [isOpen]);
 
+  const providerScopes = chipsToScopes(
+    scopesToChips((provider?.params as IOauthParams | undefined)?.scopes)
+  );
+  const scopes = chipsToScopes(chips);
+  const didScopesChange = scopes !== providerScopes;
+
   const onSubmit: SubmitHandler<IProvider<IOauthParams>> = (data) => {
-    const scopes = chips.map((chip) => chip.value).join(" ");
-    updateProvider({
-      ...data,
-      params: {
-        ...data.params,
-        scopes,
-      },
-    } as IProvider<IOauthParams>).then(() => {
+    const payload = buildProviderUpdatePayload(data, dirtyFields, {
+      params: didScopesChange ? { scopes } : undefined,
+    });
+
+    updateProvider(payload).then(() => {
       setTimeout(() => {
         updateAvatar({
           clientId: data.client_id,
@@ -138,7 +149,10 @@ export const EditProvider: FC<IEditProviderProps> = ({
       methods={methods}
       isNoBackdrop={false}
       onSubmit={handleSubmit(onSubmit)}
-      disabled={updateResult.isLoading || isObjectEmpty(dirtyFields)}
+      disabled={
+        updateResult.isLoading ||
+        (isObjectEmpty(dirtyFields) && !didScopesChange)
+      }
     >
       <ProviderHeader
         defaultAvatar={
@@ -149,20 +163,42 @@ export const EditProvider: FC<IEditProviderProps> = ({
       <InputField
         name="params.external_client_id"
         label={translate("providers.custom.clientId")}
+        dataTestId="txt-settings-login-method-resource-id"
         description={translate("providers.custom.clientIdDescription")}
         required
       />
 
-      {provider?.type === ProviderType.CUSTOM && (
+      <>
+          <Typography className={clsx("text-14", "asterisk", styles.label)}>
+            {translate("providers.custom.clientSecret")}
+          </Typography>
+          <PasswordTextField
+            showText={translate("actionButtons.show")}
+            hideText={translate("actionButtons.hide")}
+            copyText={translate("actionButtons.copy")}
+            nameField="params.external_client_secret"
+            dataTestId="txt-settings-login-method-secret-key"
+          />
+          <Typography
+            className={clsx("text-14", styles.description)}
+            color="text.secondary"
+          >
+            {translate("providers.custom.clientSecretDescription")}
+          </Typography>
+      </>
+
+      {provider?.type === EProviderType.CUSTOM && (
         <>
           <InputField
             name="params.issuer"
             label={translate("providers.custom.issuer")}
+            dataTestId="txt-settings-login-method-server-base-url"
             required
           />
           <InputField
             name="params.authorization_endpoint"
             label={translate("providers.custom.authorizationEndpoint")}
+            dataTestId="txt-settings-login-method-auth-url"
             description={translate(
               "providers.custom.authorizationEndpointDescription"
             )}
@@ -171,12 +207,14 @@ export const EditProvider: FC<IEditProviderProps> = ({
           <InputField
             name="params.token_endpoint"
             label={translate("providers.custom.tokenEndpoint")}
+            dataTestId="txt-settings-login-method-token-url"
             description={translate("providers.custom.tokenEndpointDescription")}
             required
           />
           <InputField
             name="params.userinfo_endpoint"
             label={translate("providers.custom.userinfoEndpoint")}
+            dataTestId="txt-settings-login-method-userinfo-url"
             description={translate(
               "providers.custom.userinfoEndpointDescription"
             )}
@@ -186,7 +224,11 @@ export const EditProvider: FC<IEditProviderProps> = ({
           <Typography className={clsx("text-14", styles["input-title"])}>
             {translate("providers.custom.scopes")}
           </Typography>
-          <ScopeChips chips={chips} setChips={setChips} />
+          <ScopeChips
+            chips={chips}
+            setChips={setChips}
+            inputDataTestId="txt-settings-login-method-scopes"
+          />
           <Typography
             className={clsx("text-14", styles["input-subtitle"])}
             color="text.secondary"

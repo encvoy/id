@@ -6,15 +6,17 @@ import { MESSAGE } from '@/lib/constant';
 import { Typography } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getLocalizedTextValue } from '@/lib/utils';
 
 const Page: FC = () => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
+  const resolvedMessage = getLocalizedTextValue(MESSAGE, i18n.language);
 
   return (
     <Section>
       <Container title={translate('helperText.success')} isCancelAction withoutFooter>
         <Typography sx={{ textAlign: 'center' }} color="text.secondary">
-          {MESSAGE || translate('helperText.operationSuccess')}
+          {resolvedMessage || translate('helperText.operationSuccess')}
         </Typography>
       </Container>
     </Section>

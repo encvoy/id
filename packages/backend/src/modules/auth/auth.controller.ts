@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger/dist';
+import { ApiOperation } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserId } from 'src/decorators';
 import * as dto from './auth.dto';

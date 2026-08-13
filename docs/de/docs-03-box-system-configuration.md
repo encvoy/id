@@ -1,23 +1,23 @@
 ---
-title: "Umgebungsvariablen Encvoy ID — Administrator-Referenz"
-description: "Erfahren Sie, wie Sie die Encvoy ID Umgebungsvariablen korrekt konfigurieren und einen sicheren Systembetrieb gewährleisten. Eine Schritt-für-Schritt-Anleitung für Administratoren."
+title: "Umgebungsvariablen {{projectName}} — Administrator-Referenz"
+description: "Erfahren Sie, wie Sie die {{projectName}} Umgebungsvariablen korrekt konfigurieren und einen sicheren Systembetrieb gewährleisten. Eine Schritt-für-Schritt-Anleitung für Administratoren."
 keywords:
-  - Umgebungsvariablen Encvoy ID
-  - Encvoy ID env konfigurieren
+  - Umgebungsvariablen {{projectName}}
+  - {{projectName}} env konfigurieren
   - OIDC env Variablen
   - OpenID Connect Umgebungsvariablen
   - OAuth 2.0 Umgebungskonfiguration
   - docker-compose env
-  - PostgreSQL Konfiguration Encvoy ID
-  - SMTP Konfiguration Encvoy ID
-  - Schnittstellenanpassung Encvoy ID
-  - CUSTOM_STYLES Encvoy ID
+  - PostgreSQL Konfiguration {{projectName}}
+  - SMTP Konfiguration {{projectName}}
+  - Schnittstellenanpassung {{projectName}}
+  - CUSTOM_STYLES {{projectName}}
   - Sicherheit von Umgebungsvariablen
-  - Administrator Encvoy ID
-  - Serverkonfiguration Encvoy ID
-  - Konfigurationsleitfaden Encvoy ID
-  - Google Metriken Encvoy ID
-author: "Encvoy ID Team"
+  - Administrator {{projectName}}
+  - Serverkonfiguration {{projectName}}
+  - Konfigurationsleitfaden {{projectName}}
+  - Google Metriken {{projectName}}
+author: "{{projectName}} Team"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -26,20 +26,20 @@ menu_title: "Konfiguration der Umgebungsvariablen"
 order: 3
 ---
 
-# So konfigurieren Sie die Encvoy ID Umgebungsvariablen
+# So konfigurieren Sie die {{projectName}} Umgebungsvariablen
 
-In dieser Anleitung erfahren Sie, wie Sie die Umgebungsvariablen für **Encvoy ID** auf Ihrem Server konfigurieren. Wir werden alle Parameter im Detail aufschlüsseln — von der Datenbank und OIDC bis hin zu Cache, E-Mail und Schnittstelle —, um sicherzustellen, dass Ihr System vom ersten Start an korrekt funktioniert.
+In dieser Anleitung erfahren Sie, wie Sie die Umgebungsvariablen für **{{projectName}}** auf Ihrem Server konfigurieren. Wir werden alle Parameter im Detail aufschlüsseln — von der Datenbank und OIDC bis hin zu Cache, E-Mail und Schnittstelle —, um sicherzustellen, dass Ihr System vom ersten Start an korrekt funktioniert.
 
 **Inhaltsverzeichnis:**
 
-- [So konfigurieren Sie die Encvoy ID Umgebungsvariablen](#so-konfigurieren-sie-die-encvoy-id-umgebungsvariablen)
+- [So konfigurieren Sie die {{projectName}} Umgebungsvariablen](#so-konfigurieren-sie-die-projectname-umgebungsvariablen)
   - [Allgemeine Umgebungsvariablen { #common-environment-variables }](#allgemeine-umgebungsvariablen--common-environment-variables-)
   - [Datenbank-Umgebungsvariablen (PostgreSQL) { #database-environment-variables }](#datenbank-umgebungsvariablen-postgresql--database-environment-variables-)
   - [Redis, Sitzungen und OIDC-Cookies { #redis-sessions-and-oidc-cookies }](#redis-sitzungen-und-oidc-cookies--redis-sessions-and-oidc-cookies-)
   - [Rate Limiting und Protokollierung { #rate-limiting-and-logging }](#rate-limiting-und-protokollierung--rate-limiting-and-logging-)
   - [E-Mail und Benachrichtigungen { #mail-and-notifications }](#e-mail-und-benachrichtigungen--mail-and-notifications-)
   - [Schnittstellenanpassung { #interface-customization }](#schnittstellenanpassung--interface-customization-)
-  - [Berechtigungen und Lizenzen { #permissions-and-licenses }](#berechtigungen-und-lizenzen--permissions-and-licenses-)
+  - [Urheberrecht { #copyright }](#urheberrecht--copyright-)
   - [Metriken { #metrics }](#metriken--metrics-)
   - [Siehe auch { #see-also }](#siehe-auch--see-also-)
 
@@ -62,7 +62,7 @@ Diese Variablen definieren das grundlegende Verhalten und die Identifikation des
 | `CLIENT_SECRET`             | Eindeutiges Anwendungsgeheimnis (UUID empfohlen)                    | —                           |
 | `MANUAL_URL`                | Link zur Dokumentation für Benutzer                                 | `https://your-domain/docs/` |
 
-> ⚠️ Die Variablen `CLIENT_ID` und `CLIENT_SECRET` werden verwendet, um **Encvoy ID** als OAuth 2.0 / OpenID Connect Client zu identifizieren und müssen geheim gehalten werden.
+> ⚠️ Die Variablen `CLIENT_ID` und `CLIENT_SECRET` werden verwendet, um **{{projectName}}** als OAuth 2.0 / OpenID Connect Client zu identifizieren und müssen geheim gehalten werden.
 
 ---
 
@@ -120,7 +120,7 @@ SMTP-Server-Einstellungen für den Versand von E-Mails (Registrierungsbestätigu
 
 Das Erscheinungsbild von Schaltflächen, Links und Tabs wird über ein JSON-Objekt in der Variable `CUSTOM_STYLES` konfiguriert.
 
-Die Variable `CUSTOM_STYLES` ermöglicht es Ihnen, die **Encvoy ID**-Schnittstelle anzupassen, ohne den Code zu ändern.
+Die Variable `CUSTOM_STYLES` ermöglicht es Ihnen, die **{{projectName}}**-Schnittstelle anzupassen, ohne den Code zu ändern.
 
 ```env
 # Zum Projektordner wechseln
@@ -158,7 +158,7 @@ Beschreibung der Variable `CUSTOM_STYLES`:
 
 ---
 
-## Berechtigungen und Lizenzen { #permissions-and-licenses }
+## Urheberrecht { #copyright }
 
 | Variable    | Beschreibung                           | Standardwert          | Beispiel                               |
 | ----------- | -------------------------------------- | --------------------- | -------------------------------------- |
@@ -176,5 +176,5 @@ Beschreibung der Variable `CUSTOM_STYLES`:
 
 ## Siehe auch { #see-also }
 
-- [Systeminstallation Encvoy ID](./docs-02-box-system-install.md) — Anleitung zur Systeminstallation.
+- [Systeminstallation {{projectName}}](./docs-02-box-system-install.md) — Anleitung zur Systeminstallation.
 - [Systemkonfiguration](./docs-04-box-system-settings.md) — Anleitung zur Konfiguration der Schnittstelle und des Benutzerzugriffs auf das System.

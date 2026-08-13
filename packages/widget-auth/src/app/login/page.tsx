@@ -7,7 +7,13 @@ import styles from './page.module.css';
 import { useEffect, useRef, useState } from 'react';
 import { Card } from '@/components/card/Card';
 import { LoginMethods } from '@/app/login/LoginMethods';
-import { INTERACTION_ID, LOGGED_USERS_PARSED, WIDGET } from '@/lib/constant';
+import {
+  buildPublicUrl,
+  INTERACTION_URL,
+  LOGGED_USERS_PARSED,
+  setLoggedUsersParsed,
+  WIDGET,
+} from '@/lib/constant';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 
@@ -29,10 +35,19 @@ export default function Page() {
 
   const deleteSession = async (sessionId: string) => {
     try {
-      await fetch(window.location.origin + '/api/interaction/session/' + sessionId, {
+      const response = await fetch(buildPublicUrl(`/api/interaction/session/${sessionId}`), {
         method: 'DELETE',
       });
-      setSessions((sessions) => sessions.filter((item) => item.sessionId !== sessionId));
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete session ${sessionId}`);
+      }
+
+      setSessions((sessions) => {
+        const nextSessions = sessions.filter((item) => item.sessionId !== sessionId);
+        setLoggedUsersParsed(nextSessions);
+        return nextSessions;
+      });
     } catch (e) {
       console.error('deleteUserSession error: ', e);
     }
@@ -45,12 +60,14 @@ export default function Page() {
           <Container>
             <div className={styles.toggles}>
               <Button
+                data-test-id="tab-auth-methods"
                 label={translate('pages.login.toggleLogin')}
                 className={isLogin ? '' : styles.toggleNotActive}
                 onClick={() => setIsLogin(true)}
               />
               <Button
                 label={translate('pages.login.toggleSessions')}
+                data-test-id="tab-auth-sessions"
                 className={isLogin ? styles.toggleNotActive : ''}
                 onClick={() => setIsLogin(false)}
               />
@@ -73,13 +90,9 @@ export default function Page() {
                         ref={(el) => {
                           if (el) formRefs.current[index] = el;
                         }}
-                        action={
-                          '/api/interaction/' +
-                          INTERACTION_ID +
-                          '/auth?type=session&token=' +
-                          item?.sessionToken
-                        }
+                        action={`${INTERACTION_URL}/auth?type=session&token=${item?.sessionToken}`}
                         method="POST"
+                        data-test-id={`form-auth-session-${item.id}`}
                       >
                         <Card
                           srcAvatar={item?.picture}
@@ -87,6 +100,7 @@ export default function Page() {
                           title={item?.nickname || item?.id}
                           onClick={() => formRefs.current[index]?.submit()}
                           onButtonClick={() => deleteSession(item?.sessionId)}
+                          data-test-id={`btn-auth-session-delete-${item.id}`}
                         />
                       </form>
                     </li>

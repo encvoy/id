@@ -1,7 +1,7 @@
 import * as common from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import multer, { Multer } from 'multer';
 import { Observable } from 'rxjs';
-import path from 'path';
 import { Ei18nCodes } from 'src/enums';
 
 const MULTER_MODULE_OPTIONS = 'MULTER_MODULE_OPTIONS';
@@ -26,13 +26,25 @@ export function FilesInterceptor(
       @common.Inject(MULTER_MODULE_OPTIONS)
       options: multer.Options = {},
     ) {
+      const mimeToExt: Record<string, string> = {
+        'image/png': '.png',
+        'image/jpeg': '.jpg',
+        'image/jpg': '.jpg',
+        'image/bmp': '.bmp',
+        'image/webp': '.webp',
+      };
+
       this.multer = multer({
         ...options,
         storage: multer.diskStorage({
           destination: dest,
+          filename: (_req, file, cb) => {
+            const ext = mimeToExt[file.mimetype] || '';
+            cb(null, `${randomUUID()}${ext}`);
+          },
         }),
         fileFilter: (req, file, callback) => {
-          const ext = path.extname(file.originalname).toLowerCase();
+          const ext = mimeToExt[file.mimetype] || '';
           if (!ALLOWED_EXTENSIONS.includes(ext)) {
             //@ts-ignore
             req.fileValidationError = `Incorrect file type: ${ext}`;

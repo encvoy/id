@@ -1,7 +1,175 @@
 import Cookies from "universal-cookie";
-import { EDefaultConfigValues, WidgetConfig } from "../types";
+import { EDefaultConfigValues, TrustedWidgetConfig } from "../types";
+import { APP_BASE_PATH } from "src/shared/utils/appBasePath";
 
 const cookies = new Cookies();
+const AUTH_STATE_STORAGE_PREFIX = "oidc_auth_state_";
+const PENDING_RETURN_TO_STORAGE_KEY = "oidc_pending_return_to";
+const AUTH_STATE_MAX_AGE_MS = 10 * 60 * 1000;
+const AUTH_ROUTE_PATHS = new Set(["/login", "/code"]);
+const TRUSTED_WIDGET_REFRESH_EVENT = "trusted-widget:refresh-profile";
+
+const isBrowser = (): boolean => typeof window !== "undefined";
+
+export const refreshTrustedWidgetProfile = (): void => {
+  if (!isBrowser()) return;
+
+  window.dispatchEvent(new Event(TRUSTED_WIDGET_REFRESH_EVENT));
+};
+
+export const onTrustedWidgetProfileRefresh = (
+  handler: () => void
+): (() => void) => {
+  if (!isBrowser()) return () => undefined;
+
+  window.addEventListener(TRUSTED_WIDGET_REFRESH_EVENT, handler);
+  return () => window.removeEventListener(TRUSTED_WIDGET_REFRESH_EVENT, handler);
+};
+
+const getReturnToFromLocation = (): string => {
+  if (!isBrowser()) return "";
+
+  return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+};
+
+const normalizeReturnTo = (value?: string | null): string => {
+  if (!isBrowser() || !value) return "";
+
+  try {
+    const url = new URL(value, window.location.origin);
+    if (url.origin !== window.location.origin) {
+      return "";
+    }
+
+    const pathname = url.pathname.startsWith(`${APP_BASE_PATH}/`)
+      ? url.pathname.slice(APP_BASE_PATH.length)
+      : url.pathname;
+
+    if (AUTH_ROUTE_PATHS.has(pathname)) {
+      return "";
+    }
+
+    return `${pathname}${url.search}${url.hash}`;
+  } catch (error) {
+    console.warn("normalizeReturnTo error:", error);
+    return "";
+  }
+};
+
+const pruneAuthStates = (): void => {
+  if (!isBrowser()) return;
+
+  for (let i = window.sessionStorage.length - 1; i >= 0; i--) {
+    const key = window.sessionStorage.key(i);
+    if (!key || !key.startsWith(AUTH_STATE_STORAGE_PREFIX)) {
+      continue;
+    }
+
+    try {
+      const rawState = window.sessionStorage.getItem(key);
+      if (!rawState) {
+        window.sessionStorage.removeItem(key);
+        continue;
+      }
+
+      const parsedState = JSON.parse(rawState) as { createdAt?: number };
+      if (
+        !parsedState.createdAt ||
+        Date.now() - parsedState.createdAt > AUTH_STATE_MAX_AGE_MS
+      ) {
+        window.sessionStorage.removeItem(key);
+      }
+    } catch (error) {
+      console.warn("pruneAuthStates error:", error);
+      window.sessionStorage.removeItem(key);
+    }
+  }
+};
+
+const getPendingReturnTo = (): string => {
+  if (!isBrowser()) return "";
+
+  return normalizeReturnTo(
+    window.sessionStorage.getItem(PENDING_RETURN_TO_STORAGE_KEY)
+  );
+};
+
+const createAuthState = (): string => {
+  if (!isBrowser()) return "";
+
+  pruneAuthStates();
+
+  const returnTo =
+    getPendingReturnTo() || normalizeReturnTo(getReturnToFromLocation());
+  if (!returnTo) {
+    return "";
+  }
+
+  const state = randomString();
+  window.sessionStorage.setItem(
+    `${AUTH_STATE_STORAGE_PREFIX}${state}`,
+    JSON.stringify({
+      createdAt: Date.now(),
+      returnTo,
+    })
+  );
+
+  return state;
+};
+
+export const setPendingReturnTo = (value?: string | null): void => {
+  if (!isBrowser()) return;
+
+  const normalizedValue = normalizeReturnTo(value);
+  if (!normalizedValue) {
+    window.sessionStorage.removeItem(PENDING_RETURN_TO_STORAGE_KEY);
+    return;
+  }
+
+  window.sessionStorage.setItem(PENDING_RETURN_TO_STORAGE_KEY, normalizedValue);
+};
+
+export const consumePostLoginReturnTo = (): string => {
+  if (!isBrowser()) return "";
+
+  pruneAuthStates();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const state = urlParams.get("state");
+  let returnTo = "";
+
+  if (state) {
+    const storageKey = `${AUTH_STATE_STORAGE_PREFIX}${state}`;
+    const rawState = window.sessionStorage.getItem(storageKey);
+
+    if (rawState) {
+      try {
+        const parsedState = JSON.parse(rawState) as {
+          createdAt?: number;
+          returnTo?: string;
+        };
+        const isExpired =
+          !parsedState.createdAt ||
+          Date.now() - parsedState.createdAt > AUTH_STATE_MAX_AGE_MS;
+
+        if (!isExpired) {
+          returnTo = normalizeReturnTo(parsedState.returnTo);
+        }
+      } catch (error) {
+        console.warn("consumePostLoginReturnTo error:", error);
+      }
+    }
+
+    window.sessionStorage.removeItem(storageKey);
+  }
+
+  if (!returnTo) {
+    returnTo = getPendingReturnTo();
+  }
+
+  window.sessionStorage.removeItem(PENDING_RETURN_TO_STORAGE_KEY);
+  return returnTo;
+};
 
 export const getTokenByRefreshToken = async (
   appId: string,
@@ -12,7 +180,7 @@ export const getTokenByRefreshToken = async (
   expires_in: number | null;
 }> => {
   const body = new URLSearchParams({
-    client_id: encodeURIComponent(appId),
+    client_id: appId,
   });
 
   const defaultData = { access_token: "", id_token: "", expires_in: null };
@@ -20,7 +188,7 @@ export const getTokenByRefreshToken = async (
   try {
     const response = await fetch(domain + "/auth/refresh", {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded ",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       method: "POST",
       credentials: "include",
@@ -49,8 +217,8 @@ export const checkAccessToken = async (
   const errorResult = { active: false, exp: null };
   try {
     const body = new URLSearchParams({
-      token: encodeURIComponent(token),
-      client_id: encodeURIComponent(appId),
+      token,
+      client_id: appId,
       token_type_hint: "access_token",
     });
 
@@ -197,7 +365,7 @@ export const getUrlParams = (): string => {
     );
     if (codeVerifier) {
       cookies.set(`pkce_code_verifier_${providerId}`, codeVerifier, {
-        path: "/api/interaction/code",
+        path: `${APP_BASE_PATH}/api/interaction/code`,
         maxAge: 300, //5 minutes
       });
     }
@@ -208,7 +376,7 @@ export const getUrlParams = (): string => {
 
 // Change code for tokens
 export const getTokensByCode = async (
-  config: WidgetConfig
+  config: TrustedWidgetConfig
 ): Promise<{
   access_token: string;
   id_token: string;
@@ -263,10 +431,11 @@ export const getTokensByCode = async (
   return defaultData;
 };
 
-export const login = async (config: WidgetConfig) => {
+export const login = async (config: TrustedWidgetConfig) => {
   const codeVerifier = setCodeVerifier();
   const codeVerifierBase64 = btoaRFC7636(stringToArrayBuffer(codeVerifier));
   const codeChallenge = btoaRFC7636(await sha256(codeVerifierBase64));
+  const state = createAuthState();
   const scopes = EDefaultConfigValues.scopes.split(" ");
   if (config.scopes) {
     for (const scope of config.scopes) {
@@ -285,6 +454,9 @@ export const login = async (config: WidgetConfig) => {
     code_challenge_method: "S256",
     prompt: "consent",
   });
+  if (state) {
+    params.set("state", state);
+  }
   const url = `${
     config.issuer || EDefaultConfigValues.issuer
   }/oidc/auth?${params.toString()}`;
@@ -293,6 +465,8 @@ export const login = async (config: WidgetConfig) => {
 
 export const logout = (path?: string): void => {
   try {
+    const preservedLanguage = window?.localStorage.getItem("i18nextLng");
+
     localStorage.removeItem("accessToken");
 
     // Remove all cookies related to authentication
@@ -303,14 +477,19 @@ export const logout = (path?: string): void => {
         cookieName.includes("auth") ||
         cookieName.includes("session")
       ) {
-        cookies.remove(cookieName, { path: "/" });
+        for (const cookiePath of new Set(["/", APP_BASE_PATH || "/"])) {
+          cookies.remove(cookieName, { path: cookiePath });
+        }
       }
     });
 
     window?.localStorage.clear();
     window?.sessionStorage.clear();
+    if (preservedLanguage !== null) {
+      window?.localStorage.setItem("i18nextLng", preservedLanguage);
+    }
 
-    window.location.href = path || "/";
+    window.location.href = path || APP_BASE_PATH || "/";
   } catch (error) {
     console.error("Error during aggressive logout:", error);
     window?.location.reload();

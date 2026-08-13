@@ -6,7 +6,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger/dist';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 import { GetNonceResDto } from './ethereum.dto';

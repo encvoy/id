@@ -4,7 +4,7 @@ import { connect, useDispatch } from "react-redux";
 import { Navigate, Outlet, Route, useLocation } from "react-router-dom";
 import { isOwnerOrEditor } from "src/shared/utils/helpers";
 import { RootState } from "src/app/store/store";
-import { TUserSlice } from "src/shared/lib/userSlice";
+import { TUserSlice } from "src/shared/slices/userSlice";
 import { ClientsList } from "src/features/adminPortal/clients/pages/ClientsList";
 import { EventLog } from "src/features/eventLog/EventLogList";
 import { UserProfile } from "src/features/adminPortal/users/UserProfile";
@@ -14,13 +14,18 @@ import { ChangeUserPassword } from "src/features/adminPortal/users/ChangeUserPro
 import { ClientSettings } from "src/features/adminPortal/settings/pages/ClientSettings";
 import { UsersList } from "src/features/adminPortal/users/UsersList";
 import { TopTabsOwner } from "src/app/routes/tabs/TopTabsOwner";
-import { SystemSettings } from "src/features/adminPortal/settings/pages/SystemSettings";
-import { setStartRoutePath } from "src/shared/lib/appSlice";
-import { Widget } from "src/features/adminPortal/settings/widget/Widget";
+import { TopTabsSystem } from "src/app/routes/tabs/TopTabsSystem";
+import { SystemOrgSettings } from "src/features/adminPortal/settings/pages/SystemOrgSettings";
+import { OrganizationsList } from "src/features/adminPortal/organizations/pages/OrganizationsList";
+import { ProfileSettings } from "src/features/adminPortal/settings/pages/ProfileSettings";
+import { StylingSettings } from "src/features/adminPortal/settings/pages/StylingSettings";
+import { EmailTemplatesSettings } from "src/features/adminPortal/settings/pages/EmailTemplatesSettings";
+import { setStartRoutePath } from "src/shared/slices/appSlice";
+import { WidgetSettings } from "src/features/adminPortal/settings/pages/WidgetSettings";
 import { routes, subTabs, tabs } from "src/shared/utils/enums";
-import { CLIENT_ID } from "src/shared/utils/constants";
 import { CreateClient } from "src/features/adminPortal/clients/pages/CreateClient";
 import { ClientDetails } from "src/features/adminPortal/clients/pages/ClientDetails";
+import { SystemSettings } from "src/features/adminPortal/settings/pages/SystemSettings";
 
 interface IOwnerOrEditorRouteProps {
   roleInApp: TUserSlice["roleInApp"];
@@ -41,14 +46,22 @@ const OwnerOrEditorRouteComponent: FC<IOwnerOrEditorRouteProps> = ({
 }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const thirdSegment = pathSegments[2];
+  const isSystemCabinet =
+    thirdSegment === tabs.system ||
+    thirdSegment === tabs.organizations ||
+    thirdSegment === tabs.systemProfileSettings ||
+    thirdSegment === tabs.styling;
 
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
-  const needsProfileFill =
-    pathname !== "/fill-profile" && profile?.password_change_required;
+  const needsPasswordChange =
+    pathname !== `/${routes.profile}/change-password` &&
+    profile?.password_change_required;
 
   useEffect(() => {
-    const pathSegments = window.location.pathname.split("/");
+    const pathSegments = pathname.split("/");
     switch (pathSegments[1]) {
       case routes.system:
         dispatch(setStartRoutePath(routes.system));
@@ -75,11 +88,12 @@ const OwnerOrEditorRouteComponent: FC<IOwnerOrEditorRouteProps> = ({
   if (hasAccess === null) return <LinearProgress />;
   if (!isAuthorized) return <Navigate to="/login" replace />;
   if (!hasAccess) return <Navigate to={`/${routes.profile}`} replace />;
-  if (needsProfileFill) return <Navigate to="/fill-profile" replace />;
+  if (needsPasswordChange)
+    return <Navigate to={`/${routes.profile}/change-password`} replace />;
 
   return (
     <>
-      <TopTabsOwner />
+      {isSystemCabinet ? <TopTabsSystem /> : <TopTabsOwner />}
       <Outlet />
     </>
   );
@@ -89,15 +103,33 @@ export const OwnerOrEditorRoute = connect(mapStateToProps)(
   OwnerOrEditorRouteComponent
 );
 
-export const getSystemRoutes = () => {
+export const getSystemRoutes = (systemClientId: string) => {
   return (
     <>
       <Route
         index
-        element={<Navigate to={`${CLIENT_ID}/${tabs.settings}`} replace />}
+        element={<Navigate to={`${systemClientId}/${tabs.settings}`} replace />}
       />
-      <Route path={`:appId/${tabs.settings}`} element={<SystemSettings />} />
-      <Route path={`:appId/${tabs.widget}`} element={<Widget />} />
+      <Route path={`:appId/${tabs.settings}`} element={<SystemOrgSettings />} />
+      <Route
+        path={`:appId/${tabs.organizations}`}
+        element={<OrganizationsList />}
+      />
+      <Route path={`:appId/${tabs.system}`} element={<SystemSettings />} />
+      <Route
+        path={`:appId/${tabs.profileSettings}`}
+        element={<ProfileSettings mode="custom" />}
+      />
+      <Route
+        path={`:appId/${tabs.systemProfileSettings}`}
+        element={<ProfileSettings mode="base" />}
+      />
+      <Route path={`:appId/${tabs.styling}`} element={<StylingSettings />} />
+      <Route
+        path={`:appId/${tabs.emailTemplates}/:providerId`}
+        element={<EmailTemplatesSettings />}
+      />
+      <Route path={`:appId/${tabs.widget}`} element={<WidgetSettings />} />
       <Route path={`:appId/${tabs.eventLog}`} element={<EventLog />} />
       <Route path={`:appId/${tabs.users}`} element={<UsersList />} />
       <Route
@@ -110,7 +142,7 @@ export const getSystemRoutes = () => {
         element={<EditUserProfile />}
       />
       <Route
-        path={`:appId/${tabs.users}/:userId/change-password`}
+        path={`:appId/${tabs.users}/:userId/${tabs.password}`}
         element={<ChangeUserPassword />}
       />
       <Route path={`:appId/${tabs.clients}`} element={<ClientsList />} />
@@ -128,7 +160,11 @@ export const getSystemRoutes = () => {
       />
       <Route
         path={`:appId/${tabs.clients}/:clientId/${tabs.widget}`}
-        element={<Widget />}
+        element={<WidgetSettings />}
+      />
+      <Route
+        path={`:appId/${tabs.clients}/:clientId/${tabs.emailTemplates}/:providerId`}
+        element={<EmailTemplatesSettings />}
       />
       <Route
         path={`:appId/${tabs.clients}/:clientId/${tabs.users}/:userId`}
@@ -139,7 +175,7 @@ export const getSystemRoutes = () => {
         element={<EditUserProfile />}
       />
       <Route
-        path={`:appId/${tabs.clients}/:clientId/${tabs.users}/:userId/change-password`}
+        path={`:appId/${tabs.clients}/:clientId/${tabs.users}/:userId/${tabs.password}`}
         element={<ChangeUserPassword />}
       />
     </>

@@ -8,13 +8,14 @@ import {
 import {
   IQueryPropsWithId,
   IQuerySortParams,
-  responseListItems,
+  IResponseListItems,
 } from "src/shared/api/types";
 import { FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
+import type { TLocalizedText } from "src/shared/utils/locales";
 
 export interface IInvitation {
   client?: {
-    name: string;
+    name: string | TLocalizedText;
     domain: string;
     avatar: string;
   };
@@ -27,7 +28,7 @@ export interface IInvitation {
 export const verificationApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getInvitations: builder.query<
-      responseListItems<IInvitation[]>,
+      IResponseListItems<IInvitation[]>,
       IQueryPropsWithId
     >({
       query: ({ id, query }) =>
@@ -71,7 +72,7 @@ export const verificationApi = emptySplitApi.injectEndpoints({
       invalidatesTags: [ETags.Invites],
     }),
     getUsersInvitations: builder.query<
-      responseListItems<IInvitation[]>,
+      IResponseListItems<IInvitation[]>,
       IQueryPropsWithId
     >({
       query: ({ id, query }) =>

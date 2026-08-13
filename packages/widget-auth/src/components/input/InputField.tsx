@@ -1,8 +1,9 @@
-import { FC, ReactNode } from 'react';
+import { FC, HTMLInputTypeAttribute, ReactNode } from 'react';
 import TextField from '@mui/material/TextField';
 import { useFormContext } from 'react-hook-form';
 import { InputAdornment } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { PASSWORD_MANAGER_IGNORE_ATTRIBUTES } from '@/components/autofill';
 
 interface IInputFieldProps {
   fieldName: string;
@@ -11,6 +12,10 @@ interface IInputFieldProps {
   endPosition?: ReactNode;
   autoFocus?: boolean;
   requiredFiled?: boolean;
+  dataTestId?: string;
+  autoComplete?: string;
+  ignorePasswordManagers?: boolean;
+  type?: HTMLInputTypeAttribute;
 }
 
 export const InputField: FC<IInputFieldProps> = ({
@@ -20,6 +25,10 @@ export const InputField: FC<IInputFieldProps> = ({
   endPosition,
   autoFocus,
   requiredFiled = true,
+  dataTestId,
+  autoComplete,
+  ignorePasswordManagers = false,
+  type,
 }) => {
   const { t: translate } = useTranslation();
   const {
@@ -40,9 +49,15 @@ export const InputField: FC<IInputFieldProps> = ({
       helperText={errors[fieldName]?.message as string}
       placeholder={placeholder}
       disabled={disabled}
+      type={type}
       slotProps={{
         input: {
           endAdornment: <InputAdornment position="end">{endPosition}</InputAdornment>,
+        },
+        htmlInput: {
+          autoComplete,
+          ...(ignorePasswordManagers ? PASSWORD_MANAGER_IGNORE_ATTRIBUTES : {}),
+          'data-test-id': dataTestId,
         },
       }}
     />

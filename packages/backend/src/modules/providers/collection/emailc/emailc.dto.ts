@@ -1,17 +1,30 @@
-import { Equals, IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { BaseCreateProviderDto, TypeProviderDTO } from '../../providers.dto';
-import { MailCodeTypes, ParamsEmailDto } from '../email/email.dto';
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import * as cv from 'class-validator';
 import { IsEmailCustom } from 'src/custom.dto';
+import { BaseCreateProviderDto, ProviderParamsDto, TypeProviderDTO } from '../../providers.dto';
+import { MailCodeTypes, ParamsEmailDto } from '../email/email.dto';
 
 export class CreateEmailCustomProviderDto extends BaseCreateProviderDto<ParamsEmailDto> {
-  @Equals('EMAIL_CUSTOM')
+  @cv.Equals('EMAIL_CUSTOM')
   @ApiProperty({ example: 'EMAIL_CUSTOM' })
   type: 'EMAIL_CUSTOM';
+
+  @ProviderParamsDto(ParamsEmailDto)
+  params?: ParamsEmailDto;
 }
 
-export class UpdateEmailCustomProviderDto extends PartialType(CreateEmailCustomProviderDto) {}
+export class UpdateParamsEmailCustomDto extends PartialType(ParamsEmailDto, {
+  skipNullProperties: false,
+}) {}
+
+export class UpdateEmailCustomProviderDto extends PartialType(
+  OmitType(CreateEmailCustomProviderDto, ['params'] as const),
+  { skipNullProperties: false },
+) {
+  @ProviderParamsDto(UpdateParamsEmailCustomDto)
+  params?: UpdateParamsEmailCustomDto;
+}
 
 export class VerificationStatusEmailDTO extends TypeProviderDTO {
   type: 'EMAIL_CUSTOM';
@@ -23,33 +36,36 @@ export class VerificationStatusEmailDTO extends TypeProviderDTO {
 export class VerificationSendCodeEmailCustomDTO extends TypeProviderDTO {
   type: 'EMAIL_CUSTOM';
 
-  @IsString()
+  @cv.IsString()
   @Transform(({ value }) => value.trim().toLowerCase())
   @ApiProperty()
   email: string;
 
-  @IsBoolean()
-  @IsOptional()
+  @cv.IsBoolean()
+  @cv.IsOptional()
   @ApiPropertyOptional({ example: 'true' })
   resend?: boolean;
 
-  @IsNumber()
+  @cv.IsNumber()
   @ApiProperty()
   timezone_offset?: number;
 
-  @IsString()
+  @cv.IsNotEmpty()
+  @cv.IsString()
   @ApiProperty({ example: 'client_id' })
   client_id: string;
 
-  @IsString()
+  @cv.IsNotEmpty()
+  @cv.IsString()
   @ApiProperty({ example: 'provider_id' })
   provider_id: string;
 
-  @IsString()
+  @cv.IsNotEmpty()
+  @cv.IsString()
   @ApiProperty({ example: 'provider_id' })
   uid: string;
 
-  @IsEnum(MailCodeTypes)
+  @cv.IsEnum(MailCodeTypes)
   @ApiProperty({ enum: MailCodeTypes, example: 'role' })
   code_type: MailCodeTypes;
 }

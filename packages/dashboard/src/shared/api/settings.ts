@@ -1,12 +1,8 @@
-import { ProviderType } from "./provider";
+import { EProviderType } from "./provider";
 import { emptySplitApi } from "./baseApi";
-import {
-  EClaimPrivacy,
-  EEmailAction,
-  endPoints,
-  ETags,
-} from "src/shared/utils/enums";
+import { EClaimPrivacy, endPoints, ETags } from "src/shared/utils/enums";
 import { createFetchArgs, createFetchArgsWithBody } from "./helpers";
+import type { TLocalizedText } from "src/shared/utils/locales";
 
 export type TSentry = {
   dsn: string;
@@ -22,13 +18,21 @@ export enum TargetType {
 
 export interface IRuleValidationData {
   active: boolean;
-  title: string;
-  error: string;
+  title: TLocalizedTextCompatible;
+  error: TLocalizedTextCompatible;
   regex: string;
 }
 
 export interface IRuleValidation extends IRuleValidationData {
-  id: number;
+  id: string;
+}
+
+export interface IRuleValidationScope {
+  client_id: string;
+}
+
+export interface IRuleValidationByFieldNameQuery extends IRuleValidationScope {
+  field_name: string;
 }
 
 export interface IRuleWithValidation {
@@ -40,14 +44,16 @@ export interface IRuleWithValidation {
   target?: TargetType;
   field_name: string;
   id: string;
-  title: string;
+  title: TLocalizedTextCompatible;
   validations: IRuleValidation[];
 }
 
 export interface IProfileField {
   type: "general" | "custom";
   field: string;
-  title: string;
+  id?: string;
+  organization_id?: string | null;
+  title: TLocalizedTextCompatible;
   default?: string;
   required: boolean;
   unique: boolean;
@@ -56,19 +62,37 @@ export interface IProfileField {
   claim: EClaimPrivacy;
   mapping_vcard?: string;
   allowed_as_login?: boolean;
+  validate_on_authorization?: boolean;
 }
 
+export type IProfileFieldScopeQuery = void | {
+  client_id?: string;
+  organization_id?: string;
+};
+
+export type IProfileFieldMutationScope = {
+  client_id?: string;
+  organization_id?: string | null;
+};
+
+export type ICreateProfileFieldPayload = Omit<
+  IProfileField,
+  "type" | "allowed_as_login"
+> &
+  IProfileFieldMutationScope;
+
+export type TLocalizedTextCompatible = TLocalizedText | string;
+
 export interface ICreateClientType {
-  name: string;
+  name: TLocalizedTextCompatible;
 }
 
 export interface IClientType extends ICreateClientType {
   id: string;
-  name: string;
 }
 
 export interface IProviderRule {
-  type: ProviderType;
+  type: EProviderType;
   allowedScopes: ProviderScope[];
   unique: boolean;
   editable: boolean;
@@ -84,34 +108,75 @@ export enum ProviderScope {
   internal = "internal",
 }
 
+export type TOidcScopeText = string | Record<string, string>;
+
+export interface IOidcScopeField {
+  profile_field_id: string;
+  field: string;
+  title: TLocalizedTextCompatible;
+  active: boolean;
+  claim_name: string;
+  order: number;
+}
+
+export interface IOidcScopeGroup {
+  id: string;
+  organization_id: string;
+  name: string;
+  icon?: string | null;
+  title: TOidcScopeText;
+  description?: TOidcScopeText | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+  fields: IOidcScopeField[];
+}
+
+export interface IOidcScopePayload {
+  client_id: string;
+  name: string;
+  icon?: string | null;
+  title: TLocalizedTextCompatible;
+  description?: TLocalizedTextCompatible | null;
+  active?: boolean;
+  fields?: string[];
+}
+
+export interface IOidcScopeFieldPayload {
+  client_id: string;
+  scope_id: string;
+  profile_field_id: string;
+  claim_name?: string | null;
+}
+
 export interface ISettings {
   registration_policy: string;
   ignore_required_fields_for_clients: boolean;
   authorize_only_admins: boolean;
   auto_merge_users: boolean;
   prohibit_identifier_binding: boolean;
-  default_public_profile_claims_oauth: string;
-  default_public_profile_claims_gravatar: string;
   allowed_login_fields: string;
+  copyright?: Record<string, string>;
+  manual_url?: string;
+  prohibit_restore_deleted_users: boolean;
+  delete_profile_after_days: number;
+  log_retention_days: number;
   sentry: TSentry;
   data_processing_agreement: string | null;
   two_factor_authentication: {
     controlled_methods: string[];
-    available_provider_ids: number[];
+    available_provider_ids: string[];
   };
   i18n: {
     default_language: string;
   };
+  system_style: string;
+  theme_light: string;
+  theme_dark: string;
 }
 
-export interface IEmailTemplate {
-  id: string;
-  action: EEmailAction;
-  title: string;
-  content: string;
-  subject: string;
-  locale: string;
-}
+const getClientSettingsPath = (clientId: string) =>
+  `${endPoints.clients}/${clientId}/${endPoints.settings}`;
 
 export const settingsApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -125,29 +190,42 @@ export const settingsApi = emptySplitApi.injectEndpoints({
       invalidatesTags: [ETags.Settings, ETags.ClientDetails],
     }),
 
-    getRules: builder.query<IRuleWithValidation[], void>({
-      query: () => `${endPoints.settings}/rules`,
+    getRules: builder.query<IRuleWithValidation[], IProfileFieldScopeQuery>({
+      query: (params) =>
+        createFetchArgs(
+          `${endPoints.settings}/rules`,
+          "GET",
+          params || undefined
+        ),
       providesTags: [ETags.Rules],
     }),
 
-    getProfileFields: builder.query<IProfileField[], void>({
-      query: () => `${endPoints.settings}/profile_fields`,
+    getProfileFields: builder.query<IProfileField[], IProfileFieldScopeQuery>({
+      query: (params) =>
+        createFetchArgs(
+          `${endPoints.settings}/profile_fields`,
+          "GET",
+          params || undefined
+        ),
       providesTags: [ETags.ProfileFields],
     }),
 
-    createProfileField: builder.mutation<void, IProfileField>({
+    createProfileField: builder.mutation<void, ICreateProfileFieldPayload>({
       query: (body) =>
         createFetchArgsWithBody(
           `${endPoints.settings}/profile_fields`,
           "POST",
           body
         ),
-      invalidatesTags: [ETags.ProfileFields],
+      invalidatesTags: [ETags.ProfileFields, ETags.OidcScopes],
     }),
 
     updateProfileField: builder.mutation<
       void,
-      { field_name: string; body: Partial<IProfileField> }
+      {
+        field_name: string;
+        body: Partial<IProfileField> & IProfileFieldMutationScope;
+      }
     >({
       query: ({ field_name, body }) =>
         createFetchArgsWithBody(
@@ -155,26 +233,102 @@ export const settingsApi = emptySplitApi.injectEndpoints({
           "PUT",
           body
         ),
-      invalidatesTags: [ETags.ProfileFields, ETags.Settings],
+      invalidatesTags: [ETags.ProfileFields, ETags.Settings, ETags.OidcScopes],
     }),
 
-    deleteProfileField: builder.mutation<void, string>({
-      query: (field_name) =>
-        createFetchArgs(
+    deleteProfileField: builder.mutation<
+      void,
+      string | ({ field_name: string } & IProfileFieldMutationScope)
+    >({
+      query: (payload) => {
+        const { field_name, ...params } =
+          typeof payload === "string" ? { field_name: payload } : payload;
+
+        return createFetchArgs(
           `${endPoints.settings}/profile_fields/${field_name}`,
+          "DELETE",
+          Object.keys(params).length ? params : undefined
+        );
+      },
+      invalidatesTags: [ETags.ProfileFields, ETags.OidcScopes],
+    }),
+
+    getOidcScopes: builder.query<IOidcScopeGroup[], string>({
+      query: (clientId) => `${endPoints.clients}/${clientId}/oidc/scopes`,
+      providesTags: [ETags.OidcScopes],
+    }),
+
+    createOidcScope: builder.mutation<IOidcScopeGroup, IOidcScopePayload>({
+      query: ({ client_id, ...body }) =>
+        createFetchArgsWithBody(
+          `${endPoints.clients}/${client_id}/oidc/scopes`,
+          "POST",
+          body
+        ),
+      invalidatesTags: [ETags.OidcScopes],
+    }),
+
+    updateOidcScope: builder.mutation<
+      IOidcScopeGroup,
+      IOidcScopePayload & { id: string }
+    >({
+      query: ({ client_id, id, ...body }) =>
+        createFetchArgsWithBody(
+          `${endPoints.clients}/${client_id}/oidc/scopes/${id}`,
+          "PUT",
+          body
+        ),
+      invalidatesTags: [ETags.OidcScopes],
+    }),
+
+    deleteOidcScope: builder.mutation<void, { client_id: string; id: string }>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/oidc/scopes/${id}`,
           "DELETE"
         ),
-      invalidatesTags: [ETags.ProfileFields],
+      invalidatesTags: [ETags.OidcScopes],
     }),
 
-    getRuleValidations: builder.query<IRuleValidation[], void>({
-      query: () => `${endPoints.settings}/rules_validations`,
+    bindOidcScopeField: builder.mutation<
+      IOidcScopeGroup,
+      IOidcScopeFieldPayload
+    >({
+      query: ({ client_id, scope_id, ...body }) =>
+        createFetchArgsWithBody(
+          `${endPoints.clients}/${client_id}/oidc/scopes/${scope_id}/fields`,
+          "POST",
+          body
+        ),
+      invalidatesTags: [ETags.OidcScopes],
+    }),
+
+    deleteOidcScopeField: builder.mutation<
+      void,
+      { client_id: string; scope_id: string; profile_field_id: string }
+    >({
+      query: ({ client_id, scope_id, profile_field_id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/oidc/scopes/${scope_id}/fields/${profile_field_id}`,
+          "DELETE"
+        ),
+      invalidatesTags: [ETags.OidcScopes],
+    }),
+
+    getRuleValidations: builder.query<IRuleValidation[], IRuleValidationScope>({
+      query: ({ client_id }) =>
+        `${getClientSettingsPath(client_id)}/rules_validations`,
       providesTags: [ETags.Rules],
     }),
 
-    getRuleValidationsByFieldName: builder.query<IRuleValidation[], string>({
-      query: (field_name) =>
-        `${endPoints.settings}/rules_validations/${field_name}`,
+    getRuleValidationsByFieldName: builder.query<
+      IRuleValidation[],
+      IRuleValidationByFieldNameQuery
+    >({
+      query: ({ client_id, field_name }) =>
+        `${getClientSettingsPath(
+          client_id
+        )}/rules/${field_name}/rules_validations`,
       providesTags: [ETags.Rules],
     }),
 
@@ -206,43 +360,31 @@ export const settingsApi = emptySplitApi.injectEndpoints({
       invalidatesTags: [ETags.ClientTypes],
     }),
 
-    getEmailTemplates: builder.query<IEmailTemplate[], void>({
-      query: () => `${endPoints.settings}/email_templates`,
-      providesTags: [ETags.EmailTemplates],
-    }),
-
-    updateEmailTemplates: builder.mutation<
-      void,
-      { action: string; body: Partial<IEmailTemplate> }
-    >({
-      query: ({ action, body }) =>
-        createFetchArgsWithBody(
-          `${endPoints.settings}/email_templates/${action}`,
-          "PUT",
-          body
-        ),
-      invalidatesTags: [ETags.EmailTemplates],
-    }),
-
     deleteClientType: builder.mutation<void, string>({
       query: (id) =>
         createFetchArgs(`${endPoints.settings}/client_types/${id}`, "DELETE"),
       invalidatesTags: [ETags.ClientTypes],
     }),
 
-    deleteRuleValidation: builder.mutation<void, number>({
-      query: (id) =>
+    deleteRuleValidation: builder.mutation<
+      void,
+      IRuleValidationScope & { id: string }
+    >({
+      query: ({ client_id, id }) =>
         createFetchArgs(
-          `${endPoints.settings}/rules_validations/${id}`,
+          `${getClientSettingsPath(client_id)}/rules_validations/${id}`,
           "DELETE"
         ),
       invalidatesTags: [ETags.Rules],
     }),
 
-    createRuleValidation: builder.mutation<void, IRuleValidationData>({
-      query: (body) =>
+    createRuleValidation: builder.mutation<
+      void,
+      IRuleValidationData & IRuleValidationScope
+    >({
+      query: ({ client_id, ...body }) =>
         createFetchArgsWithBody(
-          `${endPoints.settings}/rules_validations`,
+          `${getClientSettingsPath(client_id)}/rules_validations`,
           "POST",
           body
         ),
@@ -251,11 +393,11 @@ export const settingsApi = emptySplitApi.injectEndpoints({
 
     updateRuleValidation: builder.mutation<
       void,
-      { id: number; body: IRuleValidationData }
+      IRuleValidationScope & { id: string; body: Partial<IRuleValidationData> }
     >({
-      query: ({ id, body }) =>
+      query: ({ client_id, id, body }) =>
         createFetchArgsWithBody(
-          `${endPoints.settings}/rules_validations/${id}`,
+          `${getClientSettingsPath(client_id)}/rules_validations/${id}`,
           "PUT",
           body
         ),
@@ -264,11 +406,13 @@ export const settingsApi = emptySplitApi.injectEndpoints({
 
     addRuleValidationToRule: builder.mutation<
       void,
-      { field_name: string; id: number }
+      IRuleValidationScope & { field_name: string; id: string }
     >({
-      query: ({ field_name, id }) =>
+      query: ({ client_id, field_name, id }) =>
         createFetchArgs(
-          `${endPoints.settings}/rules/${field_name}/rules_validations/${id}`,
+          `${getClientSettingsPath(
+            client_id
+          )}/rules/${field_name}/rules_validations/${id}`,
           "POST"
         ),
       invalidatesTags: [ETags.Rules],
@@ -276,11 +420,13 @@ export const settingsApi = emptySplitApi.injectEndpoints({
 
     removeRuleValidationFromRule: builder.mutation<
       void,
-      { field_name: string; id: number }
+      IRuleValidationScope & { field_name: string; id: string }
     >({
-      query: ({ field_name, id }) =>
+      query: ({ client_id, field_name, id }) =>
         createFetchArgs(
-          `${endPoints.settings}/rules/${field_name}/rules_validations/${id}`,
+          `${getClientSettingsPath(
+            client_id
+          )}/rules/${field_name}/rules_validations/${id}`,
           "DELETE"
         ),
       invalidatesTags: [ETags.Rules],
@@ -308,8 +454,6 @@ export const settingsApi = emptySplitApi.injectEndpoints({
 export const {
   useGetCatalogEnabledQuery,
   useUpdateCatalogEnabledMutation,
-  useGetEmailTemplatesQuery,
-  useUpdateEmailTemplatesMutation,
   useGetClientTypesQuery,
   useCreateClientTypeMutation,
   useDeleteClientTypeMutation,
@@ -321,6 +465,12 @@ export const {
   useCreateProfileFieldMutation,
   useUpdateProfileFieldMutation,
   useDeleteProfileFieldMutation,
+  useGetOidcScopesQuery,
+  useCreateOidcScopeMutation,
+  useUpdateOidcScopeMutation,
+  useDeleteOidcScopeMutation,
+  useBindOidcScopeFieldMutation,
+  useDeleteOidcScopeFieldMutation,
   useGetRuleValidationsQuery,
   useGetRuleValidationsByFieldNameQuery,
   useDeleteRuleValidationMutation,

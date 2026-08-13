@@ -87,6 +87,7 @@ interface IArrayTextFieldsProps {
   description: string;
   disabled?: boolean;
   required?: boolean;
+  dataTestId?: string;
 }
 
 export const ArrayTextFields = ({
@@ -95,6 +96,7 @@ export const ArrayTextFields = ({
   description,
   disabled,
   required,
+  dataTestId,
 }: IArrayTextFieldsProps) => {
   const { t: translate } = useTranslation();
   const { getValues, setValue, control } = useFormContext();
@@ -117,11 +119,12 @@ export const ArrayTextFields = ({
         <div
           className={index === 0 ? styles.inputFields : styles.inputFieldsMin}
           key={index}
+          data-test-id={dataTestId}
         >
           <Typography
             className={clsx(
               "text-14",
-              required && index === 0 ? styles.asterisk : "",
+              required && index === 0 ? "asterisk" : "",
               styles.inputTitle
             )}
           >

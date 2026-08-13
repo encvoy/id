@@ -1,17 +1,17 @@
-import { findDtoEnv } from './helpers';
 import { PROVIDER_TYPE_HOTP, PROVIDER_TYPE_TOTP } from './modules/providers/collection/otp';
-import { EmailEnvDto } from './modules/settings/settings.dto';
+import { resolveRuntimeDomain } from './runtime-domain';
 
-export const VERSION = '1.0.10';
+export const VERSION = '1.2.17';
 
 export const NODE_ENV = process.env['NODE_ENV'] || 'production';
-export const DOMAIN = process.env['DOMAIN'] || process.env['VITE_DOMAIN'];
-
-export const COPYRIGHT = process?.env?.['COPYRIGHT'] ? JSON.parse(process?.env?.['COPYRIGHT']) : {};
+export const DOMAIN = resolveRuntimeDomain(process.env);
 
 //auth
-export const CLIENT_ID = process.env['CLIENT_ID'] || process.env['VITE_CLIENT_ID'];
-export const CLIENT_SECRET = process.env['CLIENT_SECRET'];
+export let CLIENT_ID = '';
+
+export const setClientId = (clientId: string) => {
+  CLIENT_ID = clientId;
+};
 
 export const TIME_TO_RESEND = 30;
 export const BIND_UID_TTL = 1800;
@@ -29,23 +29,12 @@ export const CONSOLE_LOG_LEVELS = (process.env['CONSOLE_LOG_LEVELS'] || 'log war
   ' ',
 );
 
-//mail
-export const EMAIL_PROVIDER = findDtoEnv<EmailEnvDto>('EMAIL_PROVIDER', EmailEnvDto);
-export const EMAIL_PROVIDER_2 = findDtoEnv<EmailEnvDto>('EMAIL_PROVIDER_2', EmailEnvDto);
-
 //admin
 export const ADMIN_LOGIN = process.env['ADMIN_LOGIN'] || 'root';
 export const ADMIN_PASSWORD = process.env['ADMIN_PASSWORD'] || 'changethis';
 
 //metrica
 export const GOOGLE_METRICA_ID = process?.env?.['GOOGLE_METRICA_ID'];
-
-/**
- * Custom styles used in the dashboard.
- */
-export const CUSTOM_STYLES = findDtoEnv(
-  process.env['CUSTOM_STYLES'] || process.env['VITE_CUSTOM_STYLES'],
-);
 
 export const OIDC_SESSION_TTL = parseInt(process.env.OIDC_SESSION_TTL || `${24 * 60 * 60}`, 10);
 

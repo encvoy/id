@@ -1,7 +1,21 @@
 {
   "button": {
     "avatar": "Личный аккаунт",
+    "id": "ID",
     "profile": "Профиль",
+    "system": "Система",
+    "systemSettings": "Системные настройки",
+    "catalog": "Каталог",
     "exit": "Выход"
+  },
+  "labels": {
+    "organization": "Организация",
+    "mainServices": "Основные сервисы",
+    "user": "Пользователь"
+  },
+  "catalog": {
+    "favorite": "Избранные",
+    "noServices": "Нет доступных сервисов",
+    "other": "Прочее"
   }
 }

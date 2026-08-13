@@ -1,6 +1,28 @@
+import { buildPublicUrl } from './constant';
+
 export type Assoc<T> = { [key: string]: T };
 
 const cookieRegistry: Assoc<string | null> = {};
+
+const cookiePath = (): string => {
+  try {
+    return new URL(
+      buildPublicUrl('/api/interaction/code'),
+      window.location.origin,
+    ).pathname;
+  } catch {
+    return '/api/interaction/code';
+  }
+};
+
+const clearLegacyDomainCookie = (name: string): void => {
+  if (
+    window.location.hostname === 'trusted.ru' ||
+    window.location.hostname.endsWith('.trusted.ru')
+  ) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=trusted.ru;`;
+  }
+};
 
 export class Cookie {
   static create(name: string, value: string, days: number) {
@@ -10,7 +32,8 @@ export class Cookie {
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
       expires = '; expires=' + date.toUTCString();
     }
-    document.cookie = name + '=' + value + expires + '; path=/; domain=trusted.ru;';
+    clearLegacyDomainCookie(name);
+    document.cookie = `${name}=${value}${expires}; path=${cookiePath()}; secure; samesite=lax;`;
   }
 
   static read(name: string) {

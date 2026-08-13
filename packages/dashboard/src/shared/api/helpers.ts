@@ -3,12 +3,22 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
-  FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react";
-import { responseListItems } from "./types";
-import { CLIENT_ID, DOMAIN } from "src/shared/utils/constants";
+import type { RootState } from "src/app/store/store";
+import i18n from "src/locales/i18n";
+import { DEFAULT_SYSTEM_LANGUAGE } from "src/shared/utils/locales";
+import { IResponseListItems } from "./types";
 import { getAccessToken, logout } from "src/shared/utils/auth";
 import { getTokenByRefreshToken } from "src/packages/authWidget/helpers/auth";
+import {APP_PUBLIC_URL} from "src/shared/utils/appBasePath";
+
+type TResponseMeta = {
+  response?: {
+    headers?: {
+      get: (name: string) => string | null;
+    };
+  };
+};
 
 /**
  * Transforms the response into a format containing pagination information and data for list display.
@@ -18,22 +28,22 @@ import { getTokenByRefreshToken } from "src/packages/authWidget/helpers/auth";
  */
 export const parseResponse = <T>(
   response: T,
-  meta: FetchBaseQueryMeta
-): responseListItems<T> => {
+  meta?: TResponseMeta
+): IResponseListItems<T> => {
   const totalCount = parseInt(
-    meta?.response?.headers.get("X-Total-Count") || "0",
+    meta?.response?.headers?.get("X-Total-Count") || "0",
     10
   );
   const perPage = parseInt(
-    meta?.response?.headers.get("x-per-page") || "0",
+    meta?.response?.headers?.get("x-per-page") || "0",
     10
   );
   const currentOffset = parseInt(
-    meta?.response?.headers.get("x-current-offset") || "0",
+    meta?.response?.headers?.get("x-current-offset") || "0",
     10
   );
   const nextOffset = parseInt(
-    meta?.response?.headers.get("x-next-offset") || "0",
+    meta?.response?.headers?.get("x-next-offset") || "0",
     10
   );
 
@@ -111,10 +121,22 @@ const notifyQueue = () => {
   }
 };
 
+const getRequestLocale = () => {
+  const currentLocale = i18n.resolvedLanguage || i18n.language;
+
+  if (typeof currentLocale === "string" && currentLocale.trim().length > 0) {
+    return currentLocale;
+  }
+
+  return DEFAULT_SYSTEM_LANGUAGE;
+};
+
 export const createBaseQuery = (point?: string) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: `${DOMAIN}/api/v1/${point ?? ""}`,
+    baseUrl: `${APP_PUBLIC_URL}/api/v1/${point ?? ""}`,
     prepareHeaders: async (headers) => {
+      headers.set("x-lang", getRequestLocale());
+
       const token = await getAccessToken();
       if (token) headers.set("authorization", `Bearer ${token}`);
       return headers;
@@ -140,9 +162,16 @@ export const createBaseQuery = (point?: string) => {
 
         refreshPromise = (async () => {
           try {
+            const state = api.getState() as RootState;
+            const systemClientId = state.app.systemClientId;
+
+            if (!systemClientId) {
+              throw new Error("System client ID is not initialized");
+            }
+
             const { access_token, expires_in } = await getTokenByRefreshToken(
-              CLIENT_ID,
-              DOMAIN
+              systemClientId,
+              APP_PUBLIC_URL
             );
 
             if (access_token) {

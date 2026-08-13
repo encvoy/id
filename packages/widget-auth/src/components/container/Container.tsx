@@ -8,13 +8,15 @@ import { Footer } from '@/components/footer/Footer';
 import { motion } from 'framer-motion';
 import { WIDGET } from '@/lib/constant';
 import { HtmlContent } from '@/lib/hooks';
+import { TLocalizedTextCompatible } from '@/types/types';
 
 interface IContainerProps {
-  title?: string;
+  title?: TLocalizedTextCompatible;
   backPath?: string;
   isCancelAction?: boolean;
   children: ReactNode;
   withoutFooter?: boolean;
+  dataAttribute?: string;
 }
 
 export const Container: FC<IContainerProps> = ({
@@ -23,6 +25,7 @@ export const Container: FC<IContainerProps> = ({
   children,
   isCancelAction,
   withoutFooter,
+  dataAttribute,
 }) => {
   const [outInfo, setOutInfo] = useState('');
   const [info, setInfo] = useState('');
@@ -56,7 +59,7 @@ export const Container: FC<IContainerProps> = ({
   return (
     <>
       {motionWrapper(
-        <div>
+        <div data-attribute={dataAttribute}>
           <Box className={styles.container}>
             <Header title={title} backPath={backPath} isCancelAction={isCancelAction} />
             <Box className={styles.main}>{children}</Box>

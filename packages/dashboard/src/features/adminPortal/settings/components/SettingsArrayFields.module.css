@@ -22,11 +22,6 @@
   margin-top: 8px;
 }
 
-.asterisk::after {
-  content: '*';
-  color: red;
-}
-
 .inputFields {
   width: 100%;
 }

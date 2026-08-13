@@ -2,7 +2,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow: scroll;
+  padding: 12px;
+  overflow-y: scroll;
+}
+
+.type {
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.4s ease-out;
+}
+
+.type:hover {
+  background-color: var(--mui-palette-action-hover);
 }
 
 .content {
@@ -10,17 +21,6 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
-}
-
-.item {
-  border: 1px solid var(--mui-palette-divider);
-  padding: 12px 20px 12px 24px;
-  cursor: pointer;
-  transition: background-color 0.4s ease-out;
-}
-
-.item:hover {
-  background-color: var(--mui-palette-background-hover);
 }
 
 .inputLabel {

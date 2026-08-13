@@ -16,7 +16,8 @@
       "@miniWidget/*": ["packages/miniWidget/src/*"],
       "@widget-auth/*": ["packages/widget-auth/src/*"]
     },
-    "outDir": "dist"
+    "outDir": "dist",
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "packages/dashboard/src/**/*.ts",

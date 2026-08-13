@@ -4,13 +4,14 @@ import { RATE_LIMIT, RATE_LIMIT_TTL_SEC } from '../../constants';
 import { InteractionController } from './interaction.controller';
 import { InteractionService } from './interaction.service';
 import { InteractionExceptionFilter } from '../../middlewares/exceptionFilters/interaction.exception.filter';
-import { LoggerModule } from '../logger';
-import { OidcModule } from '../oidc';
-import { PrismaModule } from '../prisma';
-import { RedisModule } from '../redis';
-import { RepositoryModule } from '../repository';
-import { SettingsModule } from '../settings';
-import { UsersModule } from '../users';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { OidcModule } from '../oidc/oidc.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { RedisModule } from '../redis/redis.module';
+import { RepositoryModule } from '../repository/repository.module';
+import { SettingsModule } from '../settings/settings.module';
+import { SentryModule } from '../sentry/sentry.module';
+import { UsersModule } from '../users/users.module';
 import { ProviderFactoryModule } from '../providers/factory.module';
 
 @Module({
@@ -25,9 +26,10 @@ import { ProviderFactoryModule } from '../providers/factory.module';
     }),
     PrismaModule,
     forwardRef(() => UsersModule),
-    forwardRef(() => LoggerModule),
     forwardRef(() => OidcModule),
+    NotificationsModule,
     SettingsModule,
+    SentryModule,
     RepositoryModule,
     RedisModule,
     ProviderFactoryModule,

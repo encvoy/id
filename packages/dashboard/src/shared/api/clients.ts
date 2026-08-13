@@ -9,42 +9,48 @@ import {
   IQueryIdProps,
   IQueryPropsWithId,
   IQuerySortParams,
-  responseListItems,
+  IResponseListItems,
   TFileString,
-  TQueryId,
+  IQueryId,
 } from "./types";
 import { TShortProvider } from "./provider";
 import { TUserWithRole } from "./users";
 import { IClientType, IRuleWithValidation } from "./settings";
 import { emptySplitApi } from "./baseApi";
 import { imagesToFormData } from "src/shared/utils/helpers";
-import { TCustomFields } from "../lib/userSlice";
+import { TCustomFields } from "src/shared/slices/userSlice";
+import { TLocalizedText } from "src/shared/utils/locales";
+
+export type TClientLocalizedName = string | TLocalizedText;
 
 export interface IUserClient {
-  id: number;
+  id: string;
+  org_id?: string | null;
+  organization_name?: string | TLocalizedText | null;
   sub: string;
   email: string;
-  email_verified: string;
+  email_verified: boolean;
   birthdate: string;
   family_name: string;
   given_name: string;
   locale: string;
   login: string;
-  middle_name: string;
   name: string;
   nickname: string;
   phone_number: string;
-  phone_number_verified: string;
+  phone_number_verified: boolean;
   picture: string;
   blocked: boolean;
   deleted: string;
   custom_fields: TCustomFields;
   password_updated_at?: string;
+  password_change_required?: boolean;
 }
 
 export interface IShortClient {
   client_id: string;
-  name: string;
+  name: TClientLocalizedName;
+  catalog_name?: TClientLocalizedName | null;
   description?: string;
   domain: string;
   avatar: TFileString;
@@ -59,9 +65,11 @@ export interface ICatalogClient extends IShortClient {
 
 export interface IClient extends IShortClient {
   catalog: boolean;
+  owner?: IClientOwnerSummary | null;
+  activity_30d?: number;
   parent?: {
     avatar?: string;
-    name: string;
+    name: TClientLocalizedName;
   };
   Provider_relations: {
     provider: TShortProvider;
@@ -71,6 +79,12 @@ export interface IClient extends IShortClient {
   };
 }
 
+export interface IClientOwnerSummary {
+  id: string;
+  display_name: string;
+  email?: string | null;
+}
+
 export interface IClientFull extends IShortClient {
   cover: TFileString;
   cover_mode: ECoverModes;
@@ -78,6 +92,7 @@ export interface IClientFull extends IShortClient {
   mini_widget: boolean;
   authorize_only_admins: boolean;
   authorize_only_employees: boolean;
+  authorize_auto_by_session: boolean;
   required_providers_ids: string[];
   client_secret: string;
   redirect_uris: string[];
@@ -99,7 +114,7 @@ export interface IClientFull extends IShortClient {
   parent_id?: string;
   parent?: {
     avater?: string;
-    name?: string;
+    name?: TClientLocalizedName;
   };
   rules?: IRuleWithValidation[];
   //Widget
@@ -108,7 +123,7 @@ export interface IClientFull extends IShortClient {
   hide_avatars_of_big_providers: boolean;
   hide_widget_header: boolean;
   hide_widget_footer: boolean;
-  widget_title: string;
+  widget_title: TClientLocalizedName;
   widget_info: string;
   widget_info_out: string;
   widget_colors: TWidgetColors;
@@ -134,26 +149,35 @@ export interface queryIdPropsWithRole extends IQueryIdProps {
   role: ERoles;
 }
 
+export interface IRegenerateClientSecretResponse {
+  client_id: string;
+  client_secret: string;
+}
+
+export interface ICreateOrganizationResponse {
+  orgId: string;
+}
+
 export const clientsApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
-    getClients: builder.query<responseListItems<IClient[]>, IQuerySortParams>({
+    getClients: builder.query<IResponseListItems<IClient[]>, IQuerySortParams>({
       query: (query) =>
         createFetchArgs<IQuerySortParams>(endPoints.clients, "GET", query),
       transformResponse: (clients: IClient[], meta: FetchBaseQueryMeta) =>
         parseResponse<IClient[]>(clients, meta),
       providesTags: [ETags.Clients],
     }),
-    getClientInfo: builder.query<IClientFull, TQueryId>({
+    getClientInfo: builder.query<IClientFull, IQueryId>({
       query: ({ id }) => `${endPoints.clients}/${id}`,
       providesTags: [ETags.ClientDetails, ETags.Organization],
     }),
-    createClient: builder.mutation<{ client_id: string }, Partial<IClientFull>>(
-      {
-        query: (body) =>
-          createFetchArgsWithBody(endPoints.clients, "POST", body),
-        invalidatesTags: [ETags.Catalog],
-      }
-    ),
+    createClient: builder.mutation<
+      IRegenerateClientSecretResponse,
+      Partial<IClientFull>
+    >({
+      query: (body) => createFetchArgsWithBody(endPoints.clients, "POST", body),
+      invalidatesTags: [ETags.Catalog],
+    }),
     updateClient: builder.mutation<IClientFull, Partial<IClientFull>>({
       query: ({ client_id, ...body }) =>
         createFetchArgsWithBody(
@@ -163,9 +187,20 @@ export const clientsApi = emptySplitApi.injectEndpoints({
         ),
       invalidatesTags: [ETags.ClientDetails, ETags.Catalog],
     }),
+    regenerateClientSecret: builder.mutation<
+      IRegenerateClientSecretResponse,
+      { client_id: string }
+    >({
+      query: ({ client_id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/regenerate-secret`,
+          "POST"
+        ),
+      invalidatesTags: [ETags.ClientDetails],
+    }),
     updateClientProvidersList: builder.mutation<
       void,
-      { client_id: string; big: number[]; small: number[] }
+      { client_id: string; big: string[]; small: string[] }
     >({
       query: ({ client_id, ...body }) =>
         createFetchArgsWithBody(
@@ -175,7 +210,7 @@ export const clientsApi = emptySplitApi.injectEndpoints({
         ),
       invalidatesTags: [ETags.Providers],
     }),
-    updateAvatarClient: builder.mutation<void, Partial<IClientFull>>({
+    updateAvatarClient: builder.mutation<IClientFull, Partial<IClientFull>>({
       query: ({ client_id, cover, avatar }) => ({
         url: `${endPoints.clients}/${client_id}/images`,
         method: "PUT",
@@ -187,15 +222,48 @@ export const clientsApi = emptySplitApi.injectEndpoints({
       query: (id) => createFetchArgs(`${endPoints.clients}/${id}`, "DELETE"),
       invalidatesTags: [ETags.Clients],
     }),
+    createOrganization: builder.mutation<ICreateOrganizationResponse, void>({
+      query: () => createFetchArgs(endPoints.organizations, "POST"),
+      invalidatesTags: [ETags.Clients, ETags.User],
+    }),
+    transferClientOwner: builder.mutation<
+      void,
+      { client_id: string; user_id: string }
+    >({
+      query: ({ client_id, user_id }) =>
+        createFetchArgsWithBody(
+          `${endPoints.clients}/${client_id}/owner`,
+          "PUT",
+          { user_id }
+        ),
+      invalidatesTags: [ETags.Clients, ETags.ClientDetails],
+    }),
+    transferOrganizationOwner: builder.mutation<
+      void,
+      { client_id: string; user_id: string }
+    >({
+      query: ({ client_id, user_id }) =>
+        createFetchArgsWithBody(
+          `${endPoints.organizations}/${client_id}/owner`,
+          "PUT",
+          { user_id }
+        ),
+      invalidatesTags: [ETags.Clients, ETags.ClientDetails],
+    }),
+    deleteOrganization: builder.mutation<void, string>({
+      query: (id) =>
+        createFetchArgs(`${endPoints.organizations}/${id}`, "DELETE"),
+      invalidatesTags: [ETags.Clients, ETags.ClientDetails],
+    }),
     deleteSession: builder.mutation<void, IQueryIdProps>({
-      query: ({ clientId, userId }) =>
+      query: ({ client_id, id }) =>
         createFetchArgs(
-          `${endPoints.clients}/${clientId}/users/${userId}/sessions`,
+          `${endPoints.clients}/${client_id}/users/${id}/sessions`,
           "DELETE"
         ),
     }),
     getUsersClient: builder.query<
-      responseListItems<TUserWithRole[]>,
+      IResponseListItems<TUserWithRole[]>,
       IQueryPropsWithId
     >({
       query: ({ id, query }) =>
@@ -208,14 +276,14 @@ export const clientsApi = emptySplitApi.injectEndpoints({
         parseResponse<TUserWithRole[]>(users, meta),
     }),
     getUserClient: builder.query<IUserWithRole, IQueryIdProps>({
-      query: ({ clientId, userId }) =>
-        `${endPoints.clients}/${clientId}/users/${userId}`,
+      query: ({ client_id, id }) =>
+        `${endPoints.clients}/${client_id}/users/${id}`,
       providesTags: [ETags.ClientUser],
     }),
     updateUserRoleClient: builder.mutation<void, queryIdPropsWithRole>({
-      query: ({ clientId, userId, role }) =>
+      query: ({ client_id, id, role }) =>
         createFetchArgsWithBody<{ role: ERoles }>(
-          `${endPoints.clients}/${clientId}/users/${userId}/role`,
+          `${endPoints.clients}/${client_id}/users/${id}/role`,
           "PUT",
           {
             role,
@@ -223,11 +291,69 @@ export const clientsApi = emptySplitApi.injectEndpoints({
         ),
     }),
     deleteUserRoleClient: builder.mutation<void, IQueryIdProps>({
-      query: ({ clientId, userId }) =>
+      query: ({ client_id, id }) =>
         createFetchArgs(
-          `${endPoints.clients}/${clientId}/users/${userId}/role`,
+          `${endPoints.clients}/${client_id}/users/${id}/role`,
           "DELETE"
         ),
+    }),
+    blockUser: builder.mutation<void, IQueryIdProps>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/users/${id}/block`,
+          "PUT"
+        ),
+      invalidatesTags: (_result, _error, { id }) => [
+        ETags.ClientUser,
+        ETags.User,
+        { type: ETags.DirectoryUser, id: `directory-user-${id}` },
+      ],
+    }),
+    unblockUser: builder.mutation<void, IQueryIdProps>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/users/${id}/unblock`,
+          "PUT"
+        ),
+      invalidatesTags: (_result, _error, { id }) => [
+        ETags.ClientUser,
+        ETags.User,
+        { type: ETags.DirectoryUser, id: `directory-user-${id}` },
+      ],
+    }),
+    addUserToInternalList: builder.mutation<void, IQueryIdProps>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/users/${id}/internal`,
+          "POST"
+        ),
+      invalidatesTags: [ETags.ClientUser, ETags.User],
+    }),
+    removeUserFromInternalList: builder.mutation<void, IQueryIdProps>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/users/${id}/internal`,
+          "DELETE"
+        ),
+      invalidatesTags: [
+        ETags.ClientUser,
+        ETags.User,
+        ETags.ExternalAccounts,
+        ETags.PublicExternalAccounts,
+      ],
+    }),
+    removeUserFromOrganizationList: builder.mutation<void, IQueryIdProps>({
+      query: ({ client_id, id }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${client_id}/users/${id}/organization-list`,
+          "DELETE"
+        ),
+      invalidatesTags: [
+        ETags.ClientUser,
+        ETags.User,
+        ETags.ExternalAccounts,
+        ETags.PublicExternalAccounts,
+      ],
     }),
     addClientRule: builder.mutation<void, { clientId: string; ruleId: string }>(
       {
@@ -257,12 +383,22 @@ export const {
   useLazyGetClientsQuery,
   useCreateClientMutation,
   useUpdateClientMutation,
+  useRegenerateClientSecretMutation,
   useUpdateClientProvidersListMutation,
   useDeleteClientMutation,
+  useDeleteOrganizationMutation,
+  useCreateOrganizationMutation,
+  useTransferOrganizationOwnerMutation,
+  useTransferClientOwnerMutation,
   useDeleteSessionMutation,
   useLazyGetUsersClientQuery,
   useUpdateUserRoleClientMutation,
   useDeleteUserRoleClientMutation,
+  useBlockUserMutation,
+  useUnblockUserMutation,
+  useAddUserToInternalListMutation,
+  useRemoveUserFromInternalListMutation,
+  useRemoveUserFromOrganizationListMutation,
   useGetClientInfoQuery,
   useGetUserClientQuery,
   useAddClientRuleMutation,

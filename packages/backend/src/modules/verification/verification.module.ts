@@ -1,9 +1,9 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { OidcModule } from '../oidc';
-import { PrismaModule } from '../prisma';
-import { ProviderModule } from '../providers';
+import { OidcModule } from '../oidc/oidc.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { ProviderModule } from '../providers/providers.module';
 import { ProviderFactoryModule } from '../providers/factory.module';
-import { RepositoryModule } from '../repository';
+import { RepositoryModule } from '../repository/repository.module';
 import { VerificationController } from './verification.controller';
 
 @Module({

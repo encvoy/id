@@ -1,6 +1,6 @@
 ---
-title: "Connexion via HOTP — Connexion et configuration dans Encvoy ID"
-description: "Apprenez à activer la connexion HOTP dans Encvoy ID : créez une méthode de connexion, ajoutez-la au widget d'autorisation et assurez un accès sécurisé pour les utilisateurs."
+title: "Connexion via HOTP — Connexion et configuration dans {{projectName}}"
+description: "Apprenez à activer la connexion HOTP dans {{projectName}} : créez une méthode de connexion, ajoutez-la au widget d'autorisation et assurez un accès sécurisé pour les utilisateurs."
 keywords:
   - connexion via HOTP
   - authentification HOTP
@@ -8,9 +8,9 @@ keywords:
   - connexion HOTP
   - login HOTP
   - authentification à deux facteurs HOTP
-  - HOTP Encvoy ID
-  - connexion via HOTP Encvoy ID
-  - configuration HOTP dans Encvoy ID
+  - HOTP {{projectName}}
+  - connexion via HOTP {{projectName}}
+  - configuration HOTP dans {{projectName}}
   - HOTP
   - HMAC-based One-Time Password
   - mot de passe à usage unique
@@ -21,11 +21,11 @@ region: [ru, en]
 menu_title: "Connexion via HOTP"
 ---
 
-# Comment connecter la connexion via HOTP dans Encvoy ID
+# Comment connecter la connexion via HOTP dans {{projectName}}
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
 
-Dans ce guide, vous apprendrez comment connecter l'authentification par mot de passe à usage unique **HOTP** au système **Encvoy ID**.
+Dans ce guide, vous apprendrez comment connecter l'authentification par mot de passe à usage unique **HOTP** au système **{{projectName}}**.
 
 À qui s'adresse ce guide :
 
@@ -128,7 +128,7 @@ Les options les plus populaires sont :
 1. Allez dans votre **Profil**.
 2. Cliquez sur **Ajouter** dans le bloc **Identifiants**.
 
-<img src="./images/personal-profile-12.webp" alt="Bloc identifiant dans le profil utilisateur Encvoy ID" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Bloc identifiant dans le profil utilisateur {{projectName}}" style="max-width:600px; width:100%">
 
 3. Dans la fenêtre qui s'ouvre, sélectionnez la méthode de connexion **HOTP**.
 
@@ -142,7 +142,7 @@ Les options les plus populaires sont :
 1. Allez sur la page de connexion où la méthode de connexion **HOTP** est activée.
 2. Sélectionnez l'icône de la méthode de connexion **HOTP**.
 3. Un formulaire de saisie du code s'ouvrira. Sans fermer la page, ouvrez l'application d'authentification sur votre téléphone.
-4. Trouvez le service correspondant à **Encvoy ID** (ou le nom de l'application) et saisissez votre identifiant et le code à 6 chiffres dans le champ du formulaire de connexion.
+4. Trouvez le service correspondant à **{{projectName}}** (ou le nom de l'application) et saisissez votre identifiant et le code à 6 chiffres dans le champ du formulaire de connexion.
 5. Cliquez sur le bouton **Confirmer**.
 
 ---
@@ -150,5 +150,5 @@ Les options les plus populaires sont :
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide pour travailler avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide pour travailler avec les organisations dans le système **{{projectName}}**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

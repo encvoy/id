@@ -7,17 +7,22 @@ import {
   BaseFormProvider,
   createProviderBaseSchema,
 } from "src/features/adminPortal/settings/providers/components/BaseFormProvider";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { OtpAlgorithmSelectField } from "src/features/adminPortal/settings/providers/components/OtpAlgorithmSelectField";
+import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
+import { InputField } from "@encvoy-id/components";
 import {
   IProvider,
   IOTPParams,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "src/shared/api/provider";
 import * as yup from "yup";
-import { ProviderAvatars } from "src/features/adminPortal/settings/providers/utils";
-import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
+import {
+  OTP_ALGORITHM_DEFAULT,
+  OTP_ALGORITHM_OPTIONS,
+  ProviderAvatars,
+} from "src/features/adminPortal/settings/providers/utils";
 import { useTranslation } from "react-i18next";
 import { EClaimPrivacyNumber } from "src/shared/utils/enums";
 
@@ -34,7 +39,7 @@ export const CreateHOTPProvider: FC<ICreateProvider> = ({
     params: yup.object({
       digits: yup
         .number()
-        .oneOf([6, 8], translate("providers.otp.digitsValidation"))
+        .oneOf([6, 7, 8], translate("providers.otp.digitsValidation"))
         .default(6),
       counter: yup
         .number()
@@ -42,8 +47,8 @@ export const CreateHOTPProvider: FC<ICreateProvider> = ({
         .default(0),
       algorithm: yup
         .string()
-        .oneOf(["SHA1", "SHA256", "SHA512"])
-        .default("SHA1"),
+        .oneOf([...OTP_ALGORITHM_OPTIONS])
+        .default(OTP_ALGORITHM_DEFAULT),
     }),
   });
 
@@ -52,14 +57,14 @@ export const CreateHOTPProvider: FC<ICreateProvider> = ({
     defaultValues: {
       name: "HOTP (HMAC-based One-Time Password)",
       avatar: ProviderAvatars.HOTP,
-      type: ProviderType.HOTP,
+      type: EProviderType.HOTP,
       default_public: EClaimPrivacyNumber.private,
       params: {
         digits: 6,
         counter: 0,
-        algorithm: "SHA1",
+        algorithm: OTP_ALGORITHM_DEFAULT,
       },
-    },
+    } as IProvider<IOTPParams>,
     mode: "onChange",
     reValidateMode: "onBlur",
   });
@@ -123,11 +128,10 @@ export const CreateHOTPProvider: FC<ICreateProvider> = ({
         disabled
       />
 
-      <InputField
-        name="params.algorithm"
+      <OtpAlgorithmSelectField<IProvider<IOTPParams>>
+        name={"params.algorithm"}
         label={translate("providers.otp.algorithm")}
         description={translate("providers.otp.algorithmDescription")}
-        placeholder="SHA1"
       />
     </BaseFormProvider>
   );

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RepositoryModule } from 'src/modules/repository';
+import { RepositoryModule } from 'src/modules/repository/repository.module';
 import { KloudService } from './kloud.service';
 
 @Module({

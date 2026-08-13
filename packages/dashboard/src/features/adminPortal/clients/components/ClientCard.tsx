@@ -1,28 +1,30 @@
 import BookmarksOutlinedIcon from "@mui/icons-material/BookmarksOutlined";
 import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import SwapHorizontalCircleOutlined from "@mui/icons-material/SwapHorizontalCircleOutlined";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import HomeWorkOutlinedIcon from "@mui/icons-material/HomeWorkOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import clsx from "clsx";
 import { FC } from "react";
 import { getImageURL } from "src/shared/utils/helpers";
 import { IClient } from "src/shared/api/clients";
 import { TShortProvider } from "src/shared/api/provider";
-import { CustomIcon } from "../../../../shared/ui/components/CustomIcon";
-import { Card, ICardProps } from "../../../../shared/ui/components/Card";
-import { IconWithTooltip } from "../../../../shared/ui/components/IconWithTooltip";
+import { CustomIcon } from "@encvoy-id/components";
+import { Card, ICardProps } from "@encvoy-id/components";
+import { DetailRow } from "@encvoy-id/components";
+import { IconWithTooltip } from "@encvoy-id/components";
 import styles from "./ClientCard.module.css";
 import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 
 export interface IClientCardProps extends ICardProps {
   items: IClient[];
   index: number;
-  onClick: (id?: string) => void;
+  onClick?: (id?: string) => void;
 }
 
 const ClientCardComponent: FC<IClientCardProps> = (props) => {
@@ -56,7 +58,7 @@ const ClientCardComponent: FC<IClientCardProps> = (props) => {
           <div key={provider?.id} onClick={(e) => e.stopPropagation()}>
             <IconWithTooltip
               customStyleButton={styles.providerButton}
-              title={provider?.name}
+              title={getLocalizedTextValue(provider?.name, i18n.language)}
               staticHover
             >
               {provider?.avatar ? (
@@ -88,17 +90,20 @@ const ClientCardComponent: FC<IClientCardProps> = (props) => {
     <Card
       {...props}
       cardId={client?.client_id}
+      dataTestId={`btn-application-${client?.client_id}`}
       isImage
       DefaultIcon={LayersOutlinedIcon}
-      avatarUrl={client?.avatar}
-      onClick={() => onClick(client?.client_id)}
+      avatarUrl={getImageURL(client?.avatar)}
+      onClick={onClick ? () => onClick(client?.client_id) : undefined}
       className={styles.card}
       content={
         <div className={styles.content}>
           <div className={styles.clientInfo}>
             <Box className={styles.clientMainInfo}>
               <Typography className={clsx("text-14", styles.hideText)}>
-                {textWrapper(client?.name)}
+                {textWrapper(
+                  getLocalizedTextValue(client?.name, i18n.language)
+                )}
               </Typography>
               <Typography color="text.secondary" className={clsx("text-12")}>
                 {textWrapper(
@@ -107,59 +112,37 @@ const ClientCardComponent: FC<IClientCardProps> = (props) => {
               </Typography>
             </Box>
             <Box className={styles.clientAddInfo}>
-              <div className={styles.rowWithIcon}>
-                <CustomIcon
-                  Icon={InsertLinkOutlinedIcon}
-                  color="textSecondary"
-                  className={styles.icon}
+              <DetailRow
+                Icon={InsertLinkOutlinedIcon}
+                value={textWrapper(client?.domain)}
+                link={{ href: client?.domain || "", target: "_blank" }}
+              />
+              {client?.owner && (
+                <DetailRow
+                  Icon={PersonOutlineOutlinedIcon}
+                  label={translate("pages.listClient.owner")}
+                  value={client.owner.display_name}
                 />
-                <Typography className={clsx("text-12", styles.hideText)}>
-                  <Link
-                    className={styles.clientLink}
-                    href={client?.domain}
-                    target="_blank"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {textWrapper(client?.domain)}
-                  </Link>
-                </Typography>
-              </div>
-              <div className={styles.rowWithIcon}>
-                <CustomIcon
-                  Icon={PeopleAltOutlinedIcon}
-                  color="textSecondary"
-                  className={styles.icon}
-                />
-                <Typography color="text.secondary" className={"text-12"}>
-                  {translate("pages.listClient.users")}
-                  <span className={clsx("text-14", styles.textNumber)}>
-                    {textWrapper(client?._count?.Role.toString())}
-                  </span>
-                </Typography>
-              </div>
+              )}
+              <DetailRow
+                Icon={PeopleAltOutlinedIcon}
+                label={translate("pages.listClient.users")}
+                value={textWrapper(client?._count?.Role.toString())}
+              />
               {client?.parent && (
-                <div className={styles.rowWithIcon}>
-                  <CustomIcon
-                    Icon={HomeWorkOutlinedIcon}
-                    color="textSecondary"
-                    className={styles.icon}
-                  />
-                  <Typography color="text.secondary" className="text-12">
-                    {client.parent.name}
-                  </Typography>
-                </div>
+                <DetailRow
+                  Icon={HomeWorkOutlinedIcon}
+                  value={getLocalizedTextValue(
+                    client.parent.name,
+                    i18n.language
+                  )}
+                />
               )}
               {client?.catalog && (
-                <div className={styles.rowWithIcon}>
-                  <CustomIcon
-                    Icon={BookmarksOutlinedIcon}
-                    color="textSecondary"
-                    className={styles.icon}
-                  />
-                  <Typography color="text.secondary" className="text-12">
-                    {translate("pages.listClient.catalog")}
-                  </Typography>
-                </div>
+                <DetailRow
+                  Icon={BookmarksOutlinedIcon}
+                  value={translate("pages.listClient.catalog")}
+                />
               )}
             </Box>
             <Box className={styles.clientProviders}>

@@ -42,7 +42,7 @@ i18next
     supportedLngs: ['en-US', 'ru-RU', 'de-DE', 'fr-FR', 'es-ES', 'it-IT'],
     interpolation: { escapeValue: false },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['localStorage'],
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng',
     },

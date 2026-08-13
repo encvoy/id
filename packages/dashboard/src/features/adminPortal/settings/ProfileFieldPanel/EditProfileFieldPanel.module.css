@@ -1,0 +1,57 @@
+.wrapper {
+  height: calc(100vh - 120px);
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+
+.itemSettings {
+  margin: 24px 0;
+}
+
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.fieldRowTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.provider {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  transition: background-color 0.4s ease-out;
+}
+
+.provider:hover {
+  cursor: pointer;
+  background-color: var(--mui-palette-action-hover);
+}
+
+.providerName {
+  width: 100%;
+  margin: 0 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.providerIcon {
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--hover-background-color);
+}

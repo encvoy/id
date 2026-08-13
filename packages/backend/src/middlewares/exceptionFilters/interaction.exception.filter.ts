@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
-import { app } from 'src/main';
 import { ESettingsNames, SettingsService } from 'src/modules/settings';
 import { CustomLogger } from '../../modules/logger/logger.service';
 import { renderWidget, showErrorWidget } from '../../modules/interaction/interaction.helpers';
@@ -11,19 +10,13 @@ import { SentryService } from 'src/modules/sentry';
 
 @Catch()
 export class InteractionExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: CustomLogger, private readonly oidcService: OidcService) {}
-
-  get settingService() {
-    return app.get(SettingsService, { strict: false });
-  }
-
-  get sentryService() {
-    return app.get(SentryService, { strict: false });
-  }
-
-  get i18nService() {
-    return app.get(I18nService<Record<string, any>>, { strict: false });
-  }
+  constructor(
+    private readonly logger: CustomLogger,
+    private readonly oidcService: OidcService,
+    private readonly settingService: SettingsService,
+    private readonly sentryService: SentryService,
+    private readonly i18nService: I18nService<Record<string, string>>,
+  ) {}
 
   async catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -39,7 +32,7 @@ export class InteractionExceptionFilter implements ExceptionFilter {
     const errorMessage = await this.getTranslatedErrorMessage(exception);
     const causeData = this.extractCauseData(exception);
 
-    if (this.sentryService.enabled) await this.sentryService.captureException(exception, undefined);
+    await this.sentryService.captureException(exception, undefined);
 
     // Log the error with the translated message
     this.logger.error(
@@ -71,7 +64,15 @@ export class InteractionExceptionFilter implements ExceptionFilter {
     } catch (fallbackError) {
       // If we can't get interaction details, show a simple error widget
       this.logger.error('InteractionController Fallback Error:', String(fallbackError));
-      return await showErrorWidget(response, errorMessage, null, undefined, causeData);
+      return await showErrorWidget(
+        response,
+        errorMessage,
+        null,
+        undefined,
+        causeData,
+        undefined,
+        this.i18nService,
+      );
     }
   }
 
@@ -84,10 +85,15 @@ export class InteractionExceptionFilter implements ExceptionFilter {
 
       // Extract the original message
       const originalMessage = this.extractOriginalMessage(exception);
+      const translationArgs =
+        exception?.cause && typeof exception.cause === 'object' && !(exception.cause instanceof Error)
+          ? { args: exception.cause as Record<string, unknown> }
+          : {};
 
       // Translate the message
       return this.i18nService.translate(originalMessage, {
-        lang: locale.default_language,
+        lang: locale?.default_language ?? 'ru',
+        ...translationArgs,
       });
     } catch (error) {
       // Fallback: return the original message without translation

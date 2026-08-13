@@ -1,10 +1,12 @@
 import Router from "@koa/router";
+import { requireInternalRequest } from "../internal-auth.js";
 import { OIDC_PROVIDER } from "../main.js";
 
 const interactionRouter = new Router({ prefix: "/oidc/api" });
 
 interactionRouter.post(
   "/interaction/details",
+  requireInternalRequest(),
   async (ctx: Router.RouterContext) => {
     try {
       const { cookies, headers, url } =

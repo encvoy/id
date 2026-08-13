@@ -3,11 +3,12 @@ import { emptySplitApi } from "./baseApi";
 import { createFetchArgs, createFetchArgsWithBody } from "./helpers";
 import { EClaimPrivacyNumber, endPoints, ETags } from "src/shared/utils/enums";
 import { TFileString } from "src/shared/api/types";
+import { TLocalizedText } from "../utils/locales";
 
 export type TShortProvider = {
-  id: number;
+  id: string;
   type: string;
-  name: string;
+  name: string | TLocalizedText;
   avatar: string;
 };
 
@@ -25,8 +26,8 @@ export type EditProviderParams = {
 
 export type TOauthProvider = {
   id: string;
-  name: string;
-  type: ProviderType;
+  name: string | TLocalizedText;
+  type: EProviderType;
   description?: string;
   avatar: TFileString;
   is_active: boolean;
@@ -48,11 +49,6 @@ export type TOauthProvider = {
   groupe: string;
   index: number;
 };
-
-export interface IProviderColors {
-  button_color: string;
-  font_color: string;
-}
 
 export interface IOauthParams {
   issuer: string;
@@ -79,6 +75,11 @@ export interface IKloudParams {
 
 export interface IMTLSParams {
   issuer: string;
+  mapping?: string;
+}
+
+export interface IWebAuthnParams {
+  authenticatorAttachment: boolean;
 }
 
 export interface IEmailParams {
@@ -87,6 +88,7 @@ export interface IEmailParams {
   mail_hostname: string;
   mail_password: string;
   mail_code_ttl_sec: string;
+  alias?: string;
 }
 
 export interface IEmailCustomParams {
@@ -95,6 +97,38 @@ export interface IEmailCustomParams {
   mail_hostname: string;
   mail_password: string;
   mail_code_ttl_sec: string;
+  alias?: string;
+}
+
+export interface ISendTestEmailProviderBody {
+  clientId: string;
+  type: EProviderType.EMAIL | EProviderType.EMAIL_CUSTOM;
+  params: IEmailParams | IEmailCustomParams;
+}
+
+export interface IEmailTemplate {
+  id: string;
+  provider_id?: string;
+  action: string;
+  title: string;
+  content: string;
+  subject: string;
+  locale: string;
+}
+
+export interface IEmailTemplatesQuery {
+  locale?: string;
+}
+
+export interface IEmailTemplatePresets {
+  variant_1: string;
+  variant_2: string;
+  variant_3: string;
+}
+
+export interface IEmailTemplatePreview {
+  html: string;
+  subject: string;
 }
 
 export interface ISmsParams {
@@ -121,13 +155,14 @@ export interface IProvider<
     | ISmsParams
     | IOTPParams
     | IMTLSParams
+    | IWebAuthnParams
 > {
   id: string;
   client_id: string;
   type: string;
   is_public: boolean;
   is_active: boolean;
-  name: string;
+  name: string | TLocalizedText;
   description?: string;
   avatar: TFileString;
   password_required: boolean;
@@ -142,7 +177,7 @@ export enum EGetProviderAction {
   all = "all",
 }
 
-export enum ProviderType {
+export enum EProviderType {
   GITHUB = "GITHUB",
   GOOGLE = "GOOGLE",
   CUSTOM = "CUSTOM",
@@ -178,7 +213,26 @@ interface IQueryIdsProps {
 
 interface IQueryActiveProps {
   clientId: string;
-  providers: number[];
+  providerId: string;
+  index?: number;
+}
+
+interface IProviderEmailTemplatesProps {
+  clientId: string;
+  providerId: string;
+  query?: IEmailTemplatesQuery;
+}
+
+interface IProviderEmailTemplatePresetsProps
+  extends IProviderEmailTemplatesProps {
+  action: string;
+}
+
+interface IProviderEmailTemplatePreviewProps
+  extends IProviderEmailTemplatePresetsProps {
+  body: {
+    content: string;
+  };
 }
 
 export const providerApi = emptySplitApi.injectEndpoints({
@@ -239,22 +293,90 @@ export const providerApi = emptySplitApi.injectEndpoints({
       invalidatesTags: [ETags.Providers],
     }),
 
+    sendTestEmailProvider: builder.mutation<void, ISendTestEmailProviderBody>({
+      query: ({ clientId, type, params }) => ({
+        url: `${endPoints.clients}/${clientId}/test-email`,
+        method: "POST",
+        body: { type, params },
+      }),
+    }),
+
+    getProviderEmailTemplates: builder.query<
+      IEmailTemplate[],
+      IProviderEmailTemplatesProps
+    >({
+      query: ({ clientId, providerId, query }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${clientId}/${endPoints.providers}/${providerId}/email_templates`,
+          "GET",
+          query
+        ),
+      providesTags: [ETags.EmailTemplates],
+    }),
+
+    getProviderEmailTemplatePresets: builder.query<
+      IEmailTemplatePresets,
+      IProviderEmailTemplatePresetsProps
+    >({
+      query: ({ clientId, providerId, action, query }) =>
+        createFetchArgs(
+          `${endPoints.clients}/${clientId}/${endPoints.providers}/${providerId}/email_templates/${action}/presets`,
+          "GET",
+          query
+        ),
+    }),
+
+    previewProviderEmailTemplate: builder.mutation<
+      IEmailTemplatePreview,
+      IProviderEmailTemplatePreviewProps
+    >({
+      query: ({ clientId, providerId, action, body, query }) => ({
+        ...createFetchArgsWithBody(
+          `${endPoints.clients}/${clientId}/${endPoints.providers}/${providerId}/email_templates/${action}/preview`,
+          "POST",
+          body
+        ),
+        params: query,
+      }),
+    }),
+
+    updateProviderEmailTemplate: builder.mutation<
+      void,
+      {
+        clientId: string;
+        providerId: string;
+        action: string;
+        body: Partial<IEmailTemplate>;
+        query?: IEmailTemplatesQuery;
+      }
+    >({
+      query: ({ clientId, providerId, action, body, query }) => ({
+        ...createFetchArgsWithBody(
+          `${endPoints.clients}/${clientId}/${endPoints.providers}/${providerId}/email_templates/${action}`,
+          "PUT",
+          body
+        ),
+        params: query,
+      }),
+      invalidatesTags: [ETags.EmailTemplates],
+    }),
+
     activateProviders: builder.mutation<void, IQueryActiveProps>({
-      query: ({ clientId, providers }) =>
+      query: ({ clientId, providerId, index }) =>
         createFetchArgsWithBody(
           `${endPoints.clients}/${clientId}/${endPoints.providers}/activate`,
           "PUT",
-          { providers }
+          { provider_id: providerId, index }
         ),
       invalidatesTags: [ETags.Providers],
     }),
 
     deactivateProviders: builder.mutation<void, IQueryActiveProps>({
-      query: ({ clientId, providers }) =>
+      query: ({ clientId, providerId }) =>
         createFetchArgsWithBody(
           `${endPoints.clients}/${clientId}/${endPoints.providers}/deactivate`,
           "PUT",
-          { providers }
+          { provider_id: providerId }
         ),
       invalidatesTags: [ETags.Providers],
     }),
@@ -278,4 +400,9 @@ export const {
   useDeleteProviderMutation,
   useUpdateProviderMutation,
   useUpdateAvatarMutation,
+  useSendTestEmailProviderMutation,
+  useGetProviderEmailTemplatesQuery,
+  useGetProviderEmailTemplatePresetsQuery,
+  usePreviewProviderEmailTemplateMutation,
+  useUpdateProviderEmailTemplateMutation,
 } = providerApi;

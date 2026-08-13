@@ -7,13 +7,14 @@ import {
   BaseWidgetConfig,
   EDefaultConfigValues,
   EBaseColors,
+  ICatalogClient,
 } from "../types";
 import styles from "./CatalogPopover.module.css";
 import clsx from "clsx";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
-import { ICatalogClient } from "src/shared/api/clients";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 
 interface ICatalogPopoverProps {
   isOpen: boolean;
@@ -31,11 +32,14 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
   config,
 }) => {
   const customStyles = generateStyles(config);
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation("trusted-widget");
   const [groupedClients, setGroupedClients] = useState<
     Record<string, ICatalogClient[]>
   >({});
   const [catalogData, setCatalogData] = useState<ICatalogClient[]>([]);
+  const isEmbeddedCatalog = "data" in config;
+  const getCatalogClientName = (client: ICatalogClient) =>
+    getLocalizedTextValue(client.catalog_name || client.name, i18n.language);
 
   const fetchToggleStatus = async (isFavorite: boolean, clientId: string) => {
     try {
@@ -112,12 +116,19 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
   };
 
   useEffect(() => {
-    fetchCatalogData();
-  }, []);
+    if (isEmbeddedCatalog) {
+      setCatalogData(profile?.catalogClients || []);
+      return;
+    }
+
+    void fetchCatalogData();
+  }, [isEmbeddedCatalog, profile?.catalogClients]);
 
   useEffect(() => {
     const grouped = (catalogData || []).reduce((acc, client) => {
-      const typeName = client.type?.name || translate("global.catalog.other");
+      const typeName =
+        getLocalizedTextValue(client.type?.name, i18n.language) ||
+        translate("catalog.other");
 
       if (client.favorite) {
         return acc;
@@ -131,7 +142,7 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
       return acc;
     }, {} as Record<string, ICatalogClient[]>);
     setGroupedClients(grouped);
-  }, [catalogData, translate]);
+  }, [catalogData, i18n.language, translate]);
 
   const handleToggleStatus = async (
     event: MouseEvent<HTMLButtonElement>,
@@ -183,57 +194,63 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
                 color: customStyles.text,
               }}
             >
-              {translate("global.catalog.favorite")}
+              {translate("catalog.favorite")}
             </p>
 
             <ul className={styles.listFavorite}>
               {catalogData
                 .filter((item) => item.favorite)
-                .map((item) => (
-                  <li key={item.client_id} className={styles.listItem}>
-                    <a href={item.domain} target="_blank" rel="noreferrer">
-                      <div className={styles.client}>
-                        {item.avatar ? (
-                          <img
-                            src={getImageURL(
-                              item.avatar as string,
-                              config.issuer || EDefaultConfigValues.issuer
-                            )}
-                            className={styles.clientImage}
-                            alt={item.name}
-                          />
-                        ) : (
-                          <LayersOutlinedIcon
-                            className={clsx(
-                              styles.clientImageDefault,
-                              styles.clientImage
-                            )}
-                          />
-                        )}
-                        <p className={styles.clientText}>{item.name}</p>
-                        <button
-                          className={styles.button}
-                          onClick={(event) => {
-                            handleToggleStatus(
-                              event,
-                              item?.favorite,
-                              item.client_id
-                            );
-                          }}
-                        >
-                          <BookmarkAddedIcon
-                            sx={{
-                              color:
-                                config?.profile?.button?.color.background ||
-                                EBaseColors.hover,
-                            }}
-                            className={styles.buttonIcon}
-                          />
-                        </button>
-                      </div>
-                    </a>
-                  </li>
-                ))}
+                .map((item) => {
+                  const localizedName = getCatalogClientName(item);
+
+                  return (
+                    <li key={item.client_id} className={styles.listItem}>
+                      <a href={item.domain} target="_blank" rel="noreferrer">
+                        <div className={styles.client}>
+                          {item.avatar ? (
+                            <img
+                              src={getImageURL(
+                                item.avatar as string,
+                                config.issuer || EDefaultConfigValues.issuer
+                              )}
+                              className={styles.clientImage}
+                              alt={localizedName}
+                            />
+                          ) : (
+                            <LayersOutlinedIcon
+                              className={clsx(
+                                styles.clientImageDefault,
+                                styles.clientImage
+                              )}
+                            />
+                          )}
+                          <p className={styles.clientText}>{localizedName}</p>
+                          {!isEmbeddedCatalog && (
+                            <button
+                              className={styles.button}
+                              onClick={(event) => {
+                                handleToggleStatus(
+                                  event,
+                                  item?.favorite,
+                                  item.client_id
+                                );
+                              }}
+                            >
+                              <BookmarkAddedIcon
+                                sx={{
+                                  color:
+                                    config?.profile?.button?.color.background ||
+                                    EBaseColors.hover,
+                                }}
+                                className={styles.buttonIcon}
+                              />
+                            </button>
+                          )}
+                        </div>
+                      </a>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         )}
@@ -244,7 +261,7 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
               color: customStyles.text,
             }}
           >
-            {translate("global.catalog.noServices")}
+            {translate("catalog.noServices")}
           </p>
         )}
         <div>
@@ -262,47 +279,57 @@ export const CatalogPopover: FC<ICatalogPopoverProps> = ({
               <ul className={styles.list}>
                 {groupedClients[typeName]
                   .filter((item) => !item.favorite)
-                  .map((client) => (
-                    <li key={client.client_id} className={styles.listItem}>
-                      <a href={client.domain} target="_blank" rel="noreferrer">
-                        <div className={styles.client}>
-                          {client.avatar ? (
-                            <img
-                              src={getImageURL(
-                                client.avatar as string,
-                                config.issuer || EDefaultConfigValues.issuer
-                              )}
-                              alt={client.name}
-                              className={styles.clientImage}
-                            />
-                          ) : (
-                            <LayersOutlinedIcon
-                              className={clsx(
-                                styles.clientImageDefault,
-                                styles.clientImage
-                              )}
-                            />
-                          )}
-                          <p className={styles.clientText}>{client.name}</p>
-                          <button
-                            className={styles.button}
-                            onClick={(event) => {
-                              handleToggleStatus(
-                                event,
-                                client?.favorite,
-                                client.client_id
-                              );
-                            }}
-                          >
-                            <BookmarkAddOutlinedIcon
-                              sx={{ color: "#858ba0" }}
-                              className={styles.buttonIcon}
-                            />
-                          </button>
-                        </div>
-                      </a>
-                    </li>
-                  ))}
+                  .map((client) => {
+                    const localizedName = getCatalogClientName(client);
+
+                    return (
+                      <li key={client.client_id} className={styles.listItem}>
+                        <a
+                          href={client.domain}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div className={styles.client}>
+                            {client.avatar ? (
+                              <img
+                                src={getImageURL(
+                                  client.avatar as string,
+                                  config.issuer || EDefaultConfigValues.issuer
+                                )}
+                                alt={localizedName}
+                                className={styles.clientImage}
+                              />
+                            ) : (
+                              <LayersOutlinedIcon
+                                className={clsx(
+                                  styles.clientImageDefault,
+                                  styles.clientImage
+                                )}
+                              />
+                            )}
+                            <p className={styles.clientText}>{localizedName}</p>
+                            {!isEmbeddedCatalog && (
+                              <button
+                                className={styles.button}
+                                onClick={(event) => {
+                                  handleToggleStatus(
+                                    event,
+                                    client?.favorite,
+                                    client.client_id
+                                  );
+                                }}
+                              >
+                                <BookmarkAddOutlinedIcon
+                                  sx={{ color: "#858ba0" }}
+                                  className={styles.buttonIcon}
+                                />
+                              </button>
+                            )}
+                          </div>
+                        </a>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           ))}

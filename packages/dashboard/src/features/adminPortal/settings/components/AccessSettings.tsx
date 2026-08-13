@@ -1,18 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, FormControlLabel, Radio, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { FC, useEffect, useState } from "react";
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
-import { isObjectEmpty } from "src/shared/utils/helpers";
-import { setNoticeInfo } from "src/shared/lib/noticesSlice";
+import { getDirtyFieldsValues, isObjectEmpty } from "src/shared/utils/helpers";
+import { setNoticeInfo } from "src/shared/slices/noticesSlice";
 import { IProvider } from "src/shared/api/provider";
 import {
   ISettings,
@@ -21,7 +16,8 @@ import {
 } from "src/shared/api/settings";
 import { EditTwoFactorPanel } from "../editTwoFactorPanel/editTwoFactorPanel";
 import styles from "./AccessSettings.module.css";
-import { SwitchBlock } from "src/shared/ui/components/SwitchBlock";
+import { RadioGroupField } from "@encvoy-id/components";
+import { SwitchBlock } from "@encvoy-id/components";
 
 export enum ERegistrationPolicyTypes {
   allowed = "allowed",
@@ -71,7 +67,6 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
   });
 
   const {
-    control,
     reset,
     handleSubmit,
     formState: { errors, dirtyFields },
@@ -90,12 +85,7 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
   const onSubmit: SubmitHandler<ISettings> = async (data) => {
     if (Object.keys(errors).length) console.error(errors);
 
-    const payload: Partial<ISettings> = (
-      Object.keys(dirtyFields) as Array<keyof typeof data>
-    ).reduce(
-      (acc, field) => ({ ...acc, [field]: data[field] }),
-      {} as Partial<ISettings>
-    );
+    const payload = getDirtyFieldsValues(data, dirtyFields);
 
     await editSettings(payload).unwrap();
   };
@@ -109,6 +99,7 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
               {translate("pages.settings.access.twoFactorTitle")}
             </Typography>
             <Button
+              data-test-id="btn-settings-access-2fa-settings"
               variant="text"
               className={styles.button}
               onClick={() => setIsTwoFactorPanelOpen(true)}
@@ -123,6 +114,7 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormProvider {...methods}>
             <SwitchBlock
+              dataTestId="chk-settings-access-ignore-required-fields"
               name="ignore_required_fields_for_clients"
               label={translate(
                 "pages.settings.access.ignoreRequiredFieldsTitle"
@@ -132,6 +124,7 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
               )}
             />
             <SwitchBlock
+              dataTestId="chk-settings-access-disable-binding-widget"
               name="prohibit_identifier_binding"
               label={translate("pages.settings.access.prohibitBindingTitle")}
               description={translate(
@@ -139,6 +132,7 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
               )}
             />
             <SwitchBlock
+              dataTestId="chk-settings-access-limited-access"
               name="authorize_only_admins"
               label={translate("pages.settings.access.restrictedAccessTitle")}
               description={translate(
@@ -150,65 +144,39 @@ export const AccessSettings: FC<IAccessSettingsProps> = ({ providers }) => {
                 {translate("pages.settings.access.registrationPolicyTitle")}
               </Typography>
               <div className={styles.radioWrapper}>
-                <Controller
-                  control={control}
-                  name={"registration_policy"}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <FormControlLabel
-                        label={
-                          <Typography className="text-14">
-                            {translate(
-                              "pages.settings.access.registrationDisabled"
-                            )}
-                          </Typography>
-                        }
-                        checked={value === ERegistrationPolicyTypes.disabled}
-                        onClick={() =>
-                          onChange(ERegistrationPolicyTypes.disabled)
-                        }
-                        control={<Radio disableRipple />}
-                      />
-                      <FormControlLabel
-                        label={
-                          <Typography className="text-14">
-                            {translate(
-                              "pages.settings.access.registrationAllowed"
-                            )}
-                          </Typography>
-                        }
-                        checked={value === ERegistrationPolicyTypes.allowed}
-                        onClick={() =>
-                          onChange(ERegistrationPolicyTypes.allowed)
-                        }
-                        control={<Radio disableRipple />}
-                      />
-                      <FormControlLabel
-                        label={
-                          <Typography className="text-14">
-                            {translate(
-                              "pages.settings.access.registrationAutoOnly"
-                            )}
-                          </Typography>
-                        }
-                        checked={
-                          value ===
-                          ERegistrationPolicyTypes.allowed_autoregistration_only
-                        }
-                        onClick={() =>
-                          onChange(
-                            ERegistrationPolicyTypes.allowed_autoregistration_only
-                          )
-                        }
-                        control={<Radio disableRipple />}
-                      />
-                    </>
-                  )}
+                <RadioGroupField
+                  name="registration_policy"
+                  options={[
+                    {
+                      value: ERegistrationPolicyTypes.disabled,
+                      dataTestId: "chk-settings-access-registartion-disable",
+                      title: translate(
+                        "pages.settings.access.registrationDisabled"
+                      ),
+                    },
+                    {
+                      value: ERegistrationPolicyTypes.allowed,
+                      dataTestId: "chk-settings-access-registartion-allowed",
+                      title: translate(
+                        "pages.settings.access.registrationAllowed"
+                      ),
+                    },
+                    {
+                      value:
+                        ERegistrationPolicyTypes.allowed_autoregistration_only,
+                      dataTestId:
+                        "chk-settings-access-autoregistartion-allowed",
+                      title: translate(
+                        "pages.settings.access.registrationAutoOnly"
+                      ),
+                    },
+                  ]}
                 />
               </div>
             </div>
             <div className={styles.buttonWrapper}>
               <Button
+                data-test-id="btn-settings-access-save"
                 className={styles.saveButton}
                 type="submit"
                 variant="contained"

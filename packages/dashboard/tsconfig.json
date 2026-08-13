@@ -16,10 +16,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "preserveSymlinks": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "vite-plugin-eslint": ["node_modules/vite-plugin-eslint/dist/index.d.ts"],
+      "react": ["node_modules/@types/react/index.d.ts"],
+      "react/*": ["node_modules/@types/react/*"],
       "src/*": ["src/*"]
     }
   },

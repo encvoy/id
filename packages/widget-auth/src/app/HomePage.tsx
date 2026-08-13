@@ -6,6 +6,7 @@ import ErrorPage from '@/app/error/page';
 import IdentifiersPage from '@/app/identifiers/page';
 import LoginPage from '@/app/login/page';
 import LoginPasswordPage from '@/app/loginPassword/page';
+import NotificationsPage from '@/app/notifications/page';
 import PasswordPage from '@/app/password/page';
 import EmailPage from '@/app/providers/email/page';
 import OAuthPage from '@/app/providers/oauth/page';
@@ -14,11 +15,19 @@ import PhonePage from '@/app/providers/phone/page';
 import WebauthnPage from '@/app/providers/webauthn/page';
 import RecoverAccountPage from '@/app/recoverAccount/page';
 import RecoverPasswordPage from '@/app/recoverPassword/page';
+import ReplaceEmailPage from '@/app/replaceEmail/page';
 import ScopesPage from '@/app/scopes/page';
 import StatusFieldsPages from '@/app/statusFields/page';
 import StepsPage from '@/app/steps/page';
 import SuccessPage from '@/app/success/page';
-import { INITIAL_ROUTE, INTERACTION_ID } from '@/lib/constant';
+import {
+  INITIAL_ROUTE,
+  INTERACTION_ID,
+  INTERACTION_URL,
+  LOGGED_USERS_PARSED,
+  PROVIDERS,
+} from '@/lib/constant';
+import { redirectToProvider } from '@/lib/utils';
 import { EProviderTypes } from '@/types/types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +36,19 @@ const getRouteFromHash = (): string => {
   if (typeof window === 'undefined') return 'login';
   const hash = window.location.hash.slice(1);
   return hash.split('/')[0] ?? hash;
+};
+
+const getAutoRedirectProvider = (initialRoute: string) => {
+  if (
+    initialRoute !== 'login' ||
+    PROVIDERS.length !== 1 ||
+    PROVIDERS[0].type === EProviderTypes.CREDENTIALS ||
+    LOGGED_USERS_PARSED.length > 0
+  ) {
+    return undefined;
+  }
+
+  return PROVIDERS[0];
 };
 
 const cleanupUrl = () => {
@@ -39,8 +61,7 @@ const cleanupUrl = () => {
 
   if (!interactionId) return;
 
-  // Expected clean path: /api/interaction/:interactionId
-  const expectedPath = `/api/interaction/${interactionId}`;
+  const expectedPath = new URL(INTERACTION_URL, window.location.origin).pathname;
 
   // If current path is longer than expected (contains /step/reg, /auth, /confirm, etc.)
   if (currentPath !== expectedPath && currentPath.startsWith(expectedPath)) {
@@ -65,6 +86,15 @@ export default function HomePage() {
     // Clean URL before any rendering
     cleanupUrl();
 
+    const initialRoute = INITIAL_ROUTE || getRouteFromHash();
+    const autoRedirectProvider = getAutoRedirectProvider(initialRoute);
+
+    if (autoRedirectProvider) {
+      redirectToProvider(autoRedirectProvider);
+      setCurrentRoute(getRouteFromHash());
+      return;
+    }
+
     // Set initial route if needed
     if (INITIAL_ROUTE && INITIAL_ROUTE !== getRouteFromHash()) {
       window.location.hash = `#${INITIAL_ROUTE}`;
@@ -78,6 +108,7 @@ export default function HomePage() {
     };
 
     window.addEventListener('hashchange', handler);
+    handler();
     return () => window.removeEventListener('hashchange', handler);
   }, []);
 
@@ -86,6 +117,8 @@ export default function HomePage() {
       return <ErrorPage />;
     case 'success':
       return <SuccessPage />;
+    case 'notifications':
+      return <NotificationsPage />;
     case 'password':
       return <PasswordPage />;
     case 'phone':
@@ -100,6 +133,8 @@ export default function HomePage() {
       return <OAuthPage pkce={true} />;
     case EProviderTypes.WEBAUTHN.toLowerCase():
       return <WebauthnPage />;
+    case 'webauthn-bind':
+      return <WebauthnPage mode="bind" />;
     case EProviderTypes.TOTP.toLowerCase():
     case EProviderTypes.HOTP.toLowerCase():
       return <OtpPage />;
@@ -118,13 +153,15 @@ export default function HomePage() {
     case 'identifiers':
       return <IdentifiersPage />;
     case 'missing-identifiers':
-      return <IdentifiersPage title={translate('pages.identifiers.second-title')} />;
+      return <IdentifiersPage mode="bind" />;
     case 'steps':
       return <StepsPage />;
     case 'email-step':
       return <EmailPage isStep={true} />;
     case 'phone-step':
       return <PhonePage isStep={true} />;
+    case 'replace-email':
+      return <ReplaceEmailPage />;
     case 'access':
       return <ScopesPage />;
     case 'publicity':

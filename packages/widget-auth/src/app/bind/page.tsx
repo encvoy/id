@@ -3,15 +3,18 @@
 import { Button } from '@/components/button/Button';
 import { Container } from '@/components/container/Container';
 import { Section } from '@/components/section/Section';
-import { INTERACTION_ID, WIDGET } from '@/lib/constant';
+import { INTERACTION_URL, MESSAGE, WIDGET } from '@/lib/constant';
+import { getLocalizedTextValue } from '@/lib/utils';
 import Typography from '@mui/material/Typography/Typography';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Page: FC = () => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const [hideCreateAccount, setHideCreateAccount] = useState<boolean>(false);
   const [hideBindAccount, setHideBindAccount] = useState<boolean>(false);
+  const message = getLocalizedTextValue(MESSAGE, i18n.language);
+
   useEffect(() => {
     setHideCreateAccount(WIDGET.HIDE_CREATE_ACCOUNT);
     setHideBindAccount(WIDGET.HIDE_BIND_ACCOUNT);
@@ -19,7 +22,12 @@ const Page: FC = () => {
   return (
     <Section>
       <Container title={translate('pages.bind.title')} isCancelAction>
-        <form action={'/api/interaction/' + INTERACTION_ID + '/steps'} method="POST">
+        {!!message && (
+          <Typography color="text.secondary" sx={{ textAlign: 'center', marginBottom: '8px' }}>
+            {message}
+          </Typography>
+        )}
+        <form action={`${INTERACTION_URL}/steps`} method="POST">
           {!hideCreateAccount && (
             <>
               <Typography color="text.secondary" sx={{ textAlign: 'center' }}>
@@ -29,11 +37,12 @@ const Page: FC = () => {
                 sx={{ marginTop: '8px' }}
                 label={translate('actionButtons.create')}
                 type="submit"
+                data-test-id="btn-auth-create-account-identifier"
               />
             </>
           )}
         </form>
-        <form action={'/api/interaction/' + INTERACTION_ID + '/bind'} method="POST">
+        <form action={`${INTERACTION_URL}/bind`} method="POST">
           {!hideBindAccount && (
             <>
               <Typography color="text.secondary" sx={{ textAlign: 'center', paddingTop: '8px' }}>
@@ -43,6 +52,7 @@ const Page: FC = () => {
                 sx={{ marginTop: '8px' }}
                 label={translate('actionButtons.bind')}
                 type="submit"
+                data-test-id="btn-auth-bind-identifier"
               />
             </>
           )}

@@ -1,25 +1,26 @@
 import { Reflector } from '@nestjs/core';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { ROLES } from '../../roles';
-import { UserRoles } from '../../enums';
-import { ROLE_KEY, SCOPE_KEY } from '../../decorators';
+import { SCOPE_KEY } from '../../decorators';
+import { AUTH_CONTEXT_KEY, TAuthContextRequest } from 'src/request-auth';
 
 /**
- * ScopeGuard - protection for routes that require checking for specific scopes
- * If no scopes are specified on the controller, access is allowed
- * Applies to all controllers
+ * ScopeGuard - protection for routes that require checking for specific scopes.
+ * TokenGuard and ClientIdGuard prepare the final permission list for authenticated requests.
  */
 @Injectable()
 export class ScopeGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const reflector = new Reflector();
+    const request = context.switchToHttp().getRequest<TAuthContextRequest>();
 
     const requiredScope = reflector.get<string>(SCOPE_KEY, context.getHandler());
     if (!requiredScope) return true;
 
-    const role = reflector.get<UserRoles>(ROLE_KEY, context.getHandler());
-    if (!role) return false;
+    const effectivePermissions =
+      request[AUTH_CONTEXT_KEY]?.effectivePermissions || request.tokenPermissions;
 
-    return ROLES.get(role).some((r) => r === requiredScope);
+    if (!effectivePermissions || !Array.isArray(effectivePermissions)) return false;
+
+    return effectivePermissions.includes(requiredScope);
   }
 }

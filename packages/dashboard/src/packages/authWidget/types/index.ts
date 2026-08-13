@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 export interface BaseWidgetConfig {
   withOutHomePage?: boolean;
   issuer?: string;
-  routerMainFn?: (value: string) => void;
+  routerMainFn?: (value: string, link?: string) => void;
   customRoute?: (token: string) => void;
   scopes?: string[];
   tokenEndPoint?: string;
@@ -13,6 +13,8 @@ export interface BaseWidgetConfig {
     wrapper?: IComponentStyles;
     button?: IComponentStyles;
   };
+  catalogButton?: IComponentStyles;
+  headerButtons?: ICustomMenuButton[];
   loginButton?: ICustomMenuButton;
   menuButtons?: ICustomMenuButton[];
   logoutButtonFn?: () => void;
@@ -54,6 +56,7 @@ export interface IMenuButton {
   text: string;
   link?: string;
   type?: string;
+  client_id?: string;
   onClick?: () => void;
 }
 
@@ -84,14 +87,19 @@ export interface IUserProfile extends PrivateClaims {
   custom_fields?: Record<string, unknown>;
   ExternalAccount?: Record<string, unknown>;
   deleted?: string | null;
-  email_public?: string | null;
   email_verified?: boolean;
   phone_number_verified?: boolean | null;
+  locale?: string;
   profile_privacy?: boolean;
   systemClient?: string;
   orgClient?: string;
+  orgClients?: Array<{
+    name: string;
+    client_id: string;
+  }>;
   lk?: IMenuButton[];
   catalog?: boolean;
+  catalogClients?: ICatalogClient[];
 }
 
 export enum EButtonTypes {
@@ -119,4 +127,26 @@ export enum EBaseColors {
   main = "#ffffff",
   background = "#efefef",
   hover = "#f5f5f5",
+}
+
+export type TFileString = File | null | string | undefined;
+
+export type TLocalizedText = Record<string, string>;
+
+export interface IClientType {
+  name: string | TLocalizedText;
+  id: string;
+}
+
+export interface ICatalogClient {
+  client_id: string;
+  name: string | TLocalizedText;
+  catalog_name?: string | TLocalizedText | null;
+  description?: string;
+  domain: string;
+  avatar: TFileString;
+  created_at: string;
+  group: string;
+  type: IClientType;
+  favorite: boolean;
 }

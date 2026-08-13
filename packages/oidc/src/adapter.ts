@@ -57,10 +57,22 @@ export class Adapter implements OidcAdapter {
   }
 
   /**
-   * Creates or updates a record in Redis (and in the database for Clients)
+   * Stores Client metadata in PostgreSQL and other OIDC models in Redis.
    * oidc-provider v9 only calls upsert
    */
-  async upsert(id: string, payload: any, expiresIn: number): Promise<void> {
+  async upsert(id: string, payload: any, expiresIn?: number): Promise<void> {
+    // Client metadata is authoritative in PostgreSQL. Keeping a second,
+    // non-expiring Redis copy creates misleading oidc:Client:* shadow keys
+    // that survive restarts but are never read by findClient().
+    if (this.name === "Client") {
+      await prisma.client.upsert({
+        where: { client_id: id },
+        update: payload,
+        create: payload,
+      });
+      return;
+    }
+
     const key = this.formatRedisKey(id);
     const multi = this.client.multi();
     let store: any;
@@ -88,7 +100,7 @@ export class Adapter implements OidcAdapter {
       );
       multi.rpush(grantKey, key);
       const ttl = await this.client.ttl(grantKey);
-      if (ttl === -1 || expiresIn > ttl) {
+      if (typeof expiresIn === "number" && (ttl === -1 || expiresIn > ttl)) {
         multi.expire(grantKey, expiresIn);
       }
     }
@@ -100,25 +112,20 @@ export class Adapter implements OidcAdapter {
         REDIS_PREFIXES.userCode
       );
       multi.set(userCodeKey, id);
-      multi.expire(userCodeKey, expiresIn);
+      if (typeof expiresIn === "number") {
+        multi.expire(userCodeKey, expiresIn);
+      }
     }
 
     if (payload.uid) {
       const uidKey = this.formatRedisKey(payload.uid, REDIS_PREFIXES.uid);
       multi.set(uidKey, id);
-      multi.expire(uidKey, expiresIn);
+      if (typeof expiresIn === "number") {
+        multi.expire(uidKey, expiresIn);
+      }
     }
 
     await multi.exec();
-
-    // If it's a Client, update it in the database
-    if (this.name === "Client") {
-      await prisma.client.upsert({
-        where: { client_id: id },
-        update: payload,
-        create: payload,
-      });
-    }
   }
 
   /**

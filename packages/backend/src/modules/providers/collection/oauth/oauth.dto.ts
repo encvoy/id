@@ -1,12 +1,16 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 import { IsAnyUrl } from 'src/custom.dto';
-import { BaseCreateProviderDto, BaseParamsProviderDto } from '../../providers.dto';
+import {
+  BaseCreateProviderDto,
+  BaseParamsProviderDto,
+  ProviderParamsDto,
+} from '../../providers.dto';
 
 export class ParamsOauthDto extends BaseParamsProviderDto {
+  @IsNotEmpty()
   @Matches(/^[^\n ]*$/, { message: 'The identifier cannot contain spaces' })
   @MaxLength(255)
-  @MinLength(1)
   @IsString()
   @ApiProperty()
   external_client_id: string;
@@ -19,7 +23,6 @@ export class ParamsOauthDto extends BaseParamsProviderDto {
 
   @Matches(/^[^\n ]*$/, { message: 'The secret key cannot contain spaces' })
   @MaxLength(255)
-  @MinLength(1)
   @IsString()
   @IsOptional()
   @ApiPropertyOptional()
@@ -57,18 +60,34 @@ export class ParamsOauthDto extends BaseParamsProviderDto {
 }
 
 export class CreateOauthProviderDto extends BaseCreateProviderDto<ParamsOauthDto> {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty()
   type: string;
+
+  @ProviderParamsDto(ParamsOauthDto)
+  params?: ParamsOauthDto;
 }
 
-export class UpdateOauthProviderDto extends PartialType(CreateOauthProviderDto) {}
+export class UpdateParamsOauthDto extends PartialType(ParamsOauthDto, {
+  skipNullProperties: false,
+}) {}
+
+export class UpdateOauthProviderDto extends PartialType(
+  OmitType(CreateOauthProviderDto, ['params'] as const),
+  { skipNullProperties: false },
+) {
+  @ProviderParamsDto(UpdateParamsOauthDto)
+  params?: UpdateParamsOauthDto;
+}
 
 export class BindExternalAccountDto {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: '2356546754' })
   sub: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'https://accounts.google.com' })
   issuer: string;
@@ -100,6 +119,7 @@ export class InteractionProviderDto {
   @ApiPropertyOptional({ example: 'Qwerty1234123' })
   token: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: '1' })
   provider_id: string;

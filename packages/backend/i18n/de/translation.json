@@ -12,9 +12,10 @@
     "data_processing_consent": "Einwilligung zur Verarbeitung personenbezogener Daten",
     "password": "Passwort"
   },
+  "widget": {
+    "passkey_bind_message": "Um einen Passkey hinzuzufügen, wählen Sie zuerst ein bestehendes Konto aus oder erstellen Sie ein neues."
+  },
   "errors": {
-    "T3LE0001": "Ungültige Lizenz",
-    "T3LE0002": "Lizenz ist bereits im System vorhanden",
     "T3E0001": "Ungültige Anmeldedaten",
     "T3E0002": "Kennung nicht ausgefüllt",
     "T3E0003": "Benutzer nicht gefunden",
@@ -34,6 +35,7 @@
     "T3E0017": "Feld ist nicht editierbar",
     "T3E0018": "Ungültige Parameter",
     "T3E0019": "E-Mail ist nicht eindeutig",
+    "T3E0020": "Erneute Autorisierung über einen vertrauenswürdigen Provider erforderlich",
     "T3E0021": "E-Mail des Benutzers nicht angegeben",
     "T3E0022": "Operation für die eigene Person nicht zulässig",
     "T3E0023": "Benutzer gelöscht",
@@ -115,6 +117,10 @@
     "T3E00": "",
     "T3E0000": "Unbekannter Fehler",
     "T3E0099": "Benutzer existiert bereits",
-    "T3E0100": "Das neue Passwort darf nicht mit dem alten Passwort übereinstimmen"
+    "T3E0100": "Das neue Passwort darf nicht mit dem alten Passwort übereinstimmen",
+    "T3E0103": "Das Wiederherstellen gelöschter Konten ist durch die Systemeinstellungen verboten",
+    "T3E0104": "Organisationslimit überschritten: {{limit}}",
+    "T3E0101": "Seriennummer und Fingerabdruck des Client-Zertifikats fehlen",
+    "T3E0102": "Diese Telefonnummer kann nicht hinzugefügt werden"
   }
 }

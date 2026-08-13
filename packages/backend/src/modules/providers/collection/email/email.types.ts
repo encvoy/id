@@ -10,6 +10,7 @@ export type TEmailProviderParams = {
   mail_port: string;
   mail_password: string;
   mail_code_ttl_sec: string;
+  alias?: string;
 };
 
 export enum NotificationAction {
@@ -24,6 +25,8 @@ export enum NotificationAction {
 export interface IBaseEmailParams {
   action: NotificationAction;
   user_id?: string;
+  branding_client_id?: string;
+  app_name?: string;
 }
 
 export type TEmailParams =
@@ -41,7 +44,6 @@ export interface IAccountCreateEmailParams extends IBaseEmailParams {
 
 export interface IConfirmationEmailCodeParams extends IBaseEmailParams {
   action: NotificationAction.confirmation_code;
-  app_name: string;
   code: string;
   expires_date: string;
   timezone: string;
@@ -49,7 +51,6 @@ export interface IConfirmationEmailCodeParams extends IBaseEmailParams {
 
 export interface IPasswordRecoverEmailParams extends IBaseEmailParams {
   action: NotificationAction.password_recover;
-  app_name: string;
   code: string;
   expires_date: string;
   timezone: string;
@@ -63,7 +64,6 @@ export interface IPasswordChangeEmailParams extends IBaseEmailParams {
 
 export interface IConfirmationEmailLinkParams extends IBaseEmailParams {
   action: NotificationAction.confirmation_link;
-  app_name: string;
   code: string;
   reference: string;
   expires_date: string;
@@ -72,7 +72,6 @@ export interface IConfirmationEmailLinkParams extends IBaseEmailParams {
 
 export interface IInviteEmailParams extends IBaseEmailParams {
   action: NotificationAction.invite;
-  app_name: string;
   reference: string;
   link_name: string;
 }

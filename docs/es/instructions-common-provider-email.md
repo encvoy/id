@@ -1,14 +1,14 @@
 ---
-title: "Inicio de sesión por correo electrónico en Encvoy ID — Configuración de correo electrónico"
-description: "Aprenda a habilitar el inicio de sesión por correo electrónico en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
-keywords:
-  - inicio de sesión por correo electrónico en Encvoy ID
+title: "Inicio de sesión por correo electrónico en {{projectName}} — Configuración de correo electrónico"
+description: "Aprenda a habilitar el inicio de sesión por correo electrónico en {{projectName}}: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
+keywords: 
+  - inicio de sesión por correo electrónico en {{projectName}}
   - configuración de correo electrónico
-  - autenticación por correo electrónico
+  - autenticación por correo electrónico 
   - conectar correo electrónico
-  - Inicio de sesión por Email Encvoy ID
-  - OAuth por Email Encvoy ID
-author: Equipo de Encvoy ID
+  - Inicio de sesión por Email {{projectName}}
+  - OAuth por Email {{projectName}}
+author: Equipo de {{projectName}}
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -16,7 +16,7 @@ region: [ru, en]
 menu_title: "Inicio de sesión por Email"
 ---
 
-# Cómo conectar el inicio de sesión por correo electrónico en Encvoy ID
+# Cómo conectar el inicio de sesión por correo electrónico en {{projectName}}
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, consulte la guía de [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
 
@@ -33,7 +33,7 @@ La configuración del inicio de sesión a través de **Email** consta de varios 
 
 1. Vaya al Panel de Administración → pestaña **Configuración**.
 
-   > 💡 Para crear un método de inicio de sesión para una organización, abra el **Panel de la Organización**. Si el método de inicio de sesión es necesario para una aplicación específica, abra **la configuración de esa aplicación**.
+    > 💡 Para crear un método de inicio de sesión para una organización, abra el **Panel de la Organización**. Si el método de inicio de sesión es necesario para una aplicación específica, abra **la configuración de esa aplicación**.
 
 2. Busque el bloque **Métodos de inicio de sesión** y haga clic en **Configurar**.
 3. En la ventana que se abre, haga clic en el botón **Crear** ![Botón Crear](./images/button-create.webp "Botón Crear").
@@ -41,20 +41,23 @@ La configuración del inicio de sesión a través de **Email** consta de varios 
 5. Seleccione la plantilla **Email**.
 6. Complete el formulario de creación:
 
-   **Información básica**
-   - **Nombre** — El nombre que verán los usuarios.
-   - **Descripción** (opcional) — Una breve descripción.
-   - **Logotipo** (opcional) — Puede subir su propio icono, o se utilizará el estándar.
+    **Información básica**
 
-   **Parámetros**
-   - **Dirección de correo principal** — La dirección de correo electrónico principal que se utilizará para enviar correos.
-   - **Dirección del servidor de correo saliente** — La dirección del servidor de correo saliente.
-   - **Puerto del servidor de correo saliente** — El puerto del servidor de correo saliente.
-   - **Contraseña del correo** — Una contraseña normal o una contraseña de aplicación creada en la configuración de la cuenta del servicio de correo.
-   - **Tiempo de vida del código de verificación** — El tiempo de vida del código de confirmación para el servicio de correo en segundos.
+    - **Nombre** — El nombre que verán los usuarios.
+    - **Descripción** (opcional) — Una breve descripción.
+    - **Logotipo** (opcional) — Puede subir su propio icono, o se utilizará el estándar.
 
-   **Configuración adicional**
-   - **Método de inicio de sesión público** — Active esto si desea que este método de inicio de sesión esté disponible para agregarse a otras aplicaciones del sistema (o de la organización), así como al perfil de usuario como un [identificador de servicio externo](./docs-12-common-personal-profile.md#external-service-identifiers).
+    **Parámetros**
+
+    - **Dirección de correo principal** — La dirección de correo electrónico principal que se utilizará para enviar correos.
+    - **Dirección del servidor de correo saliente** — La dirección del servidor de correo saliente.
+    - **Puerto del servidor de correo saliente** — El puerto del servidor de correo saliente.
+    - **Contraseña del correo** — Una contraseña normal o una contraseña de aplicación creada en la configuración de la cuenta del servicio de correo.
+    - **Tiempo de vida del código de verificación** — El tiempo de vida del código de confirmación para el servicio de correo en segundos.
+
+    **Configuración adicional**
+
+    - **Método de inicio de sesión público** — Active esto si desea que este método de inicio de sesión esté disponible para agregarse a otras aplicaciones del sistema (o de la organización), así como al perfil de usuario como un [identificador de servicio externo](./docs-12-common-personal-profile.md#external-service-identifiers).
 
 7. Haga clic en **Crear**.
 
@@ -76,5 +79,5 @@ Para que el botón de **Inicio de sesión por Email** sea visible para los usuar
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
-- [Gestión de la organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de la organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **{{projectName}}**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar el perfil personal.

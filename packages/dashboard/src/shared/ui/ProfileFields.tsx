@@ -4,33 +4,44 @@ import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { IUserProfile } from "src/shared/api/users";
 import {
+  IProfileField,
   IRuleWithValidation,
   useGetProfileFieldsQuery,
 } from "src/shared/api/settings";
 import { Box, Typography } from "@mui/material";
-import { ActionButtons } from "./components/ActionButtons";
-import { InputField } from "./components/InputBlock";
-import { IconsLibrary } from "./components/IconLibrary";
-import { InputDate } from "./components/InputDate";
+import { ActionButtons } from "@encvoy-id/components";
+import { InputField } from "@encvoy-id/components";
+import { IconsLibrary } from "@encvoy-id/components";
+import { InputDate } from "@encvoy-id/components";
 import { IUserClient } from "src/shared/api/clients";
 import { useTranslation } from "react-i18next";
 import { UploadAndDisplayImage } from "./UploadAndDisplayImage";
 import { isOwnerOrEditor } from "src/shared/utils/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "src/app/store/reducer";
+import {
+  DEFAULT_SYSTEM_LANGUAGE,
+  getLocalizedTextValue,
+} from "src/shared/utils/locales";
+import { TFunction } from "i18next";
 
 interface IProfileFieldsProps {
   userProfile?: IUserProfile | IUserClient;
   isCreateUser?: boolean;
   withContacts?: boolean;
+  contactFieldOptions?: Partial<Record<"email" | "phone_number", ReactNode>>;
   isLoading?: boolean;
+  profileFields?: IProfileField[];
   rules?: IRuleWithValidation[];
   onUploadPictureExternalAccounts?: () => void;
+  onCancel?: () => void;
   children?: ReactNode;
 }
 
 export const getRulesIcon = (
   field: string,
+  translate: TFunction<"translation", undefined>,
+  locale: string = DEFAULT_SYSTEM_LANGUAGE,
   rules?: IRuleWithValidation[],
   currentList?: string[]
 ) => {
@@ -39,6 +50,7 @@ export const getRulesIcon = (
       <IconsLibrary
         key="rules-list"
         type="rules"
+        title={translate("toolTips.rules")}
         description={currentList}
         hideHovered
       />
@@ -47,12 +59,14 @@ export const getRulesIcon = (
 
   const list = rules
     ?.find((rule) => rule.field_name === field)
-    ?.validations?.map((rule) => rule.title);
+    ?.validations?.filter((rule) => rule.active)
+    .map((rule) => getLocalizedTextValue(rule.title, locale));
 
   return list && list.length > 0 ? (
     <IconsLibrary
       key="rules-list"
       type="rules"
+      title={translate("toolTips.rules")}
       description={list}
       hideHovered
     />
@@ -62,15 +76,21 @@ export const getRulesIcon = (
 export const ProfileFields: FC<IProfileFieldsProps> = ({
   userProfile,
   withContacts,
+  contactFieldOptions,
   isLoading,
+  profileFields,
   rules,
   onUploadPictureExternalAccounts,
+  onCancel,
   children,
 }) => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const navigate = useNavigate();
   const [editableFieldNames, setEditableFieldNames] = useState<string[]>([]);
-  const { data: listProfileFields } = useGetProfileFieldsQuery();
+  const { data: fetchedProfileFields } = useGetProfileFieldsQuery(undefined, {
+    skip: Boolean(profileFields),
+  });
+  const listProfileFields = profileFields || fetchedProfileFields;
   const roleInApp = useSelector(({ user }: RootState) => user.roleInApp);
 
   const listCustomProfileFields =
@@ -90,14 +110,15 @@ export const ProfileFields: FC<IProfileFieldsProps> = ({
   const listCustomFields = listCustomProfileFields.map((field) => (
     <InputField
       key={field.field}
-      label={field.title}
+      label={getLocalizedTextValue(field.title, i18n.language)}
       required={checkRequiredIndicator(field?.field)}
       name={`custom_fields.${field.field}`}
       mode="nested"
       errorField="custom_fields"
       errorNestedField={field.field}
+      dataTestId={`txt-profile-info-${field.field}`}
     >
-      {getRulesIcon(field.field, rules)}
+      {getRulesIcon(field.field, translate, i18n.language, rules, undefined)}
     </InputField>
   ));
 
@@ -131,29 +152,45 @@ export const ProfileFields: FC<IProfileFieldsProps> = ({
           label={translate("pages.profile.fields.publicName")}
           required={checkRequiredIndicator("nickname")}
           name="nickname"
+          dataTestId="txt-profile-info-nickname"
         >
-          {getRulesIcon("nickname", rules)}
+          {getRulesIcon("nickname", translate, i18n.language, rules, undefined)}
         </InputField>
         <InputField
           label={translate("pages.profile.fields.givenName")}
           required={checkRequiredIndicator("given_name")}
           name="given_name"
+          dataTestId="txt-profile-info-firstname"
         >
-          {getRulesIcon("given_name", rules)}
+          {getRulesIcon(
+            "given_name",
+            translate,
+            i18n.language,
+            rules,
+            undefined
+          )}
         </InputField>
         <InputField
           label={translate("pages.profile.fields.familyName")}
           required={checkRequiredIndicator("family_name")}
           name="family_name"
+          dataTestId="txt-profile-info-lastname"
         >
-          {getRulesIcon("family_name", rules)}
+          {getRulesIcon(
+            "family_name",
+            translate,
+            i18n.language,
+            rules,
+            undefined
+          )}
         </InputField>
         <InputField
           label={translate("pages.profile.fields.login")}
           required={checkRequiredIndicator("login")}
           name="login"
+          dataTestId="txt-profile-info-login"
         >
-          {getRulesIcon("login", rules)}
+          {getRulesIcon("login", translate, i18n.language, rules, undefined)}
         </InputField>
       </Box>
       {withContacts && (
@@ -162,16 +199,26 @@ export const ProfileFields: FC<IProfileFieldsProps> = ({
             label={translate("pages.profile.fields.email")}
             required={checkRequiredIndicator("email")}
             name="email"
+            dataTestId="txt-profile-email"
           >
-            {getRulesIcon("email", rules)}
+            {getRulesIcon("email", translate, i18n.language, rules, undefined)}
           </InputField>
+          {contactFieldOptions?.email}
           <InputField
             label={translate("pages.profile.fields.phone")}
             required={checkRequiredIndicator("phone_number")}
             name="phone_number"
+            dataTestId="txt-profile-phone"
           >
-            {getRulesIcon("phone_number", rules)}
+            {getRulesIcon(
+              "phone_number",
+              translate,
+              i18n.language,
+              rules,
+              undefined
+            )}
           </InputField>
+          {contactFieldOptions?.phone_number}
         </>
       )}
       <InputDate
@@ -179,7 +226,9 @@ export const ProfileFields: FC<IProfileFieldsProps> = ({
         label={translate("pages.profile.fields.birthDate")}
         disabled={editableFieldNames.includes("birthdate")}
         required={checkRequiredIndicator("birthdate")}
+        dataTestId="txt-profile-info-birthdate"
       />
+
       <UploadAndDisplayImage
         title={translate("pages.profile.fields.profilePhoto")}
         required={checkRequiredIndicator("picture")}
@@ -202,7 +251,8 @@ export const ProfileFields: FC<IProfileFieldsProps> = ({
       )}
 
       <ActionButtons
-        onCancel={() => navigate(-1)}
+        cancelText={translate("actionButtons.cancel")}
+        onCancel={onCancel || (() => navigate(-1))}
         submitText={translate("actionButtons.save")}
         disabled={isLoading}
       />

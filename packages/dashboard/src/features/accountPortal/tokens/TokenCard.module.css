@@ -1,0 +1,71 @@
+.contentWrapper {
+  display: flex;
+  width: 100%;
+  container-type: inline-size;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.mainInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.details {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permissionsBlock {
+  flex: 1;
+  min-width: 0;
+}
+
+.permissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.permissionChip {
+  max-width: 100%;
+}
+
+.moreButtonWrapper {
+  align-content: center;
+  margin-left: 20px;
+}
+
+@container (max-width: 760px) {
+  .content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .details {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mainInfo {
+    min-width: unset;
+    max-width: unset;
+  }
+}

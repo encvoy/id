@@ -12,9 +12,10 @@
     "data_processing_consent": "Consentement au traitement des données personnelles",
     "password": "Mot de passe"
   },
+  "widget": {
+    "passkey_bind_message": "Pour ajouter une passkey, choisissez d'abord un compte existant ou créez-en un nouveau."
+  },
   "errors": {
-    "T3LE0001": "Licence invalide",
-    "T3LE0002": "La licence existe déjà dans le système",
     "T3E0001": "Identifiants incorrects",
     "T3E0002": "Identifiant non fourni",
     "T3E0003": "Utilisateur introuvable",
@@ -34,6 +35,7 @@
     "T3E0017": "Champ non modifiable",
     "T3E0018": "Paramètres incorrects",
     "T3E0019": "L'adresse e-mail n'est pas unique",
+    "T3E0020": "Ré-authentification requise via un fournisseur de confiance",
     "T3E0021": "E-mail utilisateur non spécifié",
     "T3E0022": "L'opération n'est pas autorisée sur soi-même",
     "T3E0023": "Utilisateur supprimé",
@@ -115,6 +117,10 @@
     "T3E00": "",
     "T3E0000": "Erreur inconnue",
     "T3E0099": "L'utilisateur existe déjà",
-    "T3E0100": "Le nouveau mot de passe ne doit pas être identique à l'ancien"
+    "T3E0100": "Le nouveau mot de passe ne doit pas être identique à l'ancien",
+    "T3E0103": "La restauration des comptes supprimés est interdite par les paramètres système",
+    "T3E0104": "Limite d'organisations dépassée : {{limit}}",
+    "T3E0101": "Le numéro de série et l'empreinte du certificat client sont manquants",
+    "T3E0102": "Impossible d'ajouter ce numéro de téléphone"
   }
 }

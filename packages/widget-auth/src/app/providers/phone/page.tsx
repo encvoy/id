@@ -5,7 +5,14 @@ import { Section } from '@/components/section/Section';
 import { Container } from '@/components/container/Container';
 import { FC, useEffect, useState } from 'react';
 import { Form } from '@/components/form/Form';
-import { CLIENT_ID, INTERACTION_ID, MESSAGE, PROVIDERS } from '@/lib/constant';
+import {
+  buildPublicUrl,
+  CLIENT_ID,
+  INTERACTION_ID,
+  INTERACTION_URL,
+  MESSAGE,
+  PROVIDERS,
+} from '@/lib/constant';
 import { EHashPages, IProvider } from '@/types/types';
 import { InputPhone } from '@/components/input/InpuFieldPhone';
 import { InputField } from '@/components/input/InputField';
@@ -15,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm, useWatch } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import { ValidationRuleList } from '@/components/listItem/listItem';
+import { getLocalizedTextValue } from '@/lib/utils';
 
 interface IPhoneFormData {
   phone_number: string;
@@ -32,7 +40,7 @@ interface IPhonePageProps {
 }
 
 const Page: FC<IPhonePageProps> = ({ isStep }) => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const hashParams = useHashParams();
   const { minute, second, setTime } = useTimer();
   const [clientId, setClientId] = useState<string>('');
@@ -56,10 +64,12 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
   }, [hashParams?.id]);
 
   useEffect(() => {
-    if (MESSAGE) {
-      setError('phone_number', { message: MESSAGE });
+    const resolvedMessage = getLocalizedTextValue(MESSAGE, i18n.language);
+
+    if (resolvedMessage) {
+      setError('phone_number', { message: resolvedMessage });
     }
-  }, [MESSAGE]);
+  }, [i18n.language, setError]);
 
   const showMessage = (codeType: string) => {
     switch (codeType) {
@@ -74,7 +84,7 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
     setPhoneUsed(phone_number);
     setIsLoading(true);
     try {
-      const response = await fetch(window.location.origin + '/api/v1/verification/code', {
+      const response = await fetch(buildPublicUrl('/api/v1/verification/code'), {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -107,7 +117,7 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
   const confirmVerificationCode = async ({ phone_number, code }: IPhoneFormData) => {
     try {
       const response = await fetch(
-        window.location.origin + `/api/interaction/${INTERACTION_ID}/phone/confirm`,
+        `${INTERACTION_URL}/phone/confirm`,
         {
           method: 'POST',
           headers: {
@@ -153,16 +163,23 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
           fnSubmit={modeForm === 'request' ? requestVerificationCode : confirmVerificationCode}
           methodsForm={methods}
           mode={modeForm === 'action' ? 'action' : 'hookForm'}
-          action={`/api/interaction/${INTERACTION_ID}/${isStep ? 'steps' : `auth?type=${provider?.type}`}`}
+          action={`${INTERACTION_URL}/${isStep ? 'steps' : `auth?type=${provider?.type}`}`}
           method="POST"
         >
-          <InputPhone fieldName="phone_number" />
+          <InputPhone
+            fieldName="phone_number"
+            dataTestId="txt-auth-add-phone"
+            autoComplete="section-phone-verification tel"
+          />
           <Box sx={{ display: 'flex', gap: 8 }}>
             <InputField
               fieldName="code"
               disabled={modeForm === 'request'}
               requiredFiled={!(phoneUsed !== watchPhone || modeForm === 'request')}
               placeholder={translate('helperText.code')}
+              dataTestId="txt-auth-code-confirm"
+              autoComplete="section-phone-verification one-time-code"
+              ignorePasswordManagers
               endPosition={
                 <Button
                   disabled={minute !== 0 || second !== 0}
@@ -173,6 +190,7 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
                     }
                   }}
                   type={phoneUsed !== watchPhone || modeForm === 'request' ? 'submit' : undefined}
+                  data-test-id="btn-auth-get-code"
                 />
               }
             />
@@ -187,6 +205,7 @@ const Page: FC<IPhonePageProps> = ({ isStep }) => {
             label={translate('actionButtons.confirm')}
             disabled={phoneUsed !== watchPhone || modeForm === 'request'}
             type={phoneUsed === watchPhone && modeForm !== 'request' ? 'submit' : undefined}
+            data-test-id="btn-auth-confirm-code"
           />
         </Form>
         {isStep && <ValidationRuleList />}

@@ -3,29 +3,25 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "deleteOutDir": true,
     "assets": [
       {
-        "include": "**/*.mustache",
-        "watchAssets": true
+        "include": "**/*.mustache"
       },
       {
-        "include": "**/*.node",
-        "watchAssets": true
+        "include": "**/*.node"
       },
       {
         "include": "../i18n/**/*",
-        "outDir": "dist/i18n",
-        "watchAssets": true
+        "outDir": "dist/i18n"
       },
       {
         "include": "../views/**/*",
-        "outDir": "dist/views",
-        "watchAssets": true
+        "outDir": "dist/views"
       },
       {
         "include": "../public/**/*",
-        "outDir": "dist/public",
-        "watchAssets": true
+        "outDir": "dist/public"
       }
     ]
   }

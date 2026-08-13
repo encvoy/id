@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { FC } from "react";
 import { IQueryPropsWithId } from "src/shared/api/types";
-import { ListItems } from "../../../shared/ui/listElements";
+import { ListItems } from "../../../shared/ui/CardsList.tsx";
 import {
   IInvitation,
   useLazyGetUsersInvitationsQuery,
@@ -23,7 +23,7 @@ export const RequestList: FC = () => {
       query: {
         sortBy: "created_at",
         sortDirection: Order.DESC,
-        limit: "10",
+        limit: 10,
         offset,
         search: search || "",
       },

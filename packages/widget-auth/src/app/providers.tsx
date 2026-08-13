@@ -9,32 +9,34 @@ import ContrastIcon from '@mui/icons-material/Contrast';
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import i18next from '@/lib/i18n';
-import { I18nextProvider } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { PROJECT_NAME, WIDGET } from '@/lib/constant';
+import { getImageURL, getLocalizedTextValue } from '@/lib/utils';
 
 function DynamicFavicon() {
-  useEffect(() => {
-    if (!WIDGET?.LOGO) return;
+  const { i18n } = useTranslation();
 
-    document
-      .querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]')
-      .forEach((el) => el.remove());
-    let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+  useEffect(() => {
+    const localizedProjectName = getLocalizedTextValue(PROJECT_NAME, i18n.language);
+
+    document.title = localizedProjectName || 'Auth widget';
+
+    const faviconUrl = getImageURL(WIDGET?.FAVICON);
+    if (!faviconUrl) {
+      return;
+    }
+
+    let link = document.querySelector<HTMLLinkElement>('#widget-favicon');
 
     if (!link) {
       link = document.createElement('link');
+      link.id = 'widget-favicon';
       link.rel = 'icon';
       document.head.appendChild(link);
     }
 
-    link.href = link.href = `${window.location.origin}/${WIDGET.LOGO}`;
-
-    if (PROJECT_NAME) {
-      document.title = PROJECT_NAME;
-    } else {
-      document.title = 'Auth widget';
-    }
-  }, [WIDGET?.LOGO]);
+    link.href = faviconUrl;
+  }, [i18n.language]);
 
   return null;
 }
@@ -66,8 +68,10 @@ export function Providers({ children }: { children: ReactNode }) {
     <Provider store={store}>
       <ThemeProvider theme={themeWithVars}>
         <StyledEngineProvider injectFirst>
-          <DynamicFavicon />
-          <I18nextProvider i18n={i18next}>{children}</I18nextProvider>
+          <I18nextProvider i18n={i18next}>
+            <DynamicFavicon />
+            {children}
+          </I18nextProvider>
         </StyledEngineProvider>
       </ThemeProvider>
     </Provider>

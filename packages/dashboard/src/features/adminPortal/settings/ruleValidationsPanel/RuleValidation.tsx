@@ -3,8 +3,10 @@ import { Button, Switch, Typography } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IconsLibrary } from "src/shared/ui/components/IconLibrary";
-import { IconWithTooltip } from "src/shared/ui/components/IconWithTooltip";
+import { IconsLibrary } from "@encvoy-id/components";
+import { IconWithTooltip } from "@encvoy-id/components";
+import { SurfaceBlock } from "@encvoy-id/components";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 import {
   IRuleValidation,
   useAddRuleValidationToRuleMutation,
@@ -18,6 +20,7 @@ type TRuleValidationField = {
   onEdit: () => void;
   checked: boolean;
   fieldName: string;
+  clientId: string;
 };
 
 export const RuleValidation: FC<TRuleValidationField> = ({
@@ -25,8 +28,9 @@ export const RuleValidation: FC<TRuleValidationField> = ({
   onEdit,
   checked,
   fieldName,
+  clientId,
 }) => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const [deleteRuleValidation] = useDeleteRuleValidationMutation();
   const [addRuleValidationToRule] = useAddRuleValidationToRuleMutation();
   const [removeRuleValidationFromRule] =
@@ -34,18 +38,20 @@ export const RuleValidation: FC<TRuleValidationField> = ({
   const [isCheck, setIsCheck] = useState<boolean>(checked);
 
   const handleDelete = async () => {
-    await deleteRuleValidation(rule.id);
+    await deleteRuleValidation({ client_id: clientId, id: rule.id });
   };
 
   const handleCheck = async () => {
     try {
       if (!isCheck) {
         await addRuleValidationToRule({
+          client_id: clientId,
           field_name: fieldName,
           id: rule.id,
         }).unwrap();
       } else {
         await removeRuleValidationFromRule({
+          client_id: clientId,
           field_name: fieldName,
           id: rule.id,
         }).unwrap();
@@ -59,41 +65,57 @@ export const RuleValidation: FC<TRuleValidationField> = ({
 
   return (
     <ListItem
+      disablePadding
       data-id="rule-validation-item"
-      className={styles.item}
       onClick={(e) => {
         e.stopPropagation();
         onEdit();
       }}
     >
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <Switch
-            checked={isCheck}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e) => {
-              e.stopPropagation();
-              handleCheck();
-            }}
-            disabled={!rule.active}
-          />
-          <Typography className="text-14">{rule.title}</Typography>
-        </div>
-        <div className={styles.buttons}>
-          {!rule.active && (
-            <IconWithTooltip
-              title={translate("toolTips.notActive")}
-              description={translate("panel.ruleValidation.tooltipDescription")}
-              Icon={VisibilityOffOutlinedIcon}
-              hideHovered
+      <SurfaceBlock className={styles.rule}>
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <Switch
+              data-test-id={`chk-settings-user-profile-rule-active-${rule.id}`}
+              checked={isCheck}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                e.stopPropagation();
+                handleCheck();
+              }}
+              disabled={!rule.active}
             />
-          )}
-          <Button variant="text" onClick={() => onEdit()}>
-            {translate("actionButtons.configure")}
-          </Button>
-          <IconsLibrary type="delete" onClick={handleDelete} />
+            <Typography className="text-14">
+              {getLocalizedTextValue(rule.title, i18n.language)}
+            </Typography>
+          </div>
+          <div className={styles.buttons}>
+            {!rule.active && (
+              <IconWithTooltip
+                title={translate("toolTips.notActive")}
+                description={translate(
+                  "panel.ruleValidation.tooltipDescription"
+                )}
+                Icon={VisibilityOffOutlinedIcon}
+                hideHovered
+              />
+            )}
+            <Button
+              variant="text"
+              onClick={() => onEdit()}
+              data-test-id="btn-settings-user-profile-rule-settings"
+            >
+              {translate("actionButtons.configure")}
+            </Button>
+            <IconsLibrary
+              title={translate("toolTips.delete")}
+              type="delete"
+              onClick={handleDelete}
+              dataTestId="btn-settings-user-profile-rule-delete"
+            />
+          </div>
         </div>
-      </div>
+      </SurfaceBlock>
     </ListItem>
   );
 };

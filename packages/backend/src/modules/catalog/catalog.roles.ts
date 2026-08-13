@@ -32,8 +32,8 @@ ROLES.set(UserRoles.EDITOR, [
   CatalogActions.settingsWrite,
 ]);
 
-ROLES.set(UserRoles.ADMIN, [
-  ...(ROLES.get(UserRoles.ADMIN) || []),
+ROLES.set(UserRoles.MANAGER, [
+  ...(ROLES.get(UserRoles.MANAGER) || []),
   CatalogActions.list,
   CatalogActions.settingsRead,
 ]);

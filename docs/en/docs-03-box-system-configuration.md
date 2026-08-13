@@ -1,23 +1,23 @@
 ---
-title: "Environment Variables Encvoy ID — Administrator Reference"
-description: "Learn how to correctly configure Encvoy ID environment variables and ensure secure system operation. A step-by-step guide for administrators."
+title: "Environment Variables {{projectName}} — Administrator Reference"
+description: "Learn how to correctly configure {{projectName}} environment variables and ensure secure system operation. A step-by-step guide for administrators."
 keywords:
-  - environment variables Encvoy ID
-  - configure Encvoy ID env
+  - environment variables {{projectName}}
+  - configure {{projectName}} env
   - OIDC env variables
   - OpenID Connect environment variables
   - OAuth 2.0 environment configuration
   - docker-compose env
-  - PostgreSQL configuration Encvoy ID
-  - SMTP configuration Encvoy ID
-  - interface customization Encvoy ID
-  - CUSTOM_STYLES Encvoy ID
+  - PostgreSQL configuration {{projectName}}
+  - SMTP configuration {{projectName}}
+  - interface customization {{projectName}}
+  - CUSTOM_STYLES {{projectName}}
   - environment variable security
-  - administrator Encvoy ID
-  - server configuration Encvoy ID
-  - configuration guide Encvoy ID
-  - Google metrics Encvoy ID
-author: "Encvoy ID Team"
+  - administrator {{projectName}}
+  - server configuration {{projectName}}
+  - configuration guide {{projectName}}
+  - Google metrics {{projectName}}
+author: "{{projectName}} Team"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -26,20 +26,20 @@ menu_title: "Environment Variable Configuration"
 order: 3
 ---
 
-# How to Configure Encvoy ID Environment Variables
+# How to Configure {{projectName}} Environment Variables
 
-In this guide, you will learn how to configure the environment variables for **Encvoy ID** on your server. We will break down all parameters in detail — from the database and OIDC to cache, mail, and interface — to ensure your system works correctly from the first launch.
+In this guide, you will learn how to configure the environment variables for **{{projectName}}** on your server. We will break down all parameters in detail — from the database and OIDC to cache, mail, and interface — to ensure your system works correctly from the first launch.
 
 **Table of Contents:**
 
-- [How to Configure Encvoy ID Environment Variables](#how-to-configure-encvoy-id-environment-variables)
+- [How to Configure {{projectName}} Environment Variables](#how-to-configure-projectname-environment-variables)
   - [Common Environment Variables { #common-environment-variables }](#common-environment-variables--common-environment-variables-)
   - [Database Environment Variables (PostgreSQL) { #database-environment-variables }](#database-environment-variables-postgresql--database-environment-variables-)
   - [Redis, Sessions, and OIDC Cookies { #redis-sessions-and-oidc-cookies }](#redis-sessions-and-oidc-cookies--redis-sessions-and-oidc-cookies-)
   - [Rate Limiting and Logging { #rate-limiting-and-logging }](#rate-limiting-and-logging--rate-limiting-and-logging-)
   - [Mail and Notifications { #mail-and-notifications }](#mail-and-notifications--mail-and-notifications-)
   - [Interface Customization { #interface-customization }](#interface-customization--interface-customization-)
-  - [Permissions and Licenses { #permissions-and-licenses }](#permissions-and-licenses--permissions-and-licenses-)
+  - [Copyright { #copyright }](#copyright--copyright-)
   - [Metrics { #metrics }](#metrics--metrics-)
   - [See Also { #see-also }](#see-also--see-also-)
 
@@ -62,7 +62,7 @@ These variables define the basic behavior and identification of the service.
 | `CLIENT_SECRET`             | Unique application secret (UUID recommended)                      | —                           |
 | `MANUAL_URL`                | Link to documentation for users                                   | `https://your-domain/docs/` |
 
-> ⚠️ The `CLIENT_ID` and `CLIENT_SECRET` variables are used to identify **Encvoy ID** as an OAuth 2.0 / OpenID Connect client and must be kept secret.
+> ⚠️ The `CLIENT_ID` and `CLIENT_SECRET` variables are used to identify **{{projectName}}** as an OAuth 2.0 / OpenID Connect client and must be kept secret.
 
 ---
 
@@ -120,7 +120,7 @@ SMTP server settings for sending emails (registration confirmation, password res
 
 The appearance of buttons, links, and tabs is configured via a JSON object in the `CUSTOM_STYLES` variable.
 
-The `CUSTOM_STYLES` variable allows you to customize the **Encvoy ID** interface without changing the code.
+The `CUSTOM_STYLES` variable allows you to customize the **{{projectName}}** interface without changing the code.
 
 ```env
 # Go to the project folder
@@ -158,11 +158,11 @@ Description of the `CUSTOM_STYLES` variable:
 
 ---
 
-## Permissions and Licenses { #permissions-and-licenses }
+## Copyright { #copyright }
 
 | Variable    | Description                          | Default Value         | Example                                |
 | ----------- | ------------------------------------ | --------------------- | -------------------------------------- |
-| `COPYRIGHT` | Copyright information in JSON format | `{"ru":" ","en":" "}` | `{"ru":"© Компания","en":"© Company"}` |
+| `COPYRIGHT` | Copyright information in JSON format | `{"ru":" ","en":" "}` | `{"ru":"© Company","en":"© Company"}` |
 
 ---
 
@@ -176,5 +176,5 @@ Description of the `CUSTOM_STYLES` variable:
 
 ## See Also { #see-also }
 
-- [System Installation Encvoy ID](./docs-02-box-system-install.md) — guide for system installation.
+- [System Installation {{projectName}}](./docs-02-box-system-install.md) — guide for system installation.
 - [System Configuration](./docs-04-box-system-settings.md) — guide for configuring the interface and user access to the system.

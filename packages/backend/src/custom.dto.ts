@@ -2,8 +2,13 @@ import * as swagger from '@nestjs/swagger';
 import * as cv from 'class-validator';
 import { isUrl, preparePhoneNumber, PHONE_REGEX } from './helpers';
 import { Transform } from 'class-transformer';
-import { SortDirection } from './enums';
+import { ELocales, SortDirection } from './enums';
 import { BadRequestException } from '@nestjs/common';
+import {
+  isLocalizedTextValue,
+  normalizeLocalizedTextInput,
+  TLocalizedTextValidationOptions,
+} from 'src/utils/localized-text-dto';
 
 /**
  *
@@ -18,9 +23,12 @@ export function IsAnyUrl(property?: string, validationOptions?: cv.ValidationOpt
       constraints: [property],
       options: validationOptions,
       validator: {
-        validate(value: string[] | string) {
+        validate(value: unknown) {
           if (typeof value === 'string') return isUrl(value);
-          return value.every((url) => (url ? isUrl(url) : true));
+          if (Array.isArray(value)) {
+            return value.every((url) => typeof url === 'string' && (!url || isUrl(url)));
+          }
+          return false;
         },
         defaultMessage() {
           return `Invalid URL format: ${propertyName} `;
@@ -90,6 +98,47 @@ export function IsBooleanCustom(): PropertyDecorator {
       }
       return value;
     })(target, propertyKey);
+  };
+}
+
+type TIsLocalizedTextDecoratorOptions = Omit<TLocalizedTextValidationOptions, 'allowedLocales'> & {
+  fallbackLocale?: string;
+  validationOptions?: cv.ValidationOptions;
+};
+
+export function IsLocalizedText(
+  allowedLocales: readonly string[],
+  options?: TIsLocalizedTextDecoratorOptions,
+): PropertyDecorator {
+  return function (target: Object, propertyKey: string | symbol) {
+    const fallbackLocale = options?.fallbackLocale || allowedLocales[0] || ELocales.ru;
+    Transform(({ value }) => normalizeLocalizedTextInput(value, fallbackLocale))(
+      target,
+      propertyKey,
+    );
+
+    cv.registerDecorator({
+      name: 'IsLocalizedText',
+      target: target.constructor,
+      propertyName: propertyKey as string,
+      constraints: [allowedLocales],
+      options: options?.validationOptions,
+      validator: {
+        validate(value: unknown) {
+          if (value === null || value === undefined) return true;
+
+          return isLocalizedTextValue(value, {
+            allowedLocales,
+            requireAtLeastOne: options?.requireAtLeastOne,
+            maxPerLang: options?.maxPerLang,
+          });
+        },
+        defaultMessage(args?: cv.ValidationArguments) {
+          const locales = (args?.constraints?.[0] as string[] | undefined)?.join(', ') || '';
+          return `Invalid localized text format. Allowed locales: ${locales}`;
+        },
+      },
+    });
   };
 }
 

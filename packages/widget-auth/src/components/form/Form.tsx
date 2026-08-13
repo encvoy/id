@@ -3,7 +3,7 @@ import styles from './Form.module.css';
 import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormReturn } from 'react-hook-form';
 
 interface IFormProps<T extends FieldValues> {
-  fnSubmit?: (data: T) => void;
+  fnSubmit?: (data: T) => void | Promise<void>;
   action?: string;
   method?: string;
   methodsForm?: UseFormReturn<T, object>;
@@ -31,7 +31,7 @@ export const Form = <T extends FieldValues>({
 
   const onSubmit: SubmitHandler<T> = async (data: T) => {
     if (fnSubmit && mode === 'hookForm') {
-      fnSubmit(data);
+      await fnSubmit(data);
     }
   };
 

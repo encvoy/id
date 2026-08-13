@@ -8,62 +8,58 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
-import { Box, Button, Typography } from "@mui/material";
-import clsx from "clsx";
-import { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+} from '@dnd-kit/sortable';
+import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
+import { Box, Button, Typography } from '@mui/material';
+import clsx from 'clsx';
+import { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   useGetClientInfoQuery,
   useUpdateClientMutation,
   useUpdateClientProvidersListMutation,
-} from "src/shared/api/clients";
-import { setNoticeError, setNoticeInfo } from "src/shared/lib/noticesSlice";
-import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
-import { CLIENT_ID } from "src/shared/utils/constants";
+} from 'src/shared/api/clients';
+import { setNoticeError, setNoticeInfo } from 'src/shared/slices/noticesSlice';
+import { SubmitModal } from '@encvoy-id/components';
 import {
   EGetProviderAction,
   IProvider,
-  ProviderType,
+  EProviderType,
   useActivateProvidersMutation,
   useDeactivateProvidersMutation,
   useDeleteProviderMutation,
   useGetProvidersQuery,
-} from "../../../../shared/api/provider";
-import { ChooseListProvidersPanel } from "./ChooseListProvidersPanel";
-import { EditEthereumProvider } from "./editPanel/EditEthereumProvider";
-import { EditHOTPProvider } from "./editPanel/EditHOTPProvider";
-import { EditKloudProvider } from "./editPanel/EditKloudProvider";
-import { EditMTLSProvider } from "./editPanel/EditMTLSProvider";
-import { EditProvider } from "./editPanel/EditProvider";
-import { EditTOTPProvider } from "./editPanel/EditTOTPProvider";
-import { EditWebAuthnProvider } from "./editPanel/EditWebAuthnProvider";
-import { EditEmailCustomProvider } from "./editPanel/EmailEmailCustomProvider";
-import { EmptyProviderPlaceholder } from "./EmptyProviderPlaceholder";
-import styles from "./ListProvidersPanel.module.css";
-import { ProviderItem } from "./ProviderItem";
-import { SortableProviderItem } from "./SortableProviderItem";
+} from '../../../../shared/api/provider';
+import { ChooseListProvidersPanel } from './ChooseListProvidersPanel';
+import { EditEmailCustomProvider } from './editPanel/EditEmailCustomProvider';
+import { EditEthereumProvider } from './editPanel/EditEthereumProvider';
+import { EditHOTPProvider } from './editPanel/EditHOTPProvider';
+import { EditKloudProvider } from './editPanel/EditKloudProvider';
+import { EditMTLSProvider } from './editPanel/EditMTLSProvider';
+import { EditProvider } from './editPanel/EditProvider';
+import { EditTOTPProvider } from './editPanel/EditTOTPProvider';
+import { EditWebAuthnProvider } from './editPanel/EditWebAuthnProvider';
+import { EmptyProviderPlaceholder } from './EmptyProviderPlaceholder';
+import styles from './ListProvidersPanel.module.css';
+import { ProviderItemBase } from './ProviderItemBase';
+import { SortableProviderItem } from './SortableProviderItem';
 
 export const ListProvidersPanel: FC = () => {
-  const { appId = "", clientId = "" } =
-    useParams<{ appId: string; clientId?: string }>();
+  const { appId = '', clientId = '' } = useParams<{ appId: string; clientId?: string }>();
   const dispatch = useDispatch();
   const { t: translate } = useTranslation();
 
   const [providerToEdit, setProviderToEdit] = useState<IProvider | null>(null);
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const [providerToDelete, setProviderToDelete] = useState<IProvider | null>(
-    null
-  );
+  const [providerToDelete, setProviderToDelete] = useState<IProvider | null>(null);
   const [bigProviders, setBigProviders] = useState<IProvider[]>([]);
   const [smallProviders, setSmallProviders] = useState<IProvider[]>([]);
   const [otherProviders, setOtherProviders] = useState<IProvider[]>([]);
@@ -86,30 +82,29 @@ export const ListProvidersPanel: FC = () => {
   const [updateClientProvidersList] = useUpdateClientProvidersListMutation();
 
   const currentClientID = clientId || appId;
-  const isSystemApp = client?.client_id === CLIENT_ID;
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const editProviderTypes: string[] = [
-    ProviderType.GITHUB,
-    ProviderType.GOOGLE,
-    ProviderType.CUSTOM,
-    ProviderType.OAUTH,
-    ProviderType.KLOUD,
-    ProviderType.ETHEREUM,
-    ProviderType.WEBAUTHN,
-    ProviderType.MTLS,
-    ProviderType.TOTP,
-    ProviderType.HOTP,
-    ProviderType.KLOUD,
-    ProviderType.EMAIL_CUSTOM,
+    EProviderType.GITHUB,
+    EProviderType.GOOGLE,
+    EProviderType.CUSTOM,
+    EProviderType.OAUTH,
+    EProviderType.KLOUD,
+    EProviderType.ETHEREUM,
+    EProviderType.WEBAUTHN,
+    EProviderType.MTLS,
+    EProviderType.TOTP,
+    EProviderType.HOTP,
+    EProviderType.KLOUD,
+    EProviderType.EMAIL_CUSTOM,
   ];
-  const onlyRemoveProviderTypes: string[] = [ProviderType.ETHEREUM];
+  const onlyRemoveProviderTypes: string[] = [EProviderType.ETHEREUM];
 
   useEffect(() => {
     if (clientProviders?.length) {
@@ -119,11 +114,9 @@ export const ListProvidersPanel: FC = () => {
         return indexA - indexB;
       });
 
-      const big = sorted.filter((p) => p.groupe === "BIG");
-      const small = sorted.filter((p) => p.groupe === "SMALL");
-      const others = sorted.filter(
-        (p) => p.groupe !== "BIG" && p.groupe !== "SMALL"
-      );
+      const big = sorted.filter((p) => p.groupe === 'BIG');
+      const small = sorted.filter((p) => p.groupe === 'SMALL');
+      const others = sorted.filter((p) => p.groupe !== 'BIG' && p.groupe !== 'SMALL');
 
       setBigProviders(big);
       setSmallProviders(small);
@@ -154,31 +147,23 @@ export const ListProvidersPanel: FC = () => {
 
     const activeInBig = bigProviders.some((p) => p.id === active.id);
 
-    if (
-      over.id === "empty-placeholder-big" ||
-      over.id === "empty-placeholder-small"
-    ) {
-      const targetGroupe =
-        over.id === "empty-placeholder-big" ? "BIG" : "SMALL";
-      const targetIsBig = targetGroupe === "BIG";
+    if (over.id === 'empty-placeholder-big' || over.id === 'empty-placeholder-small') {
+      const targetGroupe = over.id === 'empty-placeholder-big' ? 'BIG' : 'SMALL';
+      const targetIsBig = targetGroupe === 'BIG';
 
       if (activeInBig === targetIsBig) return;
 
       const sourceProviders = activeInBig ? bigProviders : smallProviders;
       const targetProviders = targetIsBig ? bigProviders : smallProviders;
-      const setSourceProviders = activeInBig
-        ? setBigProviders
-        : setSmallProviders;
-      const setTargetProviders = targetIsBig
-        ? setBigProviders
-        : setSmallProviders;
+      const setSourceProviders = activeInBig ? setBigProviders : setSmallProviders;
+      const setTargetProviders = targetIsBig ? setBigProviders : setSmallProviders;
 
       const newSource = sourceProviders.filter((p) => p.id !== active.id);
 
       const updatedActiveProvider = { ...activeProvider, groupe: targetGroupe };
       const newTarget = [...targetProviders, updatedActiveProvider];
 
-      const sourceGroupe = activeInBig ? "BIG" : "SMALL";
+      const sourceGroupe = activeInBig ? 'BIG' : 'SMALL';
       const updatedSource = newSource.map((item, index) => ({
         ...item,
         index,
@@ -202,8 +187,7 @@ export const ListProvidersPanel: FC = () => {
     }
 
     const overProvider =
-      bigProviders.find((p) => p.id === over.id) ||
-      smallProviders.find((p) => p.id === over.id);
+      bigProviders.find((p) => p.id === over.id) || smallProviders.find((p) => p.id === over.id);
 
     if (!overProvider) return;
 
@@ -229,27 +213,21 @@ export const ListProvidersPanel: FC = () => {
         sendProvidersUpdate(bigProviders, updatedItems);
       }
     } else {
-      const targetGroupe = overInBig ? "BIG" : "SMALL";
+      const targetGroupe = overInBig ? 'BIG' : 'SMALL';
       const sourceProviders = activeInBig ? bigProviders : smallProviders;
       const targetProviders = overInBig ? bigProviders : smallProviders;
-      const setSourceProviders = activeInBig
-        ? setBigProviders
-        : setSmallProviders;
-      const setTargetProviders = overInBig
-        ? setBigProviders
-        : setSmallProviders;
+      const setSourceProviders = activeInBig ? setBigProviders : setSmallProviders;
+      const setTargetProviders = overInBig ? setBigProviders : setSmallProviders;
 
       const newSource = sourceProviders.filter((p) => p.id !== active.id);
 
-      const targetIndex = targetProviders.findIndex(
-        (item) => item.id === over.id
-      );
+      const targetIndex = targetProviders.findIndex((item) => item.id === over.id);
 
       const updatedActiveProvider = { ...activeProvider, groupe: targetGroupe };
       const newTarget = [...targetProviders];
       newTarget.splice(targetIndex, 0, updatedActiveProvider);
 
-      const sourceGroupe = activeInBig ? "BIG" : "SMALL";
+      const sourceGroupe = activeInBig ? 'BIG' : 'SMALL';
       const updatedSource = newSource.map((item, index) => ({
         ...item,
         index,
@@ -273,9 +251,9 @@ export const ListProvidersPanel: FC = () => {
 
   const sendProvidersUpdate = (big: IProvider[], small: IProvider[]) => {
     updateClientProvidersList({
-      client_id: client?.client_id || "",
-      big: big.map((p) => parseInt(p.id, 10)),
-      small: small.map((p) => parseInt(p.id, 10)),
+      client_id: client?.client_id || '',
+      big: big.map((p) => p.id),
+      small: small.map((p) => p.id),
     });
   };
 
@@ -283,43 +261,39 @@ export const ListProvidersPanel: FC = () => {
     try {
       await deleteProvider({
         clientId: clientId || appId,
-        providerId: providerToDelete?.id || "",
+        providerId: providerToDelete?.id || '',
       }).unwrap();
     } catch (error) {
       console.error(error);
-      dispatch(setNoticeError(translate("info.deleteError")));
+      dispatch(setNoticeError(translate('info.deleteError')));
     }
     setProviderToDelete(null);
   };
 
   const handleCopyProvider = async (provider: IProvider) => {
     await navigator.clipboard.writeText(JSON.stringify(provider));
-    dispatch(setNoticeInfo(translate("info.dataCopied")));
+    dispatch(setNoticeInfo(translate('info.dataCopied')));
   };
 
-  const handleActivateProvider = async (provider: IProvider) => {
+  const handleActivateProvider = async (provider: IProvider, index?: number) => {
     if (!provider.is_active) {
       await activateProvider({
         clientId: clientId || appId,
-        providers: [parseInt(provider.id, 10)],
+        providerId: provider.id,
+        index,
       });
     } else {
       await deactivateProvider({
         clientId: clientId || appId,
-        providers: [parseInt(provider.id, 10)],
+        providerId: provider.id,
       });
     }
   };
 
-  const handleChangeRequired = async (
-    provider: IProvider,
-    isRequired?: boolean
-  ) => {
+  const handleChangeRequired = async (provider: IProvider, isRequired?: boolean) => {
     const updatedProvidersIds = isRequired
-      ? (client?.required_providers_ids ?? []).filter(
-          (id) => id !== provider.id.toString()
-        )
-      : [...(client?.required_providers_ids ?? []), provider.id.toString()];
+      ? (client?.required_providers_ids ?? []).filter((id) => id !== provider.id)
+      : [...(client?.required_providers_ids ?? []), provider.id];
 
     try {
       await updateClient({
@@ -327,22 +301,21 @@ export const ListProvidersPanel: FC = () => {
         required_providers_ids: updatedProvidersIds,
       }).unwrap();
     } catch (error) {
-      dispatch(setNoticeError(translate("info.updateError")));
+      dispatch(setNoticeError(translate('info.updateError')));
       console.error(error);
     }
   };
 
-  const credentials = clientProviders?.find(
-    (p) => p.type === ProviderType.CREDENTIALS
-  );
+  const credentials = clientProviders?.find((p) => p.type === EProviderType.CREDENTIALS);
 
   return (
     <>
       <Box>
         <div className={styles.header}>
-          <Typography>{translate("pages.widget.editProviders")}</Typography>
+          <Typography>{translate('pages.widget.editProviders')}</Typography>
           <Button
             data-id="side-panel-create-button"
+            data-test-id="btn-settings-login-method-create"
             variant="contained"
             color="secondary"
             onClick={() => setIsCreateFormOpen(true)}
@@ -351,11 +324,10 @@ export const ListProvidersPanel: FC = () => {
         </div>
 
         {!!credentials && (
-          <ProviderItem
+          <ProviderItemBase
             key={credentials.id}
             provider={credentials}
             currentClientID={currentClientID}
-            isSystemApp={isSystemApp}
             isRequired={false}
             onlyRemove={false}
             canClick={false}
@@ -375,34 +347,26 @@ export const ListProvidersPanel: FC = () => {
           onDragEnd={handleDragEnd}
         >
           {/* BIG */}
-          <Typography className={clsx(styles.groupTitle, "text-14")}>
-            {translate("pages.widget.big")}
+          <Typography className={clsx(styles.groupTitle, 'text-14')}>
+            {translate('pages.widget.big')}
           </Typography>
           <SortableContext
             items={
-              bigProviders.length === 0
-                ? ["empty-placeholder-big"]
-                : bigProviders.map((p) => p.id)
+              bigProviders.length === 0 ? ['empty-placeholder-big'] : bigProviders.map((p) => p.id)
             }
             strategy={verticalListSortingStrategy}
           >
             <div>
               {bigProviders.map((provider) => {
-                const isRequired = client?.required_providers_ids?.includes(
-                  provider.id.toString()
-                );
-                const onlyRemove = onlyRemoveProviderTypes.includes(
-                  provider.type
-                );
-                const canClick =
-                  !onlyRemove && provider.client_id === currentClientID;
+                const isRequired = client?.required_providers_ids?.includes(provider.id.toString());
+                const onlyRemove = onlyRemoveProviderTypes.includes(provider.type);
+                const canClick = !onlyRemove && provider.client_id === currentClientID;
 
                 return (
                   <SortableProviderItem
                     key={provider.id}
                     provider={provider}
                     currentClientID={currentClientID}
-                    isSystemApp={isSystemApp}
                     isRequired={isRequired ?? false}
                     onlyRemove={onlyRemove}
                     canClick={canClick}
@@ -412,47 +376,39 @@ export const ListProvidersPanel: FC = () => {
                     onCopy={handleCopyProvider}
                     onDelete={setProviderToDelete}
                     editProviderTypes={editProviderTypes}
+                    maxQuantity={bigProviders.length}
                   />
                 );
               })}
               {bigProviders.length === 0 && (
-                <EmptyProviderPlaceholder
-                  id="empty-placeholder-big"
-                  groupe="BIG"
-                />
+                <EmptyProviderPlaceholder id="empty-placeholder-big" groupe="BIG" />
               )}
             </div>
           </SortableContext>
 
           {/* SMALL */}
-          <Typography className={clsx(styles.groupTitle, "text-14")}>
-            {translate("pages.widget.small")}
+          <Typography className={clsx(styles.groupTitle, 'text-14')}>
+            {translate('pages.widget.small')}
           </Typography>
           <SortableContext
             items={
               smallProviders.length === 0
-                ? ["empty-placeholder-small"]
+                ? ['empty-placeholder-small']
                 : smallProviders.map((p) => p.id)
             }
             strategy={verticalListSortingStrategy}
           >
             <div>
               {smallProviders.map((provider) => {
-                const isRequired = client?.required_providers_ids?.includes(
-                  provider.id.toString()
-                );
-                const onlyRemove = onlyRemoveProviderTypes.includes(
-                  provider.type
-                );
-                const canClick =
-                  !onlyRemove && provider.client_id === currentClientID;
+                const isRequired = client?.required_providers_ids?.includes(provider.id.toString());
+                const onlyRemove = onlyRemoveProviderTypes.includes(provider.type);
+                const canClick = !onlyRemove && provider.client_id === currentClientID;
 
                 return (
                   <SortableProviderItem
                     key={provider.id}
                     provider={provider}
                     currentClientID={currentClientID}
-                    isSystemApp={isSystemApp}
                     isRequired={isRequired ?? false}
                     onlyRemove={onlyRemove}
                     canClick={canClick}
@@ -462,14 +418,12 @@ export const ListProvidersPanel: FC = () => {
                     onCopy={handleCopyProvider}
                     onDelete={setProviderToDelete}
                     editProviderTypes={editProviderTypes}
+                    maxQuantity={smallProviders.length}
                   />
                 );
               })}
               {smallProviders.length === 0 && (
-                <EmptyProviderPlaceholder
-                  id="empty-placeholder-small"
-                  groupe="SMALL"
-                />
+                <EmptyProviderPlaceholder id="empty-placeholder-small" groupe="SMALL" />
               )}
             </div>
           </SortableContext>
@@ -484,19 +438,15 @@ export const ListProvidersPanel: FC = () => {
                   if (!provider) return null;
 
                   const isRequired = client?.required_providers_ids?.includes(
-                    provider.id.toString()
+                    provider.id.toString(),
                   );
-                  const onlyRemove = onlyRemoveProviderTypes.includes(
-                    provider.type
-                  );
-                  const canClick =
-                    !onlyRemove && provider.client_id === currentClientID;
+                  const onlyRemove = onlyRemoveProviderTypes.includes(provider.type);
+                  const canClick = !onlyRemove && provider.client_id === currentClientID;
 
                   return (
                     <SortableProviderItem
                       provider={provider}
                       currentClientID={currentClientID}
-                      isSystemApp={isSystemApp}
                       isRequired={isRequired ?? false}
                       onlyRemove={onlyRemove}
                       canClick={canClick}
@@ -516,30 +466,24 @@ export const ListProvidersPanel: FC = () => {
 
         {otherProviders.length > 0 && (
           <>
-            <Typography className={clsx(styles.groupTitle, "text-14")}>
-              {translate("pages.widget.otherProviders")}
+            <Typography className={clsx(styles.groupTitle, 'text-14')}>
+              {translate('pages.widget.otherProviders')}
             </Typography>
             <div>
               {otherProviders
-                .filter(
-                  (provider) => provider.type !== ProviderType.CREDENTIALS
-                )
+                .filter((provider) => provider.type !== EProviderType.CREDENTIALS)
                 .map((provider) => {
                   const isRequired = client?.required_providers_ids?.includes(
-                    provider.id.toString()
+                    provider.id.toString(),
                   );
-                  const onlyRemove = onlyRemoveProviderTypes.includes(
-                    provider.type
-                  );
-                  const canClick =
-                    !onlyRemove && provider.client_id === currentClientID;
+                  const onlyRemove = onlyRemoveProviderTypes.includes(provider.type);
+                  const canClick = !onlyRemove && provider.client_id === currentClientID;
 
                   return (
-                    <ProviderItem
+                    <ProviderItemBase
                       key={provider.id}
                       provider={provider}
                       currentClientID={currentClientID}
-                      isSystemApp={isSystemApp}
                       isRequired={isRequired ?? false}
                       onlyRemove={onlyRemove}
                       canClick={canClick}
@@ -549,6 +493,7 @@ export const ListProvidersPanel: FC = () => {
                       onCopy={handleCopyProvider}
                       onDelete={setProviderToDelete}
                       editProviderTypes={editProviderTypes}
+                      maxQuantity={smallProviders.length}
                     />
                   );
                 })}
@@ -563,45 +508,45 @@ export const ListProvidersPanel: FC = () => {
       />
       <EditMTLSProvider
         provider={providerToEdit}
-        isOpen={providerToEdit?.type === ProviderType.MTLS}
+        isOpen={providerToEdit?.type === EProviderType.MTLS}
         onClose={() => {
           setProviderToEdit(null);
         }}
       />
       <EditWebAuthnProvider
         provider={providerToEdit}
-        isOpen={providerToEdit?.type === ProviderType.WEBAUTHN}
+        isOpen={providerToEdit?.type === EProviderType.WEBAUTHN}
         onClose={() => {
           setProviderToEdit(null);
         }}
       />
       <EditTOTPProvider
-        isOpen={providerToEdit?.type === ProviderType.TOTP}
+        isOpen={providerToEdit?.type === EProviderType.TOTP}
         onClose={() => setProviderToEdit(null)}
         provider={providerToEdit}
       />
       <EditHOTPProvider
-        isOpen={providerToEdit?.type === ProviderType.HOTP}
+        isOpen={providerToEdit?.type === EProviderType.HOTP}
         onClose={() => setProviderToEdit(null)}
         provider={providerToEdit}
       />
       <EditEthereumProvider
         provider={providerToEdit}
-        isOpen={providerToEdit?.type === ProviderType.ETHEREUM}
+        isOpen={providerToEdit?.type === EProviderType.ETHEREUM}
         onClose={() => {
           setProviderToEdit(null);
         }}
       />
       <EditKloudProvider
         provider={providerToEdit}
-        isOpen={providerToEdit?.type === ProviderType.KLOUD}
+        isOpen={providerToEdit?.type === EProviderType.KLOUD}
         onClose={() => {
           setProviderToEdit(null);
         }}
       />
       <EditEmailCustomProvider
         provider={providerToEdit}
-        isOpen={providerToEdit?.type === ProviderType.EMAIL_CUSTOM}
+        isOpen={providerToEdit?.type === EProviderType.EMAIL_CUSTOM}
         onClose={() => {
           setProviderToEdit(null);
         }}
@@ -611,24 +556,24 @@ export const ListProvidersPanel: FC = () => {
         isOpen={
           providerToEdit !== null &&
           [
-            ProviderType.OAUTH,
-            ProviderType.GITHUB,
-            ProviderType.GOOGLE,
-            ProviderType.CUSTOM,
-          ].includes(providerToEdit.type as ProviderType)
+            EProviderType.OAUTH,
+            EProviderType.GITHUB,
+            EProviderType.GOOGLE,
+            EProviderType.CUSTOM,
+          ].includes(providerToEdit.type as EProviderType)
         }
         onClose={() => {
           setProviderToEdit(null);
         }}
       />
       <SubmitModal
+        cancelText={translate('actionButtons.cancel')}
+        deleteText={translate('actionButtons.delete')}
         isOpen={!!providerToDelete}
         onClose={() => setProviderToDelete(null)}
         onSubmit={handleDeleteProvider}
-        title={translate("pages.widget.modals.deleteProvider.title")}
-        mainMessage={[
-          translate("pages.widget.modals.deleteProvider.mainMessage"),
-        ]}
+        title={translate('pages.widget.modals.deleteProvider.title')}
+        mainMessage={[translate('pages.widget.modals.deleteProvider.mainMessage')]}
       />
     </>
   );

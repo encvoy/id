@@ -10,13 +10,23 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import styles from './page.module.css';
 import { Popover } from '@/components/popover/Popover';
 import { Avatar, Tooltip } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { Form } from '@/components/form/Form';
 import { useAppDispatch } from '@/store/hooks';
 import { setLogin } from '@/store/slices/formSlice';
 import { EHashPages, EProviderGroups, EProviderTypes, TProviders } from '@/types/types';
-import { WIDGET, PROVIDERS, INTERACTION_ID, LOGGED_USERS_PARSED } from '@/lib/constant';
-import { getImageURL, redirectToProvider } from '@/lib/utils';
+import {
+  buildPublicUrl,
+  INTERACTION_URL,
+  PROVIDERS,
+  WIDGET,
+} from '@/lib/constant';
+import {
+  getImageURL,
+  getLocalizedTextValue,
+  navigateToHash,
+  normalizeWidgetLocale,
+  redirectToProvider,
+} from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { usePlaceholder } from '@/lib/hooks';
 
@@ -29,28 +39,18 @@ interface ILoginFormProps {
 }
 
 export const LoginMethods: FC<ILoginFormProps> = () => {
-  const router = useRouter();
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const placeholder = usePlaceholder();
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [providers, setProviders] = useState<TProviders>([]);
   const [hideCreateAccount, setHideCreateAccount] = useState<boolean>(false);
-  const [interactionId, setInteractionId] = useState<boolean>(false);
   const [hideAvatarsOfBigProviders, setHideAvatarsOfBigProviders] = useState<boolean>(false);
 
   useLayoutEffect(() => {
-    if (
-      PROVIDERS.length === 1 &&
-      PROVIDERS[0].type !== EProviderTypes.CREDENTIALS &&
-      LOGGED_USERS_PARSED.length === 0
-    ) {
-      redirectToProvider(PROVIDERS[0], router);
-    }
     setHideAvatarsOfBigProviders(WIDGET.HIDE_AVATARS_OF_BIG_PROVIDERS);
     setProviders(PROVIDERS);
     setHideCreateAccount(WIDGET.HIDE_CREATE_ACCOUNT);
-    setInteractionId(INTERACTION_ID);
   }, []);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -59,6 +59,7 @@ export const LoginMethods: FC<ILoginFormProps> = () => {
 
   const methods = useForm<TLoginFormData>();
   const { setError } = methods;
+  const registrationLocale = normalizeWidgetLocale(i18n.resolvedLanguage || i18n.language);
 
   const onSubmit = async ({ login }: TLoginFormData) => {
     const body = new URLSearchParams({
@@ -66,7 +67,7 @@ export const LoginMethods: FC<ILoginFormProps> = () => {
       login: login,
     });
     try {
-      const response = await fetch(window.location.origin + '/api/v1/auth/check_identifier', {
+      const response = await fetch(buildPublicUrl('/api/v1/auth/check_identifier'), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded ',
         },
@@ -81,7 +82,7 @@ export const LoginMethods: FC<ILoginFormProps> = () => {
       }
 
       dispatch(setLogin(login));
-      router.replace(EHashPages.PASSWORD);
+      navigateToHash(EHashPages.PASSWORD);
     } catch (error) {
       console.error('checkIdentifier error: ', error);
     }
@@ -96,72 +97,107 @@ export const LoginMethods: FC<ILoginFormProps> = () => {
     <>
       {!!providers.find((provider) => provider.type === EProviderTypes.CREDENTIALS) && (
         <Form<TLoginFormData> fnSubmit={onSubmit} mode="hookForm" methodsForm={methods}>
-          <InputField fieldName="login" placeholder={placeholder} />
-          <Button variant="contained" label={translate('actionButtons.logIn')} type="submit" />
+          <InputField
+            dataTestId="txt-auth-login"
+            fieldName="login"
+            placeholder={placeholder}
+            autoComplete="section-login username"
+          />
+          <Button
+            variant="contained"
+            label={translate('actionButtons.logIn')}
+            type="submit"
+            data-test-id="btn-auth-login-submit"
+          />
         </Form>
       )}
 
       {!hideCreateAccount && (
-        <form action={'/api/interaction/' + interactionId + '/steps'} method="POST">
-          <Button label={translate('actionButtons.createAccount')} type="submit" />
+        <form action={`${INTERACTION_URL}/steps`} method="POST">
+          <input type="hidden" name="locale" value={registrationLocale} />
+          <Button
+            label={translate('actionButtons.createAccount')}
+            type="submit"
+            data-test-id="btn-auth-registration-submit"
+          />
         </form>
       )}
 
-      {bigProviders.map((provider) => (
-        <Button
-          data-id={provider.name}
-          key={provider.id}
-          variant="contained"
-          label={provider.name}
-          startIcon={
-            hideAvatarsOfBigProviders ? undefined : (
-              <>
-                {provider.avatar ? (
-                  <Avatar variant="custom" src={getImageURL(provider.avatar)} />
-                ) : (
-                  <SwapHorizontalCircleOutlinedIcon
-                    sx={{
-                      width: '30px',
-                      height: '30px',
-                      fill: '#000',
-                      backgroundColor: '#fff',
-                      borderRadius: '50%',
-                    }}
-                  />
-                )}
-              </>
-            )
-          }
-          onClick={() => {
-            redirectToProvider(provider, router);
-          }}
-        />
-      ))}
+      {bigProviders.map((provider) => {
+        const providerName = getLocalizedTextValue(provider.name, i18n.language);
+
+        return (
+          <Button
+            data-test-id={`btn-auth-provider-${providerName}`}
+            data-id={providerName}
+            key={provider.id}
+            variant="contained"
+            label={providerName}
+            startIcon={
+              hideAvatarsOfBigProviders ? undefined : (
+                <>
+                  {provider.avatar ? (
+                    <Avatar variant="custom" src={getImageURL(provider.avatar)} />
+                  ) : (
+                    <SwapHorizontalCircleOutlinedIcon
+                      sx={{
+                        width: '30px',
+                        height: '30px',
+                        fill: '#000',
+                        backgroundColor: '#fff',
+                        borderRadius: '50%',
+                      }}
+                    />
+                  )}
+                </>
+              )
+            }
+            onClick={() => {
+              redirectToProvider(provider);
+            }}
+          />
+        );
+      })}
       {!!smallProvidersLine.length && (
         <>
-          <Typography color="text.secondary" className={styles.additionText}>
-            {translate('pages.login.otherProvider')}
-          </Typography>
+          {providers.find(
+            (provider) =>
+              provider.type === EProviderTypes.CREDENTIALS ||
+              provider.groupe === EProviderGroups.BIG,
+          ) && (
+            <Typography
+              data-test-id="btn-auth-other-providers"
+              color="text.secondary"
+              className={styles.additionText}
+            >
+              {translate('pages.login.otherProvider')}
+            </Typography>
+          )}
           <Box className={styles.actions}>
-            {smallProvidersLine.map((provider) => (
-              <Tooltip title={provider.name} key={provider.id}>
-                <IconButton
-                  data-id={provider.name}
-                  key={provider.id}
-                  onClick={() => {
-                    redirectToProvider(provider, router);
-                  }}
-                >
-                  {provider.avatar ? (
-                    <Avatar src={getImageURL(provider.avatar)} />
-                  ) : (
-                    <SwapHorizontalCircleOutlinedIcon />
-                  )}
-                </IconButton>
-              </Tooltip>
-            ))}
+            {smallProvidersLine.map((provider) => {
+              const providerName = getLocalizedTextValue(provider.name, i18n.language);
+
+              return (
+                <Tooltip title={providerName} key={provider.id}>
+                  <IconButton
+                    data-test-id={`btn-auth-provider-${providerName}`}
+                    data-id={providerName}
+                    key={provider.id}
+                    onClick={() => {
+                      redirectToProvider(provider);
+                    }}
+                  >
+                    {provider.avatar ? (
+                      <Avatar src={getImageURL(provider.avatar)} />
+                    ) : (
+                      <SwapHorizontalCircleOutlinedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              );
+            })}
             {smallProviders.length > 5 && (
-              <IconButton onClick={handleClick}>
+              <IconButton onClick={handleClick} data-test-id="btn-auth-more-providers">
                 <MoreHorizIcon />
               </IconButton>
             )}
@@ -170,21 +206,26 @@ export const LoginMethods: FC<ILoginFormProps> = () => {
       )}
       <Popover anchorEl={anchorEl} setAnchorEl={setAnchorEl}>
         <ul className={styles.listProviders}>
-          {smallProvidersList.map((provider) => (
-            <li
-              className={styles.itemProvider}
-              key={provider.id}
-              data-id={provider.name}
-              onClick={() => {
-                redirectToProvider(provider, router);
-              }}
-            >
-              {(provider.avatar && <Avatar src={getImageURL(provider.avatar)} />) || (
-                <SwapHorizontalCircleOutlinedIcon />
-              )}
-              <Typography>{provider.name}</Typography>
-            </li>
-          ))}
+          {smallProvidersList.map((provider) => {
+            const providerName = getLocalizedTextValue(provider.name, i18n.language);
+
+            return (
+              <li
+                className={styles.itemProvider}
+                key={provider.id}
+                data-id={providerName}
+                data-test-id={`btn-auth-provider-${providerName}`}
+                onClick={() => {
+                  redirectToProvider(provider);
+                }}
+              >
+                {(provider.avatar && <Avatar src={getImageURL(provider.avatar)} />) || (
+                  <SwapHorizontalCircleOutlinedIcon />
+                )}
+                <Typography>{providerName}</Typography>
+              </li>
+            );
+          })}
         </ul>
       </Popover>
     </>

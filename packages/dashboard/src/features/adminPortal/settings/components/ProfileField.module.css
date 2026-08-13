@@ -1,21 +1,18 @@
-.container {
-  width: 100%;
-  margin-top: 16px;
+.field {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid var(--mui-palette-divider);
-  border-radius: 4px;
-  padding: 12px 20px 12px 24px;
+  padding: 8px 24px;
+  margin-top: 8px;
 }
 
-.containerHover {
+.fieldHover {
   cursor: pointer;
   transition: background-color 0.4s ease-out;
 }
 
-.containerHover:hover {
-  background: var(--mui-palette-background-hover);
+.fieldHover:hover {
+  background-color: var(--mui-palette-action-hover);
 }
 
 .header {

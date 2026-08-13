@@ -6,7 +6,7 @@ import { Form } from '@/components/form/Form';
 import { InputField } from '@/components/input/InputField';
 import { InputPassword } from '@/components/inputPassword/InputPassword';
 import { Section } from '@/components/section/Section';
-import { INTERACTION_ID, LOGIN, PROVIDERS } from '@/lib/constant';
+import { INTERACTION_URL, LOGIN, PROVIDERS } from '@/lib/constant';
 import { useHashParams } from '@/lib/hooks';
 import { IProvider } from '@/types/types';
 import { FC, useLayoutEffect, useState } from 'react';
@@ -16,7 +16,7 @@ import { useForm, useWatch } from 'react-hook-form';
 const Page: FC = () => {
   const { t: translate } = useTranslation();
   const hashParams = useHashParams();
-  const actionUrl = `/api/interaction/${INTERACTION_ID}/change-password`;
+  const actionUrl = `${INTERACTION_URL}/change-password`;
   const [provider, setProvider] = useState<IProvider>();
   const [modeForm, setModeForm] = useState<'hookForm' | 'action'>('hookForm');
 
@@ -55,18 +55,37 @@ const Page: FC = () => {
           action={actionUrl}
           method="POST"
         >
-          <InputField fieldName="identifier" placeholder={translate('helperText.login')} disabled />
+          <InputField
+            fieldName="identifier"
+            placeholder={translate('helperText.login')}
+            autoComplete="section-change-password username"
+            disabled
+          />
           <InputPassword
             fieldName="current_password"
             placeholder={translate('pages.changePassword.current')}
+            dataTestId="txt-auth-current-password"
+            autoComplete="section-change-password current-password"
           />
           <InputPassword
             fieldName="new_password"
             placeholder={translate('pages.changePassword.new')}
+            dataTestId="txt-auth-new-password"
+            autoComplete="section-change-password new-password"
           />
           <input type="hidden" name="provider_id" value={provider?.id} />
-          <input type="hidden" name="identifier" value={login} />
-          <Button variant="contained" label={translate('actionButtons.change')} type="submit" />
+          <input
+            type="hidden"
+            name="identifier"
+            value={login}
+            autoComplete="section-change-password username"
+          />
+          <Button
+            variant="contained"
+            label={translate('actionButtons.change')}
+            type="submit"
+            data-test-id="btn-auth-change-password"
+          />
         </Form>
       </Container>
     </Section>

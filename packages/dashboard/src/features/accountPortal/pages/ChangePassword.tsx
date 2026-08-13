@@ -4,30 +4,37 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { connect, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { PasswordTextField } from "src/shared/ui/components/PasswordTextField";
-import { ActionButtons } from "src/shared/ui/components/ActionButtons";
+import { PasswordTextField } from "@encvoy-id/components";
+import { ActionButtons } from "@encvoy-id/components";
 import * as yup from "yup";
-import { setNoticeError } from "src/shared/lib/noticesSlice";
+import { setNoticeError } from "src/shared/slices/noticesSlice";
 import { useChangePasswordMutation } from "src/shared/api/users";
 import { logout } from "src/shared/utils/auth";
 import { useGetRuleValidationsByFieldNameQuery } from "../../../shared/api/settings";
 import { RootState } from "../../../app/store/store";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import styles from "./ChangePassword.module.css";
-import { componentBorderRadius } from "src/shared/theme/Theme";
+import { SurfaceBlock } from "@encvoy-id/components";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
 
 const mapStateToProps = (state: RootState) => ({
   userId: state.user.profile.id,
+  organizationClientId: state.user.profile.org_id,
+  systemClientId: state.app.systemClientId,
 });
 
 interface IChangePasswordProps {
   userId?: string;
+  organizationClientId?: string | null;
+  systemClientId: string | null;
 }
 
 export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
   userId,
+  organizationClientId,
+  systemClientId,
 }) => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [changePassword] = useChangePasswordMutation();
@@ -46,7 +53,10 @@ export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
         translate("pages.changePassword.errors.passwordsMustDiffer")
       ),
   });
-  const { data: rules } = useGetRuleValidationsByFieldNameQuery("password");
+  const { data: rules } = useGetRuleValidationsByFieldNameQuery({
+    client_id: organizationClientId || systemClientId || "",
+    field_name: "password",
+  });
 
   const methods = useForm<{
     password: string;
@@ -81,18 +91,18 @@ export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
   return (
     <div className="page-container">
       <div className="content">
-        <Box
-          className={styles.container}
-          sx={{ borderRadius: componentBorderRadius }}
-        >
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography style={{ marginBottom: 24 }} className="title-medium">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SurfaceBlock className={styles.container}>
+              <Typography
+                style={{ marginBottom: "12px" }}
+                className="text-20-medium"
+              >
                 {translate("pages.changePassword.title")}
               </Typography>
               <Typography
                 color="text.secondary"
-                style={{ marginBottom: 24 }}
+                style={{ marginBottom: "24px" }}
                 className="text-14"
               >
                 {translate("pages.changePassword.description")}
@@ -102,13 +112,25 @@ export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
                   <Typography style={{ marginBottom: 8 }} className="text-14">
                     {translate("pages.changePassword.currentPassword")}
                   </Typography>
-                  <PasswordTextField nameField="old_password" />
+                  <PasswordTextField
+                    showText={translate("actionButtons.show")}
+                    hideText={translate("actionButtons.hide")}
+                    copyText={translate("actionButtons.copy")}
+                    nameField="old_password"
+                    dataTestId="txt-profile-password-old"
+                  />
                 </div>
                 <div>
                   <Typography style={{ marginBottom: 8 }} className="text-14">
                     {translate("pages.changePassword.newPassword")}
                   </Typography>
-                  <PasswordTextField nameField="password" />
+                  <PasswordTextField
+                    showText={translate("actionButtons.show")}
+                    hideText={translate("actionButtons.hide")}
+                    copyText={translate("actionButtons.copy")}
+                    nameField="password"
+                    dataTestId="txt-profile-password-new"
+                  />
                 </div>
                 {rules && rules.length > 0 ? (
                   <>
@@ -122,7 +144,7 @@ export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
                             color="text.secondary"
                             className="text-14"
                           >
-                            {rule.title}
+                            {getLocalizedTextValue(rule.title, i18n.language)}
                           </Typography>
                         </li>
                       ))}
@@ -136,12 +158,14 @@ export const ChangePasswordComponent: FC<IChangePasswordProps> = ({
               </div>
 
               <ActionButtons
+                cancelText={translate("actionButtons.cancel")}
+                submitButtonDataTestId="btn-profile-password-change"
                 onCancel={() => navigate(-1)}
                 submitText={translate("actionButtons.edit")}
               />
-            </form>
-          </FormProvider>
-        </Box>
+            </SurfaceBlock>
+          </form>
+        </FormProvider>
         <div className="zeroBlock"></div>
       </div>
     </div>

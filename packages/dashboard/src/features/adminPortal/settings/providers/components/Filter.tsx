@@ -7,7 +7,7 @@ import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import styles from "./Filter.module.css";
 import { IProvider } from "src/shared/api/provider";
 import { useParams } from "react-router-dom";
-import { CLIENT_ID } from "src/shared/utils/constants";
+import { useSystemClientId } from "src/shared/hooks/useSystemClientId";
 import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
 
@@ -24,6 +24,7 @@ const FilterComponent: FC<IFilterProps> = ({
 }) => {
   const { appId = "", clientId = "" } =
     useParams<{ appId: string; clientId: string }>();
+  const systemClientId = useSystemClientId();
   const { t: translate } = useTranslation();
 
   const filterMethods = {
@@ -63,7 +64,7 @@ const FilterComponent: FC<IFilterProps> = ({
       })
       .sort((a, b) => {
         if (a.is_active !== b.is_active) return !a.is_active ? 1 : -1;
-        return a.client_id === CLIENT_ID ? 1 : -1;
+        return a.client_id === systemClientId ? 1 : -1;
       });
     updateProviders(filtered || []);
   };

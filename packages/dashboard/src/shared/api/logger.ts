@@ -1,15 +1,15 @@
-import { IQuerySortParams, responseListItems } from "./types";
+import { IQuerySortParams, IResponseListItems } from "./types";
 import { createFetchArgs, parseResponse } from "./helpers";
 import { FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
 import { emptySplitApi } from "./baseApi";
 import { endPoints } from "src/shared/utils/enums";
 
 export interface ILogEvent {
-  id: number;
+  id: string;
   date: string;
   ip_address: string;
   device: string;
-  user_id: number;
+  user_id: string | null;
   client_id: string;
   event: string;
   description: string;
@@ -21,7 +21,7 @@ export interface ILogEvent {
 export const loggerApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getEventsLog: builder.query<
-      responseListItems<ILogEvent[]>,
+      IResponseListItems<ILogEvent[]>,
       IQuerySortParams
     >({
       query: (query) =>

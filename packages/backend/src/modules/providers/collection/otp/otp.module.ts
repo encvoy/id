@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
-import { RepositoryModule } from 'src/modules/repository';
-import { OtpService } from './otp.service';
-import { HotpService } from './hotp.service';
-import { OtpController } from './otp.controller';
+import { OidcModule } from 'src/modules/oidc/oidc.module';
+import { RepositoryModule } from 'src/modules/repository/repository.module';
+import { InteractionOtpController } from './otp.controller';
+import { HotpController } from './hotp/hotp.controller';
+import { HotpService } from './hotp/hotp.service';
+import { TotpController } from './totp/totp.controller';
+import { TotpService } from './totp/totp.service';
 
 @Module({
-  imports: [RepositoryModule],
-  controllers: [OtpController],
-  providers: [OtpService, HotpService],
-  exports: [OtpService, HotpService],
+  imports: [RepositoryModule, OidcModule],
+  controllers: [TotpController, HotpController, InteractionOtpController],
+  providers: [TotpService, HotpService],
+  exports: [TotpService, HotpService],
 })
 export class OtpModule {}

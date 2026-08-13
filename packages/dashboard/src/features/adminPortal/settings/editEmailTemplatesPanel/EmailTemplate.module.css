@@ -1,11 +1,15 @@
-.listItem {
-  border: 1px solid var(--mui-palette-divider);
-  padding: 12px 20px 12px 24px;
+.template {
+  padding: 12px 24px;
   cursor: pointer;
   transition: background-color 0.4s ease-out;
+  margin-bottom: 16px;
 }
 
-.listItem:hover {
+.template:hover {
+  background-color: var(--mui-palette-action-hover);
+}
+
+.selected {
   background-color: var(--mui-palette-action-hover);
 }
 

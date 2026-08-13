@@ -1,31 +1,29 @@
 import Box from "@mui/material/Box";
 import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabs } from "src/shared/utils/enums";
-import { TAppSlice } from "src/shared/lib/appSlice";
 import { RootState } from "src/app/store/reducer";
-import {
-  useGetClientInfoQuery,
-  useLazyGetUsersClientQuery,
-} from "src/shared/api/clients";
-import { TUserWithRole } from "src/shared/api/users";
-import { IQueryPropsWithId } from "src/shared/api/types";
-import { useTranslation } from "react-i18next";
-import {
-  ISubmitModalProps,
-  SubmitModal,
-} from "src/shared/ui/modal/SubmitModal";
-import { ListItems } from "src/shared/ui/listElements";
+import { ClientInvitations } from "src/features/adminPortal/clients/components/ClientInvitations";
 import {
   IUserCardProps,
   UserCard,
 } from "src/features/adminPortal/users/components/UserCard";
-import styles from "./ClientDetails.module.css";
+import {
+  useGetClientInfoQuery,
+  useLazyGetUsersClientQuery,
+} from "src/shared/api/clients";
+import { IQueryPropsWithId } from "src/shared/api/types";
+import { TUserWithRole } from "src/shared/api/users";
+import { TAppSlice } from "src/shared/slices/appSlice";
+import { ListItems } from "src/shared/ui/CardsList.tsx";
+import { ISubmitModalProps, SubmitModal } from "@encvoy-id/components";
+import { tabs } from "src/shared/utils/enums";
+import { ClientAccessGroupsList } from "../components/ClientAccessGroupsList";
 import { ClientDetailsAddInfo } from "../components/ClientDetailsAddInfo";
 import { ClientDetailsHeader } from "../components/ClientDetailsHeader";
-import Button from "@mui/material/Button";
-import { ClientInvitations } from "src/features/adminPortal/clients/components/ClientInvitations";
+import { MetricsInfo } from "../components/MetricsInfo";
+import styles from "./ClientDetails.module.css";
 
 const mapStateToProps = (state: RootState) => ({
   startRoutePath: state.app.startRoutePath,
@@ -44,7 +42,6 @@ const ClientDetailsComponent: FC<IClientDetailsProps> = ({
   const navigate = useNavigate();
   const { data: client } = useGetClientInfoQuery({ id: clientId });
   const [getUsers, { data: usersData }] = useLazyGetUsersClientQuery();
-  const [isOpenInviteModal, setIsOpenInviteModal] = useState(false);
 
   const [modalProps, setModalProps] = useState<ISubmitModalProps>({
     isOpen: false,
@@ -54,18 +51,18 @@ const ClientDetailsComponent: FC<IClientDetailsProps> = ({
     actionButtonText: "",
     mainMessage: [],
   });
-  const query = (offset: number, search?: string): IQueryPropsWithId => {
+  const query = (offset: number, search = ""): IQueryPropsWithId => {
     return {
       query: {
-        limit: "10",
+        limit: 10,
         offset,
-        search: search || "",
+        search,
       },
       id: clientId ?? "",
     };
   };
 
-  const handleEventClick = (userId?: number) => {
+  const handleEventClick = (userId?: string) => {
     navigate(
       `/${startRoutePath}/${appId}/${tabs.clients}/${clientId}/${tabs.users}/${userId}`
     );
@@ -88,30 +85,36 @@ const ClientDetailsComponent: FC<IClientDetailsProps> = ({
                 totalCount={usersData?.totalCount}
               />
             </Box>
+            <Box className={styles.metrics}>
+              <MetricsInfo clientId={clientId} />
+            </Box>
             <Box className={styles.usersList}>
-              <ClientInvitations
-                isOpen={isOpenInviteModal}
-                setIsOpen={setIsOpenInviteModal}
-              />
-              <ListItems<TUserWithRole, IQueryPropsWithId, IUserCardProps>
-                query={query}
-                getItems={getUsers}
-                RowElement={UserCard}
-                rowElementProps={{
-                  client: client,
-                  onClick: handleEventClick,
-                  setConfirmModalProps: setModalProps,
-                }}
-                searchFormChildren={
-                  <Button
-                    variant="contained"
-                    onClick={() => setIsOpenInviteModal(true)}
-                  >
-                    Пригласить
-                  </Button>
-                }
-              />
+              <ClientInvitations />
+
+              <Box className={styles.listWrapper}>
+                <Box className={styles.listColumn}>
+                  <ListItems<TUserWithRole, IQueryPropsWithId, IUserCardProps>
+                    query={query}
+                    getItems={getUsers}
+                    RowElement={UserCard}
+                    searchDataTestId="btn-search-info"
+                    rowElementProps={{
+                      client: client,
+                      onClick: handleEventClick,
+                      setConfirmModalProps: setModalProps,
+                    }}
+                  />
+                </Box>
+                {client.parent_id ? (
+                  <ClientAccessGroupsList
+                    applicationId={client.client_id}
+                    organizationId={client.parent_id}
+                  />
+                ) : null}
+              </Box>
               <SubmitModal
+                cancelText={translate("actionButtons.cancel")}
+                deleteText={translate("actionButtons.delete")}
                 isOpen={modalProps.isOpen}
                 onSubmit={modalProps.onSubmit}
                 onClose={modalProps.onClose}

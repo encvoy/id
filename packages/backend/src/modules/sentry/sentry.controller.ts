@@ -6,7 +6,6 @@ import { SentryActions } from './sentry.roles';
 import { SentryService } from './sentry.service';
 
 @common.Controller('/v1/sentry')
-@swagger.ApiBasicAuth()
 @swagger.ApiBearerAuth()
 export class SentryController {
   constructor(private readonly service: SentryService) {}

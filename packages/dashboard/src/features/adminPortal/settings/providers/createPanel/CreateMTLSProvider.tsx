@@ -10,7 +10,7 @@ import {
 import {
   IMTLSParams,
   IProvider,
-  ProviderType,
+  EProviderType,
   useCreateProviderMutation,
   useUpdateAvatarMutation,
 } from "src/shared/api/provider";
@@ -19,7 +19,8 @@ import { ProviderAvatars } from "src/features/adminPortal/settings/providers/uti
 import { ProviderHeader } from "src/features/adminPortal/settings/providers/components/ProviderHeader";
 import { useTranslation } from "react-i18next";
 import { EClaimPrivacyNumber } from "src/shared/utils/enums";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
+import { withAppPublicUrlAtPort } from "src/shared/utils/appBasePath";
 
 export const CreateMTLSProvider: FC<ICreateProvider> = ({
   isOpen,
@@ -46,12 +47,12 @@ export const CreateMTLSProvider: FC<ICreateProvider> = ({
     defaultValues: {
       name: "mTLS",
       avatar: ProviderAvatars.MTLS,
-      type: ProviderType.MTLS,
+      type: EProviderType.MTLS,
       default_public: EClaimPrivacyNumber.private,
       params: {
-        issuer: document.location.origin + ":3443",
+        issuer: withAppPublicUrlAtPort(3443),
       },
-    },
+    } as IProvider<IMTLSParams>,
     mode: "onChange",
     reValidateMode: "onBlur",
   });

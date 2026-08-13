@@ -1,12 +1,9 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { Global, Module } from '@nestjs/common';
 import { LoggerController } from './logger.controller';
 import { CustomLogger } from './logger.service';
-import { RepositoryModule } from '../repository/repository.module';
-import { SettingsModule } from '../settings/settings.module';
 
+@Global()
 @Module({
-  imports: [PrismaModule, RepositoryModule, forwardRef(() => SettingsModule)],
   controllers: [LoggerController],
   providers: [CustomLogger],
   exports: [CustomLogger],

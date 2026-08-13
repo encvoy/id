@@ -1,23 +1,39 @@
-# Stage 1: dashboard
+FROM node:22.20-alpine3.21 AS components-builder
+WORKDIR /workspace/packages/components
+
+COPY packages/components/package.json ./
+RUN npm install --legacy-peer-deps
+COPY packages/components ./
+RUN npm run build
+
+# Stage 1: Build the dashboard.
 FROM node:22.20-alpine3.21 AS dashboard-builder
 WORKDIR /dashboard
+
+# The dashboard uses the local file:../components package. Preserve the repository
+# directory structure and copy the built public UI contract into the image.
+COPY packages/components/package.json /components/package.json
+COPY --from=components-builder /workspace/packages/components/dist /components/dist
 COPY packages/dashboard/package.json ./
 RUN npm install --legacy-peer-deps && npm i ajv --legacy-peer-deps
 COPY packages/dashboard ./
 
 RUN npm run build
 
-# Stage 2: Production (Nginx with runtime env vars)
-FROM nginx:1.27-alpine
-
-RUN apk add --no-cache gettext
+# Stage 2: Production
+FROM nginx:1.28-alpine
 
 WORKDIR /usr/share/nginx/html
 
 COPY --from=dashboard-builder /dashboard/dist ./
 
+# Copy nginx templates for the self-contained ingress.
+COPY internal/front-nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY internal/front-nginx/mtls.conf.template /etc/nginx/templates/mtls.conf.template
+
+# Copy the runtime environment-substitution script.
 COPY frontend-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-EXPOSE 80
+EXPOSE 80 3443
 ENTRYPOINT ["/docker-entrypoint.sh"]

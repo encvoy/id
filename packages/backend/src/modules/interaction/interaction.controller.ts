@@ -1,5 +1,5 @@
 import * as common from '@nestjs/common';
-import * as dist from '@nestjs/swagger/dist';
+import * as dist from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Provider } from '@prisma/client';
 import Cookies from 'cookies';
@@ -8,8 +8,9 @@ import { BasicAuth } from 'src/decorators';
 import { UidNotUndefinedGuard } from 'src/middlewares/guards/uid.guard';
 import { CLIENT_ID, DOMAIN } from '../../constants';
 import { Actions, Ei18nCodes, UserRoles } from '../../enums';
-import { InteractionExceptionFilter } from '../../middlewares/exceptionFilters';
+import { InteractionExceptionFilter } from '../../middlewares/exceptionFilters/interaction.exception.filter';
 import { CustomLogger } from '../logger';
+import { MarkNotificationsReadDto } from '../notifications';
 import { OidcService } from '../oidc/oidc.service';
 import { prisma } from '../prisma';
 import { ProviderFactory, ProviderService } from '../providers';
@@ -17,10 +18,13 @@ import { OauthService } from '../providers/collection/oauth';
 import { GetExternalClientSecretResDto } from '../providers/providers.dto';
 import { REDIS_PREFIXES, RedisAdapter } from '../redis/redis.adapter';
 import { RoleRepository } from '../repository';
+import { CallEventNames, CallEventsService } from '../call-events';
 import { UsersService } from '../users/users.service';
 import { getLoggedUsers, renderWidget, setPkceValuesFromRequest } from './interaction.helpers';
 import { InteractionService } from './interaction.service';
 import { ChangePasswordDto } from './interaction.dto';
+import { I18nService } from 'nestjs-i18n';
+import { ESettingsNames, SettingsService } from '../settings';
 
 @common.Controller('interaction')
 @common.UseFilters(InteractionExceptionFilter)
@@ -34,6 +38,9 @@ export class InteractionController {
     private readonly providerFactory: ProviderFactory,
     private readonly providerService: ProviderService,
     private readonly oidcService: OidcService,
+    private readonly callEventsService: CallEventsService,
+    private readonly settingsService: SettingsService,
+    private readonly i18nService: I18nService<Record<string, string>>,
   ) {}
 
   mfa1 = new RedisAdapter(REDIS_PREFIXES.MFA1);
@@ -75,7 +82,7 @@ export class InteractionController {
     let provider: Provider;
     if (!clientId) {
       provider = await prisma.provider.findUnique({
-        where: { id: parseInt(providerId) },
+        where: { id: providerId },
       });
       if (!provider.is_public) throw new common.ForbiddenException(Ei18nCodes.T3E0076);
     } else {
@@ -124,15 +131,23 @@ export class InteractionController {
       const info = await (providerService as OauthService).parseUserInfo(extInfo);
       if (user_id) {
         try {
-          await this.userService.bindAccount(user_id, provider.type, {
+          await this.userService.bindAccount(user_id, provider, {
             ...info,
             issuer: provider.params['issuer'],
           });
           return res.status(200).send(renderPostMessagePage({ result: true }));
         } catch (e) {
-          const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+          const locale = await this.settingsService.getSettingsByName<{ default_language: string }>(
+            ESettingsNames.i18n,
+          );
+          const errorMessage =
+            e instanceof Error
+              ? this.i18nService.translate(e.message, {
+                  lang: locale?.default_language ?? 'ru',
+                })
+              : 'Unknown error';
           return res
-            .status(200)
+            .status(400)
             .send(renderPostMessagePage({ result: false, cause: errorMessage }));
         }
       } else {
@@ -180,12 +195,34 @@ export class InteractionController {
     } = interactionDetails;
 
     const client = await this.service.getClient(client_id as string);
-    const loggedUsers = JSON.stringify(await getLoggedUsers(req, res, this.loggedUsersInfo));
+    const loggedUsersData = (await getLoggedUsers(req, res, this.loggedUsersInfo)) || [];
+    const loggedUsers = JSON.stringify(loggedUsersData.length ? loggedUsersData : undefined);
 
     switch (name) {
       case 'login':
+        const pendingNotifications = await this.service.getPendingNotifications(uid);
+        if (pendingNotifications?.length) {
+          return renderWidget({
+            res,
+            initialRoute: 'notifications',
+            client,
+            uid,
+            notifications: pendingNotifications,
+          });
+        }
+
         const mfa_1 = await this.mfa1.find(uid);
         if (!mfa_1) {
+          if (
+            client.client_id !== CLIENT_ID &&
+            client.authorize_auto_by_session &&
+            loggedUsersData.length === 1
+          ) {
+            return await this.authByType('session', req, res, {
+              token: loggedUsersData[0].sessionToken,
+            });
+          }
+
           const providers = await this.providerService.getList(
             { only_active: true },
             client.client_id,
@@ -200,7 +237,7 @@ export class InteractionController {
           });
         }
 
-        const user = await prisma.user.findFirst({ where: { id: mfa_1.user_id } });
+        const user = await this.userService.getById(mfa_1.user_id);
         await this.mfa1.destroy(uid);
         await this.service.finishAuthorization({
           client,
@@ -212,6 +249,11 @@ export class InteractionController {
         });
 
       case 'consent': {
+        const accountId = interactionDetails?.session?.accountId;
+        if (typeof accountId === 'string' && accountId) {
+          await this.settingsService.canAuthorize(accountId, client);
+        }
+
         //Generate a list of missing scopes to pass to the widget and request confirmation.
         const params = await this.service.checkMissingScopes(req, res);
         if (params) return renderWidget(params);
@@ -230,7 +272,11 @@ export class InteractionController {
   @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
   @dist.ApiOperation({ summary: 'Open widget' })
   @dist.ApiOkResponse({ content: { 'text/html': {} } })
-  async clean(@common.Req() req: Request, @common.Res() res: Response) {
+  async clean(
+    @common.Req() req: Request,
+    @common.Res() res: Response,
+    @common.Query('initialRoute') initialRoute?: string,
+  ) {
     const interactionDetails = await this.oidcService.interactionDetails(req, res);
     const {
       jti: uid,
@@ -240,6 +286,7 @@ export class InteractionController {
     await this.mfa2.destroy(uid);
     await this.bindData.destroy(uid);
     await this.userData.destroy(uid);
+    await this.service.clearPendingAuthorization(uid);
 
     const client = await this.service.getClient(client_id as string);
     const loggedUsers = JSON.stringify(await getLoggedUsers(req, res, this.loggedUsersInfo));
@@ -251,11 +298,62 @@ export class InteractionController {
     );
     return renderWidget({
       res,
-      initialRoute: 'login',
+      initialRoute: initialRoute || 'login',
       client,
       loggedUsers,
       providers: [...providers.big, ...providers.small],
     });
+  }
+
+  @common.Post('/:uid/notifications/continue')
+  @dist.ApiParam({
+    name: 'uid',
+    example: 'gg-mNVXQtFNaIackQOXQ4',
+    description: 'OIDC interaction identifier in whose context the notifications were shown.',
+  })
+  @dist.ApiOperation({
+    summary: 'Continue authorization after notifications review',
+    description:
+      'Continues the OIDC authorization flow after the notifications screen is shown. Optionally accepts a list of notification IDs to mark as read before continuing.',
+  })
+  @dist.ApiBody({
+    type: MarkNotificationsReadDto,
+    required: false,
+    description:
+      'Optional list of notification IDs to mark as read before continuing authorization.',
+    examples: {
+      continueWithoutReadMarks: {
+        summary: 'Continue without marking notifications as read',
+        value: {},
+      },
+      continueAndMarkSelected: {
+        summary: 'Continue and mark selected notifications as read',
+        value: {
+          notification_ids: ['3c1e0f1b-5857-4aa2-98a8-df8db597cdb5'],
+        },
+      },
+    },
+  })
+  @dist.ApiResponse({
+    status: 302,
+    description: 'Redirects back to the OIDC flow at /oidc/auth/:uid.',
+    headers: {
+      Location: {
+        description: 'Redirect URL used to continue the OIDC interaction.',
+        schema: { type: 'string', example: '/oidc/auth/gg-mNVXQtFNaIackQOXQ4' },
+      },
+    },
+  })
+  @dist.ApiBadRequestResponse({
+    description: 'Interaction was not found or is no longer valid.',
+  })
+  async continueAfterNotifications(
+    @common.Param('uid') uid: string,
+    @common.Body() body: MarkNotificationsReadDto,
+    @common.Req() req: Request,
+    @common.Res() res: Response,
+  ) {
+    return this.service.continueAfterNotifications(uid, req, res, body);
   }
 
   @common.Post('/:uid/confirm')
@@ -270,6 +368,9 @@ export class InteractionController {
       params,
       session: { accountId },
     } = interactionDetails;
+    const client = await this.service.getClient(params.client_id as string);
+
+    await this.settingsService.canAuthorize(accountId, client);
 
     let { grantId } = interactionDetails;
 
@@ -353,6 +454,14 @@ export class InteractionController {
     @common.Req() req: Request,
     @common.Res() res: Response,
   ) {
+    const {
+      jti: uid,
+      params: { client_id },
+    } = await this.oidcService.interactionDetails(req, res);
+    const client = await this.service.getClient(client_id);
+
+    await this.callEventsService.call(CallEventNames.InteractionController.steps, { client });
+
     return this.service.steps(dto, req, res);
   }
 
@@ -391,6 +500,7 @@ export class InteractionController {
   @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
   @dist.ApiOperation({ summary: 'Account recovery' })
   @dist.ApiConsumes('application/x-www-form-urlencoded')
+  @dist.ApiBasicAuth()
   @BasicAuth()
   async recoverAndAuth(
     @common.Req() req: Request,
@@ -404,13 +514,30 @@ export class InteractionController {
 
     if (client_id !== CLIENT_ID) throw new common.BadRequestException(Ei18nCodes.T3E0067);
 
+    const prohibitRestoreDeletedUsers = Boolean(
+      await this.settingsService.getSettingsByName<boolean>(
+        ESettingsNames.prohibit_restore_deleted_users,
+      ),
+    );
+
+    if (prohibitRestoreDeletedUsers) {
+      const { user: restoreCandidate } = await this.settingsService.getUserByIdentifier(
+        body.identifier,
+        true,
+      );
+
+      if (restoreCandidate.deleted) {
+        throw new common.ForbiddenException(Ei18nCodes.T3E0103);
+      }
+    }
+
     const client = await this.service.getClient(client_id as string);
     const user = await this.userService.restoreProfile(body.identifier, body.password);
 
     await this.logger.logEvent({
       ip_address: req.ip,
       device: req.headers['user-agent'],
-      user_id: user.id.toString(),
+      user_id: user.id,
       client_id: CLIENT_ID,
       event: Actions.USER_RESTORE,
       description: '',
@@ -431,6 +558,7 @@ export class InteractionController {
   @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
   @dist.ApiOperation({ summary: 'Account recovery' })
   @dist.ApiConsumes('application/x-www-form-urlencoded')
+  @dist.ApiBasicAuth()
   @BasicAuth()
   async recoverPassword(
     @common.Req() req: Request,
@@ -440,9 +568,24 @@ export class InteractionController {
     return this.service.recoverPassword(body, req, res);
   }
 
+  @common.Post('/:uid/change-password')
+  @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
+  @dist.ApiOperation({ summary: 'Account recovery' })
+  @dist.ApiConsumes('application/x-www-form-urlencoded')
+  @dist.ApiBasicAuth()
+  @BasicAuth()
+  async changePassword(
+    @common.Req() req: Request,
+    @common.Res() res: Response,
+    @common.Body() body: ChangePasswordDto,
+  ) {
+    return this.service.changePassword(body, req, res);
+  }
+
   @common.Get('/:uid/auth')
   @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
   @dist.ApiOperation({ summary: 'Prepare authorization by provider (GET)' })
+  @dist.ApiBasicAuth()
   @BasicAuth()
   async prepareAuthByType(
     @common.Query('type') type: string,
@@ -460,6 +603,7 @@ export class InteractionController {
   @dist.ApiParam({ name: 'uid', example: 'gg-mNVXQtFNaIackQOXQ4' })
   @dist.ApiOperation({ summary: 'Authorization by provider' })
   @dist.ApiConsumes('application/x-www-form-urlencoded')
+  @dist.ApiBasicAuth()
   @BasicAuth()
   async authByType(
     @common.Query('type') type: string,
@@ -472,6 +616,8 @@ export class InteractionController {
       params: { client_id },
     } = await this.oidcService.interactionDetails(req, res);
     const client = await this.service.getClient(client_id);
+
+    await this.callEventsService.call(CallEventNames.InteractionController.authByType, { client });
 
     const providers = await prisma.provider_relations.findMany({
       where: { client_id: client_id },

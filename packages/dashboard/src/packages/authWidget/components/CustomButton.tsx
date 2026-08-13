@@ -1,11 +1,9 @@
-import AddIcon from "@mui/icons-material/Add";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import HomeWorkOutlinedIcon from "@mui/icons-material/HomeWorkOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import clsx from "clsx";
 import { FC, isValidElement, ReactNode, useState } from "react";
-import { routes, tabs } from "src/shared/utils/enums";
 import { logout } from "../helpers/auth";
 import { generateStyles } from "../helpers/utils";
 import {
@@ -22,6 +20,7 @@ interface ICustomButtonProps {
   content: IMenuButton;
   customStyles: IComponentStyles;
   icon?: ReactNode | string;
+  dataTestId?: string;
   onClose?: () => void;
   onClick?: () => void;
 }
@@ -31,6 +30,7 @@ export const CustomButton: FC<ICustomButtonProps> = ({
   content,
   customStyles,
   icon,
+  dataTestId,
   onClose,
   onClick,
 }) => {
@@ -63,7 +63,7 @@ export const CustomButton: FC<ICustomButtonProps> = ({
           if (onClose) {
             onClose();
           }
-          config.routerMainFn(type);
+          config.routerMainFn(type, link);
           return;
         } else {
           window.location.href =
@@ -109,6 +109,7 @@ export const CustomButton: FC<ICustomButtonProps> = ({
           ? styles.logoutButton
           : ""
       )}
+      data-test-id={dataTestId}
       style={{
         color: text,
         backgroundColor: isHovered && hover ? hover : background,

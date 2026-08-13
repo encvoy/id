@@ -5,7 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { InputField } from "src/shared/ui/components/InputBlock";
+import { InputField } from "@encvoy-id/components";
 import * as yup from "yup";
 import { routes, tabs } from "src/shared/utils/enums";
 import { IUpdateContact, useChangeEmailMutation } from "src/shared/api/profile";
@@ -15,8 +15,9 @@ import {
   useSendEmailCodeMutation,
 } from "../../../shared/api/verification";
 import { RootState } from "../../../app/store/store";
-import { TUserSlice } from "../../../shared/lib/userSlice";
-import { ActionButtons } from "../../../shared/ui/components/ActionButtons";
+import { TUserSlice } from "src/shared/slices/userSlice";
+import { ActionButtons } from "@encvoy-id/components";
+import { SurfaceBlock } from "@encvoy-id/components";
 import styles from "./ConfirmEmail.module.css";
 
 const mapStateToProps = ({ user }: RootState) => ({
@@ -66,12 +67,14 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
   const [sendEmailCode, { isLoading: sendEmailCodeLoading }] =
     useSendEmailCodeMutation();
   const [isConfirmedLink, setIsConfirmedLink] = useState(false);
+  const shouldAddAdditionalEmail = action === "add" && Boolean(profile?.email);
 
   useEffect(() => {
     reset({
-      identifier: profile?.email,
+      identifier: shouldAddAdditionalEmail ? "" : profile?.email ?? "",
+      code: "",
     });
-  }, [profile]);
+  }, [profile, shouldAddAdditionalEmail, reset]);
 
   const requestVerificationCode = async (email: string, resend: boolean) => {
     try {
@@ -158,13 +161,20 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
   return (
     <div className="page-container">
       <div className="content">
-        <div className={styles.container}>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography style={{ marginBottom: 24 }} className="title-medium">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SurfaceBlock className={styles.container}>
+              <Typography
+                style={{ marginBottom: "24px" }}
+                className="text-20-medium"
+              >
                 {translate(
                   `pages.confirmEmail.titles.${
-                    action === "change" ? "change" : "add"
+                    action === "confirm"
+                      ? "confirm"
+                      : action === "change"
+                      ? "change"
+                      : "add"
                   }`
                 )}
               </Typography>
@@ -173,9 +183,12 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
                 name="identifier"
                 description={translate("pages.confirmEmail.emailDescription")}
                 disabled={isMailSent}
+                dataTestId="txt-profile-email"
+                required
               >
                 {isMailSent && (
                   <Button
+                    data-test-id="btn-profile-contact-edit"
                     variant="contained"
                     color="secondary"
                     onClick={() => {
@@ -190,6 +203,7 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
               </InputField>
               <InputField
                 label={translate("pages.confirmEmail.codeLabel")}
+                required
                 name="code"
                 description={
                   minute !== 0 || second !== 0
@@ -200,9 +214,11 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
                     : ""
                 }
                 disabled={!isMailSent}
+                dataTestId="txt-confirm-email-code"
               >
                 {isMailSent && (
                   <Button
+                    data-test-id="btn-profile-contact-resent"
                     variant="contained"
                     color="secondary"
                     disabled={minute !== 0 || second !== 0}
@@ -210,20 +226,22 @@ export const ConfirmEmailComponent: FC<TConfirmEmailComponent> = ({
                       requestVerificationCode(getValues("identifier"), true)
                     }
                   >
-                    {translate("actionButtons.resend")}
+                    {translate("actionButtons.retry")}
                   </Button>
                 )}
               </InputField>
               <ActionButtons
+                cancelText={translate("actionButtons.cancel")}
+                submitButtonDataTestId="btn-profile-contact-getcode"
                 onCancel={() => navigate(`/${routes.profile}/${tabs.profile}`)}
                 submitText={translate(
                   isMailSent ? "actionButtons.confirm" : "actionButtons.getCode"
                 )}
                 disabled={sendEmailCodeLoading}
               />
-            </form>
-          </FormProvider>
-        </div>
+            </SurfaceBlock>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

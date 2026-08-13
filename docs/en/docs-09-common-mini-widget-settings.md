@@ -1,12 +1,12 @@
 ---
-title: "Encvoy ID Mini-widget — Setup and Customization"
-description: "Learn how to connect and configure the Encvoy ID mini-widget: login buttons, user profile, and custom styles. Integrate the solution into your project."
-keywords:
-  - Encvoy ID mini-widget
-  - mini-widget integration
-  - mini-widget customization
+title: "{{projectName}} Mini-widget — Setup and Customization"
+description: "Learn how to connect and configure the {{projectName}} mini-widget: login buttons, user profile, and custom styles. Integrate the solution into your project."
+keywords: 
+  - {{projectName}} mini-widget 
+  - mini-widget integration 
+  - mini-widget customization 
   - login button styling
-author: "Encvoy ID Team"
+author: "{{projectName}} Team"
 date: 2025-12-12
 updated: 2025-12-12
 product: [box, github, service]
@@ -15,9 +15,9 @@ menu_title: "Mini-Widget Setup"
 order: 10
 ---
 
-# How to Configure and Connect the Encvoy ID Mini-widget
+# How to Configure and Connect the {{projectName}} Mini-widget
 
-In this guide, you will learn how to connect and configure the **Encvoy ID** mini-widget on your web resource. You will learn how to set up authentication parameters, user profile display, login buttons, and menus, as well as customize the widget's appearance to harmonize with your project's design.
+In this guide, you will learn how to connect and configure the **{{projectName}}** mini-widget on your web resource. You will learn how to set up authentication parameters, user profile display, login buttons, and menus, as well as customize the widget's appearance to harmonize with your project's design.
 
 **Table of Contents:**
 
@@ -36,13 +36,13 @@ In this guide, you will learn how to connect and configure the **Encvoy ID** min
 
 A **mini-widget** is a menu containing user data and essential functions. It provides access to the profile, admin panel, organizations or small office, and system logout. You can also place an application here for quick access. The widget opens when clicking the user's avatar in the top right corner of the screen.
 
-The mini-widget is a lightweight JavaScript component for user authentication in the **Encvoy ID** service. It operates based on OIDC/OAuth2 and PKCE standards and can be embedded into any websites or interfaces — from simple HTML to SPAs on React or Vue.
+The mini-widget is a lightweight JavaScript component for user authentication in the **{{projectName}}** service. It operates based on OIDC/OAuth2 and PKCE standards and can be embedded into any websites or interfaces — from simple HTML to SPAs on React or Vue.
 
 > 💡 To add an application to the mini-widget, enable the **Display in Mini-Widget** toggle in the [application settings](./docs-10-common-app-settings.md).
 
-Widget examples:
+Widget examples:  
 
-<img src="./images/mini-widget-01.webp" alt="Example of mini-widget design in Encvoy ID" style="max-width:600px; width:100%">
+<img src="./images/mini-widget-01.webp" alt="Example of mini-widget design in {{projectName}}" style="max-width:600px; width:100%">
 
 ---
 
@@ -52,27 +52,27 @@ Widget examples:
 
 For basic widget operation, three key parameters must be specified:
 
-| Parameter     | Type     | Description                              | Example                         |
-| ------------- | -------- | ---------------------------------------- | ------------------------------- |
-| `appId`       | `string` | Unique application identifier in Trusted | `"MTnOOTdx85FgNbOFy2nUsH"`      |
-| `backendUrl`  | `string` | Your backend API URL                     | `"http://localhost:3001"`       |
-| `redirectUrl` | `string` | URL for redirection after authorization  | `"http://localhost:3000/login"` |
+| Parameter     | Type     | Description                                      | Example                         |
+| ------------- | -------- | ------------------------------------------------ | ------------------------------- |
+| `appId`       | `string` | Unique application identifier in Trusted         | `"MTnOOTdx85FgNbOFy2nUsH"`      |
+| `backendUrl`  | `string` | Your backend API URL                             | `"http://localhost:3001"`       |
+| `redirectUrl` | `string` | URL for redirection after authorization          | `"http://localhost:3000/login"` |
 
 ### Optional Parameters
 
 Optional parameters are available for advanced configuration:
 
-| Parameter             | Type                  | Description                         | Default Value                 |
-| --------------------- | --------------------- | ----------------------------------- | ----------------------------- |
-| `issuer`              | `string`              | Trusted SSO server URL              | `"https://id.kloud.one"`      |
-| `withOutHomePage`     | `boolean`             | Automatic redirect to authorization | `false`                       |
-| `getTokenEndPoint`    | `string`              | Endpoint for obtaining a token      | `"/api/oidc/token"`           |
-| `getUserInfoEndPoint` | `string`              | Endpoint for obtaining user data    | `"/api/oidc/me"`              |
-| `scopes`              | `string[]`            | OAuth2 permissions                  | `["openid", "lk", "profile"]` |
-| `profile`             | `IProfileConfig`      | User profile settings               | See section below             |
-| `loginButton`         | `ICustomMenuButton`   | Login button settings               | See section below             |
-| `menuButtons`         | `ICustomMenuButton[]` | Array of additional buttons         | See section below             |
-| `customStyles`        | `ICustomStyles`       | Global widget styles                | See section below             |
+| Parameter             | Type                  | Description                                | Default Value                 |
+| --------------------- | --------------------- | ------------------------------------------ | ----------------------------- |
+| `issuer`              | `string`              | Trusted SSO server URL                     | `"https://id.kloud.one"`      |
+| `withOutHomePage`     | `boolean`             | Automatic redirect to authorization        | `false`                       |
+| `getTokenEndPoint`    | `string`              | Endpoint for obtaining a token             | `"/api/oidc/token"`           |
+| `getUserInfoEndPoint` | `string`              | Endpoint for obtaining user data           | `"/api/oidc/me"`              |
+| `scopes`              | `string[]`            | OAuth2 permissions                         | `["openid", "lk", "profile"]` |
+| `profile`             | `IProfileConfig`      | User profile settings                      | See section below             |
+| `loginButton`         | `ICustomMenuButton`   | Login button settings                      | See section below             |
+| `menuButtons`         | `ICustomMenuButton[]` | Array of additional buttons                | See section below             |
+| `customStyles`        | `ICustomStyles`       | Global widget styles                       | See section below             |
 
 ### Basic Connection Example
 
@@ -101,11 +101,11 @@ const newConfig: TrustedWidgetConfig = {
 
 The **User Profile** is a component that contains the avatar and the username.
 
-| Parameter    | Type               | Description                             | Default Value     |
-| ------------ | ------------------ | --------------------------------------- | ----------------- |
-| `isHideText` | `boolean`          | Hide the username display               | `false`           |
-| `wrapper`    | `IComponentStyles` | Profile container styles (colors only)  | See style section |
-| `button`     | `IComponentStyles` | User avatar button styles (colors only) | See style section |
+| Parameter    | Type               | Description                                      | Default Value     |
+| ------------ | ------------------ | ------------------------------------------------ | ----------------- |
+| `isHideText` | `boolean`          | Hide the username display                        | `false`           |
+| `wrapper`    | `IComponentStyles` | Profile container styles (colors only)           | See style section |
+| `button`     | `IComponentStyles` | User avatar button styles (colors only)          | See style section |
 
 > ⚠️ **Important:** For profile settings (`profile.wrapper` and `profile.button`), only colors (`color.text`, `color.background`, `color.hover`) can be changed and the username can be hidden (`isHideText`). Other styling parameters (such as `borderRadius`, `padding`, `position`) are not applied to the profile.
 
@@ -131,12 +131,12 @@ The login button is displayed for unauthorized users. You can customize its text
 
 ### Login Button Parameters
 
-| Parameter      | Type                           | Description                      | Default Value     |
-| -------------- | ------------------------------ | -------------------------------- | ----------------- |
-| `text`         | `string`                       | Login button text                | `"Login"`         |
-| `type`         | `string`                       | Button type                      | `"login"`         |
-| `icon`         | `string \| React.ReactElement` | Image link or React element      | `null`            |
-| `customStyles` | `IComponentStyles`             | Individual styles for the button | See style section |
+| Parameter      | Type                           | Description                             | Default Value     |
+| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
+| `text`         | `string`                       | Login button text                       | `"Login"`         |
+| `type`         | `string`                       | Button type                             | `"login"`         |
+| `icon`         | `string \| React.ReactElement` | Image link or React element             | `null`            |
+| `customStyles` | `IComponentStyles`             | Individual styles for the button        | See style section |
 
 ### Configuration Example
 
@@ -176,17 +176,17 @@ const config: TrustedWidgetConfig = {
 
 ### Required Parameters
 
-| Parameter | Type     | Description                    | Example              |
-| --------- | -------- | ------------------------------ | -------------------- |
-| `text`    | `string` | Displayed button name          | `"TestService"`      |
-| `link`    | `string` | URL of the page to navigate to | `"https://test.com"` |
+| Parameter | Type     | Description                     | Example              |
+| --------- | -------- | ------------------------------- | -------------------- |
+| `text`    | `string` | Displayed button name           | `"TestService"`      |
+| `link`    | `string` | URL of the page to navigate to  | `"https://test.com"` |
 
 ### Optional Parameters
 
-| Parameter      | Type                           | Description                      | Default Value     |
-| -------------- | ------------------------------ | -------------------------------- | ----------------- |
-| `icon`         | `string \| React.ReactElement` | Image link or React element      | `null`            |
-| `customStyles` | `IComponentStyles`             | Individual styles for the button | See style section |
+| Parameter      | Type                           | Description                             | Default Value     |
+| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
+| `icon`         | `string \| React.ReactElement` | Image link or React element             | `null`            |
+| `customStyles` | `IComponentStyles`             | Individual styles for the button        | See style section |
 
 ### Configuration Example
 
@@ -233,30 +233,30 @@ customStyles: {
 
 #### Global Styles
 
-| Parameter             | Type               | Description                    | Example   |
-| --------------------- | ------------------ | ------------------------------ | --------- |
-| `global.borderRadius` | `string`           | Corner radius for all elements | `"12px"`  |
-| `global.color`        | `IComponentStyles` | Global colors                  | See below |
+| Parameter             | Type               | Description                         | Example  |
+| --------------------- | ------------------ | ----------------------------------- | -------- |
+| `global.borderRadius` | `string`           | Corner radius for all elements      | `"12px"` |
+| `global.color`        | `IComponentStyles` | Global colors                       | See below|
 
 #### Component Styles
 
-| Parameter                    | Type               | Description               | Purpose                   |
-| ---------------------------- | ------------------ | ------------------------- | ------------------------- |
-| `components.primaryButton`   | `IComponentStyles` | Primary button style      | "Login", "Profile" button |
-| `components.secondaryButton` | `IComponentStyles` | Secondary button style    | "Logout" button           |
-| `components.accountButton`   | `IComponentStyles` | Account menu button style | Buttons in dropdown menu  |
+| Parameter                    | Type               | Description                 | Purpose                   |
+| ---------------------------- | ------------------ | --------------------------- | ------------------------- |
+| `components.primaryButton`   | `IComponentStyles` | Primary button style        | "Login", "Profile" button |
+| `components.secondaryButton` | `IComponentStyles` | Secondary button style      | "Logout" button           |
+| `components.accountButton`   | `IComponentStyles` | Account menu button style   | Buttons in dropdown menu  |
 
 #### IComponentStyles Component Style Parameters
 
-| Parameter          | Type                 | Description                  | Example      |
-| ------------------ | -------------------- | ---------------------------- | ------------ |
-| `color.text`       | `string`             | Text and icon color (HEX)    | `"#ffffff"`  |
-| `color.background` | `string`             | Background color (HEX)       | `"#1976d2"`  |
-| `color.hover`      | `string`             | Hover background color (HEX) | `"#1565c0"`  |
-| `borderRadius`     | `string`             | Element corner radius        | `"8px"`      |
-| `padding`          | `string`             | Internal padding             | `"8px 16px"` |
-| `position`         | `"left" \| "center"` | Content alignment in button  | `"center"`   |
-| `isHideIcon`       | `boolean`            | Hide icon in button          | `false`      |
+| Parameter          | Type                 | Description                    | Example      |
+| ------------------ | -------------------- | ------------------------------ | ------------ |
+| `color.text`       | `string`             | Text and icon color (HEX)      | `"#ffffff"`  |
+| `color.background` | `string`             | Background color (HEX)         | `"#1976d2"`  |
+| `color.hover`      | `string`             | Hover background color (HEX)   | `"#1565c0"`  |
+| `borderRadius`     | `string`             | Element corner radius          | `"8px"`      |
+| `padding`          | `string`             | Internal padding               | `"8px 16px"` |
+| `position`         | `"left" \| "center"` | Content alignment in button    | `"center"`   |
+| `isHideIcon`       | `boolean`            | Hide icon in button            | `false`      |
 
 #### Style Inheritance
 
@@ -359,6 +359,7 @@ const config: TrustedWidgetConfig = {
   },
 };
 ```
+
 
 #### Full Configuration with Global Styles and Menu Example
 
@@ -498,23 +499,23 @@ const config: TrustedWidgetConfig = {
 
 ### Mini-Widget Styling Principles
 
-| Principle                    | What it means                                                                                         | How to apply it                                                                                                                                                                                                    |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Centralized Management**   | All appearance settings are defined via three key configuration objects.                              | Configure the general look in `customStyles`, profile in `profile`, and login button in `loginButton`.                                                                                                             |
-| **Flexible Profile Setup**   | The appearance of the block with the name and avatar of the authorized user is configured separately. | Use `profile.wrapper` for the background and `profile.button` for the avatar button. Note that only color settings work here.                                                                                      |
-| **Login Button Setup**       | Styles for the button seen by unauthorized users are configured independently.                        | Define text, icon, and styles in the `loginButton` object and its `customStyles` property.                                                                                                                         |
-| **Color Structure**          | The color scheme for any element is described uniformly.                                              | Always use a nested `color` object with `text`, `background`, and `hover` fields (e.g., `color: {text: "#fff", background: "#1976d2"}`).                                                                           |
-| **Display Management**       | Text labels or icons can be easily hidden.                                                            | Use the `isHideText` (hide text) and `isHideIcon` (hide icon) flags in component styles.                                                                                                                           |
-| **Flexible Alignment**       | Content inside buttons can be aligned to the left or center.                                          | Set the `position: "left"` or `position: "center"` property in the styles of the desired button.                                                                                                                   |
-| **Smart Inheritance**        | The system fills configuration gaps using logical default values.                                     | - For `secondaryButton`: if styles are not set, it inherits `primaryButton` with added transparency.<br>- For `hover`: if color is not specified, `filter: brightness(90%)` is applied to the background on hover. |
-| **Fallback System**          | Buttons in the dropdown menu use general styles if individual ones are not set.                       | If a button in `menuButtons` lacks its own `customStyles`, styles from `accountButton` are automatically applied.                                                                                                  |
-| **Global Border Radius**     | A single corner radius value can be set for all widget elements.                                      | Specify `customStyles.global.borderRadius` (e.g., `"8px"`), and it will affect buttons and modal windows.                                                                                                          |
-| **Individual Customization** | Any button in the menu can be styled completely uniquely.                                             | Add a `customStyles` object for a specific element in the `menuButtons` array.                                                                                                                                     |
+| Principle | What it means | How to apply it |
+| :--- | :--- | :--- |
+| **Centralized Management** | All appearance settings are defined via three key configuration objects. | Configure the general look in `customStyles`, profile in `profile`, and login button in `loginButton`. |
+| **Flexible Profile Setup** | The appearance of the block with the name and avatar of the authorized user is configured separately. | Use `profile.wrapper` for the background and `profile.button` for the avatar button. Note that only color settings work here. |
+| **Login Button Setup** | Styles for the button seen by unauthorized users are configured independently. | Define text, icon, and styles in the `loginButton` object and its `customStyles` property. |
+| **Color Structure** | The color scheme for any element is described uniformly. | Always use a nested `color` object with `text`, `background`, and `hover` fields (e.g., `color: {text: "#fff", background: "#1976d2"}`). |
+| **Display Management** | Text labels or icons can be easily hidden. | Use the `isHideText` (hide text) and `isHideIcon` (hide icon) flags in component styles. |
+| **Flexible Alignment** | Content inside buttons can be aligned to the left or center. | Set the `position: "left"` or `position: "center"` property in the styles of the desired button. |
+| **Smart Inheritance** | The system fills configuration gaps using logical default values. | - For `secondaryButton`: if styles are not set, it inherits `primaryButton` with added transparency.<br>- For `hover`: if color is not specified, `filter: brightness(90%)` is applied to the background on hover. |
+| **Fallback System** | Buttons in the dropdown menu use general styles if individual ones are not set. | If a button in `menuButtons` lacks its own `customStyles`, styles from `accountButton` are automatically applied. |
+| **Global Border Radius** | A single corner radius value can be set for all widget elements. | Specify `customStyles.global.borderRadius` (e.g., `"8px"`), and it will affect buttons and modal windows. |
+| **Individual Customization** | Any button in the menu can be styled completely uniquely. | Add a `customStyles` object for a specific element in the `menuButtons` array. |
 
 ---
 
 ## See Also { #see-also }
 
 - [Application Management](./docs-10-common-app-settings.md) — guide for creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.
-- [Organization Management](./docs-11-common-org-settings.md) — guide for working with organizations in **Encvoy ID**.
+- [Organization Management](./docs-11-common-org-settings.md) — guide for working with organizations in **{{projectName}}**.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — guide for managing your personal profile.

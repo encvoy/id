@@ -1,31 +1,19 @@
-import AddIcon from "@mui/icons-material/Add";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { SvgIconProps } from "@mui/material/SvgIcon";
-import clsx from "clsx";
-import {
-  ChangeEvent,
-  ElementType,
-  FC,
-  SyntheticEvent,
-  useRef,
-  useState,
-} from "react";
-import { useFormContext } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import ReactCrop, {
-  centerCrop,
-  Crop,
-  makeAspectCrop,
-  PixelCrop,
-} from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
-import { ModalInfo } from "src/shared/ui/modal/ModalInfo";
-import { SubmitModal } from "src/shared/ui/modal/SubmitModal";
-import { getImageURL, toBase64 } from "src/shared/utils/helpers";
-import styles from "./UploadAndDisplayImage.module.css";
+import AddIcon from '@mui/icons-material/Add';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { SvgIconProps } from '@mui/material/SvgIcon';
+import clsx from 'clsx';
+import { ChangeEvent, ElementType, FC, SyntheticEvent, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import { CustomIcon } from '@encvoy-id/components';
+import { ModalInfo } from '@encvoy-id/components';
+import { SubmitModal } from '@encvoy-id/components';
+import { getImageURL, toBase64 } from 'src/shared/utils/helpers';
+import styles from './UploadAndDisplayImage.module.css';
 
 interface IUploadAndDisplayImageProps {
   title: string;
@@ -36,7 +24,7 @@ interface IUploadAndDisplayImageProps {
   disabled?: boolean;
   onAvailableClick?: () => void;
   aspect?: number;
-  figure?: "square" | "circle" | "rectangle";
+  figure?: 'square' | 'circle' | 'rectangle';
   disabledDeleted?: boolean;
   required?: boolean;
 }
@@ -62,9 +50,9 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
   disabled,
   maxImageSize = 1,
   onAvailableClick,
-  nameFieldForm = "avatar",
+  nameFieldForm = 'avatar',
   aspect = 1 / 1,
-  figure = "square",
+  figure = 'square',
   disabledDeleted,
   required,
 }) => {
@@ -79,7 +67,7 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
   const avatar = watch(nameFieldForm) || undefined;
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpenCropModal, setIsOpenCropModal] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState<string>('');
   const [openLoadImageModal, setIsOpenLoadImageModal] = useState(false);
   const [cropImageFile, setCropImageFile] = useState<Crop>();
   const imgRef = useRef<HTMLImageElement>(null);
@@ -87,11 +75,9 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
 
   const getImageSrc = (avatar?: File | string) => {
     if (!avatar) {
-      return typeof defaultIcon === "string" ? getImageURL(defaultIconSrc) : "";
+      return typeof defaultIcon === 'string' ? getImageURL(defaultIconSrc) : '';
     }
-    return avatar instanceof File
-      ? URL.createObjectURL(avatar)
-      : getImageURL(avatar);
+    return avatar instanceof File ? URL.createObjectURL(avatar) : getImageURL(avatar);
   };
 
   const handleOpenFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -102,19 +88,17 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
     }
 
     if (
-      !["jpeg", "png", "jpg", "bmp", "webp"].find(
-        (imageType) => `image/${imageType}` === file.type
-      )
+      !['jpeg', 'png', 'jpg', 'bmp', 'webp'].find((imageType) => `image/${imageType}` === file.type)
     ) {
       setError(nameFieldForm, {
-        message: translate("errors.invalidImageFormat"),
+        message: translate('errors.invalidImageFormat'),
       });
       return;
     }
 
     if (file.size / 1024 / 1024 > maxImageSize) {
       setError(nameFieldForm, {
-        message: translate("errors.imageSizeExceeded", {
+        message: translate('errors.imageSizeExceeded', {
           maxSize: maxImageSize,
         }),
       });
@@ -128,23 +112,19 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
   };
 
   //crop on center
-  const centerAspectCrop = (
-    mediaWidth: number,
-    mediaHeight: number,
-    aspect: number
-  ) => {
+  const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) => {
     return centerCrop(
       makeAspectCrop(
         {
-          unit: "%",
+          unit: '%',
           width: 90,
         },
         aspect,
         mediaWidth,
-        mediaHeight
+        mediaHeight,
       ),
       mediaWidth,
-      mediaHeight
+      mediaHeight,
     );
   };
 
@@ -155,13 +135,10 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
     }
   };
 
-  const getCroppedFile = async (
-    img: HTMLImageElement,
-    crop: PixelCrop
-  ): Promise<File | null> => {
+  const getCroppedFile = async (img: HTMLImageElement, crop: PixelCrop): Promise<File | null> => {
     if (!crop?.width || !crop?.height) return null;
 
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     const scaleX = img.naturalWidth / img.width;
     const scaleY = img.naturalHeight / img.height;
 
@@ -173,7 +150,7 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
     canvas.width = Math.round(sw);
     canvas.height = Math.round(sh);
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
@@ -181,11 +158,11 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
     return await new Promise<File | null>((resolve) => {
       canvas.toBlob((blob) => {
         if (!blob) return resolve(null);
-        const file = new File([blob], "image_crop.webp", {
-          type: blob.type || "image/webp",
+        const file = new File([blob], 'image_crop', {
+          type: blob.type || 'image/webp',
         });
         resolve(file);
-      }, "image/webp");
+      });
     });
   };
 
@@ -205,12 +182,7 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
   return (
     <>
       <Typography
-        className={clsx(
-          "text-14",
-          styles.title,
-          required ? styles.asterisk : "",
-          styles.inputLabel
-        )}
+        className={clsx('text-14', styles.title, required ? 'asterisk' : '', styles.inputLabel)}
       >
         {title}
       </Typography>
@@ -218,11 +190,11 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
         <Avatar
           className={clsx(
             styles.avatar,
-            figure === "circle"
+            figure === 'circle'
               ? styles.avatarCircle
-              : figure === "rectangle"
-              ? styles.avatarRectangle
-              : ""
+              : figure === 'rectangle'
+                ? styles.avatarRectangle
+                : '',
           )}
           src={getImageSrc(avatar)}
         >
@@ -230,11 +202,12 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
             <CustomIcon
               Icon={defaultIcon}
               color="textSecondary"
-              sx={{ width: "35px", height: "35px" }}
+              sx={{ width: '35px', height: '35px' }}
             />
           )}
         </Avatar>
         <Button
+          data-test-id="btn-logo-delete"
           onClick={() => {
             setValue(nameFieldForm, defaultIconSrc ? defaultIconSrc : null, {
               shouldDirty: true,
@@ -244,24 +217,26 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
           variant="contained"
           disabled={disabledDeleted || !avatar}
         >
-          {translate("actionButtons.delete")}
+          {translate('actionButtons.delete')}
         </Button>
         <Button
+          data-test-id="btn-logo-upload"
           variant="contained"
           disabled={disabled}
           onClick={() => {
             setIsOpenLoadImageModal(true);
           }}
         >
-          {translate("actionButtons.upload")}
+          {translate('actionButtons.upload')}
         </Button>
         {onAvailableClick && (
           <Button
             variant="contained"
             color="secondary"
             onClick={onAvailableClick}
+            data-test-id="btn-profile-logo-available"
           >
-            {translate("actionButtons.available")}
+            {translate('actionButtons.available')}
           </Button>
         )}
 
@@ -270,21 +245,19 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
           onClose={() => {
             setIsOpenLoadImageModal(false);
           }}
-          title={translate("modals.uploadImage.title")}
+          title={translate('modals.uploadImage.title')}
         >
-          <Typography className="text-14">
-            {translate("modals.uploadImage.description")}
-          </Typography>
+          <Typography className="text-14">{translate('modals.uploadImage.description')}</Typography>
           <Button className={styles.uploadButton} component="label">
             <CustomIcon Icon={AddIcon} color="primaryMain" />
             <Typography color="custom.accent">
-              {translate("modals.uploadImage.uploadButton")}
+              {translate('modals.uploadImage.uploadButton')}
             </Typography>
             <Typography className="text-14" color="text.secondary">
-              {translate("modals.uploadImage.formatInfo")}
+              {translate('modals.uploadImage.formatInfo')}
             </Typography>
             <Typography className="text-14" color="text.secondary">
-              {translate("modals.uploadImage.maxSizeInfo", {
+              {translate('modals.uploadImage.maxSizeInfo', {
                 maxSize: maxImageSize,
               })}
             </Typography>
@@ -294,6 +267,7 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
               onChange={handleOpenFile}
               ref={inputRef}
               accept="image/jpeg, image/png, image/jpg, image/bmp, image/webp"
+              data-test-id="txt-logo-upload"
             />
           </Button>
           {errors[nameFieldForm] && (
@@ -304,12 +278,14 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
         </ModalInfo>
 
         <SubmitModal
-          title={translate("modals.editImage.title")}
+          cancelText={translate('actionButtons.cancel')}
+          deleteText={translate('actionButtons.delete')}
+          title={translate('modals.editImage.title')}
           isOpen={isOpenCropModal}
           onSubmit={saveCropImage}
           onClose={() => setIsOpenCropModal(false)}
-          mainMessage={[translate("modals.editImage.description")]}
-          actionButtonText={translate("actionButtons.apply")}
+          mainMessage={[translate('modals.editImage.description')]}
+          actionButtonText={translate('actionButtons.apply')}
         >
           <div className={styles.modalCropContent}>
             <ReactCrop
@@ -319,14 +295,14 @@ export const UploadAndDisplayImage: FC<IUploadAndDisplayImageProps> = ({
               onComplete={(c) => setCompletedCrop(c)}
               aspect={aspect}
               keepSelection={true}
-              circularCrop={figure === "circle"}
+              circularCrop={figure === 'circle'}
             >
               <img
                 ref={imgRef}
                 alt="crop image"
                 src={imageSrc}
                 style={{
-                  objectFit: "contain",
+                  objectFit: 'contain',
                 }}
                 onLoad={onImageLoad}
               />

@@ -12,6 +12,15 @@ import trustedWidgetEs from "../packages/authWidget/locales/es.json";
 import trustedWidgetFr from "../packages/authWidget/locales/fr.json";
 import trustedWidgetDe from "../packages/authWidget/locales/de.json";
 import trustedWidgetIt from "../packages/authWidget/locales/it.json";
+import {
+  DEFAULT_SYSTEM_LANGUAGE,
+  normalizeSystemLanguage,
+  SYSTEM_LANGUAGE_CODES,
+} from "src/shared/utils/locales";
+
+const initialLanguage = normalizeSystemLanguage(
+  typeof window !== "undefined" ? window.localStorage.getItem("locale") : null
+);
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -40,8 +49,15 @@ i18n.use(initReactI18next).init({
       "trusted-widget": trustedWidgetIt,
     },
   },
-  //debug: true,
-  lng: localStorage.getItem("locale") || "en-US",
+  lng: initialLanguage,
+  fallbackLng: DEFAULT_SYSTEM_LANGUAGE,
+  supportedLngs: [...SYSTEM_LANGUAGE_CODES],
+  react: {
+    useSuspense: false,
+  },
+  interpolation: {
+    escapeValue: false,
+  },
 });
 
 export default i18n;

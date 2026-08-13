@@ -6,13 +6,20 @@ import {
   EGetProviderAction,
   Ei18nCodes,
   EProviderGroups,
+  EProviderTypes,
   SortDirection,
   UserRoles,
 } from '../../enums';
-import { deleteImageFromLocalPath, isEditor } from '../../helpers';
+import { deleteImageFromLocalPath, getOrganizationId, isEditor } from '../../helpers';
+import {
+  resolveLocalizedText,
+  getDefaultLocale,
+  createLocalizedTextFallback,
+} from 'src/utils/localized-text';
 import { prisma } from '../prisma';
 import { listProfileFields } from '../settings/settings.dto';
 import { SettingsService } from '../settings/settings.service';
+import { EmailService } from './collection/email/email.service';
 import { ProviderFactory } from './factory.service';
 import {
   BaseCreateProviderDto,
@@ -25,7 +32,7 @@ import {
 
 @Injectable()
 export class ProviderService {
-  private credentials_provider_id: number;
+  private credentials_provider_id: string;
 
   constructor(
     private readonly settingsService: SettingsService,
@@ -36,7 +43,7 @@ export class ProviderService {
    * Getting the CREDENTIALS provider ID
    * Request data is cached to reduce the number of database queries
    */
-  public async getCredentialsProviderId(): Promise<number> {
+  public async getCredentialsProviderId(): Promise<string> {
     if (this.credentials_provider_id) {
       return this.credentials_provider_id;
     }
@@ -102,11 +109,15 @@ export class ProviderService {
       where: { client_id },
     });
 
-    if (params.is_public === true && client.parent_id) {
+    if (params.is_public === true && client_id !== CLIENT_ID) {
       throw new BadRequestException(Ei18nCodes.T3E0066);
     }
 
     const updatedParams = await providerService.onCreate(params, client_id, user_id);
+
+    if (typeof updatedParams.name === 'string') {
+      updatedParams.name = createLocalizedTextFallback(updatedParams.name) as any;
+    }
 
     // Check the mapping
     if (
@@ -118,13 +129,23 @@ export class ProviderService {
       await this.checkMapping(updatedParams.params.mapping);
     }
 
-    // Create a provider
-    return prisma.provider.create({
+    const provider = await prisma.provider.create({
       data: {
         ...updatedParams,
         avatar: providerService.defaultUrlAvatar,
       },
     });
+
+    if (
+      [EProviderTypes.EMAIL, EProviderTypes.EMAIL_CUSTOM].includes(provider.type as EProviderTypes)
+    ) {
+      const emailService = this.providerFactory.getProviderService<EmailService>(
+        EProviderTypes.EMAIL,
+      );
+      await emailService.ensureProviderEmailTemplates(provider.id);
+    }
+
+    return provider;
   }
 
   async getList(params: ListProvidersDto, client_id: string, role: UserRoles) {
@@ -135,14 +156,52 @@ export class ProviderService {
       all
         .filter((p) => p.groupe === EProviderGroups.SMALL || !p.groupe)
         .sort((a, b) => a.index - b.index) || [];
-    const off = all.filter((p) => !p.is_active).sort((a, b) => a.name.localeCompare(b.name)) || [];
+    const defaultLocale = await getDefaultLocale();
+    const off =
+      all
+        .filter((p) => !p.is_active)
+        .sort((a, b) =>
+          resolveLocalizedText(a.name, defaultLocale, defaultLocale).localeCompare(
+            resolveLocalizedText(b.name, defaultLocale, defaultLocale),
+          ),
+        ) || [];
     return { big, small, off };
   }
 
+  private async getProfileOrganizationProviderClientIds(userId?: string | null): Promise<string[]> {
+    if (!userId) {
+      return [];
+    }
+
+    const organizationRoles = await prisma.role.findMany({
+      where: {
+        user_id: userId,
+        role: {
+          in: [UserRoles.OWNER, UserRoles.EDITOR],
+        },
+        client: {
+          client_id: {
+            not: CLIENT_ID,
+          },
+          parent_id: null,
+        },
+      },
+      select: {
+        client_id: true,
+      },
+    });
+
+    return organizationRoles.map((role) => role.client_id);
+  }
+
   async updateList(params: UpdateListProvidersDto, client_id: string) {
-    const bigArray = params.big.map((id, index) => ({ id, index, groupe: EProviderGroups.BIG }));
+    const bigArray = params.big.map((id, index) => ({
+      id: String(id),
+      index,
+      groupe: EProviderGroups.BIG,
+    }));
     const smallArray = params.small.map((id, index) => ({
-      id,
+      id: String(id),
       index,
       groupe: EProviderGroups.SMALL,
     }));
@@ -158,22 +217,47 @@ export class ProviderService {
     );
   }
 
-  async getAll(params: AllProvidersDto, client_id: string, role: UserRoles) {
+  async getAll(params: AllProvidersDto, client_id: string, role: UserRoles, userId?: string) {
     const client = await prisma.client.findUnique({
       where: { client_id },
     });
 
     const where: Prisma.ProviderWhereInput = {
       type: { in: params.types || undefined },
-      OR: [
-        { Provider_relations: { some: { client_id } } },
-        { client_id },
-        { client_id: CLIENT_ID, is_public: true },
-      ],
     };
 
-    if (client.parent_id) {
-      where.OR.push({ client_id: client.parent_id, is_public: true });
+    if (client_id === CLIENT_ID && params.action === EGetProviderAction.auth) {
+      const user = userId
+        ? await prisma.user.findUnique({
+            where: { id: userId },
+            select: { org_id: true },
+          })
+        : null;
+
+      where.OR = [
+        ...(user?.org_id === CLIENT_ID
+          ? [{ client_id: CLIENT_ID }]
+          : [{ client_id: CLIENT_ID, is_public: true }]),
+      ];
+
+      const organizationClientIds = await this.getProfileOrganizationProviderClientIds(userId);
+      if (organizationClientIds.length) {
+        where.OR.push({
+          client_id: {
+            in: organizationClientIds,
+          },
+        });
+      }
+    } else {
+      where.OR = [
+        { providerRelations: { some: { client_id } } },
+        { client_id },
+        { client_id: CLIENT_ID, is_public: true },
+      ];
+
+      if (client.parent_id) {
+        where.OR.push({ client_id: client.parent_id });
+      }
     }
 
     const [all, relations] = await Promise.all([
@@ -196,7 +280,6 @@ export class ProviderService {
       // 'external_client_id',
       'external_client_secret',
       'certificate',
-      'license_id',
       'root_mail',
       'mail_hostname',
       'mail_port',
@@ -229,7 +312,15 @@ export class ProviderService {
               'show_provider_avatar',
               'provider_title',
               'provider_colors',
+              'use_kerberos',
             ];
+            const isOtpProvider =
+              provider.type === EProviderTypes.TOTP || provider.type === EProviderTypes.HOTP;
+
+            if (isOtpProvider) {
+              publicParams.push('digits');
+            }
+
             Object.keys(provider.params).forEach((key) => {
               if (!publicParams.includes(key)) {
                 if (provider.type !== 'MTLS') {
@@ -265,9 +356,6 @@ export class ProviderService {
     );
 
     if (params.only_active) providers = providers.filter((provider) => provider.is_active);
-    if (params.is_public) {
-      providers = providers.filter((provider) => provider.is_public);
-    }
 
     if (params.action && params.action === EGetProviderAction.auth) {
       providers = providers.filter((p) => LIST_PROVIDERS_AUTH.includes(p.type));
@@ -277,40 +365,39 @@ export class ProviderService {
   }
 
   async activate(params: BindProviderDto, client_id: string) {
-    const providers = await prisma.provider.findMany({
+    const org_id = await getOrganizationId(client_id);
+    const provider = await prisma.provider.findFirst({
       where: {
         OR: [
-          { id: { in: params.providers }, client_id },
-          { id: { in: params.providers }, is_public: true },
+          { id: String(params.provider_id), client_id: org_id },
+          { id: String(params.provider_id), client_id },
+          { id: String(params.provider_id), is_public: true },
         ],
-        Provider_relations: { none: { client_id } },
+        providerRelations: { none: { client_id } },
       },
     });
 
-    if (!providers.length) {
+    if (!provider) {
       return;
     }
 
-    for (const provider of providers) {
-      if (provider.type === PROVIDER_TYPE_CREDENTIALS) {
-        continue;
-      }
+    if (provider.type !== PROVIDER_TYPE_CREDENTIALS) {
       const providerService = this.providerFactory.getProviderService(provider.type);
       await providerService.onActivate(provider);
     }
 
-    await prisma.provider_relations.createMany({
-      data: providers.map((provider) => {
-        if (provider.type === PROVIDER_TYPE_CREDENTIALS) {
-          return { provider_id: provider.id, client_id, groupe: '' };
-        }
-        return { provider_id: provider.id, client_id };
-      }),
-    });
+    if (provider.type === PROVIDER_TYPE_CREDENTIALS) {
+      await prisma.provider_relations.createMany({
+        data: { provider_id: provider.id, client_id, groupe: '' },
+      });
+    } else {
+      await prisma.provider_relations.create({
+        data: { provider_id: provider.id, client_id, index: params?.index },
+      });
+    }
   }
 
   async deactivate(params: BindProviderDto, client_id: string) {
-    // Get the Login/Password provider ID
     const credentials_provider_id = await this.getCredentialsProviderId();
 
     const client = await prisma.client.findUnique({
@@ -319,22 +406,20 @@ export class ProviderService {
       },
     });
 
-    // The OWNER of the personal account should always be able to log in via Login/Password
-    if (params.providers.includes(credentials_provider_id) && !client.parent_id)
+    if (String(params.provider_id) === credentials_provider_id && !client.parent_id)
       throw new BadRequestException(Ei18nCodes.T3E0067);
 
-    // Remove all relationships
     await prisma.provider_relations.deleteMany({
       where: {
-        provider_id: { in: params.providers },
+        provider_id: String(params.provider_id),
         client_id,
       },
     });
   }
 
   async delete(provider_id: string, client_id: string) {
-    const provider = await prisma.provider.findUnique({
-      where: { id: parseInt(provider_id, 10), client_id },
+    const provider = await prisma.provider.findFirst({
+      where: { id: provider_id, client_id },
     });
     if (!provider) {
       return;
@@ -347,7 +432,7 @@ export class ProviderService {
     await deleteImageFromLocalPath(provider.avatar);
 
     await prisma.provider.delete({
-      where: { id: parseInt(provider_id, 10), client_id },
+      where: { id: provider_id },
     });
 
     const clients = await prisma.client.findMany({
@@ -390,7 +475,7 @@ export class ProviderService {
    * Updating a provider
    */
   async update(
-    provider_id: number,
+    provider_id: string,
     client_id: string,
     user_id: string,
     params: BaseUpdateProviderDto,
@@ -413,7 +498,7 @@ export class ProviderService {
       where: { client_id },
     });
 
-    if (params.is_public === true && client.parent_id) {
+    if (params.is_public === true && client_id !== CLIENT_ID) {
       throw new BadRequestException(Ei18nCodes.T3E0066);
     }
 
@@ -457,8 +542,8 @@ export class ProviderService {
   /**
    * Updating an avatar
    */
-  async updateAvatar(provider_id: number, client_id: string, avatar: string | null) {
-    const provider = await prisma.provider.findUnique({ where: { id: provider_id, client_id } });
+  async updateAvatar(provider_id: string, client_id: string, avatar: string | null) {
+    const provider = await prisma.provider.findFirst({ where: { id: provider_id, client_id } });
     if (!provider) {
       throw new BadRequestException(Ei18nCodes.T3E0030);
     }

@@ -5,48 +5,613 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Client, Prisma, User } from '@prisma/client';
-import { I18nService } from 'nestjs-i18n';
-import { CLIENT_ID } from 'src/constants';
-import { app } from 'src/main';
+import fetch from 'node-fetch';
+import { I18nContext, I18nService } from 'nestjs-i18n';
+import { CLIENT_ID, DOMAIN } from 'src/constants';
+import { getInternalRequestHeaders } from 'src/internal-request';
+import { getDefaultLocale, resolveLocalizedText } from 'src/utils/localized-text';
 import * as enums from '../../enums';
 import { SortDirection } from '../../enums';
-import { getIdentifierType } from '../../helpers';
+import { getIdentifierType, getOrganizationId, prepareIdentifier } from '../../helpers';
+import { hasApplicationAccessForUser } from '../groups/groups.access';
+import { prepareOrganizationGuestsMembershipForClientAuthorization } from '../prisma/guests-group';
 import { prisma } from '../prisma';
-import { NotificationAction } from '../providers/collection/email/email.types';
 import { SettingsModel, UserModel, UserRepository } from '../repository';
+import { clearLegacyProfileFieldCache } from '../repository/user-profile-write';
+import { getLegacyUserExternalAccountEmails } from '../repository/user-search';
+import { RedisAdapter } from '../redis';
 import { UpdateUserDTO } from '../users/users.dto';
+import { getClientAuthorizationContext } from '../auth/client-authorization';
 import * as dto from './settings.dto';
 
 const listUnChangeableUserFields = [dto.UserProfileFields.sub, 'name'];
+const generalProfileFieldKeys = new Set(dto.listProfileFields.map((field) => field.field));
+
+type RuleValidationModel = Prisma.RuleValidationGetPayload<Record<string, never>>;
+type ProfileFieldRuleRecord = Prisma.ProfileFieldGetPayload<{
+  include: {
+    validations: {
+      include: {
+        rule_validation: true;
+      };
+    };
+  };
+}>;
+
+type LegacyRuleModel = {
+  id: string;
+  field_name: string;
+  organization_id?: string | null;
+  title: string | dto.TLocalizedTextDto;
+  default?: string;
+  required: boolean;
+  unique: boolean;
+  validate_on_authorization: boolean;
+  active: boolean;
+  editable: boolean;
+  validations: RuleValidationModel[];
+};
+
+type TPreparedGeneralProfileFields = UpdateUserDTO & {
+  password?: string;
+};
+
+type TProfileFieldScopeOptions = {
+  clientId?: string;
+  organizationId?: string | null;
+};
+
+type SettingsCacheItem = Prisma.SettingsGetPayload<{
+  select: {
+    name: true;
+    public: true;
+    value: true;
+  };
+}>;
+
+const SETTINGS_CACHE_KEY = 'list';
+
+function jsonValueToOptionalString(value: Prisma.JsonValue | null | undefined): string | undefined {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+
+  return undefined;
+}
 
 @Injectable()
 export class SettingsService {
-  private cache: Prisma.SettingsGetPayload<{ select: Prisma.SettingsSelect }>[] | null = null;
-  constructor(private readonly userRepo: UserRepository) {}
+  private readonly settingsCache = new RedisAdapter('SettingsCache');
 
-  get i18nService() {
-    return app.get(I18nService<Record<string, any>>, { strict: false });
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly i18nService: I18nService<Record<string, string>>,
+  ) {}
+
+  private async getEmailOwners(excludedUserId?: string) {
+    const externalAccounts = await prisma.externalAccount.findMany({
+      where: {
+        type: {
+          in: [enums.EProviderTypes.EMAIL, enums.EProviderTypes.EMAIL_CUSTOM],
+        },
+        ...(excludedUserId
+          ? {
+              user_id: {
+                not: excludedUserId,
+              },
+            }
+          : {}),
+      },
+      select: {
+        user_id: true,
+        sub: true,
+      },
+    });
+
+    return externalAccounts
+      .map((item) => ({
+        user_id: item.user_id,
+        email: item.sub,
+      }))
+      .filter((item): item is { user_id: string; email: string } => Boolean(item.email));
+  }
+
+  public async isEmailTaken(email: string, userId?: string | number): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+    const owners = await this.getEmailOwners(userId ? String(userId) : undefined);
+    return owners.some((item) => item.email === email);
+  }
+
+  private async findDuplicateEmailsAcrossUsers(): Promise<string[]> {
+    const owners = await this.getEmailOwners();
+    const usersByEmail = new Map<string, Set<string>>();
+
+    for (const owner of owners) {
+      if (!usersByEmail.has(owner.email)) {
+        usersByEmail.set(owner.email, new Set());
+      }
+
+      usersByEmail.get(owner.email)?.add(owner.user_id);
+    }
+
+    return [...usersByEmail.entries()]
+      .filter(([, userIds]) => userIds.size > 1)
+      .map(([email]) => email);
+  }
+
+  private normalizeTwoFactorAuthenticationSettings(
+    value?: dto.TwoFactorAuthenticationDto | null,
+  ): dto.TwoFactorAuthenticationDto {
+    const controlledMethods = Array.isArray(value?.controlled_methods)
+      ? value.controlled_methods.filter((method): method is dto.AuthMethodTypes =>
+          Object.values(dto.AuthMethodTypes).includes(method as dto.AuthMethodTypes),
+        )
+      : [];
+
+    const availableProviderIds = Array.isArray(value?.available_provider_ids)
+      ? value.available_provider_ids
+          .map((id) => (typeof id === 'string' ? id.trim() : ''))
+          .filter(Boolean)
+      : [];
+
+    return {
+      controlled_methods: controlledMethods,
+      available_provider_ids: Array.from(new Set(availableProviderIds)),
+    };
+  }
+
+  private async validateTwoFactorAuthenticationSettings(
+    value: dto.TwoFactorAuthenticationDto,
+  ): Promise<void> {
+    if (!value.available_provider_ids.length) {
+      return;
+    }
+
+    const providers = await prisma.provider.findMany({
+      where: {
+        id: {
+          in: value.available_provider_ids,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const existingProviderIds = new Set(providers.map((provider) => provider.id));
+    const missingProviderIds = value.available_provider_ids.filter(
+      (providerId) => !existingProviderIds.has(providerId),
+    );
+
+    if (missingProviderIds.length) {
+      throw new BadRequestException(
+        `Two-factor authentication providers were not found: ${missingProviderIds.join(', ')}`,
+      );
+    }
+  }
+
+  private claimPrivacyToPublicLevel(mode: enums.EClaimPrivacy) {
+    switch (mode) {
+      case enums.EClaimPrivacy.public:
+        return 2;
+      case enums.EClaimPrivacy.request:
+        return 1;
+      case enums.EClaimPrivacy.private:
+      default:
+        return 0;
+    }
+  }
+
+  private publicLevelToClaimPrivacy(level?: number | null) {
+    if ((level ?? 0) >= 2) {
+      return enums.EClaimPrivacy.public;
+    }
+
+    if ((level ?? 0) >= 1) {
+      return enums.EClaimPrivacy.request;
+    }
+
+    return enums.EClaimPrivacy.private;
+  }
+
+  private normalizeLegacyClaimKeys(value: string | undefined, allowedKeys: Set<string>) {
+    return Array.from(
+      new Set(
+        `${value || ''}`
+          .trim()
+          .split(/\s+/)
+          .filter((key) => Boolean(key) && allowedKeys.has(key)),
+      ),
+    );
+  }
+
+  private async getProfileFieldDefaultPublicEntries(options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    return prisma.profileField.findMany({
+      where: {
+        ...this.getProfileFieldScopeWhere(organizationId),
+        key: {
+          not: dto.UserProfileFields.password,
+        },
+      },
+      select: {
+        id: true,
+        key: true,
+        default_public: true,
+      },
+    });
+  }
+
+  private async getProfileFieldScopeKeys(options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const profileFields = await prisma.profileField.findMany({
+      where: {
+        ...this.getProfileFieldScopeWhere(organizationId),
+        key: {
+          not: dto.UserProfileFields.password,
+        },
+      },
+      select: {
+        key: true,
+      },
+    });
+
+    return new Set(profileFields.map((field) => field.key));
+  }
+
+  private buildLegacyDefaultPublicClaims(
+    profileFields: Array<{ key: string; default_public: number }>,
+  ) {
+    const sortedFields = [...profileFields].sort((left, right) =>
+      left.key.localeCompare(right.key),
+    );
+
+    return {
+      default_public_profile_claims_oauth: sortedFields
+        .filter((field) => field.default_public >= 1)
+        .map((field) => field.key)
+        .join(' '),
+      default_public_profile_claims_gravatar: sortedFields
+        .filter((field) => field.default_public >= 2)
+        .map((field) => field.key)
+        .join(' '),
+    };
+  }
+
+  private async getLegacyDefaultPublicClaims() {
+    return this.buildLegacyDefaultPublicClaims(await this.getProfileFieldDefaultPublicEntries());
+  }
+
+  private async syncDefaultPublicClaimsFromLegacySettings(
+    params: Pick<
+      dto.EditSettingsDto,
+      | dto.ESettingsNames.default_public_profile_claims_oauth
+      | dto.ESettingsNames.default_public_profile_claims_gravatar
+    >,
+  ) {
+    if (
+      params.default_public_profile_claims_oauth === undefined &&
+      params.default_public_profile_claims_gravatar === undefined
+    ) {
+      return;
+    }
+
+    const profileFields = await this.getProfileFieldDefaultPublicEntries();
+    const allowedKeys = new Set(profileFields.map((field) => field.key));
+    const currentClaims = this.buildLegacyDefaultPublicClaims(profileFields);
+
+    const nextOauth = new Set(
+      this.normalizeLegacyClaimKeys(
+        params.default_public_profile_claims_oauth ??
+          currentClaims.default_public_profile_claims_oauth,
+        allowedKeys,
+      ),
+    );
+    const nextGravatar = new Set(
+      this.normalizeLegacyClaimKeys(
+        params.default_public_profile_claims_gravatar ??
+          currentClaims.default_public_profile_claims_gravatar,
+        allowedKeys,
+      ),
+    );
+
+    for (const key of nextGravatar) {
+      nextOauth.add(key);
+    }
+
+    const updates = profileFields
+      .map((field) => {
+        const defaultPublic = nextGravatar.has(field.key) ? 2 : nextOauth.has(field.key) ? 1 : 0;
+        if (field.default_public === defaultPublic) {
+          return null;
+        }
+
+        return {
+          id: field.id,
+          default_public: defaultPublic,
+        };
+      })
+      .filter(Boolean) as Array<{ id: string; default_public: number }>;
+
+    if (!updates.length) {
+      return;
+    }
+
+    await prisma.$transaction(
+      updates.map((field) =>
+        prisma.profileField.update({
+          where: { id: field.id },
+          data: {
+            default_public: field.default_public,
+          },
+        }),
+      ),
+    );
+  }
+
+  private async resolveProfileFieldScopeOrganizationId(options?: TProfileFieldScopeOptions) {
+    if (!options) {
+      return undefined;
+    }
+
+    if (options.organizationId === null) {
+      return null;
+    }
+
+    const scopeClientId = options.organizationId ?? options.clientId;
+    if (!scopeClientId) {
+      return undefined;
+    }
+
+    return getOrganizationId(scopeClientId);
+  }
+
+  private async resolveRuleValidationScopeOrganizationId(options?: TProfileFieldScopeOptions) {
+    if (!options) {
+      return undefined;
+    }
+
+    if (options.organizationId === null) {
+      return null;
+    }
+
+    const scopeClientId = options.organizationId ?? options.clientId;
+    if (!scopeClientId) {
+      return undefined;
+    }
+
+    const organizationId = await getOrganizationId(scopeClientId);
+    return organizationId === CLIENT_ID ? null : organizationId;
+  }
+
+  private getProfileFieldScopeWhere(
+    organizationId: string | null | undefined,
+  ): Prisma.ProfileFieldWhereInput {
+    if (organizationId === undefined) {
+      return {};
+    }
+
+    if (organizationId === null || organizationId === CLIENT_ID) {
+      return {
+        OR: [{ organization_id: null }, { organization_id: CLIENT_ID }],
+      };
+    }
+
+    return {
+      OR: [
+        { organization_id: null },
+        { organization_id: CLIENT_ID },
+        { organization_id: organizationId },
+      ],
+    };
+  }
+
+  private getOwnedProfileFieldScopeWhere(
+    organizationId: string | null | undefined,
+  ): Prisma.ProfileFieldWhereInput {
+    if (organizationId === undefined) {
+      return {};
+    }
+
+    return { organization_id: organizationId ?? CLIENT_ID };
+  }
+
+  private getRuleValidationScopeWhere(
+    organizationId: string | null | undefined,
+  ): Prisma.RuleValidationWhereInput {
+    if (organizationId === undefined) {
+      return {};
+    }
+
+    if (organizationId === null || organizationId === CLIENT_ID) {
+      return {
+        OR: [{ organization_id: null }, { organization_id: CLIENT_ID }],
+      };
+    }
+
+    return {
+      OR: [
+        { organization_id: null },
+        { organization_id: CLIENT_ID },
+        { organization_id: organizationId },
+      ],
+    };
+  }
+
+  private async getScopedRuleValidation(
+    id: string,
+    options?: TProfileFieldScopeOptions,
+    select?: Prisma.RuleValidationSelect,
+  ) {
+    const organizationId = await this.resolveRuleValidationScopeOrganizationId(options);
+
+    return prisma.ruleValidation.findFirst({
+      where: {
+        id,
+        ...this.getRuleValidationScopeWhere(organizationId),
+      },
+      ...(select ? { select } : {}),
+    });
+  }
+
+  private async ensureRuleValidationExists(
+    id: string,
+    options?: TProfileFieldScopeOptions,
+    select?: Prisma.RuleValidationSelect,
+  ) {
+    const ruleValidation = await this.getScopedRuleValidation(id, options, select);
+
+    if (!ruleValidation) {
+      throw new BadRequestException(enums.Ei18nCodes.T3E0016);
+    }
+
+    return ruleValidation;
+  }
+
+  private async ensureRuleValidationTitleAvailable(
+    title: dto.TLocalizedTextDto | undefined,
+    options?: TProfileFieldScopeOptions,
+    excludedId?: string,
+  ) {
+    if (!title) {
+      return title;
+    }
+
+    const organizationId = await this.resolveRuleValidationScopeOrganizationId(options);
+    const existingRule = await prisma.ruleValidation.findFirst({
+      where: {
+        title: {
+          equals: title as Prisma.InputJsonValue,
+        },
+        ...this.getRuleValidationScopeWhere(organizationId),
+        ...(excludedId
+          ? {
+              id: {
+                not: excludedId,
+              },
+            }
+          : {}),
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingRule) {
+      throw new BadRequestException('Validation rule title already exists in this scope');
+    }
+
+    return title;
+  }
+
+  private async resolveProfileFieldOwnerOrganizationId(
+    params: Pick<dto.CreateProfileFieldDto, 'client_id' | 'organization_id'>,
+  ) {
+    const scopeClientId = params.organization_id ?? params.client_id;
+    if (!scopeClientId) {
+      return CLIENT_ID;
+    }
+
+    return getOrganizationId(scopeClientId);
+  }
+
+  private async notifyDynamicScopesChanged(organizationId?: string | null) {
+    try {
+      await fetch(`${DOMAIN}/oidc/update-dynamic-scopes`, {
+        method: 'POST',
+        headers: await getInternalRequestHeaders(),
+        body: JSON.stringify({ organization_id: organizationId ?? CLIENT_ID }),
+      });
+    } catch (error) {
+      console.warn('Failed to request dynamic OIDC scope refresh', error);
+    }
+  }
+
+  private mapProfileFieldToRule(
+    field: ProfileFieldRuleRecord,
+    title?: string | dto.TLocalizedTextDto,
+  ): LegacyRuleModel {
+    return {
+      id: field.id,
+      field_name: field.key,
+      organization_id: field.organization_id,
+      title: title || (field.title as string | dto.TLocalizedTextDto),
+      default: jsonValueToOptionalString(field.default_value),
+      required: field.required,
+      unique: field.unique,
+      validate_on_authorization: field.validate_on_authorization,
+      active: field.active,
+      editable: field.editable,
+      validations: field.validations.map((validation) => validation.rule_validation),
+    };
   }
 
   /**
    * Returns service settings
    */
-  public async getList() {
-    return prisma.settings.findMany();
+  public async getList(): Promise<SettingsCacheItem[]> {
+    return prisma.settings.findMany({
+      select: {
+        name: true,
+        public: true,
+        value: true,
+      },
+    });
+  }
+
+  private async getCachedSettingsList(forceRefresh = false): Promise<SettingsCacheItem[]> {
+    if (!forceRefresh) {
+      try {
+        const cached = await this.settingsCache.get<SettingsCacheItem[]>(SETTINGS_CACHE_KEY);
+        if (Array.isArray(cached)) {
+          return cached;
+        }
+      } catch (error) {
+        console.warn('Failed to read settings cache from Redis:', error);
+      }
+    }
+
+    const freshSettings = await this.getList();
+
+    try {
+      await this.settingsCache.upsert(SETTINGS_CACHE_KEY, freshSettings);
+    } catch (error) {
+      console.warn('Failed to write settings cache to Redis:', error);
+    }
+
+    return freshSettings;
+  }
+
+  private async resetSettingsCache(): Promise<void> {
+    try {
+      await this.settingsCache.destroy(SETTINGS_CACHE_KEY);
+    } catch (error) {
+      console.warn('Failed to invalidate settings cache in Redis:', error);
+    }
   }
 
   /**
    * Checks whether the user can log in
    */
-  async canAuthorize(user: number | UserModel, client?: Client) {
+  async isAuthorizeOnlyAdminsEnabled(): Promise<boolean> {
+    return this.getSettingsByName<boolean>(dto.ESettingsNames.authorize_only_admins);
+  }
+
+  async canAuthorize(user: string | UserModel, client?: Client) {
     // If the user is an administrator, then skip
     //TODO: fix the hardcoded admin check
-    const userId = typeof user === 'number' ? user : user.id;
-    if (userId === 1) {
+    const userId = typeof user === 'object' ? user.id : String(user);
+    if (userId === '1') {
       return;
     }
 
-    const userObj = typeof user === 'number' ? await this.userRepo.findById(user) : user;
+    const userObj = typeof user === 'object' ? user : await this.userRepo.findById(userId);
 
     // Check for user existence
     if (!userObj) {
@@ -58,48 +623,78 @@ export class SettingsService {
       throw new BadRequestException(enums.Ei18nCodes.T3E0024);
     }
 
-    // Check for a ban on authorization for users
-    const authorize_only_admins = await this.getSettingsByName<boolean>(
-      dto.ESettingsNames.authorize_only_admins,
-    );
+    const [authorize_only_admins, authorizationContext] = await Promise.all([
+      this.isAuthorizeOnlyAdminsEnabled(),
+      getClientAuthorizationContext(userId, client),
+    ]);
+    const role = authorizationContext.mainRole;
+    const clientRole = client ? authorizationContext.clientRole : null;
 
-    const role = await prisma.role.findFirst({ where: { user_id: userId, client_id: CLIENT_ID } });
+    if (authorizationContext.isMainRoleBlocked) {
+      throw new BadRequestException(enums.Ei18nCodes.T3E0024);
+    }
 
     // If the setting is enabled, only main application admins can access
     if (
       authorize_only_admins &&
-      role.role !== enums.UserRoles.EDITOR &&
-      role.role !== enums.UserRoles.OWNER
+      (!role || (role.role !== enums.UserRoles.EDITOR && role.role !== enums.UserRoles.OWNER))
     )
       throw new BadRequestException(enums.Ei18nCodes.T3E0026);
 
-    if (client && client.authorize_only_admins) {
-      const role = await prisma.role.findFirst({
-        where: { user_id: userId, client_id: client.client_id },
-      });
+    if (client && authorizationContext.isClientAccessBlocked) {
+      throw new BadRequestException(enums.Ei18nCodes.T3E0024);
+    }
 
-      if (!role || (role.role !== enums.UserRoles.EDITOR && role.role !== enums.UserRoles.OWNER)) {
+    if (client && client.authorize_only_admins) {
+      if (
+        !clientRole ||
+        (clientRole.role !== enums.UserRoles.EDITOR && clientRole.role !== enums.UserRoles.OWNER)
+      ) {
         throw new BadRequestException(enums.Ei18nCodes.T3E0026);
       }
     }
 
-    if (client && client.authorize_only_employees) {
-      const isEmployee = await prisma.role.findFirst({
-        where: {
-          user_id: userId,
-          client_id: client.client_id,
-        },
-      });
+    if (client) {
+      await prepareOrganizationGuestsMembershipForClientAuthorization(
+        prisma,
+        userId,
+        client.client_id,
+      );
 
-      const invite = await prisma.clientInvitation.findFirst({
-        where: {
-          client_id: client.client_id,
-          email: userObj.email,
-        },
-      });
+      if (client.authorize_only_employees) {
+        if (clientRole) {
+          return;
+        }
 
-      if (!isEmployee && !invite) throw new ForbiddenException(enums.Ei18nCodes.T3E0026);
+        if (!client.parent_id) {
+          throw new ForbiddenException(enums.Ei18nCodes.T3E0026);
+        }
+
+        const externalEmails = getLegacyUserExternalAccountEmails(userObj);
+        const [hasApplicationAccess, invitation] = await Promise.all([
+          hasApplicationAccessForUser(prisma, client.parent_id, client.client_id, userId),
+          externalEmails.length
+            ? prisma.clientInvitation.findFirst({
+                where: {
+                  client_id: client.client_id,
+                  email: {
+                    in: externalEmails,
+                  },
+                },
+                select: {
+                  id: true,
+                },
+              })
+            : Promise.resolve(null),
+        ]);
+
+        if (!hasApplicationAccess && !invitation) {
+          throw new ForbiddenException(enums.Ei18nCodes.T3E0026);
+        }
+      }
     }
+
+    return;
   }
 
   public getTypeDataOfField(field_name: string): string {
@@ -129,7 +724,11 @@ export class SettingsService {
   /**
    * Gets a user by ID
    */
-  public async getUserByIdentifier(identifier: string, checkIds = false) {
+  public async getUserByIdentifier(
+    identifier: string,
+    checkIds = false,
+    validateOnAuthorization?: boolean,
+  ) {
     const identifierType = getIdentifierType(identifier);
 
     if (checkIds) {
@@ -148,12 +747,24 @@ export class SettingsService {
       throw new ForbiddenException(enums.Ei18nCodes.T3E0003);
     }
 
-    if (identifierType === enums.IdentifierType.Email && !user.email_verified) {
-      throw new ForbiddenException(enums.Ei18nCodes.T3E0070);
-    }
+    if (
+      validateOnAuthorization &&
+      (identifierType === enums.IdentifierType.Email ||
+        identifierType === enums.IdentifierType.PhoneNumber)
+    ) {
+      const contactLoginFieldName = identifierType;
+      const [field] = await this.getProfileFields(contactLoginFieldName);
 
-    if (identifierType === enums.IdentifierType.PhoneNumber && !user.phone_number_verified) {
-      throw new ForbiddenException(enums.Ei18nCodes.T3E0069);
+      if (field?.validate_on_authorization) {
+        await this.prepareGeneralProfileFields(
+          {
+            [contactLoginFieldName]: String(prepareIdentifier(identifier, identifierType)),
+          },
+          user.id,
+          enums.UserRoles.OWNER,
+          false,
+        );
+      }
     }
 
     return { user, identifierType };
@@ -171,23 +782,18 @@ export class SettingsService {
       });
     });
 
-    // Reset the cache
-    this.cache = null;
-
-    return Promise.all(updatePromises);
+    const result = await Promise.all(updatePromises);
+    await this.resetSettingsCache();
+    return result;
   }
 
   /**
    * Returns service settings
    */
-  async getSettings(role?: enums.UserRoles) {
-    if (!this.cache) {
-      // Get settings from the repository if there is no cache
-      this.cache = await this.getList();
-    }
-
-    return this.convertToOldVersion(
-      ...this.cache.filter((s) => {
+  async getSettings(role?: enums.UserRoles): Promise<Record<string, unknown>> {
+    const cachedSettings = await this.getCachedSettingsList();
+    const settings = this.convertToOldVersion(
+      ...cachedSettings.filter((s) => {
         if (role === enums.UserRoles.OWNER || role === enums.UserRoles.EDITOR) {
           return true;
         }
@@ -195,78 +801,117 @@ export class SettingsService {
         return s.public;
       }),
     );
+
+    return {
+      ...settings,
+      ...(await this.getLegacyDefaultPublicClaims()),
+    };
   }
 
   /**
    * Returns a service setting
    */
-  async getSettingsByName<T = string>(name: string) {
-    if (!this.cache) {
-      // Get settings from the repository if there is no cache
-      this.cache = await this.getList();
+  async getSettingsByName<T = string>(name: string, forceRefresh = false) {
+    if (
+      name === dto.ESettingsNames.default_public_profile_claims_oauth ||
+      name === dto.ESettingsNames.default_public_profile_claims_gravatar
+    ) {
+      const claims = await this.getLegacyDefaultPublicClaims();
+      return claims[name] as T;
     }
 
-    return this.cache.find((s) => s.name === name).value as T;
+    const cachedSettings = await this.getCachedSettingsList(forceRefresh);
+    const value = cachedSettings.find((s) => s.name === name)?.value;
+
+    if (name === dto.ESettingsNames.two_factor_authentication) {
+      return this.normalizeTwoFactorAuthenticationSettings(
+        value as unknown as dto.TwoFactorAuthenticationDto | null | undefined,
+      ) as T;
+    }
+
+    if (name === dto.ESettingsNames.i18n) {
+      const defaultLanguage =
+        value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        'default_language' in value &&
+        typeof value.default_language === 'string'
+          ? value.default_language
+          : await getDefaultLocale();
+
+      return {
+        ...(value && typeof value === 'object' && !Array.isArray(value) ? value : {}),
+        default_language: defaultLanguage,
+      } as T;
+    }
+
+    return value as T;
   }
 
-  private convertToOldVersion(...values: SettingsModel[]): {
-    [key: string]: string | number | boolean | object;
-  } {
+  private convertToOldVersion(
+    ...values: Pick<SettingsModel, 'name' | 'value'>[]
+  ): Record<string, unknown> {
     return values.reduce((acc, item) => {
       acc[item.name] = item.value;
       return acc;
-    }, {});
+    }, {} as Record<string, unknown>);
   }
 
   /**
    * Change Trusted settings
    */
   async changeSettings(params: dto.EditSettingsDto) {
-    // Check for values ​​for claims
-    await this.checkScopes(params.default_public_profile_claims_gravatar);
-    await this.checkScopes(params.default_public_profile_claims_oauth);
+    if (params.two_factor_authentication) {
+      params.two_factor_authentication = this.normalizeTwoFactorAuthenticationSettings(
+        params.two_factor_authentication,
+      );
+      await this.validateTwoFactorAuthenticationSettings(params.two_factor_authentication);
+    }
 
     await this.checkLoginFields(params.allowed_login_fields);
 
     if (params.data_processing_agreement) {
-      await prisma.user.updateMany({ data: { data_processing_agreement: false } });
+      const agreementField = await prisma.profileField.findUnique({
+        where: { key: dto.UserProfileFields.data_processing_agreement },
+        select: { id: true },
+      });
+
+      if (agreementField) {
+        await prisma.userProfileValue.updateMany({
+          where: { profile_field_id: agreementField.id },
+          data: { value: false },
+        });
+      }
     }
 
+    await this.syncDefaultPublicClaimsFromLegacySettings(params);
+
     // Convert settings
-    const settings = Object.entries(params).map(([name, value]) => ({
-      name: name as dto.ESettingsNames,
-      value,
-    }));
+    const settings = Object.entries(params)
+      .filter(
+        ([name]) =>
+          name !== dto.ESettingsNames.default_public_profile_claims_oauth &&
+          name !== dto.ESettingsNames.default_public_profile_claims_gravatar,
+      )
+      .map(([name, value]) => ({
+        name: name as dto.ESettingsNames,
+        value,
+      }));
 
     // Update settings
-    await this.updateSettings(...settings);
-  }
+    if (settings.length) {
+      await this.updateSettings(...settings);
+      return;
+    }
 
-  //#region email_templates
-  async getEmailTemplates() {
-    const i18n = await this.getSettingsByName<{ default_language: enums.ELocales }>(
-      dto.ESettingsNames.i18n,
-    );
-    return prisma.emailTemplates.findMany({ where: { locale: i18n.default_language } });
+    await this.resetSettingsCache();
   }
-
-  async getEmailTemplate(action: NotificationAction, locale: enums.ELocales) {
-    return prisma.emailTemplates.findFirst({
-      where: { action, locale },
-    });
-  }
-
-  async updateEmailTemplate(action: string, params: dto.UpdateEmailTemplateDto) {
-    return prisma.emailTemplates.update({
-      where: { action_locale: { action, locale: params.locale } },
-      data: params,
-    });
-  }
-  //#endregion
 
   async deleteLoginField(field: string) {
-    const settings = await this.getSettings();
-    const loginFields = `${settings[dto.ESettingsNames.allowed_login_fields]}`.split(' ');
+    const loginIdsStr = await this.getSettingsByName<string>(
+      dto.ESettingsNames.allowed_login_fields,
+    );
+    const loginFields = `${loginIdsStr}`.split(' ');
 
     if (!loginFields.includes(field)) {
       return;
@@ -275,13 +920,9 @@ export class SettingsService {
     loginFields.splice(loginFields.indexOf(field), 1);
 
     // Check for remaining filled-in identifiers for the administrator
-    const admin = await prisma.user.findFirst({
-      where: {
-        id: 1,
-      },
-    });
+    const admin = await this.userRepo.findById('1');
 
-    const check = loginFields.find((field) => admin[field]);
+    const check = loginFields.find((field) => admin?.[field]);
     if (!check) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0040);
     }
@@ -292,8 +933,10 @@ export class SettingsService {
   }
 
   async addLoginField(field: string) {
-    const settings = await this.getSettings();
-    const loginFields = `${settings[dto.ESettingsNames.allowed_login_fields]}`.split(' ');
+    const loginIdsStr = await this.getSettingsByName<string>(
+      dto.ESettingsNames.allowed_login_fields,
+    );
+    const loginFields = `${loginIdsStr}`.split(' ');
 
     if (loginFields.includes(field)) {
       return;
@@ -307,65 +950,30 @@ export class SettingsService {
   }
 
   /**
-   * Change claims settings
-   */
-  async changeClaims(field_name: string, mode: enums.EClaimPrivacy) {
-    const settings = await this.getSettings();
-    const defaultOAuth = `${settings[dto.ESettingsNames.default_public_profile_claims_oauth]}`;
-    const defaultGravatar = `${
-      settings[dto.ESettingsNames.default_public_profile_claims_gravatar]
-    }`;
-    let listOauth = defaultOAuth.trim().split(' ');
-    let listGravatar = defaultGravatar.trim().split(' ');
-
-    switch (mode) {
-      case enums.EClaimPrivacy.private:
-        listGravatar = listGravatar.filter((claim) => claim !== field_name);
-        listOauth = listOauth.filter((claim) => claim !== field_name);
-        break;
-      case enums.EClaimPrivacy.request: {
-        listGravatar = listGravatar.filter((claim) => claim !== field_name);
-        const ok = listOauth.find((claim) => claim === field_name);
-        if (!ok) {
-          listOauth.push(field_name);
-        }
-        break;
-      }
-      case enums.EClaimPrivacy.public: {
-        const okGravatar = listGravatar.find((claim) => claim === field_name);
-        if (!okGravatar) {
-          listGravatar.push(field_name);
-        }
-        const okOauth = listOauth.find((claim) => claim === field_name);
-        if (!okOauth) {
-          listOauth.push(field_name);
-        }
-        break;
-      }
-      default:
-        break;
-    }
-
-    await this.changeSettings({
-      default_public_profile_claims_oauth: listOauth.join(' '),
-      default_public_profile_claims_gravatar: listGravatar.join(' '),
-    });
-  }
-
-  /**
    * Generate a list of profile fields. Add rules and settings.
    */
-  private async prepareProfileFields(...values: dto.ProfileField[]) {
-    const rules = await this.getAllRules(true);
-    const settings = await this.getSettings();
-
-    const listOauth = `${settings[dto.ESettingsNames.default_public_profile_claims_oauth]}`.split(
-      ' ',
-    );
-    const listGravatar = `${
-      settings[dto.ESettingsNames.default_public_profile_claims_gravatar]
-    }`.split(' ');
-    const listLoginFields = `${settings[dto.ESettingsNames.allowed_login_fields]}`.split(' ');
+  private async prepareProfileFields(
+    values: dto.ProfileField[],
+    options?: TProfileFieldScopeOptions,
+  ) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const [rules, loginIdsStr, profileFieldDefaults] = await Promise.all([
+      this.getAllRules(true, options),
+      this.getSettingsByName<string>(dto.ESettingsNames.allowed_login_fields),
+      prisma.profileField.findMany({
+        where: this.getProfileFieldScopeWhere(organizationId),
+        select: {
+          key: true,
+          organization_id: true,
+          default_public: true,
+        },
+      }),
+    ]);
+    const defaultPublicByKey = profileFieldDefaults.reduce<Record<string, number>>((acc, field) => {
+      acc[field.key] = field.default_public;
+      return acc;
+    }, {});
+    const listLoginFields = `${loginIdsStr}`.split(' ');
 
     return values.map((field) => {
       const rule = rules.find((r) => r.field_name === field.field);
@@ -374,20 +982,19 @@ export class SettingsService {
         throw new InternalServerErrorException(enums.Ei18nCodes.T3E0016, { cause: field.field });
       }
 
-      let claim = enums.EClaimPrivacy.private;
-      if (listGravatar.includes(field.field)) {
-        claim = enums.EClaimPrivacy.public;
-      } else if (listOauth.includes(field.field)) {
-        claim = enums.EClaimPrivacy.request;
-      }
+      const claim = this.publicLevelToClaimPrivacy(defaultPublicByKey[field.field]);
 
       return {
         type: field.type,
         field: field.field,
+        id: field.type === dto.ProfileFieldTypes.custom ? field.id : undefined,
         title: field.title,
+        organization_id:
+          field.type === dto.ProfileFieldTypes.custom ? field.organization_id : undefined,
         default: rule.default || undefined,
         required: rule.required,
         unique: rule.unique,
+        validate_on_authorization: rule.validate_on_authorization,
         active: rule.active,
         editable: rule.editable,
         mapping_vcard:
@@ -402,24 +1009,26 @@ export class SettingsService {
   /**
    * Getting a full list of profile fields
    */
-  async getProfileFields(name?: string) {
+  async getProfileFields(name?: string, options?: TProfileFieldScopeOptions) {
     const result: dto.ProfileField[] = [];
 
     const generalFields = await this.getGeneralFields();
     result.push(...generalFields);
 
-    const customFields = await this.getCustomFields();
+    const customFields = await this.getCustomFields(options);
     const customFieldsDto: dto.CustomProfileField[] = customFields.map((field) => ({
       id: field.id,
       type: dto.ProfileFieldTypes.custom,
       field: field.field,
-      title: field.title,
+      organization_id: field.organization_id,
+      title: field.title as string | dto.TLocalizedTextDto,
       mapping_vcard: field.mapping_vcard,
     }));
     result.push(...customFieldsDto);
 
     return this.prepareProfileFields(
-      ...(name ? [result.find((field) => field.field === name)].filter(Boolean) : result),
+      name ? [result.find((field) => field.field === name)].filter(Boolean) : result,
+      options,
     );
   }
 
@@ -432,17 +1041,47 @@ export class SettingsService {
     );
     const list = dto.listProfileFields.map((field) => ({
       ...field,
-      title: this.i18nService.t(field.title, { lang: locale.default_language }),
+      title: this.i18nService.t(field.title as string, {
+        lang: locale?.default_language ?? 'ru',
+      }),
     }));
 
     return list;
   }
 
   //#region Profile Fields
+  private async backfillProfileFieldDefault(
+    transaction: Prisma.TransactionClient,
+    profileField: { id: string; default_public: number },
+    defaultValue: string,
+    organizationId: string | null | undefined,
+  ) {
+    const users = await transaction.user.findMany({
+      where:
+        organizationId && organizationId !== CLIENT_ID
+          ? {
+              OR: [{ org_id: organizationId }, { roles: { some: { client_id: organizationId } } }],
+            }
+          : {},
+      select: { id: true },
+    });
+
+    await transaction.userProfileValue.createMany({
+      data: users.map((user) => ({
+        user_id: user.id,
+        profile_field_id: profileField.id,
+        value: defaultValue,
+        public: profileField.default_public,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
   /**
    * Adding an additional profile field
    */
   async addProfileField(params: dto.CreateProfileFieldDto) {
+    const organizationId = await this.resolveProfileFieldOwnerOrganizationId(params);
     await prisma.$transaction(async (prisma) => {
       // Create an additional field
       // Check for a match with the main fields
@@ -454,17 +1093,11 @@ export class SettingsService {
         throw new BadRequestException(enums.Ei18nCodes.T3E0041);
       }
 
-      // Check for the presence of a field with the same name or title
-      const field = await prisma.customField.findFirst({
-        where: {
-          OR: [{ field: params.field }, { title: params.title }],
-        },
-      });
-      if (field) {
-        throw new BadRequestException(enums.Ei18nCodes.T3E0042);
+      if (params.required && !params.editable) {
+        throw new BadRequestException(enums.Ei18nCodes.T3E0043);
       }
 
-      if (params.required && !params.editable) {
+      if (params.validate_on_authorization && !params.editable) {
         throw new BadRequestException(enums.Ei18nCodes.T3E0043);
       }
 
@@ -477,57 +1110,61 @@ export class SettingsService {
         throw new BadRequestException(enums.Ei18nCodes.T3E0045);
       }
 
-      // Add a field
-      await prisma.customField.create({
-        data: {
-          field: params.field,
-          title: params.title,
-          mapping_vcard: params.mapping_vcard,
+      const existingField = await prisma.profileField.findFirst({
+        where: {
+          ...this.getOwnedProfileFieldScopeWhere(organizationId),
+          OR: [{ key: params.field }, { title: { equals: params.title as Prisma.InputJsonValue } }],
         },
       });
+      if (existingField) {
+        throw new BadRequestException(enums.Ei18nCodes.T3E0042);
+      }
 
-      // Additional check: if the rule already exists in the system, then delete it
-      await prisma.rule.deleteMany({
-        where: { field_name: params.field, target: dto.TargetType.user },
-      });
-
-      // Add a rule
-      await prisma.rule.create({
+      const profileField = await prisma.profileField.create({
         data: {
-          field_name: params.field,
-          target: dto.TargetType.user,
+          key: params.field,
+          organization_id: organizationId,
+          title: params.title as Prisma.InputJsonValue,
+          value_type: 'STRING',
+          mapping_vcard: params.mapping_vcard,
           editable: params.editable,
           active: params.active,
           required: params.required,
           unique: params.unique,
-          default: params.default,
+          validate_on_authorization: params.validate_on_authorization,
+          default_value: params.default ?? null,
+          default_public: this.claimPrivacyToPublicLevel(params.claim),
         },
       });
 
-      // Change claims
-      await this.changeClaims(params.field, params.claim);
+      clearLegacyProfileFieldCache([params.field]);
 
       // Add a field value to users if default is specified
       if (params.default) {
-        const defaultValue = JSON.stringify(params.default);
-        await prisma.$executeRawUnsafe(`
-          UPDATE "User"
-          SET custom_fields = jsonb_set(
-           COALESCE(custom_fields, '{}'::jsonb),
-           '{${params.field}}',
-           '${defaultValue}'::jsonb
-          );
-        `);
+        await this.backfillProfileFieldDefault(
+          prisma,
+          profileField,
+          params.default,
+          organizationId,
+        );
       }
     });
+
+    await this.notifyDynamicScopesChanged(organizationId);
   }
 
   /**
    * Updating profile field settings
    */
   public async updateProfileField(field_name: string, params: dto.UpdateProfileFieldDto) {
+    const scopeOrganizationId = await this.resolveProfileFieldScopeOrganizationId({
+      clientId: params.client_id,
+      organizationId: params.organization_id,
+    });
     // Check for the presence of the field through a rule, since for each Fields must have a rule
-    const rule = await this.getUserRuleByFieldName(field_name);
+    const rule = await this.getUserRuleByFieldName(field_name, {
+      organizationId: scopeOrganizationId,
+    });
     if (!rule) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0046);
     }
@@ -548,18 +1185,21 @@ export class SettingsService {
       throw new BadRequestException(enums.Ei18nCodes.T3E0048);
     }
 
-    if (
-      dto.listProfileFields.find(
-        (field) => field.field === params.field || field.title === params.title,
-      )
-    ) {
+    if (dto.listProfileFields.find((field) => field.field === params.field)) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0049);
     }
 
     if (
-      await prisma.customField.findFirst({
+      await prisma.profileField.findFirst({
         where: {
-          OR: [{ field: params.field }, { title: params.title }],
+          ...this.getOwnedProfileFieldScopeWhere(scopeOrganizationId),
+          OR: [
+            { key: params.field },
+            ...(params.title !== undefined
+              ? [{ title: { equals: params.title as Prisma.InputJsonValue } }]
+              : []),
+          ],
+          NOT: { key: field_name },
         },
       })
     ) {
@@ -580,24 +1220,24 @@ export class SettingsService {
     // Check if uniqueness can be enabled for a field
     if (params.unique === true) {
       if (field_name === dto.UserProfileFields.email) {
-        // Check for duplicate emails in externalAccount
-        const duplicates = await prisma.$queryRaw<{ email: string; occurrences: number }[]>`
-  SELECT sub AS email, COUNT(*) AS occurrences
-  FROM "ExternalAccount"
-  WHERE sub IS NOT NULL AND type = 'EMAIL'
-  GROUP BY sub
-  HAVING COUNT(*) > 1;
-`;
+        const duplicates = await this.findDuplicateEmailsAcrossUsers();
         if (duplicates.length > 0) {
           throw new BadRequestException(enums.Ei18nCodes.T3E0089, {
-            cause: duplicates.map((d) => d.email).join(', '),
+            cause: duplicates.join(', '),
           });
         }
-      } else if (!(await this.checkUniqueField(field_name)))
+      } else if (!(await this.checkUniqueField(field_name, rule.organization_id ?? null)))
         throw new BadRequestException(enums.Ei18nCodes.T3E0089);
     }
 
     if ((params.required ?? rule.required) && !(params.editable ?? rule.editable)) {
+      throw new BadRequestException(enums.Ei18nCodes.T3E0043);
+    }
+
+    if (
+      (params.validate_on_authorization ?? rule.validate_on_authorization) &&
+      !(params.editable ?? rule.editable)
+    ) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0043);
     }
 
@@ -650,144 +1290,87 @@ export class SettingsService {
     }
 
     await prisma.$transaction(async (prisma) => {
-      if (params.field || params.title || params.mapping_vcard) {
-        const customField = await prisma.customField.findFirst({
-          where: { field: field_name },
-        });
-        if (!customField) {
-          throw new BadRequestException(enums.Ei18nCodes.T3E0046);
-        }
+      const profileField = await prisma.profileField.update({
+        where: { id: rule.id },
+        data: {
+          key: params.field,
+          title: params.title as Prisma.InputJsonValue,
+          editable: params.editable,
+          required: params.required,
+          unique: params.unique,
+          validate_on_authorization: params.validate_on_authorization,
+          default_value: params.default,
+          active: params.active,
+          default_public:
+            params.claim === undefined ? undefined : this.claimPrivacyToPublicLevel(params.claim),
+        },
+      });
 
-        // Update a field
-        await prisma.customField.update({
-          where: { id: customField.id },
-          data: {
-            field: params.field,
-            title: params.title,
-            mapping_vcard: params.mapping_vcard,
-          },
-        });
-
-        if (params.field !== undefined) {
-          // Update a field name for users
-          const updateQuery = `
-            UPDATE "User"
-            SET custom_fields = jsonb_set(
-              custom_fields - '${customField.field}',
-              '{${params.field}}',
-              custom_fields->'${customField.field}'
-              )
-              WHERE custom_fields ? '${customField.field}';
-              `;
-
-          await prisma.$executeRawUnsafe(updateQuery);
-        }
-      }
-
-      if (
-        params.field !== undefined ||
-        params.editable !== undefined ||
-        params.required !== undefined ||
-        params.unique !== undefined ||
-        params.default !== undefined ||
-        params.active !== undefined
-      ) {
-        await prisma.rule.update({
-          where: { id: rule.id },
-          data: {
-            field_name: params.field,
-            editable: params.editable,
-            required: params.required,
-            unique: params.unique,
-            default: params.default,
-            active: params.active,
-          },
-        });
-      }
-
-      if (params.claim) {
-        await this.changeClaims(field_name, params.claim);
+      const effectiveDefault = params.default === undefined ? rule.default : params.default;
+      if (effectiveDefault) {
+        await this.backfillProfileFieldDefault(
+          prisma,
+          profileField,
+          effectiveDefault,
+          rule.organization_id,
+        );
       }
     });
+
+    clearLegacyProfileFieldCache(
+      [field_name, params.field].filter((key): key is string => Boolean(key)),
+    );
+    await this.notifyDynamicScopesChanged(rule.organization_id ?? null);
   }
 
   /**
    * Removing an additional profile field
    */
-  public async deleteProfileField(field_name: string) {
+  public async deleteProfileField(field_name: string, options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    let deletedOrganizationId: string | null | undefined;
     await prisma.$transaction(async (prisma) => {
-      const field = await prisma.customField.findFirst({
-        where: { field: field_name },
+      const field = await prisma.profileField.findFirst({
+        where: {
+          key: field_name,
+          ...this.getOwnedProfileFieldScopeWhere(organizationId),
+        },
       });
       if (!field) {
         return;
       }
+      deletedOrganizationId = field.organization_id;
 
-      // Remove from the claims list in settings
-      await this.changeClaims(field_name, enums.EClaimPrivacy.private);
-
-      // Remove the rule
-      await prisma.rule.deleteMany({
-        where: { field_name: field_name, target: dto.TargetType.user },
+      await prisma.profileField.delete({
+        where: { id: field.id },
       });
-
-      // Remove the field
-      await prisma.customField.deleteMany({
-        where: { field: field_name },
-      });
-
-      // Remove the field for users
-      await prisma.$executeRawUnsafe(`
-          UPDATE "User"
-          SET custom_fields = custom_fields - '${field.field}'
-          WHERE custom_fields ? '${field.field}';
-          `);
-
-      // Remove from claims in settings
-      await this.changeClaims(field_name, enums.EClaimPrivacy.private);
-
-      // Remove from claims for users
-      await prisma.$executeRawUnsafe(`
-        UPDATE "User"
-        SET public_profile_claims_gravatar = (
-          regexp_replace(
-              public_profile_claims_gravatar,
-              '(^|\\s)${field.field}(\\s|$)',
-              '\\2',
-              'g'
-          )
-        )
-        WHERE public_profile_claims_gravatar IS NOT NULL;
-      `);
-
-      // Remove from claims for users
-      await prisma.$executeRawUnsafe(`
-          UPDATE "User"
-          SET public_profile_claims_oauth = (
-            regexp_replace(
-              public_profile_claims_oauth,
-              '(^|\\s)${field.field}(\\s|$)',
-              '\\2',
-              'g'
-            )
-          )
-          WHERE public_profile_claims_oauth IS NOT NULL;
-      `);
     });
+
+    clearLegacyProfileFieldCache([field_name]);
+    await this.notifyDynamicScopesChanged(deletedOrganizationId ?? null);
   }
 
   async prepareGeneralProfileFields(
-    body: UpdateUserDTO,
-    user_id?: number,
+    body: TPreparedGeneralProfileFields,
+    user_id?: string | number,
     role?: enums.UserRoles,
     ignoreErrors = false,
-  ): Promise<UpdateUserDTO> {
-    const generalFields = (await this.getProfileFields()).filter(
+    options?: {
+      skipValidationsForFields?: string[];
+      scope?: TProfileFieldScopeOptions;
+    },
+  ): Promise<TPreparedGeneralProfileFields> {
+    const defaultLocale = await getDefaultLocale();
+    const generalFields = (await this.getProfileFields(undefined, options?.scope)).filter(
       (field) =>
         field.type === dto.ProfileFieldTypes.general && field.field !== dto.UserProfileFields.sub,
     );
+    const skipValidationsForFields = new Set(options?.skipValidationsForFields || []);
 
-    const user = user_id ? await prisma.user.findUnique({ where: { id: user_id } }) : null;
+    const currentUserId = user_id ? String(user_id) : undefined;
+    const user = currentUserId
+      ? await prisma.user.findUnique({ where: { id: currentUserId } })
+      : null;
 
     // Loop through all body fields
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -825,17 +1408,23 @@ export class SettingsService {
 
       // If the field is email, we convert it to lowercase.
       if (key === dto.UserProfileFields.email && typeof body[key] === 'string') {
-        body[key] = body[key].toLowerCase();
+        body[key] = body[key].trim().toLowerCase();
       }
 
       // Check validations.
-      if (body[key] !== undefined && body[key] !== '' && body[key] !== null) {
+      if (
+        !skipValidationsForFields.has(key) &&
+        body[key] !== undefined &&
+        body[key] !== '' &&
+        body[key] !== null
+      ) {
+        const targetLocale = I18nContext.current()?.lang || defaultLocale;
         const errors: string[] = [];
         field.validations.forEach((validation) => {
           if (validation.active) {
             const regex = new RegExp(validation.regex);
             if (!regex.test(`${body[key]}`)) {
-              errors.push(validation.error);
+              errors.push(resolveLocalizedText(validation.error, targetLocale, defaultLocale));
             }
           }
         });
@@ -851,22 +1440,40 @@ export class SettingsService {
       }
 
       // Check for uniqueness.
-      if (field.unique && body[key] !== null) {
-        const ok = await prisma.user.findFirst({
-          where: {
-            [key]: body[key],
-            id: {
-              not: user_id,
-            },
-          },
-        });
+      if (field.unique && body[key] !== undefined && body[key] !== '' && body[key] !== null) {
+        const ok =
+          key === dto.UserProfileFields.email
+            ? await this.isEmailTaken(String(body[key]), currentUserId)
+            : await prisma.userProfileValue.findFirst({
+                where: {
+                  profile_field: {
+                    key,
+                  },
+                  value: {
+                    equals: body[key] as Prisma.InputJsonValue,
+                  },
+                  ...(currentUserId
+                    ? {
+                        user_id: {
+                          not: currentUserId,
+                        },
+                      }
+                    : {}),
+                },
+              });
 
         if (ok) {
           if (ignoreErrors) {
             delete body[key];
             continue;
           }
-          throw new BadRequestException(enums.Ei18nCodes.T3E0095, { cause: field.title });
+          throw new BadRequestException(enums.Ei18nCodes.T3E0095, {
+            cause: resolveLocalizedText(
+              field.title,
+              I18nContext.current()?.lang || defaultLocale,
+              defaultLocale,
+            ),
+          });
         }
       }
     }
@@ -879,8 +1486,31 @@ export class SettingsService {
   /**
    * Getting a list of additional custom fields
    */
-  async getCustomFields() {
-    return prisma.customField.findMany();
+  async getCustomFields(options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const defaultLocale = await getDefaultLocale();
+    const fields = await prisma.profileField.findMany({
+      where: {
+        ...this.getProfileFieldScopeWhere(organizationId),
+        key: {
+          notIn: Array.from(generalProfileFieldKeys),
+        },
+      },
+    });
+
+    return fields
+      .map((field) => ({
+        id: field.id,
+        field: field.key,
+        organization_id: field.organization_id,
+        title: field.title as string | dto.TLocalizedTextDto,
+        mapping_vcard: field.mapping_vcard,
+      }))
+      .sort((a, b) =>
+        resolveLocalizedText(a.title, defaultLocale, defaultLocale).localeCompare(
+          resolveLocalizedText(b.title, defaultLocale, defaultLocale),
+        ),
+      );
   }
   //#endregion
 
@@ -888,8 +1518,10 @@ export class SettingsService {
   /**
    * Getting a list of profile editing rules
    */
-  public async getAllRules(widthSub: boolean = false) {
-    const rules = await prisma.rule.findMany({
+  public async getAllRules(widthSub: boolean = false, options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const rules = await prisma.profileField.findMany({
+      where: this.getProfileFieldScopeWhere(organizationId),
       include: {
         validations: {
           include: {
@@ -899,18 +1531,18 @@ export class SettingsService {
       },
     });
 
-    const cf = await this.getCustomFields();
+    const cf = await this.getCustomFields(options);
     const gf = await this.getGeneralFields();
 
     // Transform the data structure to extract the validations themselves.
-    const rulesWithValidations = rules.map((rule) => ({
-      ...rule,
-      title:
-        cf.find((f) => f.field === rule.field_name)?.title ||
-        gf.find((f) => f.field === rule.field_name)?.title ||
-        '',
-      validations: rule.validations.map((rv) => rv.rule_validation),
-    }));
+    const rulesWithValidations = rules.map((rule) =>
+      this.mapProfileFieldToRule(
+        rule,
+        cf.find((f) => f.field === rule.key)?.title ||
+          gf.find((f) => f.field === rule.key)?.title ||
+          (rule.title as string | dto.TLocalizedTextDto),
+      ),
+    );
 
     // Return the rules in the order they need to be filled.
     const order = {
@@ -941,42 +1573,61 @@ export class SettingsService {
   /**
    * Getting a rule for editing a profile by field name
    */
-  public async getUserRuleByFieldName(fieldName: string) {
-    return prisma.rule.findFirst({
+  public async getUserRuleByFieldName(fieldName: string, options?: TProfileFieldScopeOptions) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const field = await prisma.profileField.findFirst({
       where: {
-        target: dto.TargetType.user,
-        field_name: fieldName,
+        key: fieldName,
+        ...this.getProfileFieldScopeWhere(organizationId),
+      },
+      include: {
+        validations: {
+          include: {
+            rule_validation: true,
+          },
+        },
       },
     });
+
+    return field ? this.mapProfileFieldToRule(field) : null;
   }
 
   /**
    * Checking for unique values ​​for a field
    * Returns true if all values ​​for the fieldName field are unique for all users
    */
-  private async checkUniqueField(fieldName: string): Promise<boolean> {
+  private async checkUniqueField(
+    fieldName: string,
+    organizationId?: string | null,
+  ): Promise<boolean> {
     try {
-      const result = await prisma.$queryRaw<{ value: string; occurrences: number }[]>`
-        WITH custom_fields_extracted AS (
-          SELECT
-            (jsonb_each_text(custom_fields)).* 
-          FROM
-            "User"
-        )
-        SELECT
-          value,
-          COUNT(*) AS occurrences
-        FROM
-          custom_fields_extracted
-        WHERE
-          key = ${fieldName}
-        GROUP BY
-          value
-        HAVING
-          COUNT(*) > 1;
-      `;
+      const values = await prisma.userProfileValue.findMany({
+        where: {
+          profile_field: {
+            key: fieldName,
+            ...(organizationId === undefined ? {} : { organization_id: organizationId }),
+          },
+        },
+        select: {
+          value: true,
+        },
+      });
 
-      return result.length === 0;
+      const seen = new Set<string>();
+      for (const item of values) {
+        if (item.value === null) {
+          continue;
+        }
+
+        const serializedValue = JSON.stringify(item.value);
+        if (seen.has(serializedValue)) {
+          return false;
+        }
+
+        seen.add(serializedValue);
+      }
+
+      return true;
     } catch (error) {
       console.error('Error checking unique field:', error);
       throw new InternalServerErrorException('Failed to check unique field');
@@ -991,24 +1642,32 @@ export class SettingsService {
     fieldName: string,
     value: string | number | boolean,
     userId?: string | User,
+    organizationId?: string | null,
   ): Promise<boolean> {
-    const userCondition = userId
-      ? typeof userId === 'string'
-        ? `AND id != ${userId}`
-        : `AND id != ${userId.id}`
-      : '';
+    const currentUserId = userId ? (typeof userId === 'string' ? userId : userId.id) : undefined;
+    const existingValue = await prisma.userProfileValue.findFirst({
+      where: {
+        profile_field: {
+          key: fieldName,
+          ...(organizationId === undefined ? {} : { organization_id: organizationId }),
+        },
+        value: {
+          equals: value as Prisma.InputJsonValue,
+        },
+        ...(currentUserId
+          ? {
+              user_id: {
+                not: currentUserId,
+              },
+            }
+          : {}),
+      },
+      select: {
+        id: true,
+      },
+    });
 
-    // Search for users with this value in custom_fields, except for the current user if one exists.
-    const result = await prisma.$queryRaw<{ count: bigint }[]>`
-    SELECT
-      COUNT(*) AS count
-    FROM
-      "User"
-    WHERE
-      custom_fields @> jsonb_build_object(${fieldName}, ${value})::jsonb
-      ${Prisma.raw(userCondition)}
-  `;
-    return Number(result[0].count) === 0;
+    return !existingValue;
   }
   //#endregion
 
@@ -1017,18 +1676,27 @@ export class SettingsService {
    */
   async prepareCustomFieldsToSave(
     customFields: { [key: string]: string | boolean | number },
-    user_id?: number,
+    user_id?: string | number,
     role?: enums.UserRoles,
     ignoreErrors = false,
+    options?: TProfileFieldScopeOptions,
   ): Promise<{ [key: string]: string | boolean | number }> {
+    const defaultLocale = await getDefaultLocale();
     const customFieldsToSave = customFields || {};
-    const customFieldsWithDisabled = (await this.getProfileFields()).filter(
+    const currentUserId = user_id ? String(user_id) : undefined;
+    const user = currentUserId
+      ? await prisma.user.findUnique({ where: { id: currentUserId } })
+      : null;
+    const resolvedOrganizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const organizationId =
+      resolvedOrganizationId === undefined ? user?.org_id ?? null : resolvedOrganizationId;
+    const scopedOptions = { organizationId };
+    const customFieldsWithDisabled = (await this.getProfileFields(undefined, scopedOptions)).filter(
       (f) => f.type === dto.ProfileFieldTypes.custom,
     );
-    const customFieldsDef = (await this.getProfileFields()).filter(
+    const customFieldsDef = (await this.getProfileFields(undefined, scopedOptions)).filter(
       (f) => f.type === dto.ProfileFieldTypes.custom && f.active,
     );
-    const user = user_id ? await prisma.user.findUnique({ where: { id: user_id } }) : null;
 
     // Loop through all custom_fields.
     const customFieldsEntries = Object.entries(customFieldsToSave);
@@ -1068,17 +1736,24 @@ export class SettingsService {
         role !== enums.UserRoles.OWNER &&
         !defaultFields.includes(field.field)
       ) {
-        throw new BadRequestException(enums.Ei18nCodes.T3E0067, { cause: field.title });
+        throw new BadRequestException(enums.Ei18nCodes.T3E0067, {
+          cause: resolveLocalizedText(
+            field.title,
+            I18nContext.current()?.lang || defaultLocale,
+            defaultLocale,
+          ),
+        });
       }
 
       // Check validations
       if (value !== undefined && value !== '' && value !== null) {
+        const targetLocale = I18nContext.current()?.lang || defaultLocale;
         const errors: string[] = [];
         field.validations.forEach((validation) => {
           if (validation.active) {
             const regex = new RegExp(validation.regex);
             if (!regex.test(`${value}`)) {
-              errors.push(validation.error);
+              errors.push(resolveLocalizedText(validation.error, targetLocale, defaultLocale));
             }
           }
         });
@@ -1089,7 +1764,11 @@ export class SettingsService {
             continue;
           }
           throw new BadRequestException(enums.Ei18nCodes.T3E0093, {
-            cause: `${field.title}: ${errors.join(', ')}`,
+            cause: `${resolveLocalizedText(
+              field.title,
+              I18nContext.current()?.lang || defaultLocale,
+              defaultLocale,
+            )}: ${errors.join(', ')}`,
           });
         }
       }
@@ -1103,14 +1782,27 @@ export class SettingsService {
       }
 
       // Check for uniqueness
-      if (field.unique) {
-        if (!(await this.checkUniqueValue(key, value, user))) {
+      if (field.unique && value !== undefined && value !== '' && value !== null) {
+        if (
+          !(await this.checkUniqueValue(
+            key,
+            value,
+            currentUserId || user,
+            field.organization_id ?? null,
+          ))
+        ) {
           if (ignoreErrors) {
             // Ignore the error, delete, and continue
             delete customFieldsToSave[key];
             continue;
           }
-          throw new BadRequestException(enums.Ei18nCodes.T3E0095, { cause: field.title });
+          throw new BadRequestException(enums.Ei18nCodes.T3E0095, {
+            cause: resolveLocalizedText(
+              field.title,
+              I18nContext.current()?.lang || defaultLocale,
+              defaultLocale,
+            ),
+          });
         }
       }
     }
@@ -1140,31 +1832,31 @@ export class SettingsService {
     }
   }
 
-  public async checkScopes(value: string) {
-    if (!value) {
-      return;
+  public async checkScopes(value?: string, options?: TProfileFieldScopeOptions) {
+    if (value === undefined) {
+      return value;
     }
 
-    // Remove extra spaces from the beginning and end of the value
-    value = value.trim();
+    const fields = await this.getProfileFieldScopeKeys(options);
 
-    // Get a list of profile fields
-    const fields = (await this.getProfileFields()).map((field) => field.field);
-
-    const scopes = value.split(' ');
-    const newScopes: string[] = [];
-    for (const scope of scopes) {
-      if (fields.find((f) => scope === f)) {
-        newScopes.push(scope);
-      }
-    }
-    value = newScopes.join(' ');
+    return Array.from(
+      new Set(
+        value
+          .trim()
+          .split(/\s+/)
+          .filter((scope) => scope && fields.has(scope)),
+      ),
+    ).join(' ');
   }
 
   /**
    * Adding a validation to a rule
    */
-  public async addRuleValidationToRule(field_name: string, validationId: number) {
+  public async addRuleValidationToRule(
+    field_name: string,
+    validationId: string,
+    options?: TProfileFieldScopeOptions,
+  ) {
     // Validation cannot be assigned to the birthday, picture, and fields
     if (
       [
@@ -1175,14 +1867,24 @@ export class SettingsService {
     )
       throw new BadRequestException(enums.Ei18nCodes.T3E0026);
 
-    const rule = await prisma.rule.findFirst({ where: { field_name } });
-    if (!rule) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const field = await prisma.profileField.findFirst({
+      where: {
+        key: field_name,
+        ...this.getProfileFieldScopeWhere(organizationId),
+      },
+    });
+    if (!field) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0016);
     }
 
-    await prisma.ruleRuleValidation.create({
+    await this.ensureRuleValidationExists(validationId, options, {
+      id: true,
+    });
+
+    await prisma.profileFieldValidation.create({
       data: {
-        rule_id: rule.id,
+        profile_field_id: field.id,
         rule_validation_id: validationId,
       },
     });
@@ -1191,16 +1893,30 @@ export class SettingsService {
   /**
    * Removing a validation from a rule
    */
-  public async deleteRuleValidationFromRule(field_name: string, validationId: number) {
-    const rule = await prisma.rule.findFirst({ where: { field_name } });
-    if (!rule) {
+  public async deleteRuleValidationFromRule(
+    field_name: string,
+    validationId: string,
+    options?: TProfileFieldScopeOptions,
+  ) {
+    const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+    const field = await prisma.profileField.findFirst({
+      where: {
+        key: field_name,
+        ...this.getProfileFieldScopeWhere(organizationId),
+      },
+    });
+    if (!field) {
       throw new BadRequestException(enums.Ei18nCodes.T3E0016);
     }
 
-    await prisma.ruleRuleValidation.delete({
+    await this.ensureRuleValidationExists(validationId, options, {
+      id: true,
+    });
+
+    await prisma.profileFieldValidation.delete({
       where: {
-        rule_id_rule_validation_id: {
-          rule_id: rule.id,
+        profile_field_id_rule_validation_id: {
+          profile_field_id: field.id,
           rule_validation_id: validationId,
         },
       },
@@ -1210,54 +1926,99 @@ export class SettingsService {
   /**
    * Getting a list of validations
    */
-  public async getRulesValidations(field_name?: string) {
+  public async getRulesValidations(
+    field_name?: string,
+    onlyActive = false,
+    options?: TProfileFieldScopeOptions,
+  ) {
+    const ruleValidationOrganizationId = await this.resolveRuleValidationScopeOrganizationId(
+      options,
+    );
+
     if (field_name) {
-      const ruleRule = await prisma.ruleRuleValidation.findMany({
+      const organizationId = await this.resolveProfileFieldScopeOrganizationId(options);
+      const field = await prisma.profileField.findFirst({
         where: {
-          rule: {
-            field_name,
-          },
+          key: field_name,
+          ...this.getProfileFieldScopeWhere(organizationId),
+        },
+        select: {
+          id: true,
         },
       });
 
+      if (!field) {
+        return [];
+      }
+
       return prisma.ruleValidation.findMany({
         where: {
-          id: {
-            in: ruleRule.map((r) => r.rule_validation_id),
+          ...this.getRuleValidationScopeWhere(ruleValidationOrganizationId),
+          profile_fields: {
+            some: {
+              profile_field_id: field.id,
+            },
           },
+          ...(onlyActive ? { active: true } : {}),
         },
-        orderBy: { title: SortDirection.ASC },
+        orderBy: { id: SortDirection.DESC },
       });
     }
 
     return prisma.ruleValidation.findMany({
-      orderBy: { title: SortDirection.ASC },
+      where: this.getRuleValidationScopeWhere(ruleValidationOrganizationId),
+      orderBy: { id: SortDirection.DESC },
     });
   }
 
   /**
    * Creating a validation
    */
-  public async addRuleValidation(data: Prisma.RuleValidationCreateInput) {
+  public async addRuleValidation(
+    data: dto.CreateRuleValidationDto,
+    options?: TProfileFieldScopeOptions,
+  ) {
+    const organizationId = await this.resolveRuleValidationScopeOrganizationId(options);
+    const title = await this.ensureRuleValidationTitleAvailable(data.title, options);
+
     return prisma.ruleValidation.create({
-      data,
+      data: {
+        ...data,
+        title: (title ?? data.title) as Prisma.InputJsonValue,
+        error: data.error as Prisma.InputJsonValue,
+        organization_id: organizationId,
+      },
     });
   }
 
   /**
    * Updating a validation
    */
-  public async updateRuleValidation(id: number, data: Prisma.RuleValidationUpdateInput) {
+  public async updateRuleValidation(
+    id: string,
+    data: dto.UpdateRuleValidationDto,
+    options?: TProfileFieldScopeOptions,
+  ) {
+    await this.ensureRuleValidationExists(id, options, { id: true });
+
+    const title = await this.ensureRuleValidationTitleAvailable(data.title, options, id);
+
     return prisma.ruleValidation.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        ...(title !== undefined ? { title: title as Prisma.InputJsonValue } : {}),
+        ...(data.error !== undefined ? { error: data.error as Prisma.InputJsonValue } : {}),
+      },
     });
   }
 
   /**
    * Removing a validation
    */
-  public async deleteRuleValidation(id: number) {
+  public async deleteRuleValidation(id: string, options?: TProfileFieldScopeOptions) {
+    await this.ensureRuleValidationExists(id, options, { id: true });
+
     return prisma.ruleValidation.delete({
       where: { id },
     });
@@ -1281,7 +2042,9 @@ export class SettingsService {
    */
   public async addClientType(data: dto.CreateClientTypeDto) {
     return prisma.clientType.create({
-      data,
+      data: {
+        name: data.name as Prisma.InputJsonValue,
+      },
       select: {
         id: true,
         name: true,
@@ -1295,7 +2058,9 @@ export class SettingsService {
   public async updateClientType(id: string, data: dto.CreateClientTypeDto) {
     return prisma.clientType.update({
       where: { id },
-      data,
+      data: {
+        name: data.name as Prisma.InputJsonValue,
+      },
       select: {
         id: true,
         name: true,

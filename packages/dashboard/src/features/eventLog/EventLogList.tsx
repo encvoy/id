@@ -11,118 +11,148 @@ import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined
 import UnsubscribeOutlinedIcon from "@mui/icons-material/UnsubscribeOutlined";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
-import { FC, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { EEventLog, Order } from "src/shared/utils/enums";
+import type { ChipProps } from "@mui/material/Chip";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+import { ElementType, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { EEventLog, ETagColor, Order, routes } from "src/shared/utils/enums";
 import { ILogEvent, useLazyGetEventsLogQuery } from "src/shared/api/logger";
 import { IQuerySortParams } from "src/shared/api/types";
-import { ModalInfo } from "src/shared/ui/modal/ModalInfo";
-import { ListItems } from "../../shared/ui/listElements";
+import { ModalInfo } from "@encvoy-id/components";
+import { ListItems } from "../../shared/ui/CardsList.tsx";
 import { CardEventLog, ICardEventLogProps } from "./EventLogCard";
 import { EventLogInfo } from "./EventLogInfo";
 import { TFunction } from "i18next";
 
-enum ETagColor {
-  red = "#990000",
-  green = "#006633",
-  yellow = "#CC9900",
-}
-
-export function getEventSpecific(translate: TFunction, code?: string) {
+export function getEventSpecific(
+  translate: TFunction,
+  code?: string
+): {
+  color: ETagColor;
+  chipColor: NonNullable<ChipProps["color"]>;
+  icon: ElementType<SvgIconProps>;
+  tag: string;
+} {
   switch (code) {
     case EEventLog.USER_LOGIN_SUCCESS:
       return {
         color: ETagColor.green,
+        chipColor: "success",
         icon: VerifiedUserOutlinedIcon,
         tag: translate("pages.eventLog.events.successUserLogin"),
       };
     case EEventLog.USER_DELETED_DB:
       return {
         color: ETagColor.red,
+        chipColor: "error",
         icon: PersonOffOutlinedIcon,
         tag: translate("pages.eventLog.events.userDeletedDb"),
       };
     case EEventLog.USER_DELETE:
       return {
         color: ETagColor.red,
+        chipColor: "error",
         icon: PersonRemoveOutlinedIcon,
         tag: translate("pages.eventLog.events.userDeleted"),
       };
     case EEventLog.USER_CREATE:
       return {
         color: ETagColor.green,
+        chipColor: "success",
         icon: PersonAddAltOutlinedIcon,
         tag: translate("pages.eventLog.events.userCreated"),
       };
     case EEventLog.USER_UPDATE:
       return {
         color: ETagColor.yellow,
+        chipColor: "warning",
         icon: ManageAccountsOutlinedIcon,
         tag: translate("pages.eventLog.events.userUpdated"),
       };
     case EEventLog.USER_RESTORE:
       return {
         color: ETagColor.yellow,
+        chipColor: "warning",
         icon: RestoreFromTrashOutlinedIcon,
         tag: translate("pages.eventLog.events.userRestored"),
       };
     case EEventLog.USER_BLOCK:
       return {
         color: ETagColor.red,
+        chipColor: "error",
         icon: LockOutlinedIcon,
         tag: translate("pages.eventLog.events.userBlock"),
       };
     case EEventLog.USER_UNBLOCK:
       return {
         color: ETagColor.green,
+        chipColor: "success",
         icon: LockOpenOutlinedIcon,
         tag: translate("pages.eventLog.events.userUnblock"),
       };
     case EEventLog.INVITATION_CREATE:
       return {
         color: ETagColor.green,
+        chipColor: "success",
         icon: EmailOutlinedIcon,
-        tag: "Создано приглашение",
+        tag: "Invitation created",
       };
     case EEventLog.INVITATION_CONFIRM:
       return {
         color: ETagColor.green,
+        chipColor: "success",
         icon: MarkEmailReadOutlinedIcon,
-        tag: "Приглашение подтверждено",
+        tag: "Invitation accepted",
       };
     case EEventLog.INVITATION_DELETE:
       return {
         color: ETagColor.red,
+        chipColor: "error",
         icon: UnsubscribeOutlinedIcon,
-        tag: "Приглашение удалено",
+        tag: "Invitation deleted",
       };
     default:
       return {
         color: ETagColor.red,
+        chipColor: "error",
         icon: ErrorOutlineOutlinedIcon,
-        tag: code,
+        tag: code ?? "",
       };
   }
 }
 
-const EventLogComponent: FC = () => {
+const EventLogComponent = () => {
   const location = useLocation();
+  const { appId = "" } = useParams<{ appId: string }>();
   const { userId }: { userId: string } = location.state || {};
   const [isOpen, setIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<ILogEvent | null>(null);
   const [getEventsLog] = useLazyGetEventsLogQuery();
 
   const query = (offset: number, search?: string): IQuerySortParams => {
+    const filter: Record<string, string> = {};
     const queryParams: IQuerySortParams = {
       sortBy: "date",
       sortDirection: Order.DESC,
-      limit: "10",
+      limit: 10,
       offset,
       search: search || "",
     };
 
     if (userId) {
-      queryParams.filter = JSON.stringify({ user_id: parseInt(userId, 10) });
+      filter.user_id = userId;
+    }
+
+    const isOrganizationContext =
+      location.pathname.startsWith(`/${routes.customer}/`) ||
+      location.pathname.startsWith(`/${routes.admin}/`);
+
+    if (isOrganizationContext && appId) {
+      filter.organization_id = appId;
+    }
+
+    if (Object.keys(filter).length) {
+      queryParams.filter = JSON.stringify(filter);
     }
 
     return queryParams;
@@ -140,6 +170,7 @@ const EventLogComponent: FC = () => {
           query={query}
           getItems={getEventsLog}
           RowElement={CardEventLog}
+          searchContext="eventlog"
           rowElementProps={{
             openModal: openModal,
             isUserSpecific: !!userId,

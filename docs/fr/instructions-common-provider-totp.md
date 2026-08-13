@@ -1,6 +1,6 @@
 ---
-title: "Connexion TOTP — Connexion et configuration dans Encvoy ID"
-description: "Apprenez à activer la connexion TOTP dans Encvoy ID : créez une méthode de connexion, ajoutez-la au widget d'autorisation et assurez un accès sécurisé pour les utilisateurs."
+title: "Connexion TOTP — Connexion et configuration dans {{projectName}}"
+description: "Apprenez à activer la connexion TOTP dans {{projectName}} : créez une méthode de connexion, ajoutez-la au widget d'autorisation et assurez un accès sécurisé pour les utilisateurs."
 keywords:
   # Main actions
   - connexion HOTP
@@ -9,9 +9,9 @@ keywords:
   - connexion HOTP
   - se connecter via HOTP
   - authentification à deux facteurs HOTP
-  - HOTP Encvoy ID
-  - connexion via HOTP Encvoy ID
-  - configuration HOTP dans Encvoy ID
+  - HOTP {{projectName}}
+  - connexion via HOTP {{projectName}}
+  - configuration HOTP dans {{projectName}}
   - différence entre HOTP et TOTP
   - HOTP
   - Mot de passe à usage unique basé sur HMAC
@@ -23,11 +23,11 @@ region: [ru, en]
 menu_title: "Connexion TOTP"
 ---
 
-# Comment connecter la connexion TOTP dans Encvoy ID
+# Comment connecter la connexion TOTP dans {{projectName}}
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
 
-Dans ce guide, vous apprendrez comment connecter l'authentification par mot de passe à usage unique **TOTP** au système **Encvoy ID**.
+Dans ce guide, vous apprendrez comment connecter l'authentification par mot de passe à usage unique **TOTP** au système **{{projectName}}**.
 
 À qui s'adresse cette instruction :
 
@@ -132,12 +132,12 @@ Les options les plus populaires sont :
 1. Allez dans votre **Profil**.
 2. Cliquez sur **Ajouter** dans le bloc **Identifiants**.
 
-<img src="./images/personal-profile-12.webp" alt="Bloc identifiant dans le profil utilisateur Encvoy ID" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Bloc identifiant dans le profil utilisateur {{projectName}}" style="max-width:600px; width:100%">
 
 3. Dans la fenêtre qui s'ouvre, sélectionnez la méthode de connexion **TOTP**.
 4. Scannez le code QR à l'aide de votre application d'authentification.
 
-<img src="./images/instructions-provider-totp-02.webp" alt="Dialogue pour ajouter un identifiant TOTP dans le profil utilisateur Encvoy ID" style="max-width:400px; width:100%">
+<img src="./images/instructions-provider-totp-02.webp" alt="Dialogue pour ajouter un identifiant TOTP dans le profil utilisateur {{projectName}}" style="max-width:400px; width:100%">
 
 5. Saisissez le code de l'application et confirmez.
 
@@ -150,7 +150,7 @@ Les options les plus populaires sont :
 3. Un formulaire de saisie du code s'ouvrira.
 4. Saisissez votre identifiant.
 
-<img src="./images/instructions-provider-totp-03.webp" alt="Exemple de widget de connexion pour l'identifiant TOTP dans Encvoy ID" style="max-width:300px; width:100%">
+<img src="./images/instructions-provider-totp-03.webp" alt="Exemple de widget de connexion pour l'identifiant TOTP dans {{projectName}}" style="max-width:300px; width:100%">
 
 5. Sans fermer la page, ouvrez l'application d'authentification sur votre téléphone. Copiez le code à 6 chiffres et collez-le dans le formulaire.
 
@@ -163,5 +163,5 @@ Les options les plus populaires sont :
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide pour travailler avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide pour travailler avec les organisations dans le système **{{projectName}}**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

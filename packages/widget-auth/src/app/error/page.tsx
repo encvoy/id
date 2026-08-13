@@ -5,19 +5,15 @@ import { Container } from '@/components/container/Container';
 import { Section } from '@/components/section/Section';
 import { MESSAGE, MESSAGE_DETAIL } from '@/lib/constant';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
+import { getLocalizedTextValue } from '@/lib/utils';
 
 const Page: FC = () => {
-  const { t: translate } = useTranslation();
-  const [errorText, setErrorText] = useState('');
-  const [errorDescription, setErrorDescription] = useState('');
-
-  useEffect(() => {
-    setErrorText(MESSAGE);
-    setErrorDescription(MESSAGE_DETAIL);
-  }, []);
+  const { t: translate, i18n } = useTranslation();
+  const errorText = getLocalizedTextValue(MESSAGE, i18n.language);
+  const errorDescription = MESSAGE_DETAIL;
 
   return (
     <Section>
@@ -39,7 +35,7 @@ const Page: FC = () => {
                   id="panel2-header"
                 >
                   <Typography color="text.secondary" component="span">
-                    Подробнее
+                    Details
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>

@@ -1,10 +1,9 @@
-import { MenuItem, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   ISettings,
   useEditSettingsMutation,
-  useGetEmailTemplatesQuery,
   useGetProfileFieldsQuery,
   useGetSettingsQuery,
 } from "src/shared/api/settings";
@@ -13,9 +12,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setNoticeInfo } from "src/shared/lib/noticesSlice";
+import { setNoticeInfo } from "src/shared/slices/noticesSlice";
 import { useTranslation } from "react-i18next";
-import Select from "@mui/material/Select";
+import { SystemLanguageSelect } from "src/shared/ui/components/SystemLanguageSelect";
+import { TSystemLanguage } from "src/shared/utils/locales";
 
 export const LocaleSettings = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,6 @@ export const LocaleSettings = () => {
   const { data: dataSettings } = useGetSettingsQuery();
   const [editSettings, editSettingsResult] = useEditSettingsMutation();
   const { refetch: refetchProfileFields } = useGetProfileFieldsQuery();
-  const { refetch: refetchTemplates } = useGetEmailTemplatesQuery();
 
   const schema = yup
     .object({
@@ -64,7 +63,6 @@ export const LocaleSettings = () => {
     if (editSettingsResult.isSuccess) {
       dispatch(setNoticeInfo(translate("info.infoUpdated")));
       refetchProfileFields();
-      refetchTemplates();
     }
   }, [editSettingsResult]);
 
@@ -91,36 +89,18 @@ export const LocaleSettings = () => {
         name="i18n.default_language"
         defaultValue={dataSettings?.i18n?.default_language ?? "ru-RU"}
         render={({ field }) => (
-          <Select
-            ref={null}
+          <SystemLanguageSelect
             className={styles.selectWrapper}
-            data-id="locale-select"
+            dataTestId="ddl-settigs-locale-selection"
+            dataId="locale-select"
+            optionTestIdPrefix="btn-settigs-locale-language"
             value={
-              field.value ?? dataSettings?.i18n?.default_language ?? "ru-RU"
+              (field.value ??
+                dataSettings?.i18n?.default_language ??
+                "ru-RU") as TSystemLanguage
             }
-            onChange={(e) => {
-              field.onChange((e as any).target.value);
-            }}
-          >
-            <MenuItem className="custom-select" key={0} value={"en-US"}>
-              {translate("pages.settings.locale.english")}
-            </MenuItem>
-            <MenuItem className="custom-select" key={1} value={"ru-RU"}>
-              {translate("pages.settings.locale.russian")}
-            </MenuItem>
-            <MenuItem className="custom-select" key={1} value={"fr-FR"}>
-              {translate("pages.settings.locale.french")}
-            </MenuItem>
-            <MenuItem className="custom-select" key={1} value={"es-ES"}>
-              {translate("pages.settings.locale.spanish")}
-            </MenuItem>
-            <MenuItem className="custom-select" key={1} value={"de-DE"}>
-              {translate("pages.settings.locale.german")}
-            </MenuItem>
-            <MenuItem className="custom-select" key={1} value={"it-IT"}>
-              {translate("pages.settings.locale.italian")}
-            </MenuItem>
-          </Select>
+            onChange={field.onChange}
+          />
         )}
       />
       <Typography className="text-12" color="text.secondary">
@@ -128,6 +108,7 @@ export const LocaleSettings = () => {
       </Typography>
       <div className={styles.buttonWrapper}>
         <Button
+          data-test-id="btn-settings-locale-save"
           className={styles.saveButton}
           type="submit"
           variant="contained"

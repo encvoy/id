@@ -15,9 +15,17 @@ export enum ClientActions {
    */
   list = 'client:list',
   /**
+   * Getting a list of client users
+   */
+  users_list = 'client:users:list',
+  /**
    * Creating and editing an app
    */
   write = 'client:write',
+  /**
+   * Creating an organization
+   */
+  createOrg = 'client:create-org',
   /**
    * Deleting an app
    */
@@ -42,31 +50,33 @@ ROLES.set(UserRoles.USER, [
 ROLES.set(UserRoles.EDITOR, [
   ...(ROLES.get(UserRoles.EDITOR) || []),
   ClientActions.list,
+  ClientActions.users_list,
   ClientActions.read,
   ClientActions.write,
   ClientActions.delete,
   ClientActions.scopes_read,
   ClientActions.updateRole,
   ClientActions.getRole,
+  ClientActions.createOrg,
 ]);
 
-ROLES.set(UserRoles.ADMIN, [
-  ...(ROLES.get(UserRoles.ADMIN) || []),
+ROLES.set(UserRoles.MANAGER, [
+  ...(ROLES.get(UserRoles.MANAGER) || []),
   ClientActions.list,
-  ClientActions.read,
-  ClientActions.write,
-  ClientActions.delete,
   ClientActions.scopes_read,
   ClientActions.getRole,
+  ClientActions.createOrg,
 ]);
 
 ROLES.set(UserRoles.OWNER, [
   ...(ROLES.get(UserRoles.OWNER) || []),
   ClientActions.list,
+  ClientActions.users_list,
   ClientActions.read,
   ClientActions.write,
   ClientActions.delete,
   ClientActions.scopes_read,
   ClientActions.updateRole,
   ClientActions.getRole,
+  ClientActions.createOrg,
 ]);

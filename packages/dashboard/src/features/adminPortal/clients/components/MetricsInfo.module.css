@@ -1,0 +1,185 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.titleBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.periodControl {
+  min-width: 100px;
+}
+
+.chartHeader {
+  margin-bottom: 20px;
+}
+
+.chartMeta {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.option {
+  color: var(--mui-palette-text-secondary) !important;
+  font-size: 0.875rem !important;
+}
+
+.optionValue {
+  color: var(--mui-palette-primary-main);
+}
+
+.carousel {
+  padding: 0;
+}
+
+.slideCard {
+  min-height: 380px;
+  background: var(--mui-palette-background-paper);
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  animation: slideFadeIn 0.28s ease;
+}
+
+.slideContent {
+  min-height: 280px;
+  flex: 1;
+}
+
+.chartContainer {
+  height: 300px;
+  position: relative;
+}
+
+.methodsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.methodItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.methodHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.methodShare {
+  color: var(--mui-palette-primary-main);
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap;
+}
+
+.methodBar {
+  width: 100%;
+  height: 8px;
+  background: var(--mui-palette-action-hover);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.methodBarFill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mui-palette-primary-main);
+}
+
+.stateText {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--mui-palette-text-secondary);
+}
+
+.slideDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.slideDot {
+  width: 9px;
+  height: 9px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: var(--mui-palette-divider);
+  cursor: pointer;
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.slideDotActive {
+  width: 28px;
+  background: var(--mui-palette-primary-main);
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .periodControl {
+    width: 100%;
+  }
+
+  .slideCard {
+    min-height: 340px;
+  }
+
+  .chartContainer {
+    height: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .slideCard {
+    min-height: 320px;
+    padding: 16px;
+  }
+
+  .chartContainer {
+    height: 220px;
+  }
+
+  .methodHead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { IFieldEnv } from '@/types/types';
 import { FIELD } from '@/lib/constant';
 import { useTranslation } from 'react-i18next';
+import { getLocalizedTextValue } from '@/lib/utils';
 
 interface ISectionProps {
   children?: ReactNode;
@@ -30,7 +31,7 @@ export const ListItem: FC<ISectionProps> = ({ children }) => {
 };
 
 export const ValidationRuleList: FC = () => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const [currentField, setCurrentField] = useState<IFieldEnv>();
 
   useEffect(() => {
@@ -44,8 +45,10 @@ export const ValidationRuleList: FC = () => {
       )}
       <List sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {currentField?.validations.map((item) => (
-          <ListItem key={item.title}>
-            <Typography color="text.secondary">{item.title}</Typography>
+          <ListItem key={item.id}>
+            <Typography color="text.secondary">
+              {getLocalizedTextValue(item.title, i18n.language)}
+            </Typography>
           </ListItem>
         ))}
       </List>

@@ -1,9 +1,10 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
 import * as cv from 'class-validator';
 import { IsAnyUrl, IsPhoneNumberCustom } from 'src/custom.dto';
 import {
   BaseCreateProviderDto,
   BaseParamsProviderDto,
+  ProviderParamsDto,
   TypeProviderDTO,
 } from 'src/modules/providers/providers.dto';
 
@@ -13,6 +14,7 @@ export class VerificationStatusKloudDTO extends TypeProviderDTO {
   @IsPhoneNumberCustom()
   phone_number: string;
 
+  @cv.IsNotEmpty()
   @cv.IsString()
   @ApiProperty()
   provider_id: string;
@@ -24,26 +26,28 @@ export class VerificationSendCodeKloudDTO extends TypeProviderDTO {
   @IsPhoneNumberCustom()
   phone_number: string;
 
+  @cv.IsNotEmpty()
   @cv.IsString()
   @ApiProperty({ example: 'client_id' })
   client_id: string;
 
+  @cv.IsNotEmpty()
   @cv.IsString()
   @ApiProperty({ example: 'provider_id' })
   provider_id: string;
 }
 
 export class ParamsKloudDto extends BaseParamsProviderDto {
+  @cv.IsNotEmpty()
   @cv.Matches(/^[^\n ]*$/, { message: 'The identifier cannot contain spaces' })
   @cv.MaxLength(255)
-  @cv.MinLength(1)
   @cv.IsString()
   @ApiProperty()
   external_client_id: string;
 
+  @cv.IsNotEmpty()
   @cv.Matches(/^[^\n ]*$/, { message: 'The secret key cannot contain spaces' })
   @cv.MaxLength(255)
-  @cv.MinLength(1)
   @cv.IsString()
   @ApiProperty()
   external_client_secret: string;
@@ -59,9 +63,22 @@ export class CreateKloudProviderDto extends BaseCreateProviderDto<ParamsKloudDto
   @cv.Equals('KLOUD')
   @ApiProperty({ example: 'KLOUD' })
   type: 'KLOUD';
+
+  @ProviderParamsDto(ParamsKloudDto)
+  params?: ParamsKloudDto;
 }
 
-export class UpdateKloudProviderDto extends PartialType(CreateKloudProviderDto) {}
+export class UpdateParamsKloudDto extends PartialType(ParamsKloudDto, {
+  skipNullProperties: false,
+}) {}
+
+export class UpdateKloudProviderDto extends PartialType(
+  OmitType(CreateKloudProviderDto, ['params'] as const),
+  { skipNullProperties: false },
+) {
+  @ProviderParamsDto(UpdateParamsKloudDto)
+  params?: UpdateParamsKloudDto;
+}
 
 export class AuthByKloudDto {
   @cv.IsString()

@@ -1,61 +1,55 @@
 import { SwapHorizontalCircleOutlined } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+import { Avatar, Box, useTheme } from "@mui/material";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Buffer } from "buffer";
 import clsx from "clsx";
 import QRCode from "qrcode";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ETags, routes, tabs } from "src/shared/utils/enums";
 import { useBindEthereumAccountMutation } from "src/shared/api/profile";
 import { usersApi } from "src/shared/api/users";
-import Cookies from "universal-cookie";
-import { CLIENT_ID, DOMAIN } from "src/shared/utils/constants";
 import { getImageURL, randomString } from "src/shared/utils/helpers";
-import { setNoticeError } from "src/shared/lib/noticesSlice";
+import { withAppBase } from "src/shared/utils/appBasePath";
+import { getLocalizedTextValue } from "src/shared/utils/locales";
+import { setNoticeError } from "src/shared/slices/noticesSlice";
 import { useGetOauthMutation } from "src/shared/api/auth";
 import { useLazyGetNonceQuery } from "src/shared/api/ethereum";
 import {
   EGetProviderAction,
   IMTLSParams,
-  ProviderType,
+  EProviderType,
   TOauthProvider,
   useGetProvidersQuery,
 } from "src/shared/api/provider";
 import { RootState } from "src/app/store/store";
 import { getAccessToken } from "src/shared/utils/auth";
 import {
-  generateCodeChallenge,
-  generateCodeVerifier,
-} from "src/shared/utils/pkce";
+  ActionButtons,
+  CustomIcon,
+  InputCode,
+  ModalInfo,
+  SubmitModal,
+  SurfaceBlock,
+} from "@encvoy-id/components";
 import { Typography } from "@mui/material";
-import { ModalInfo } from "src/shared/ui/modal/ModalInfo";
-import { ActionButtons } from "src/shared/ui/components/ActionButtons";
 import styles from "./AddIdentifyToProfile.module.css";
 import { TFileString } from "src/shared/api/types";
-import { componentBorderRadius } from "src/shared/theme/Theme";
-import { CustomIcon } from "src/shared/ui/components/CustomIcon";
+import { TAppSlice } from "src/shared/slices/appSlice";
 
 const mapStateToProps = (state: RootState) => ({
   userId: state.user.profile.id,
+  systemClientId: state.app.systemClientId,
 });
 
 interface IAddIdentifyToProfileProps {
   userId?: string;
+  systemClientId: TAppSlice["systemClientId"];
 }
 
-// Тип для ответа от /otp/setup
+// Type response from /otp/setup
 type OtpSetupResponse = {
   secret: string;
   qrCode: string;
@@ -64,81 +58,141 @@ type OtpSetupResponse = {
   algorithm: string;
   period?: number;
   counter?: number;
+  state: string;
+};
+
+const isWebAuthnPreviouslyRegisteredError = (error: unknown) => {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  const webAuthnError = error as {
+    code?: unknown;
+    name?: unknown;
+    cause?: { name?: unknown };
+  };
+
+  return (
+    webAuthnError.code === "ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED" ||
+    webAuthnError.name === "InvalidStateError" ||
+    webAuthnError.cause?.name === "InvalidStateError"
+  );
 };
 
 export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
   userId,
+  systemClientId,
 }) => {
-  // Состояния для OTP
+  const theme = useTheme();
+  // States for OTP
   const [otpModal, setOtpModal] = useState<{
     open: boolean;
     providerType: "TOTP" | "HOTP" | null;
+    providerId?: string;
     data?: OtpSetupResponse;
     code?: string;
     error?: string;
     loading?: boolean;
   }>({ open: false, providerType: null });
+  const otpConfirmInProgressRef = useRef(false);
 
-  // Запрос к backend для генерации OTP (универсальный для TOTP/HOTP)
-  const handleOtpSetup = async (providerType: "TOTP" | "HOTP") => {
+  // Request to backend for OTP generation (universal for TOTP/HOTP)
+  const handleOtpSetup = async (
+    providerType: "TOTP" | "HOTP",
+    providerId: string
+  ) => {
     setOtpModal({ open: true, providerType, loading: true });
     try {
       const access = await getAccessToken();
       const res = await fetch(
-        `/api/otp/setup?type=${providerType.toLowerCase()}`,
+        withAppBase(
+          `/api/otp/${providerType.toLowerCase()}/setup?provider_id=${providerId}`
+        ),
         {
           method: "GET",
           headers: { Authorization: `Bearer ${access}` },
         }
       );
-      if (!res.ok) throw new Error("Ошибка запроса");
+      if (!res.ok) throw new Error("Request error");
       const data = await res.json();
-      setOtpModal({ open: true, providerType, data });
+      setOtpModal({ open: true, providerType, data, providerId });
     } catch (e: any) {
       setOtpModal({ open: true, providerType, error: e.message });
     }
   };
 
-  // Подтверждение кода (POST /api/otp/confirm-setup)
-  const handleOtpConfirm = async () => {
-    if (!otpModal.data || !otpModal.code) return;
+  // Confirm code (POST /api/otp/confirm-setup)
+  const handleOtpConfirm = async (code = otpModal.code) => {
+    if (
+      !otpModal.data ||
+      !code ||
+      code.length !== otpModal.data.digits ||
+      otpConfirmInProgressRef.current
+    ) {
+      return;
+    }
+
+    otpConfirmInProgressRef.current = true;
     setOtpModal((prev) => ({ ...prev, loading: true, error: undefined }));
     try {
       const access = await getAccessToken();
-      const res = await fetch(`/api/otp/confirm-setup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-        body: JSON.stringify({ token: otpModal.code }),
-      });
+      const res = await fetch(
+        withAppBase(`/api/v1/profile/external_accounts/${otpModal.providerId}`),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+          body: JSON.stringify({
+            token: code,
+            state: otpModal.data.state,
+            provider_id: otpModal.providerId,
+          }),
+        }
+      );
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.message || "Ошибка подтверждения");
+        throw new Error(err.message || "Confirmation error");
       }
       setOtpModal({ open: false, providerType: null });
       dispatch(usersApi.util.invalidateTags([ETags.ExternalAccounts]));
       navigate(`/${routes.profile}/${tabs.profile}`);
     } catch (e: any) {
       setOtpModal((prev) => ({ ...prev, error: e.message, loading: false }));
+    } finally {
+      otpConfirmInProgressRef.current = false;
     }
   };
-  const { t: translate } = useTranslation();
+
+  const handleOtpCodeChange = (code: string) => {
+    setOtpModal((prev) => ({ ...prev, code, error: undefined }));
+
+    if (
+      otpModal.data &&
+      !otpModal.loading &&
+      code.length === otpModal.data.digits
+    ) {
+      void handleOtpConfirm(code);
+    }
+  };
+
+  const { t: translate, i18n } = useTranslation();
   const { data: providers } = useGetProvidersQuery({
-    client_id: CLIENT_ID,
+    client_id: systemClientId || "",
     query: {
-      is_public: true,
       action: EGetProviderAction.auth,
     },
   });
   const [bindEthereumAccount] = useBindEthereumAccountMutation();
   const [isOpen, setIsOpen] = useState(false);
   const windowRef = useRef<Window | null>(null);
+  const popupIntervalRef = useRef<number | null>(null);
+  const popupMessageHandlerRef = useRef<((event: MessageEvent) => void) | null>(
+    null
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let intervalId: ReturnType<typeof setTimeout>;
-  const cookies = new Cookies();
   const [providerOauth, setProviderOauth] = useState<{
     avatar: TFileString;
     name: string;
@@ -153,13 +207,26 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
   const client = useSelector((state: RootState) => state.app.clientProfile);
   const PROJECT_NAME = client?.name || "PROJECT_NAME";
 
+  const cleanupExternalAccountPopup = () => {
+    if (popupIntervalRef.current !== null) {
+      window.clearInterval(popupIntervalRef.current);
+      popupIntervalRef.current = null;
+    }
+
+    if (popupMessageHandlerRef.current) {
+      window.removeEventListener("message", popupMessageHandlerRef.current);
+      popupMessageHandlerRef.current = null;
+    }
+  };
+
   const externalAccount = async (providerId: string) => {
+    cleanupExternalAccountPopup();
+
     const oauthParams: any = {
       provider_id: providerId,
       state: randomString(30),
       return_url: true,
     };
-
     const result = await getOauthUrl(oauthParams);
     windowRef.current = window.open(
       "error" in result ? "" : result.data.url,
@@ -170,7 +237,7 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
     );
 
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== DOMAIN) {
+      if (event.origin !== window.location.origin) {
         return;
       }
 
@@ -178,24 +245,16 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
       const result = params.get("result");
       const cause = params.get("cause");
 
-      cookies.remove(`pkce_code_verifier_${providerId}`, {
-        path: "/api/interaction/code",
-      });
-      cookies.remove(`pkce_state_${providerId}`, {
-        path: "/api/interaction/code",
-      });
-      cookies.remove(`pkce_device_id_${providerId}`, {
-        path: "/api/interaction/code",
-      });
-
       if (result === "true") {
-        clearInterval(intervalId);
+        cleanupExternalAccountPopup();
         windowRef.current?.close();
+        windowRef.current = null;
         dispatch(usersApi.util.invalidateTags([ETags.ExternalAccounts]));
         navigate(`/${routes.profile}/${tabs.profile}`);
       } else if (result === "false") {
-        clearInterval(intervalId);
+        cleanupExternalAccountPopup();
         windowRef.current?.close();
+        windowRef.current = null;
         setIsOpen(false);
         dispatch(
           setNoticeError(
@@ -205,18 +264,19 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
       }
     };
 
+    popupMessageHandlerRef.current = messageHandler;
     window.addEventListener("message", messageHandler);
 
-    intervalId = setInterval(() => {
+    popupIntervalRef.current = window.setInterval(() => {
       if (windowRef.current?.closed) {
+        cleanupExternalAccountPopup();
+        windowRef.current = null;
         dispatch(
           setNoticeError(
             translate("pages.addLoginMethod.errors.operationCancelled")
           )
         );
         setIsOpen(false);
-        clearInterval(intervalId);
-        window.removeEventListener("message", messageHandler);
       }
     }, 250);
   };
@@ -235,7 +295,8 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
             address,
             signature: sign,
             rebind,
-            client_id: CLIENT_ID,
+            client_id: systemClientId || "",
+            provider_id: "ETHEREUM",
           }).unwrap();
         }
       }
@@ -298,7 +359,7 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
       );
       const optionsJSON = await responseBind.json();
       const responseVerify = await fetch(
-        "/api/v1/profile/external_accounts?type=mtls",
+        withAppBase(`/api/v1/profile/external_accounts/${providerId}`),
         {
           method: "POST",
           headers: {
@@ -341,7 +402,7 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
 
       // Call API to start WebAuthn device binding process
       const responseBind = await fetch(
-        `/api/webauthn/register?provider_id=${providerId}`,
+        withAppBase(`/api/webauthn/register?provider_id=${providerId}`),
         {
           method: "GET",
           headers: {
@@ -351,11 +412,11 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
         }
       );
 
-      const optionsJSON = await responseBind.json();
+      const { state, ...optionsJSON } = await responseBind.json();
       const authResponse = await startRegistration(optionsJSON);
 
       const responseVerify = await fetch(
-        "/api/v1/profile/external_accounts?type=webauthn",
+        withAppBase(`/api/v1/profile/external_accounts/${providerId}`),
         {
           method: "POST",
           headers: {
@@ -364,6 +425,7 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
           },
           body: JSON.stringify({
             provider_id: providerId,
+            state,
             registrationResponse: authResponse,
           }),
         }
@@ -379,66 +441,50 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
       }
     } catch (error) {
       console.error("WebAuthn binding error:", error);
-      dispatch(
-        setNoticeError(
-          `${translate(
+      const isPreviouslyRegistered = isWebAuthnPreviouslyRegisteredError(error);
+      const errorMessage = isPreviouslyRegistered
+        ? translate("pages.addLoginMethod.errors.webauthnAlreadyRegistered")
+        : `${translate(
             "pages.addLoginMethod.errors.webauthnBindingError"
-          )}: ${error}`
-        )
-      );
+          )}: ${error}`;
+
+      dispatch(setNoticeError(errorMessage));
     }
   };
 
   useEffect(() => {
-    const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== DOMAIN) {
-        return;
-      }
-
-      const params = new URLSearchParams(event.data);
-      const result = params.get("result");
-      const cause = params.get("cause");
-
-      if (result === "true") {
-        console.info("Authentication successful");
-      } else if (result === "false") {
-        console.warn("Authentication failed:", cause);
-      }
-    };
-
-    window.addEventListener("message", messageHandler);
-
     return () => {
-      window.removeEventListener("message", messageHandler);
+      cleanupExternalAccountPopup();
     };
   }, []);
 
   const closeWindow = () => {
+    cleanupExternalAccountPopup();
     setIsOpen(false);
     windowRef.current?.close();
+    windowRef.current = null;
   };
 
   const itemsProviders = providers?.map((provider) => {
     return (
-      <Box
+      <SurfaceBlock
         key={provider.id}
         className={styles.provider}
-        sx={{ borderRadius: componentBorderRadius }}
         onClick={() => {
-          if (provider.type === ProviderType.MTLS) {
+          if (provider.type === EProviderType.MTLS) {
             const mtlsParams = provider.params as IMTLSParams;
             handleMtlsBinding(provider.id.toString(), mtlsParams?.issuer);
-          } else if (provider.type === ProviderType.WEBAUTHN) {
+          } else if (provider.type === EProviderType.WEBAUTHN) {
             handleWebAuthnBinding(provider.id.toString());
           } else if (
-            provider.type === ProviderType.TOTP ||
-            provider.type === ProviderType.HOTP
+            provider.type === EProviderType.TOTP ||
+            provider.type === EProviderType.HOTP
           ) {
-            handleOtpSetup(provider.type);
+            handleOtpSetup(provider.type, provider.id.toString());
           } else {
             const providerCopy = { ...provider } as TOauthProvider;
             setProviderOauth({
-              name: providerCopy.name,
+              name: getLocalizedTextValue(providerCopy.name, i18n.language),
               avatar: providerCopy.avatar,
               type: providerCopy.type,
             });
@@ -461,107 +507,147 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
           )}
         </Avatar>
         <div>
-          <Typography className="text-14">{provider.name}</Typography>
+          <Typography className="text-14">
+            {getLocalizedTextValue(provider.name, i18n.language)}
+          </Typography>
           <Typography className="text-12" color="text.secondary">
             {provider.type}
           </Typography>
         </div>
-      </Box>
+      </SurfaceBlock>
     );
   });
-  // --- Компонент для отображения QR-кода ---
-  // Если backend возвращает qrCode как data:image/png;base64..., просто <img src=...>
-  // Если otpauth://... — генерируем через qrcode
-  const QrCodeDisplay: FC<{ value: string }> = ({ value }) => {
-    const qrRef = useRef<HTMLCanvasElement>(null);
-    useEffect(() => {
-      if (value && qrRef.current && !value.startsWith("data:image")) {
-        QRCode.toCanvas(qrRef.current, value, { width: 180 });
-      }
-    }, [value]);
-    if (value.startsWith("data:image")) {
-      return (
-        <img src={value} alt="QR code" style={{ width: 180, height: 180 }} />
-      );
-    }
-    return <canvas ref={qrRef} style={{ width: 180, height: 180 }} />;
+
+  const closeOtpModal = () => {
+    setOtpModal({ open: false, providerType: null });
   };
 
-  // --- Модальное окно для TOTP/HOTP ---
   const renderOtpModal = () => (
-    <Dialog
-      open={otpModal.open}
-      onClose={() => setOtpModal({ open: false, providerType: null })}
+    <SubmitModal
+      isOpen={otpModal.open}
+      onClose={closeOtpModal}
+      onSubmit={handleOtpConfirm}
+      disabled={
+        otpModal.loading ||
+        !otpModal.data ||
+        otpModal.code?.length !== otpModal.data.digits
+      }
+      actionButtonText={translate("actionButtons.confirm")}
+      title={
+        otpModal.providerType === EProviderType.TOTP
+          ? translate("pages.addLoginMethod.modals.otpSetupTitleTotp")
+          : translate("pages.addLoginMethod.modals.otpSetupTitleHotp")
+      }
     >
-      <DialogTitle>
-        {otpModal.providerType === "TOTP" ? "Настройка TOTP" : "Настройка HOTP"}
-      </DialogTitle>
-      <DialogContent>
-        {otpModal.loading && <div>Загрузка...</div>}
-        {otpModal.error && <div style={{ color: "red" }}>{otpModal.error}</div>}
-        {otpModal.data && (
-          <>
-            <div style={{ textAlign: "center", margin: 16 }}>
-              <QrCodeDisplay value={otpModal.data.qrCode} />
-            </div>
-            <div style={{ marginBottom: 8 }}>
-              <b>Секрет (manual):</b> {otpModal.data.manualEntryKey}
-            </div>
-            <div style={{ marginBottom: 8 }}>
-              <b>Алгоритм:</b> {otpModal.data.algorithm}
-            </div>
-            <div style={{ marginBottom: 8 }}>
-              <b>Цифр:</b> {otpModal.data.digits}
-            </div>
-            {otpModal.data.period && (
-              <div style={{ marginBottom: 8 }}>
-                <b>Период:</b> {otpModal.data.period}
-              </div>
-            )}
-            {otpModal.data.counter !== undefined && (
-              <div style={{ marginBottom: 8 }}>
-                <b>Счетчик:</b> {otpModal.data.counter}
-              </div>
-            )}
-            <TextField
-              label="Введите код из приложения"
-              value={otpModal.code || ""}
-              onChange={(e) =>
-                setOtpModal((prev) => ({ ...prev, code: e.target.value }))
-              }
-              fullWidth
-              margin="normal"
-              disabled={otpModal.loading}
-            />
-          </>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => setOtpModal({ open: false, providerType: null })}
-          disabled={otpModal.loading}
-        >
-          Отмена
-        </Button>
-        <Button
-          onClick={handleOtpConfirm}
-          disabled={otpModal.loading || !otpModal.code}
-          variant="contained"
-        >
-          Подтвердить
-        </Button>
-      </DialogActions>
-    </Dialog>
+      {otpModal.loading && (
+        <Typography className="text-14">
+          {translate("helperText.loading")}
+        </Typography>
+      )}
+      {otpModal.error && (
+        <Typography className="text-14" color="error">
+          {otpModal.error}
+        </Typography>
+      )}
+      {otpModal.data && (
+        <>
+          <Typography sx={{ textAlign: "center", margin: 2 }}>
+            <QrCodeDisplay value={otpModal.data.qrCode} />
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              marginBottom: 1,
+              flexWrap: "wrap",
+            }}
+          >
+            <Typography>
+              {translate("pages.addLoginMethod.modals.otpSecretManualLabel")}
+            </Typography>
+            <Typography className="text-12">
+              {otpModal.data.manualEntryKey}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              marginBottom: 1,
+              alignItems: "center",
+            }}
+          >
+            <Typography>
+              {translate("pages.addLoginMethod.modals.otpAlgorithmLabel")}
+            </Typography>
+            <Typography>{otpModal.data.algorithm}</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              marginBottom: 1,
+              alignItems: "center",
+            }}
+          >
+            <Typography>
+              {translate("pages.addLoginMethod.modals.otpDigitsLabel")}
+            </Typography>
+            <Typography>{otpModal.data.digits}</Typography>
+          </Box>
+          {otpModal.data.period && (
+            <Box
+              sx={{
+                display: "flex",
+                gap: 0.5,
+                marginBottom: 1,
+                alignItems: "center",
+              }}
+            >
+              <Typography>
+                {translate("pages.addLoginMethod.modals.otpPeriodLabel")}
+              </Typography>
+              <Typography>{otpModal.data.period}</Typography>
+            </Box>
+          )}
+          {otpModal.data.counter !== undefined && (
+            <Box
+              sx={{
+                display: "flex",
+                gap: 0.5,
+                marginBottom: 1,
+                alignItems: "center",
+              }}
+            >
+              <Typography>
+                {translate("pages.addLoginMethod.modals.otpCounterLabel")}
+              </Typography>
+              <Typography className="text-12">
+                {otpModal.data.counter}
+              </Typography>
+            </Box>
+          )}
+          <Typography sx={{ marginTop: "16px" }} color="text.secondary">
+            {translate("pages.addLoginMethod.modals.otpModalInstruction")}
+          </Typography>
+          <InputCode
+            value={otpModal.code || ""}
+            onChange={handleOtpCodeChange}
+            length={otpModal.data.digits}
+            disabled={otpModal.loading}
+            autoFocus
+            dataTestId="otp-code-input"
+          />
+        </>
+      )}
+    </SubmitModal>
   );
 
   return (
     <div className="page-container">
       <div className="content">
-        <Box
-          className={styles.container}
-          sx={{ borderRadius: componentBorderRadius }}
-        >
-          <Typography className="title-medium">
+        <SurfaceBlock className={styles.container}>
+          <Typography className="text-20-medium" sx={{ marginBottom: "24px" }}>
             {translate("pages.addLoginMethod.title")}
           </Typography>
           <Typography
@@ -576,17 +662,17 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
             {itemsProviders?.length ? itemsProviders : ""}
           </div>
           <ActionButtons onCancel={() => navigate(-1)} />
-        </Box>
+        </SurfaceBlock>
         <ModalInfo onClose={closeWindow} isOpen={isOpen}>
           <Box
             className={styles.modalHeader}
-            sx={{ borderRadius: componentBorderRadius }}
+            sx={{ borderRadius: theme.encvoy.componentBorderRadius }}
           >
             <Avatar
               variant="square"
               src={getImageURL(providerOauth.avatar)}
               className={styles.modalIcon}
-              sx={{ borderRadius: componentBorderRadius }}
+              sx={{ borderRadius: theme.encvoy.componentBorderRadius }}
             >
               {!providerOauth.avatar && (
                 <CustomIcon
@@ -598,7 +684,7 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
           </Box>
           <Box
             className={styles.modalContent}
-            sx={{ borderRadius: componentBorderRadius }}
+            sx={{ borderRadius: theme.encvoy.componentBorderRadius }}
           >
             <Typography className={styles.modalTitle}>
               {translate("pages.addLoginMethod.modals.loginToAccount", {
@@ -615,6 +701,49 @@ export const AddIdentifyToProfileComponent: FC<IAddIdentifyToProfileProps> = ({
     </div>
   );
 };
+
+interface IQrCodeDisplayProps {
+  value: string;
+  size?: number;
+  ariaLabel?: string;
+}
+
+const QrCodeDisplay = memo(
+  ({ value, size = 180, ariaLabel = "QR code" }: IQrCodeDisplayProps) => {
+    const qrRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+      if (value && qrRef.current && !value.startsWith("data:image")) {
+        QRCode.toCanvas(qrRef.current, value, { width: size }).catch(
+          (error) => {
+            console.error("QR code generation error:", error);
+          }
+        );
+      }
+    }, [size, value]);
+
+    if (value.startsWith("data:image")) {
+      return (
+        <img
+          src={value}
+          alt={ariaLabel}
+          style={{ width: size, height: size }}
+        />
+      );
+    }
+
+    return (
+      <canvas
+        ref={qrRef}
+        aria-label={ariaLabel}
+        role="img"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+);
+
+QrCodeDisplay.displayName = "QrCodeDisplay";
 
 export const AddIdentifyToProfile = connect(mapStateToProps)(
   AddIdentifyToProfileComponent

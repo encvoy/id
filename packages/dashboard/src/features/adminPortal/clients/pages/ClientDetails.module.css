@@ -2,15 +2,22 @@
   height: 100%;
   display: grid;
   grid-gap: 20px;
+  padding: 12px;
   grid-template-areas:
     "mainInfo mainInfo"
-    "usersList addInfo";
+    "metrics addInfo"
+    "usersList usersList";
   grid-template-columns: minmax(0, 700px) 1fr;
   grid-template-rows: max-content;
+  overflow-y: scroll;
 }
 
 .mainInfo {
   grid-area: mainInfo;
+}
+
+.metrics {
+  grid-area: metrics;
 }
 
 .addInfo {
@@ -21,12 +28,20 @@
   grid-area: usersList;
 }
 
+.listWrapper {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
+
 @media screen and (max-width: 1023px) {
   .client {
-    grid-template-areas:
-      "mainInfo mainInfo"
-      "usersList addInfo";
     grid-template-columns: 1fr 1fr;
+  }
+
+  .listWrapper {
+    display: flex;
+    flex-direction: column-reverse;
   }
 }
 

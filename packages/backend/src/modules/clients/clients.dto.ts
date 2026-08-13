@@ -1,9 +1,12 @@
 import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import * as cv from 'class-validator';
-import { IsAnyUrl } from '../../custom.dto';
+import { IsAnyUrl, IsLocalizedText } from '../../custom.dto';
 import { TransformToArray, TransformToBoolean, TransformToNumber } from '../../decorators';
-import { ECoverModes, SortDirection, UserRoles } from '../../enums';
+import { ECoverModes, ELocales, SortDirection, UserRoles } from '../../enums';
+import { TLocalizedTextDto } from 'src/utils/localized-text-dto';
+
+const CLIENT_NAME_LOCALES = Object.values(ELocales);
 
 export enum EAuthMethodTypes {
   client_secret_basic = 'client_secret_basic',
@@ -38,13 +41,29 @@ enum EResponseTypes {
 }
 
 export class CreateClientDto {
-  @cv.IsString()
-  @cv.Matches(/^\S/)
-  @cv.MaxLength(50)
-  @cv.MinLength(1)
-  @ApiProperty()
-  name: string;
+  @cv.IsNotEmpty()
+  @cv.IsObject()
+  @IsLocalizedText(CLIENT_NAME_LOCALES, {
+    fallbackLocale: ELocales.ru,
+    requireAtLeastOne: true,
+    maxPerLang: 50,
+    validationOptions: {
+      message: 'name must contain at least one non-empty localized value, each up to 50 chars',
+    },
+  })
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      type: 'string',
+    },
+    example: {
+      'ru-RU': 'Приложение',
+      'en-US': 'Application',
+    },
+  })
+  name: TLocalizedTextDto;
 
+  @cv.IsNotEmpty()
   @IsAnyUrl()
   @cv.MaxLength(2000)
   @ApiProperty()
@@ -117,6 +136,26 @@ export class CreateClientDto {
   catalog?: boolean;
 
   @cv.IsOptional()
+  @IsLocalizedText(CLIENT_NAME_LOCALES, {
+    fallbackLocale: ELocales.ru,
+    maxPerLang: 50,
+    validationOptions: {
+      message: 'catalog_name must be a localized text object with string values up to 50 chars',
+    },
+  })
+  @ApiPropertyOptional({
+    type: 'object',
+    additionalProperties: {
+      type: 'string',
+    },
+    example: {
+      'ru-RU': 'Приложение',
+      'en-US': 'Application',
+    },
+  })
+  catalog_name?: TLocalizedTextDto;
+
+  @cv.IsOptional()
   @cv.IsBoolean()
   @TransformToBoolean()
   @ApiPropertyOptional({ type: Boolean })
@@ -133,6 +172,17 @@ export class CreateClientDto {
   @TransformToBoolean()
   @ApiPropertyOptional({ type: Boolean })
   authorize_only_employees?: boolean;
+
+  @cv.IsOptional()
+  @cv.IsBoolean()
+  @TransformToBoolean()
+  @ApiPropertyOptional({ type: Boolean })
+  authorize_auto_by_session?: boolean;
+
+  @cv.IsString()
+  @cv.IsOptional()
+  @ApiPropertyOptional()
+  parent_id?: string;
 
   @cv.IsOptional()
   @TransformToBoolean()
@@ -162,6 +212,14 @@ export class UpdateAvatarClientDto {
   cover?: string;
 }
 
+export class TransferClientOwnerDto {
+  @cv.IsString()
+  @cv.IsNotEmpty()
+  @ApiProperty({ description: 'Target owner user id' })
+  user_id: string;
+}
+
+// TODO: Simplify these types.
 export class WidgetColorsDto {
   @cv.IsString()
   @cv.Matches(/(^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$)/, {
@@ -233,12 +291,6 @@ export class UpdateClientDto extends PartialType(
   @ApiPropertyOptional({ type: Boolean })
   hide_avatars_of_big_providers: boolean;
 
-  @cv.MaxLength(255)
-  @cv.IsString()
-  @cv.IsOptional()
-  @ApiPropertyOptional()
-  client_secret?: string;
-
   @cv.IsArray()
   @cv.IsOptional()
   @ApiPropertyOptional({ type: [String], example: ['1'] })
@@ -259,10 +311,24 @@ export class UpdateClientDto extends PartialType(
   @ApiPropertyOptional()
   widget_colors?: WidgetColorsDto;
 
-  @cv.IsString()
   @cv.IsOptional()
-  @ApiPropertyOptional()
-  widget_title?: string;
+  @IsLocalizedText(CLIENT_NAME_LOCALES, {
+    fallbackLocale: ELocales.ru,
+    validationOptions: {
+      message: 'widget_title must be a localized text object with string values',
+    },
+  })
+  @ApiPropertyOptional({
+    type: 'object',
+    additionalProperties: {
+      type: 'string',
+    },
+    example: {
+      'ru-RU': 'Вход в APP_NAME',
+      'en-US': 'Sign in to APP_NAME',
+    },
+  })
+  widget_title?: TLocalizedTextDto;
 
   @TransformToNumber()
   @cv.IsOptional()

@@ -7,7 +7,15 @@ COPY packages/widget-auth ./
 RUN sed -i "s|distDir: '../backend/views/widget'|distDir: './out'|g" next.config.ts
 RUN npm run build
 
-# Stage 2: backend
+# # Stage 2: mini widget
+# FROM node:22.20-alpine3.21 AS mini-widget-builder
+# WORKDIR /miniWidget
+# COPY packages/miniWidget/package.json ./
+# RUN npm install
+# COPY packages/miniWidget ./
+# RUN npm run build:umd
+
+# Stage 4: backend
 FROM node:22-bookworm-slim AS backend-builder
 WORKDIR /backend
 
@@ -23,16 +31,14 @@ COPY packages/backend ./
 RUN npx prisma generate
 RUN npm run build
 
-# Stage 3: Production
+# Stage 5: Production
 FROM node:22-bookworm-slim AS production
+ARG AUTH_TOKEN=""
+ENV AUTH_TOKEN=${AUTH_TOKEN}
+
 WORKDIR /app
+
 RUN apt-get update -y && apt-get install -y \
-  libsasl2-dev \
-  libauthen-sasl-perl \
-  libsasl2-2 \
-  libsasl2-modules \
-  libsasl2-modules-db \
-  libsasl2-modules-gssapi-mit \
   python3 \
   make \
   g++ \
@@ -46,8 +52,7 @@ COPY --from=backend-builder /backend/prisma ./prisma
 COPY --from=backend-builder /backend/public ./public
 COPY --from=backend-builder /backend/views ./views
 COPY --from=widget-builder /app/widget-auth/out ./views/widget
-COPY --from=mkdocs-builder /app/docs/site ./views/docs
-
 RUN npm rebuild bcrypt --build-from-source
+# COPY --from=mini-widget-builder /backend/auth/ /app/auth/
 EXPOSE 3005
 CMD ["node", "dist/main.js"]

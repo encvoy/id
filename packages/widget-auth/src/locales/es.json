@@ -18,6 +18,7 @@
       "offlineAccess": "La aplicación podrá acceder a sus datos en cualquier momento",
       "accounts": "Ver las cuentas de redes sociales añadidas al perfil",
       "openid": "Ver su identificador",
+      "internal": "Información interna del sistema (áreas personales, catálogo, idioma)",
       "lk": "Ver información breve de los perfiles de usuario",
       "locale": "Ver información sobre el idioma",
       "title": "Accesos solicitados",
@@ -34,8 +35,7 @@
       "new": "Nueva contraseña"
     },
     "identifiers": {
-      "title": "Confirme la cuenta",
-      "second-title": "Agregar identificadores necesarios"
+      "title": "Confirme la cuenta"
     },
     "recover": {
       "account": "Recuperación de cuenta",
@@ -53,6 +53,13 @@
       "uploadImage": "Subir imagen",
       "requiredImage": "La imagen es obligatoria",
       "selectFile": "Archivo seleccionado: {{value}}"
+    },
+    "replaceEmail": {
+      "title": "Cambiar correo electrónico",
+      "description": "La dirección de correo electrónico verificada no cumple con las reglas de validación actuales. Proporcione un nuevo email para completar el inicio de sesión o utilice un email diferente para acceder."
+    },
+    "missingIdentifiers": {
+      "title": "Adición de los identificadores requeridos"
     }
   },
   "helperText": {
@@ -71,6 +78,7 @@
   "actionButtons": {
     "home": "Inicio",
     "logIn": "Iniciar sesión",
+    "back": "Volver",
     "save": "Guardar",
     "create": "Crear",
     "createAccount": "Crear cuenta",
@@ -84,11 +92,32 @@
     "select": "Seleccionar",
     "recoverPassword": "Recuperar contraseña"
   },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Review important messages before completing sign-in.",
+    "continue": "Continue",
+    "markAsRead": "Mark as read",
+    "types": {
+      "system": "System",
+      "organization": "Organization",
+      "client": "Application"
+    },
+    "totalCount": "Nuevas notificaciones: {{count}}",
+    "nextNotification": "Siguiente notificación",
+    "completeSignIn": "Completar inicio de sesión",
+    "markAsReadHelpText": "El mensaje se mostrará al iniciar sesión hasta que lo marque como leído."
+  },
   "errors": {
     "error": "Error",
     "errorOccurred": "Se produjo un error",
     "requiredField": "Campo obligatorio",
+    "valueNotAvailable": "Este valor ya está en uso",
     "invalidEmailFormat": "Formato de correo electrónico no válido",
     "passwordsMatch": "La nueva contraseña no debe coincidir con la anterior"
+  },
+  "webauthn": {
+    "noPasskeyDescription": "No se seleccionó ninguna passkey. Para agregar una, continúe y elija la cuenta a la que pertenecerá.",
+    "continueAddingPasskey": "Continuar agregando passkey",
+    "tryAgain": "Intentarlo de nuevo"
   }
 }

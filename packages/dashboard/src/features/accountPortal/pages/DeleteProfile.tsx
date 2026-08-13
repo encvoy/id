@@ -1,18 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FC } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { connect, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { setNoticeError } from "src/shared/lib/noticesSlice";
-import { useDeleteUserMutation } from "src/shared/api/users";
-import { TUserSlice } from "src/shared/lib/userSlice";
+import { setNoticeError } from "src/shared/slices/noticesSlice";
+import { IDeleteUserResult, useDeleteUserMutation } from "src/shared/api/users";
+import { TUserSlice } from "src/shared/slices/userSlice";
 import { logout } from "src/shared/utils/auth";
 import { RootState } from "../../../app/store/store";
 import { Typography } from "@mui/material";
-import { PasswordTextField } from "../../../shared/ui/components/PasswordTextField.tsx";
-import { ActionButtons } from "../../../shared/ui/components/ActionButtons";
+import Button from "@mui/material/Button";
+import { PasswordTextField } from "@encvoy-id/components";
+import { ActionButtons } from "@encvoy-id/components";
+import { SurfaceBlock } from "@encvoy-id/components";
 import styles from "./DeleteProfile.module.css";
 
 const mapStateToProps = (state: RootState) => ({
@@ -25,6 +27,9 @@ interface IDeleteProfileComponent {
 
 const DeleteProfileComponent: FC<IDeleteProfileComponent> = ({ userId }) => {
   const { t: translate } = useTranslation();
+  const [deleteResult, setDeleteResult] = useState<IDeleteUserResult | null>(
+    null
+  );
 
   const schema = yup.object({
     password: yup.string().required(translate("errors.requiredField")),
@@ -44,11 +49,55 @@ const DeleteProfileComponent: FC<IDeleteProfileComponent> = ({ userId }) => {
 
   const { handleSubmit, setError } = methods;
 
+  useEffect(() => {
+    if (!deleteResult) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      void logout();
+    }, 20000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [deleteResult]);
+
+  const successMessage = useMemo(() => {
+    if (!deleteResult) {
+      return "";
+    }
+
+    if (deleteResult.mode === "deleted") {
+      return translate("pages.deleteAccount.success.immediate");
+    }
+
+    if (deleteResult.mode === "archived") {
+      return translate(
+        deleteResult.restore_allowed
+          ? "pages.deleteAccount.success.archived"
+          : "pages.deleteAccount.success.archivedNoRestore"
+      );
+    }
+
+    return translate(
+      deleteResult.restore_allowed
+        ? "pages.deleteAccount.success.scheduled"
+        : "pages.deleteAccount.success.scheduledNoRestore",
+      {
+        days: deleteResult.retention_days,
+      }
+    );
+  }, [deleteResult, translate]);
+
   const onSubmit: SubmitHandler<{ password: string }> = async (data) => {
     if (userId) {
       try {
-        await deleteUser({ id: userId, password: data.password }).unwrap();
-        logout();
+        const result = await deleteUser({
+          id: userId,
+          password: data.password,
+        }).unwrap();
+        setDeleteResult(result);
       } catch (error: any) {
         if (error?.data?.message) {
           setError("password", { message: error?.data?.message });
@@ -70,38 +119,76 @@ const DeleteProfileComponent: FC<IDeleteProfileComponent> = ({ userId }) => {
   return (
     <div className="page-container">
       <div className="content">
-        <div className={styles.container}>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <SurfaceBlock className={styles.container}>
+          <Typography
+            style={{ marginBottom: "12px" }}
+            className="text-20-medium"
+          >
+            {translate(
+              deleteResult
+                ? "pages.deleteAccount.success.title"
+                : "pages.deleteAccount.title"
+            )}
+          </Typography>
+
+          {deleteResult ? (
+            <>
               <Typography
-                sx={{ marginBottom: "24px" }}
-                className="title-medium"
-              >
-                {translate("pages.deleteAccount.title")}
-              </Typography>
-              <Typography
-                color="custom.error"
-                sx={{ marginBottom: "24px" }}
+                color="text.secondary"
+                sx={{ marginBottom: "16px" }}
                 className="text-14"
               >
-                {translate("pages.deleteAccount.description")}
+                {successMessage}
               </Typography>
               <Typography
                 color="text.secondary"
+                sx={{ marginBottom: "24px" }}
                 className="text-14"
-                sx={{ marginBottom: "8px" }}
               >
-                {translate("pages.deleteAccount.passwordConfirmation")}
+                {translate("pages.deleteAccount.success.sessionsRevoked")}
               </Typography>
-              <PasswordTextField nameField="password" />
-              <ActionButtons
-                onCancel={() => navigate(-1)}
-                submitText={translate("actionButtons.delete")}
-                onSubmit={handleSubmit(onSubmit)}
-              />
-            </form>
-          </FormProvider>
-        </div>
+              <Typography
+                color="text.secondary"
+                sx={{ marginBottom: "24px" }}
+                className="text-14"
+              >
+                {translate("pages.deleteAccount.success.redirect", {
+                  seconds: 20,
+                })}
+              </Typography>
+              <Button variant="contained" onClick={() => void logout()}>
+                {translate("pages.deleteAccount.success.exitNow")}
+              </Button>
+            </>
+          ) : (
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Typography
+                  color="text.secondary"
+                  sx={{ marginBottom: "24px" }}
+                  className="text-14"
+                >
+                  {translate("pages.deleteAccount.description")}
+                </Typography>
+                <Typography className="text-14" sx={{ marginBottom: "8px" }}>
+                  {translate("pages.deleteAccount.passwordConfirmation")}
+                </Typography>
+                <PasswordTextField
+                  showText={translate("actionButtons.show")}
+                  hideText={translate("actionButtons.hide")}
+                  copyText={translate("actionButtons.copy")}
+                  nameField="password"
+                />
+                <ActionButtons
+                  cancelText={translate("actionButtons.cancel")}
+                  onCancel={() => navigate(-1)}
+                  submitText={translate("actionButtons.delete")}
+                  onSubmit={handleSubmit(onSubmit)}
+                />
+              </form>
+            </FormProvider>
+          )}
+        </SurfaceBlock>
       </div>
     </div>
   );

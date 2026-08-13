@@ -30,40 +30,6 @@
   margin: auto 0;
 }
 
-.rowWithIcon {
-  display: flex;
-  align-items: center;
-}
-
-.icon {
-  width: 28px;
-  height: 28px;
-  margin-right: 10px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  background: var(--mui-palette-divider);
-  padding: 4px;
-}
-
-.clientLink {
-  display: inline;
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.1s ease-in-out;
-}
-
-.clientLink:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.textNumber {
-  margin-left: 4px;
-  color: var(--mui-palette-text-primary);
-}
-
 .clientProviders {
   grid-area: providers;
   margin: auto 0;
@@ -150,11 +116,6 @@
     width: 26px;
     height: 26px;
     margin-right: 6px;
-  }
-
-  .icon {
-    width: 18px;
-    height: 18px;
   }
 
   .clientProviders {

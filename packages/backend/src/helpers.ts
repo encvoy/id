@@ -7,10 +7,15 @@ import fs from 'fs';
 import path, { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { DOMAIN } from './constants';
-import { ListInputDto } from './custom.dto';
 import { Ei18nCodes, IdentifierType, UserRoles } from './enums';
 import { Client } from '@prisma/client';
-import { prisma } from './modules';
+import { prisma } from './modules/prisma/prisma.client';
+import { sanitizeResponseBody } from './utils/response-sanitizer';
+
+type TListResponseParams = {
+  offset?: number;
+  limit?: number;
+};
 
 export const isEmpty = (obj) =>
   [Object, Array].includes((obj || {}).constructor) && !Object.entries(obj || {}).length;
@@ -72,7 +77,6 @@ export function prepareIdentifier(identifier: string, type: IdentifierType): str
  * 8-912-345-67-89
  * +4791234567
  * +12025550123
- * и т.д.
  */
 export const PHONE_REGEX =
   /^(\+?\d{1,3})?[-.\s]?\(?(\d{3})\)?[-.\s]?\d{3}[-.\s]?\d{2}[-.\s]?\d{2}$|^(\+?\d{1,3})\d{8,15}$/;
@@ -155,6 +159,11 @@ export async function getOrganization(client: string | Client): Promise<Client> 
   return organization;
 }
 
+export async function getOrganizationId(client: string | Client): Promise<string> {
+  const organization = await getOrganization(client);
+  return organization.client_id;
+}
+
 export const getObjectKeys = <T extends Record<string, unknown>>(object: T): Array<keyof T> =>
   <Array<keyof T>>Object.keys(object);
 
@@ -164,6 +173,20 @@ export const getObjectEntries = <T extends Record<string, never>, K extends keyo
 
 export const removeEmptyValues = (obj: Object) =>
   Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
+
+/**
+ * Extracts CN value from DN-like string (e.g. "CN=John Doe,OU=IT" or "/CN=John Doe/O=Org").
+ * Returns null when CN is missing.
+ */
+export function getCnFromString(value?: string | null): string | null {
+  if (!value) return null;
+
+  const cnMatch = value.match(/(?:^|[,/])\s*CN\s*=\s*((?:\\.|[^,/])+)/i);
+  if (!cnMatch?.[1]) return null;
+
+  const cn = cnMatch[1].replace(/\\([,/])/g, '$1').trim();
+  return cn || null;
+}
 
 export function errorHandler(message: string, e: any) {
   if (!(e instanceof HttpException)) {
@@ -200,46 +223,6 @@ export function generateRandomString(length = 34): string {
 export const stringToBoolean = (value?: string) => {
   if (!value) return undefined;
   return !!JSON.parse(String(value).toLowerCase());
-};
-
-export const formatDate = (value: string | Date): string => {
-  const date = new Date(value);
-
-  return (
-    `0${date.getDate()}`.slice(-2) +
-    ` ${getMonthByNumber(date.getMonth())} ${date.getFullYear()} г.`
-  );
-};
-
-export const getMonthByNumber = (month: number): string => {
-  switch (month) {
-    case 0:
-      return 'January';
-    case 1:
-      return 'February';
-    case 2:
-      return 'March';
-    case 3:
-      return 'April';
-    case 4:
-      return 'May';
-    case 5:
-      return 'June';
-    case 6:
-      return 'July';
-    case 7:
-      return 'August';
-    case 8:
-      return 'September';
-    case 9:
-      return 'October';
-    case 10:
-      return 'November';
-    case 11:
-      return 'December';
-    default:
-      return '';
-  }
 };
 
 export type decodedBase64ImageData = { type?: string; base64?: string; data?: Buffer };
@@ -288,6 +271,37 @@ export async function deleteImageFromLocalPath(...paths: string[]) {
   }
 }
 
+export const duplicateProviderAvatarForExternalAccount = async (providerAvatar: string) => {
+  if (!providerAvatar) return providerAvatar;
+
+  const providerAvatarPath = providerAvatar.split('public/images/provider/')[1]?.split('?')[0];
+  if (!providerAvatarPath) return providerAvatar;
+
+  const imageExtension = path.extname(providerAvatarPath) || '.png';
+  const imageName = `${uuidv4()}${imageExtension}`;
+  const providerAvatarFullPath = join(
+    process.cwd(),
+    'public',
+    'images',
+    'provider',
+    ...providerAvatarPath.split('/'),
+  );
+  const duplicatedAvatarFullPath = join(
+    process.cwd(),
+    'public',
+    'images',
+    'externalAccount',
+    imageName,
+  );
+
+  try {
+    await fs.promises.copyFile(providerAvatarFullPath, duplicatedAvatarFullPath);
+    return `${DOMAIN}/public/images/externalAccount/${imageName}`;
+  } catch {
+    return providerAvatar;
+  }
+};
+
 export const saveExternalAccountImageOnAuth = async (
   avatarData: decodedBase64ImageData,
   avatar: string,
@@ -308,15 +322,6 @@ export const saveExternalAccountImageOnAuth = async (
     savePath = null;
   }
   return { savePath, imagesAreEqual };
-};
-
-export const saveExternalAccountImageOnBind = async (avatarData: decodedBase64ImageData) => {
-  let pathToImage = '';
-  if (avatarData) {
-    const imageName = await uploadExternalAccountImage(avatarData);
-    pathToImage = imageName ? DOMAIN + '/public/images/externalAccount/' + imageName : undefined;
-  }
-  return pathToImage;
 };
 
 export const uploadExternalAccountImage = async (
@@ -367,20 +372,19 @@ export const uploadExternalAccountImage = async (
 export function convertToRoles(role: string): UserRoles {
   switch (role.toLowerCase()) {
     case 'admin':
-      return UserRoles.ADMIN;
+      return UserRoles.MANAGER;
     case 'editor':
       return UserRoles.EDITOR;
     case 'owner':
       return UserRoles.OWNER;
     case 'user':
       return UserRoles.USER;
+    case 'trusted_user':
+      return UserRoles.TRUSTED_USER;
     default:
       return UserRoles.NONE;
   }
 }
-
-export const isAdministrator = (role?: string): boolean =>
-  role === UserRoles.OWNER || role === UserRoles.ADMIN;
 
 export const isEditor = (role?: string): boolean =>
   role === UserRoles.OWNER || role === UserRoles.EDITOR;
@@ -583,7 +587,7 @@ export function prepareListResponse(
   res: Response,
   data: any[],
   totalCount: number,
-  params: ListInputDto,
+  params: TListResponseParams,
 ) {
   const currentOffset = params.offset || 0;
   const nextOffset = currentOffset + (params.limit || 10);
@@ -595,7 +599,7 @@ export function prepareListResponse(
     'X-Next-Offset': nextOffset,
   });
 
-  return res.json(data);
+  return res.json(sanitizeResponseBody(data));
 }
 
 export function maskEmail(email: string): string {
@@ -605,42 +609,4 @@ export function maskEmail(email: string): string {
   }
   const maskedLocalPart = localPart[0] + '***' + localPart[localPart.length - 1];
   return `${maskedLocalPart}@${domain}`;
-}
-
-export async function loadModules(
-  pathFolder: string,
-  moduleHandler: (module: any) => Promise<void>,
-) {
-  // If path is not specified, exit
-  if (!pathFolder) return;
-
-  // If path is not a folder or does not exist, exit
-  if (!fs.existsSync(pathFolder) || !fs.lstatSync(pathFolder).isDirectory()) {
-    console.warn(`Folder ${pathFolder} not found`);
-    return;
-  }
-
-  // Iterate over all folders in the specified directory
-  const files = fs.readdirSync(pathFolder);
-  for (const file of files) {
-    // If not a folder, skip
-    if (!fs.lstatSync(path.join(pathFolder, file)).isDirectory()) {
-      continue;
-    }
-
-    // Check that the folder contains an index file
-    const indexPathJS = path.join(pathFolder, file, 'index.js');
-    const indexPathTS = path.join(pathFolder, file, 'index.ts');
-    if (!fs.existsSync(indexPathJS) && !fs.existsSync(indexPathTS)) {
-      console.warn(`Index file not found in folder ${file}`);
-      continue;
-    }
-
-    try {
-      const module = await import(path.join(pathFolder, file));
-      await moduleHandler(module);
-    } catch (error) {
-      console.error(`Error loading providers from ${file}:`, error);
-    }
-  }
 }

@@ -1,5 +1,5 @@
 import { FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
-import { IQuerySortParams, responseListItems } from "./types";
+import { IQuerySortParams, IResponseListItems } from "./types";
 import { createFetchArgs, parseResponse } from "./helpers";
 import { ICatalogClient } from "./clients";
 import { emptySplitApi } from "./baseApi";
@@ -8,7 +8,7 @@ import { endPoints, ETags } from "src/shared/utils/enums";
 export const catalogApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getCatalog: builder.query<
-      responseListItems<ICatalogClient[]>,
+      IResponseListItems<ICatalogClient[]>,
       IQuerySortParams
     >({
       query: (query) =>

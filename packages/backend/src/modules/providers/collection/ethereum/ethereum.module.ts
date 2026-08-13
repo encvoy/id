@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { PrismaModule } from 'src/modules/prisma';
+import { PrismaModule } from 'src/modules/prisma/prisma.module';
 import { RATE_LIMIT, RATE_LIMIT_TTL_SEC } from '../../../../constants';
 import { EthereumController } from './ethereum.controller';
 import { EthereumService } from './ethereum.service';

@@ -22,7 +22,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["../dashboard/src/packages/authWidget/*"]
+      "~/*": ["../dashboard/src/packages/authWidget/*"],
+      "src/*": ["../dashboard/src/*"]
     }
   },
   "include": [
