@@ -1,35 +1,3 @@
----
-title: "Configuring Encvoy ID User Profile — Password and Fields"
-description: "Learn how to configure the Encvoy ID user profile: password, basic and additional fields, data validation, email and phone confirmation."
-keywords:
-keywords:
-  - Encvoy ID user profile configuration
-  - Encvoy ID user profile
-  - Encvoy ID user settings
-  - Encvoy ID profile management
-  - Encvoy ID password policy
-  - password policy configuration
-  - password requirements
-  - user profile field validation
-  - Encvoy ID validation rules
-  - validation rules configuration
-  - validation regular expressions
-  - OAuth email confirmation
-  - OAuth phone confirmation
-  - email verification
-  - phone verification
-  - basic profile fields
-  - additional profile fields
-  - custom profile fields
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "User Profile Configuration"
-order: 5
----
-
 # How to Configure the Encvoy ID User Profile
 
 In this guide, we will explain how to configure the user profile and password policy in **Encvoy ID**. You will learn how to manage profile fields, field validation, and set up email address and phone number confirmation.
@@ -48,7 +16,9 @@ In this guide, we will explain how to configure the user profile and password po
 
 ---
 
-## Password Policy { #password-policy }
+<a name="password-policy"></a>
+
+## Password Policy
 
 **Password policy in Encvoy ID** is a set of rules defining requirements for the complexity and security of user passwords. It helps protect accounts from hacking and unauthorized access.
 
@@ -99,7 +69,9 @@ To ensure robust account protection, it is recommended to enable the following p
 
 ---
 
-## Basic User Profile Fields { #basic-profile-fields }
+<a name="basic-profile-fields"></a>
+
+## Basic User Profile Fields
 
 **Basic profile fields** are mandatory system attributes created automatically for every user upon registration. They form the base structure of the profile and ensure the correct operation of authentication, identification, and cross-system communication mechanisms.
 
@@ -148,7 +120,9 @@ In the interface, a quick view of field settings is available for each field in 
 
 5. Save the changes in the editing form.
 
-### Basic Field Parameters { #basic-field-parameters }
+<a name="basic-field-parameters"></a>
+
+### Basic Field Parameters
 
 | Name                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -166,7 +140,9 @@ In the interface, a quick view of field settings is available for each field in 
 
 ---
 
-## Additional User Profile Fields { #additional-profile-fields }
+<a name="additional-profile-fields"></a>
+
+## Additional User Profile Fields
 
 **Additional profile fields** are custom attributes that can be created to store any specific data not included in the standard set.
 
@@ -220,7 +196,9 @@ In the interface, a quick view of field settings is available for each field in 
 
 > ⚠️ **Note**: When a field is deleted, all user data stored in it will be permanently lost.
 
-### Additional Field Parameters { #additional-field-parameters }
+<a name="additional-field-parameters"></a>
+
+### Additional Field Parameters
 
 | Name                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -236,7 +214,9 @@ In the interface, a quick view of field settings is available for each field in 
 
 ---
 
-## Profile Field and Password Validation Rules { #validation-rules }
+<a name="validation-rules"></a>
+
+## Profile Field and Password Validation Rules
 
 **Field validation rules** are a set of checks by which the system evaluates the correctness of data entered by the user.
 
@@ -332,7 +312,9 @@ Changes are applied automatically.
 
 ---
 
-## Email Confirmation Settings { #email-confirmation-settings }
+<a name="email-confirmation-settings"></a>
+
+## Email Confirmation Settings
 
 **Email confirmation in Encvoy ID** is a mechanism for verifying the validity of the address provided by the user during registration, authorization, or profile data modification.
 
@@ -404,7 +386,9 @@ Email confirmation settings are defined by the administrator and include mail se
 
 ---
 
-## Phone Number Confirmation Settings { #phone-confirmation-settings }
+<a name="phone-confirmation-settings"></a>
+
+## Phone Number Confirmation Settings
 
 **Phone number confirmation in Encvoy ID** is a mechanism for verifying the validity of the contact number provided by the user during registration, login, or profile modification.
 
@@ -472,7 +456,9 @@ In the current version of **Encvoy ID**, number confirmation is implemented thro
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — guide on connecting and configuring external authentication services.
 - [Application Management](./docs-10-common-app-settings.md) — guide on creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.

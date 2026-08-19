@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Login Methods — Connection and Configuration"
-description: "Learn how to configure login methods and the authorization widget in Encvoy ID. Quick connection of OAuth, WebAuthn, mTLS, HOTP, and TOTP providers with examples."
-keywords:
-  - Encvoy ID login methods
-  - SSO authorization
-  - authorization widget
-  - OAuth 2.0 configuration
-  - authentication providers
-  - WebAuthn mTLS TOTP
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [en]
-menu_title: "Login Methods Configuration"
-order: 7
----
-
 # How to Configure Login Methods in Encvoy ID
 
 In this guide, you will learn how to configure login methods in **Encvoy ID**, including standard OAuth providers and enhanced authentication methods (WebAuthn, mTLS, TOTP). We will also explain how to properly set up and style the authorization widget to make the login process secure and user-friendly.
@@ -30,7 +11,9 @@ In this guide, you will learn how to configure login methods in **Encvoy ID**, i
 
 ---
 
-## Login Methods Overview { #login-methods-overview }
+<a name="login-methods-overview"></a>
+
+## Login Methods Overview
 
 A **login method** is an authentication method for users that allows them to authorize in the personal account or connected applications. It is a key element of the Single Sign-On system, providing flexible and secure identification.
 
@@ -44,7 +27,9 @@ A **login method** is an authentication method for users that allows them to aut
 
 Combine login methods to increase security. Implement **two-factor authentication**, where after entering the first factor (login, password, or another method), the user must confirm their identity using a second factor (phone, email, or WebAuthn). [How to configure two-factor authentication →](./docs-04-box-system-settings.md#two-factor-authentication)
 
-### Management Levels and Publicity of Login Methods { #management-levels-and-publicity }
+<a name="management-levels-and-publicity"></a>
+
+### Management Levels and Publicity of Login Methods
 
 Login methods can be created in different types of **Encvoy ID** dashboards:
 
@@ -62,7 +47,9 @@ For login methods created at the **service** or **organization** level, you can 
 
 ---
 
-## Managing Login Methods { #managing-login-methods }
+<a name="managing-login-methods"></a>
+
+## Managing Login Methods
 
 ### Creating a New Login Method
 
@@ -151,7 +138,9 @@ The setting is applied without additional confirmation.
 
 ---
 
-## Login Widget Settings { #login-widget-settings }
+<a name="login-widget-settings"></a>
+
+## Login Widget Settings
 
 ### What is the Login Widget?
 
@@ -232,8 +221,10 @@ To configure the display of a login method in the widget:
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Application Management](./docs-10-common-app-settings.md) — guide for creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.
-- [Organization Management](./docs-02-box-system-install.md) — guide for working with an organization in **Encvoy ID**.
+- [Organization Management](./docs-11-common-org-settings.md) — guide for working with an organization in **Encvoy ID**.
 - [User Registration and Login](./docs-13-common-user-authentication.md) — instructions for creating an account, logging in with a username/password, and external authentication services.

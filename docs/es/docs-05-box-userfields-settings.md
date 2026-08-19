@@ -1,35 +1,3 @@
----
-title: "Configuración del perfil de usuario de Encvoy ID — Contraseña y campos"
-description: "Aprenda a configurar el perfil de usuario de Encvoy ID: contraseña, campos básicos y adicionales, validación de datos, confirmación de correo electrónico y teléfono."
-keywords:
-keywords:
-  - configuración del perfil de usuario de Encvoy ID
-  - perfil de usuario de Encvoy ID
-  - ajustes de usuario de Encvoy ID
-  - gestión de perfiles de Encvoy ID
-  - política de contraseñas de Encvoy ID
-  - configuración de política de contraseñas
-  - requisitos de contraseña
-  - validación de campos de perfil de usuario
-  - reglas de validación de Encvoy ID
-  - configuración de reglas de validación
-  - expresiones regulares de validación
-  - confirmación de correo electrónico OAuth
-  - confirmación de teléfono OAuth
-  - verificación de correo electrónico
-  - verificación de teléfono
-  - campos básicos del perfil
-  - campos adicionales del perfil
-  - campos de perfil personalizados
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configuración del perfil de usuario"
-order: 5
----
-
 # Cómo configurar el perfil de usuario de Encvoy ID
 
 En esta guía, explicaremos cómo configurar el perfil de usuario y la política de contraseñas en **Encvoy ID**. Aprenderá a gestionar los campos del perfil, la validación de campos y a configurar la confirmación de la dirección de correo electrónico y el número de teléfono.
@@ -48,7 +16,9 @@ En esta guía, explicaremos cómo configurar el perfil de usuario y la política
 
 ---
 
-## Política de contraseñas { #password-policy }
+<a name="password-policy"></a>
+
+## Política de contraseñas
 
 La **política de contraseñas en Encvoy ID** es un conjunto de reglas que definen los requisitos de complejidad y seguridad para las contraseñas de los usuarios. Ayuda a proteger las cuentas contra el hackeo y el acceso no autorizado.
 
@@ -99,7 +69,9 @@ Para garantizar una protección sólida de la cuenta, se recomienda habilitar lo
 
 ---
 
-## Campos básicos del perfil de usuario { #basic-profile-fields }
+<a name="basic-profile-fields"></a>
+
+## Campos básicos del perfil de usuario
 
 Los **campos básicos del perfil** son atributos del sistema obligatorios creados automáticamente para cada usuario al registrarse. Forman la estructura base del perfil y garantizan el correcto funcionamiento de los mecanismos de autenticación, identificación y comunicación entre sistemas.
 
@@ -148,7 +120,9 @@ En la interfaz, está disponible una vista rápida de la configuración de los c
 
 5. Guarde los cambios en el formulario de edición.
 
-### Parámetros de campos básicos { #basic-field-parameters }
+<a name="basic-field-parameters"></a>
+
+### Parámetros de campos básicos
 
 | Nombre                                                  | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -166,7 +140,9 @@ En la interfaz, está disponible una vista rápida de la configuración de los c
 
 ---
 
-## Campos adicionales del perfil de usuario { #additional-profile-fields }
+<a name="additional-profile-fields"></a>
+
+## Campos adicionales del perfil de usuario
 
 Los **campos adicionales del perfil** son atributos personalizados que se pueden crear para almacenar cualquier dato específico no incluido en el conjunto estándar.
 
@@ -220,7 +196,9 @@ En la interfaz, está disponible una vista rápida de la configuración de los c
 
 > ⚠️ **Nota**: Cuando se elimina un campo, todos los datos de usuario almacenados en él se perderán permanentemente.
 
-### Parámetros de campos adicionales { #additional-field-parameters }
+<a name="additional-field-parameters"></a>
+
+### Parámetros de campos adicionales
 
 | Nombre                    | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -236,7 +214,9 @@ En la interfaz, está disponible una vista rápida de la configuración de los c
 
 ---
 
-## Reglas de validación de campos de perfil y contraseñas { #validation-rules }
+<a name="validation-rules"></a>
+
+## Reglas de validación de campos de perfil y contraseñas
 
 Las **reglas de validación de campos** son un conjunto de comprobaciones mediante las cuales el sistema evalúa la corrección de los datos introducidos por el usuario.
 
@@ -332,7 +312,9 @@ Los cambios se aplican automáticamente.
 
 ---
 
-## Ajustes de confirmación de correo electrónico { #email-confirmation-settings }
+<a name="email-confirmation-settings"></a>
+
+## Ajustes de confirmación de correo electrónico
 
 La **confirmación de correo electrónico en Encvoy ID** es un mecanismo para verificar la validez de la dirección proporcionada por el usuario durante el registro, la autorización o la modificación de los datos del perfil.
 
@@ -404,7 +386,9 @@ Los ajustes de confirmación de correo electrónico son definidos por el adminis
 
 ---
 
-## Ajustes de confirmación de número de teléfono { #phone-confirmation-settings }
+<a name="phone-confirmation-settings"></a>
+
+## Ajustes de confirmación de número de teléfono
 
 La **confirmación de número de teléfono en Encvoy ID** es un mecanismo para verificar la validez del número de contacto proporcionado por el usuario durante el registro, el inicio de sesión o la modificación del perfil.
 
@@ -472,7 +456,9 @@ En la versión actual de **Encvoy ID**, la confirmación de número se implement
 
 ---
 
-## Ver también { #see-also }
+<a name="see-also"></a>
+
+## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — guía sobre la conexión y configuración de servicios de autenticación externos.
 - [Gestión de aplicaciones](./docs-10-common-app-settings.md) — guía sobre la creación, configuración y gestión de aplicaciones OAuth 2.0 y OpenID Connect (OIDC).

@@ -1,25 +1,3 @@
----
-title: "Inicio de sesión con Google — Conexión y configuración en Encvoy ID"
-description: "Aprenda a conectar el inicio de sesión de Google en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
-keywords:
-  - inicio de sesión Google
-  - configuración Google en Encvoy ID
-  - autenticación Google
-  - conectar Google
-  - login Google Encvoy ID
-  - Google OAuth Encvoy ID
-  - Google sign-in
-  - autorización Google
-  - Google Encvoy ID
-  - iniciar sesión mediante Google Encvoy ID
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "Inicio de sesión con Google"
----
-
 # Cómo conectar el inicio de sesión con Google en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, lea la guía [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
@@ -36,7 +14,9 @@ La configuración del inicio de sesión con **Google** consta de tres pasos clav
 
 ---
 
-## Paso 1. Configurar la aplicación en Google { #step-1-configure-google-app }
+<a name="step-1-configure-google-app"></a>
+
+## Paso 1. Configurar la aplicación en Google
 
 Antes de configurar el método de inicio de sesión en **Encvoy ID**, debe registrar su aplicación en la consola de desarrolladores de **Google** y obtener las claves de acceso:
 
@@ -90,7 +70,9 @@ Antes de configurar el método de inicio de sesión en **Encvoy ID**, debe regis
 
 ---
 
-## Paso 2. Crear el método de inicio de sesión { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Paso 2. Crear el método de inicio de sesión
 
 Ahora, con las claves de **Google**, vamos a crear el proveedor correspondiente en el sistema **Encvoy ID**.
 
@@ -124,7 +106,9 @@ Tras la creación exitosa, el nuevo método de inicio de sesión aparecerá en l
 
 ---
 
-## Paso 3. Añadir al widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Paso 3. Añadir al widget
 
 Para que el botón **Iniciar sesión con Google** sea visible en el formulario de autorización, debe activar esta función en la configuración del widget:
 
@@ -135,7 +119,9 @@ Para que el botón **Iniciar sesión con Google** sea visible en el formulario d
 
 ---
 
-## Descripción de parámetros { #parameters-description }
+<a name="parameters-description"></a>
+
+## Descripción de parámetros
 
 ### Información Básica
 
@@ -162,8 +148,10 @@ Para que el botón **Iniciar sesión con Google** sea visible en el formulario d
 
 ---
 
-## Ver también { #see-also }
+<a name="see-also"></a>
+
+## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget.
-- [Gestión de organizaciones](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de organizaciones](./docs-11-common-org-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar el perfil personal.

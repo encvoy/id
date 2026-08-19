@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Organization — Management and Access Configuration"
-description: "Learn how to set up an organization in Encvoy ID: creation, branding, access management, login methods, and user activity auditing."
-keywords:
-  - Encvoy ID organization
-  - Encvoy ID organization dashboard
-  - organization settings
-  - organization login methods
-  - organization access management
-  - organization branding
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Managing Your Organization"
-order: 6
----
-
 # Managing an Organization in Encvoy ID
 
 In **Encvoy ID**, organizations serve as the primary structural unit for managing application access, dividing employees by departments, and maintaining user activity audits. In this guide, we will cover how to create organizations and configure login methods.
@@ -31,7 +12,9 @@ In **Encvoy ID**, organizations serve as the primary structural unit for managin
 
 ---
 
-## Organization Basics { #organization-basics }
+<a name="organization-basics"></a>
+
+## Organization Basics
 
 An organization in **Encvoy ID** is a structural unit that allows you to:
 
@@ -45,7 +28,9 @@ An organization in **Encvoy ID** is a structural unit that allows you to:
 
 ---
 
-## Accessing the Organization Dashboard { #organization-panel-access }
+<a name="organization-panel-access"></a>
+
+## Accessing the Organization Dashboard
 
 The organization dashboard is designed for managing organization settings, applications, and users.
 
@@ -72,7 +57,9 @@ You will be redirected to the **Organization Dashboard**.
 > 💡 Add frequently used applications to the mini-widget using the **Display in Mini-Widget** setting for quick access. <br>
 > <img src="./images/org-settings-02.webp" alt="Configuring application display in the Encvoy ID mini-widget" style="max-width:300px; width:100%">
 
-## Configuring Organization Name and Logo { #organization-name-and-logo }
+<a name="organization-name-and-logo"></a>
+
+## Configuring Organization Name and Logo
 
 The name and logo are displayed in the **Encvoy ID** system interface as well as in the mini-widget.
 
@@ -93,7 +80,9 @@ To configure the name and logo:
 
 ---
 
-## Organization Login Methods { #organization-login-methods }
+<a name="organization-login-methods"></a>
+
+## Organization Login Methods
 
 A **login method** is a user authentication method that allows them to log in to applications.
 
@@ -112,7 +101,9 @@ An organization can use both public login methods and login methods created spec
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and login widget setup.
 - [Application Management](./docs-10-common-app-settings.md) — a guide to creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.

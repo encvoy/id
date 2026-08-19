@@ -1,4 +1,4 @@
-**English** | **[Español](/locale/README-qs-es.md)** | **[Italiano](/locale/README-qs-it.md)** | **[Français](/locale/README-qs-fr.md)** | **[Deutsch](/locale/README-qs-de.md)**
+**English** | **[Español](./locale/README-qs-es.md)** | **[Italiano](./locale/README-qs-it.md)** | **[Français](./locale/README-qs-fr.md)** | **[Deutsch](./locale/README-qs-de.md)**
 
 ## Quick Start (Local Development)
 

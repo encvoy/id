@@ -1,37 +1,3 @@
----
-title: "Creating an application in Encvoy ID — web and native OAuth/OIDC"
-description: "Learn how to create an application in Encvoy ID: configuring the authorization widget, login methods, sending invitations, and user management."
-keywords: 
-keywords:
-  - creating Encvoy ID application
-  - create Encvoy ID app
-  - OAuth/OIDC application setup
-  - OAuth web application
-  - OAuth native application
-  - OAuth 2.0 Encvoy ID
-  - OpenID Connect Encvoy ID
-  - Encvoy ID application management
-  - application invitations
-  - invitation-based access
-  - Encvoy ID login widget
-  - authorization widget configuration
-  - application members
-  - assigning application administrator
-  - Encvoy ID application parameters
-  - delete application
-  - terminate user sessions
-  - block user in application
-  - OAuth parameters reference
-  - SSO application
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Application Management"
-order: 11
----
-
 # How to Create and Configure an Application in Encvoy ID
 
 In this guide, you will learn how to create and configure OAuth 2.0 and OIDC applications in **Encvoy ID**. We will cover in detail the creation of web and native applications, login widget configuration, and user and access management.
@@ -50,7 +16,9 @@ In this guide, you will learn how to create and configure OAuth 2.0 and OIDC app
 
 ---
 
-## Creating an Application { #creating-application }
+<a name="creating-application"></a>
+
+## Creating an Application
 
 ### Creating an OAuth Web Application
 
@@ -109,9 +77,13 @@ Next, configure authorization on your application's side:
 
 ---
 
-## Managing Applications { #managing-applications }
+<a name="managing-applications"></a>
 
-### Viewing an Application { #viewing-application }
+## Managing Applications
+
+<a name="viewing-application"></a>
+
+### Viewing an Application
 
 1. Go to the administrator, organization, or application (small) dashboard.
 2. Open the **Applications** tab.
@@ -123,7 +95,9 @@ Next, configure authorization on your application's side:
 
 <img src="./images/app-settings-03.webp" alt="Viewing an OAuth application in Encvoy ID" style="max-width:600px; width:100%">
 
-### Editing an Application { #editing-application }
+<a name="editing-application"></a>
+
+### Editing an Application
 
 1. Go to the administrator, organization, or application (small) dashboard.
 2. Open the **Applications** tab.
@@ -151,7 +125,9 @@ After confirmation, the application will be deleted from **Encvoy ID**.
 
 ---
 
-## Application Invitations { #application-invitations }
+<a name="application-invitations"></a>
+
+## Application Invitations
 
 The invitation mechanism allows you to restrict access to the application and grant it only to pre-selected users. This is useful if the application is intended for a **closed circle of users**.
 
@@ -225,7 +201,9 @@ If you need to revoke a sent invitation:
 
 ---
 
-## Application Login Widget Settings { #app-login-widget-settings }
+<a name="app-login-widget-settings"></a>
+
+## Application Login Widget Settings
 
 The **Login Widget** is the authorization form that users see when attempting to log in to **this specific application**. Its settings allow you to adapt the appearance and login methods to your service's brand and needs.
 
@@ -246,7 +224,9 @@ What can be configured:
 
 ---
 
-## Application Users { #application-users }
+<a name="application-users"></a>
+
+## Application Users
 
 **Application Users** (members) are **Encvoy ID** system users who have granted your application permission to access their data.
 
@@ -277,7 +257,9 @@ What can be configured:
 
 <img src="./images/app-settings-06.webp" alt="User profile in Encvoy ID" style="max-width:600px; width:100%">
 
-### Assigning an Application Administrator { #assigning-app-administrator }
+<a name="assigning-app-administrator"></a>
+
+### Assigning an Application Administrator
 
 **When this is needed:** To delegate application management rights to trusted users. Application administrators can manage its settings and users.
 
@@ -390,7 +372,9 @@ After confirmation, the user's status will change to **Active**.
 
 ---
 
-## Full Parameters Reference { #full-parameters-reference }
+<a name="full-parameters-reference"></a>
+
+## Full Parameters Reference
 
 ### Basic Information
 
@@ -515,8 +499,10 @@ Technical parameters affecting the application's interaction with **Encvoy ID**.
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
 
-- [Managing Organizations](./docs-09-common-mini-widget-settings.md) — guide to working with **Encvoy ID** system organizations.
+## See Also
+
+- [Managing Organizations](./docs-11-common-org-settings.md) — guide to working with **Encvoy ID** system organizations.
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — guide to managing your personal profile.
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — guide to login methods and login widget configuration.

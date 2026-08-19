@@ -1,29 +1,3 @@
----
-title: "Encvoy ID Perfil Personal — Gestión de Cuenta"
-description: "Aprenda a configurar su perfil personal de Encvoy ID: edite datos y privacidad, gestione el acceso a aplicaciones y la seguridad de la cuenta."
-keywords:
-  - Encvoy ID perfil personal
-  - Encvoy ID cuenta personal
-  - editar perfil Encvoy ID
-  - configuración de perfil Encvoy ID
-  - seguridad de cuenta Encvoy ID
-  - cambiar contraseña Encvoy ID
-  - permisos de aplicación OAuth
-  - gestión de acceso a aplicaciones
-  - eliminar cuenta Encvoy ID
-  - borrar cuenta Encvoy ID
-  - recuperación de cuenta Encvoy ID
-  - exportación de datos de perfil
-  - finalizar todas las sesiones
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Perfil Personal"
-order: 12
----
-
 # Cómo gestionar su Perfil Personal de Encvoy ID
 
 **El Perfil de Encvoy ID** es su centro de control para los datos y la seguridad de su cuenta.
@@ -41,7 +15,9 @@ En esta guía, aprenderá a gestionar su perfil personal en **Encvoy ID**: edita
 
 ---
 
-## Gestión del Perfil Personal { #personal-profile-management }
+<a name="personal-profile-management"></a>
+
+## Gestión del Perfil Personal
 
 Su perfil contiene información básica para su identificación dentro del sistema. Dependiendo del método de registro, algunos campos pueden no estar disponibles para edición. Si necesita editarlos, contacte al administrador del servicio.
 
@@ -139,13 +115,17 @@ Puede subir una foto desde su dispositivo o usar un avatar de servicios externos
 
 Después de cambiar la contraseña, se cerrará su sesión. Para continuar trabajando, debe iniciar sesión nuevamente con la nueva contraseña.
 
-### Ajustes de Privacidad { #privacy-settings }
+<a name="privacy-settings"></a>
+
+### Ajustes de Privacidad
 
 Puede controlar de forma independiente qué información estará disponible para otros usuarios o sistemas de terceros. Esto se hace a través de los ajustes de privacidad de los campos.
 
 Este ajuste le permite definir la privacidad para cada campo en los bloques **Información principal**, **Información adicional** y **Identificadores**.
 
-#### Niveles de Privacidad { #privacy-levels }
+<a name="privacy-levels"></a>
+
+#### Niveles de Privacidad
 
 | Nivel                          | Icono                                                                                                        | Descripción                                                                                                                                |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -165,7 +145,9 @@ Dependiendo del valor seleccionado, el valor del campo en el perfil se vuelve p�
 
 El ajuste se aplica sin confirmación adicional.
 
-### Gestión de Identificadores de Servicios Externos { #external-service-identifiers }
+<a name="external-service-identifiers"></a>
+
+### Gestión de Identificadores de Servicios Externos
 
 **Los Identificadores** son servicios externos que ha añadido a su perfil o a través de los cuales ha iniciado sesión alguna vez en aplicaciones o en la cuenta personal.
 
@@ -249,7 +231,9 @@ END:VCARD
 
 Después de activar el ajuste, los datos con el nivel de privacidad "Disponible para todos" estarán disponibles solo bajo petición.
 
-### Tarjeta de Presentación Digital del Perfil Personal { #digital-business-card }
+<a name="digital-business-card"></a>
+
+### Tarjeta de Presentación Digital del Perfil Personal
 
 > 🔬 **Función experimental**: La disponibilidad está regulada por el administrador del sistema.
 
@@ -357,7 +341,9 @@ Durante un período determinado después de la eliminación de la cuenta, tiene 
 
 ---
 
-## Permisos de Aplicaciones y Acceso OAuth { #app-permissions-and-oauth }
+<a name="app-permissions-and-oauth"></a>
+
+## Permisos de Aplicaciones y Acceso OAuth
 
 **Los Permisos** son los derechos que usted otorga a aplicaciones externas para acceder a datos específicos en su perfil de **Encvoy ID**. Puede restringir el acceso, finalizar sesiones activas o revocar permisos completamente en cualquier momento.
 
@@ -403,7 +389,9 @@ Para prohibir completamente que una aplicación acceda a sus datos:
 
 ---
 
-## Invitaciones a Aplicaciones Cerradas { #closed-app-invitations }
+<a name="closed-app-invitations"></a>
+
+## Invitaciones a Aplicaciones Cerradas
 
 Una **invitación** es una forma de obtener acceso a una aplicación cerrada. El administrador de la aplicación envía una invitación a su correo electrónico, tras lo cual puede iniciar sesión en la aplicación que no está disponible para otros usuarios.
 
@@ -449,7 +437,9 @@ Si recibió una invitación pero aún no está registrado en el sistema **Encvoy
 
 ---
 
-## Catálogo de Aplicaciones { #application-catalog }
+<a name="application-catalog"></a>
+
+## Catálogo de Aplicaciones
 
 > 🔬 **Función experimental**: La disponibilidad está regulada por el administrador del sistema.
 
@@ -498,7 +488,9 @@ La aplicación se eliminará de favoritos y desaparecerá del menú lateral.
 
 ---
 
-## Registro de Actividad e Historial de Inicio de Sesión { #activity-log-and-login-history }
+<a name="activity-log-and-login-history"></a>
+
+## Registro de Actividad e Historial de Inicio de Sesión
 
 **El Registro de Actividad** es una herramienta de seguridad que le permite rastrear dónde y desde qué dispositivos inició sesión en **Encvoy ID** o en las aplicaciones.
 
@@ -522,6 +514,8 @@ Hay información detallada disponible para cada evento.
 
 ---
 
-## Ver También { #see-also }
+<a name="see-also"></a>
+
+## Ver También
 
 - [Registro e Inicio de Sesión de Usuario](./docs-13-common-user-authentication.md) — instrucciones para crear una cuenta, iniciar sesión con nombre de usuario/contraseña y servicios de autenticación externos.

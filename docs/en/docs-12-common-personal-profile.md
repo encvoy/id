@@ -1,29 +1,3 @@
----
-title: "Encvoy ID Personal Profile — Account Management"
-description: "Learn how to set up your Encvoy ID personal profile: edit data and privacy, manage app access, and account security."
-keywords:
-  - Encvoy ID personal profile
-  - Encvoy ID personal account
-  - edit Encvoy ID profile
-  - Encvoy ID profile settings
-  - Encvoy ID account security
-  - change Encvoy ID password
-  - OAuth app permissions
-  - app access management
-  - delete Encvoy ID account
-  - remove Encvoy ID account
-  - Encvoy ID account recovery
-  - export profile data
-  - terminate all sessions
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Personal Profile"
-order: 12
----
-
 # How to Manage Your Encvoy ID Personal Profile
 
 **The Encvoy ID Profile** is your control center for account data and security.
@@ -41,7 +15,9 @@ In this guide, you will learn how to manage your personal profile in **Encvoy ID
 
 ---
 
-## Personal Profile Management { #personal-profile-management }
+<a name="personal-profile-management"></a>
+
+## Personal Profile Management
 
 Your profile contains basic information for identification within the system. Depending on the registration method, some fields may be unavailable for editing. If you need to edit them, contact the service administrator.
 
@@ -139,13 +115,17 @@ You can upload a photo from your device or use an avatar from linked external se
 
 After changing the password, you will be logged out. To continue working, you must log in again using the new password.
 
-### Privacy Settings { #privacy-settings }
+<a name="privacy-settings"></a>
+
+### Privacy Settings
 
 You can independently control what information will be available to other users or third-party systems. This is done through field privacy settings.
 
 This setting allows you to define privacy for each field in the **Main Information**, **Additional Information**, and **Identifiers** blocks.
 
-#### Privacy Levels { #privacy-levels }
+<a name="privacy-levels"></a>
+
+#### Privacy Levels
 
 | Level                     | Icon                                                                                     | Description                                                                                                           |
 | ------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -165,7 +145,9 @@ Depending on the selected value, the field value in the profile becomes public o
 
 The setting is applied without additional confirmation.
 
-### Managing External Service Identifiers { #external-service-identifiers }
+<a name="external-service-identifiers"></a>
+
+### Managing External Service Identifiers
 
 **Identifiers** are external services that you have added to your profile or through which you have ever logged into applications or the personal account.
 
@@ -249,7 +231,9 @@ END:VCARD
 
 After activating the setting, data with the "Available to everyone" privacy level becomes available only upon request.
 
-### Personal Profile Digital Business Card { #digital-business-card }
+<a name="digital-business-card"></a>
+
+### Personal Profile Digital Business Card
 
 > 🔬 **Experimental feature**: Availability is regulated by the system administrator.
 
@@ -357,7 +341,9 @@ For a certain period after account deletion, you have the opportunity to restore
 
 ---
 
-## App Permissions and OAuth Access { #app-permissions-and-oauth }
+<a name="app-permissions-and-oauth"></a>
+
+## App Permissions and OAuth Access
 
 **Permissions** are the rights you grant to external applications to access specific data in your **Encvoy ID** profile. You can restrict access, terminate active sessions, or completely revoke permissions at any time.
 
@@ -403,7 +389,9 @@ To completely prohibit an application from accessing your data:
 
 ---
 
-## Closed App Invitations { #closed-app-invitations }
+<a name="closed-app-invitations"></a>
+
+## Closed App Invitations
 
 An **invitation** is a way to gain access to a closed application. The application administrator sends an invitation to your email, after which you can log into the application that is unavailable to other users.
 
@@ -449,7 +437,9 @@ If you received an invitation but are not yet registered in the **Encvoy ID** sy
 
 ---
 
-## Application Catalog { #application-catalog }
+<a name="application-catalog"></a>
+
+## Application Catalog
 
 > 🔬 **Experimental feature**: Availability is regulated by the system administrator.
 
@@ -498,7 +488,9 @@ The application will be removed from favorites and will disappear from the side 
 
 ---
 
-## Activity Log and Login History { #activity-log-and-login-history }
+<a name="activity-log-and-login-history"></a>
+
+## Activity Log and Login History
 
 **The Activity Log** is a security tool that allows you to track where and from which devices you logged into **Encvoy ID** or applications.
 
@@ -522,6 +514,8 @@ Detailed information is available for each event.
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [User Registration and Login](./docs-13-common-user-authentication.md) — instructions for creating an account, logging in with username/password, and external authentication services.

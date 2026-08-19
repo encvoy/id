@@ -1,30 +1,3 @@
----
-title: "Configuring Encvoy ID — security, interface, and access"
-description: "Learn how to configure Encvoy ID: user access, interface, email templates, and monitoring via Sentry. Set up your system now!"
-keywords:
-  - Encvoy ID configuration
-  - Encvoy ID access setup
-  - localization
-  - interface language
-  - email notification templates
-  - logo setup
-  - application types
-  - experimental features
-  - access settings
-  - two-factor authentication
-  - access tokens
-  - access restrictions
-  - Sentry integration
-  - event log
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "System Configuration (Interface, Security, and Access)"
-order: 4
----
-
 # How to Configure Encvoy ID: Security, Interface, and Access
 
 In this guide, you will learn how to configure the **Encvoy ID** interface and localization, create application types, manage user access, enable two-factor authentication, and integrate the service with Sentry for event monitoring.
@@ -43,11 +16,15 @@ This section is intended for administrators and security specialists who want to
 
 ---
 
-## Interface and Localization Setup { #interface-and-localization }
+<a name="interface-and-localization"></a>
+
+## Interface and Localization Setup
 
 > 💡 Customizing colors, fonts, and the appearance of interface elements is available via the `CUSTOM_STYLES` variable in the `.env` file. More details in the [Environment Variables](./docs-03-box-system-configuration.md#interface-customization) section.
 
-### Configuring System Name and Logo { #system-name-and-logo }
+<a name="system-name-and-logo"></a>
+
+### Configuring System Name and Logo
 
 The name and logo are displayed in the **Encvoy ID** interface, as well as in the [mini-widget](./docs-09-common-mini-widget-settings.md) and the [login widget](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
@@ -101,7 +78,9 @@ The language change will occur automatically, without restarting the service or 
 
 > 🚨 **Warning:** After changing the language, all interface texts, including system messages and notifications, will be displayed in the selected language. Ensure your users understand the chosen language.
 
-### Configuring Email Notification Templates { #email-notification-templates }
+<a name="email-notification-templates"></a>
+
+### Configuring Email Notification Templates
 
 **Email templates** are email presets that contain predefined formatting and design elements. They are used to create automatic notifications, such as registration emails, password recovery, and other events.
 
@@ -147,11 +126,17 @@ The language change will occur automatically, without restarting the service or 
 
 ---
 
-## Security and Access { #security-and-access }
+<a name="security-and-access"></a>
 
-### Access Settings { #access-settings }
+## Security and Access
 
-#### Two-Factor Authentication { #two-factor-authentication }
+<a name="access-settings"></a>
+
+### Access Settings
+
+<a name="two-factor-authentication"></a>
+
+#### Two-Factor Authentication
 
 Two-factor authentication (2FA) adds an extra layer of protection during login. After entering the first factor (login/password or another authentication method), the user must confirm their identity with a second factor (phone, email, WebAuthn).
 
@@ -313,7 +298,9 @@ Restricts login to the personal profile only to users with administrative roles.
 | ----------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Signing Algorithm for ID Token (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Specifies the algorithm used to sign the ID token. </p> `ID token` is a JSON Web Token (JWT) containing claims about the user's authentication |
 
-#### Authentication Time { #authentication-time }
+<a name="authentication-time"></a>
+
+#### Authentication Time
 
 | Name                                                | Parameter           | Description                                                                                   |
 | --------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
@@ -331,13 +318,17 @@ Restricts login to the personal profile only to users with administrative roles.
 | ---------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **User ID Transmission Method in ID Token (subject_type)** | `subject_type` | Determines how the `sub claim` is formed in the ID token: <p> - `public` — the same identifier for all clients <br> - `pairwise` — a unique identifier for each client, enhancing privacy </p> |
 
-#### Access Token { #access-token }
+<a name="access-token"></a>
+
+#### Access Token
 
 | Name                                | Parameter          | Description                        |
 | ----------------------------------- | ------------------ | ---------------------------------- |
 | **Access Token (access_token_ttl)** | `access_token_ttl` | `access_token` lifetime in seconds |
 
-#### Refresh Token { #refresh-token }
+<a name="refresh-token"></a>
+
+#### Refresh Token
 
 | Name                                  | Parameter           | Description                         |
 | ------------------------------------- | ------------------- | ----------------------------------- |
@@ -404,7 +395,9 @@ Detailed information is available for each event.
 
 ---
 
-## Application Types { #application-types }
+<a name="application-types"></a>
+
+## Application Types
 
 **Application types** are categories for systematizing applications in the **[catalog](./docs-12-common-personal-profile.md#application-catalog)**. They help organize the structure and simplify user navigation.
 
@@ -414,7 +407,9 @@ Detailed information is available for each event.
 - Simplify searching for required applications
 - Help organize the catalog structure
 
-### Creating an Application Type { #creating-app-type }
+<a name="creating-app-type"></a>
+
+### Creating an Application Type
 
 1. Go to the admin panel → **Settings** tab.
 2. Find the **Application Types** block and click **Configure**.
@@ -461,7 +456,9 @@ Deletion occurs without additional confirmation.
 
 ---
 
-## Experimental Features { #experimental-features }
+<a name="experimental-features"></a>
+
+## Experimental Features
 
 **Experimental features** are new capabilities of the **Encvoy ID** service that are in the testing and refinement stage.
 
@@ -496,7 +493,9 @@ The experimental features section is available at: `https://ID_HOST/experimental
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Configuring Password Policy and User Profile](./docs-05-box-userfields-settings.md) — guide for configuring user profiles.
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — guide for connecting and configuring external authentication services.

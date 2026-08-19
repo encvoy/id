@@ -1,26 +1,3 @@
----
-title: "User Management in Encvoy ID — Administrator Guide"
-description: "Learn how to manage users in Encvoy ID: creation and editing, blocking and deletion, access control, and privacy management."
-keywords:
-  - user management Encvoy ID
-  - create user Encvoy ID
-  - edit user profile
-  - block and unblock user
-  - assign access rights Encvoy ID
-  - export profile data
-  - terminate user sessions
-  - user identifiers
-  - delete user Encvoy ID
-  - user rights and roles
-author: "The Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "User Management"
-order: 9
----
-
 # User Management in Encvoy ID
 
 In this guide, you will learn how to create and edit user profiles in **Encvoy ID**, assign roles and access rights, block and delete accounts, terminate active sessions, manage privacy, and export profile data.
@@ -36,7 +13,9 @@ In this guide, you will learn how to create and edit user profiles in **Encvoy I
 
 ---
 
-## Overview and Basic Actions { #overview-and-basics }
+<a name="overview-and-basics"></a>
+
+## Overview and Basic Actions
 
 ### About the "Users" Section
 
@@ -69,7 +48,7 @@ In this instruction, we will cover how to manually create a user:
 
 5. Click **Save**.
 
-   > 💡 A user profile may contain [additional fields](./docs-05-box-userfields-settings.md#password-policy).
+   > 💡 A user profile may contain [additional fields](./docs-05-box-userfields-settings.md#additional-profile-fields).
 
    > 📌 Field validation is performed according to validation rules. For more details, see the [Field Validation Rules](./docs-05-box-userfields-settings.md#validation-rules) guide.
 
@@ -100,7 +79,9 @@ To make changes to a user profile:
 
 ---
 
-## Profile Data Management { #profile-data-management }
+<a name="profile-data-management"></a>
+
+## Profile Data Management
 
 ### Managing Profile Identifiers
 
@@ -187,7 +168,9 @@ The exported file contains a complete list of user data:
 
 ---
 
-## Access and Security { #access-and-security }
+<a name="access-and-security"></a>
+
+## Access and Security
 
 ### Terminating User Sessions
 
@@ -257,7 +240,9 @@ The user will receive the selected role and its corresponding rights.
 
 ---
 
-## Account Status { #account-status }
+<a name="account-status"></a>
+
+## Account Status
 
 ### Blocking Encvoy ID Users
 
@@ -303,7 +288,9 @@ After confirming the action, the user's status will change to **Active**.
 
 ---
 
-## Deleting a User { #deleting-user }
+<a name="deleting-user"></a>
+
+## Deleting a User
 
 An administrator can permanently delete a user. Once deletion is confirmed, the account and all data will disappear irrevocably. The user will lose access to all applications where their **Encvoy ID** account was used.
 
@@ -336,8 +323,10 @@ After confirmation, the user will be deleted.
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.
 - [Application Management](./docs-10-common-app-settings.md) — a guide to creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.
-- [Organization Management](./docs-02-box-system-install.md) — a guide to working with organizations in **Encvoy ID**.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in **Encvoy ID**.

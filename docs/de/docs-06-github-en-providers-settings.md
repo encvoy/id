@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Login-Methoden — Verbindung und Konfiguration"
-description: "Erfahren Sie, wie Sie Login-Methoden und das Autorisierungs-Widget in Encvoy ID konfigurieren. Schnelle Anbindung von OAuth-, WebAuthn-, mTLS-, HOTP- und TOTP-Providern mit Beispielen."
-keywords:
-  - Encvoy ID Login-Methoden
-  - SSO Autorisierung
-  - Autorisierungs-Widget
-  - OAuth 2.0 Konfiguration
-  - Authentifizierungsanbieter
-  - WebAuthn mTLS TOTP
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [en]
-menu_title: "Konfiguration der Login-Methoden"
-order: 7
----
-
 # So konfigurieren Sie Login-Methoden in Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie Login-Methoden in **Encvoy ID** konfigurieren, einschließlich Standard-OAuth-Providern und erweiterten Authentifizierungsmethoden (WebAuthn, mTLS, TOTP). Wir erklären außerdem, wie Sie das Autorisierungs-Widget korrekt einrichten und gestalten, um den Login-Prozess sicher und benutzerfreundlich zu gestalten.
@@ -30,7 +11,9 @@ In dieser Anleitung erfahren Sie, wie Sie Login-Methoden in **Encvoy ID** konfig
 
 ---
 
-## Übersicht der Login-Methoden { #login-methods-overview }
+<a name="login-methods-overview"></a>
+
+## Übersicht der Login-Methoden
 
 Eine **Login-Methode** ist ein Authentifizierungsverfahren für Benutzer, das es ihnen ermöglicht, sich im persönlichen Konto oder in verbundenen Anwendungen zu autorisieren. Sie ist ein Schlüsselelement des Single Sign-On-Systems und bietet eine flexible und sichere Identifizierung.
 
@@ -44,7 +27,9 @@ Eine **Login-Methode** ist ein Authentifizierungsverfahren für Benutzer, das es
 
 Kombinieren Sie Login-Methoden, um die Sicherheit zu erhöhen. Implementieren Sie eine **Zwei-Faktor-Authentifizierung**, bei der der Benutzer nach Eingabe des ersten Faktors (Login, Passwort oder eine andere Methode) seine Identität mit einem zweiten Faktor (Telefon, E-Mail oder WebAuthn) bestätigen muss. [So konfigurieren Sie die Zwei-Faktor-Authentifizierung →](./docs-04-box-system-settings.md#two-factor-authentication)
 
-### Verwaltungsebenen und Sichtbarkeit von Login-Methoden { #management-levels-and-publicity }
+<a name="management-levels-and-publicity"></a>
+
+### Verwaltungsebenen und Sichtbarkeit von Login-Methoden
 
 Login-Methoden können in verschiedenen Dashboards von **Encvoy ID** erstellt werden:
 
@@ -62,7 +47,9 @@ Für Login-Methoden, die auf der **Service-** oder **Organisationsebene** erstel
 
 ---
 
-## Verwalten von Login-Methoden { #managing-login-methods }
+<a name="managing-login-methods"></a>
+
+## Verwalten von Login-Methoden
 
 ### Erstellen einer neuen Login-Methode
 
@@ -151,7 +138,9 @@ Die Einstellung wird ohne zusätzliche Bestätigung übernommen.
 
 ---
 
-## Einstellungen des Login-Widgets { #login-widget-settings }
+<a name="login-widget-settings"></a>
+
+## Einstellungen des Login-Widgets
 
 ### Was ist das Login-Widget?
 
@@ -232,8 +221,10 @@ So konfigurieren Sie die Anzeige einer Login-Methode im Widget:
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Anwendungsverwaltung](./docs-10-common-app-settings.md) — Anleitung zum Erstellen, Konfigurieren und Verwalten von OAuth 2.0- und OpenID Connect (OIDC)-Anwendungen.
-- [Organisationsverwaltung](./docs-02-box-system-install.md) — Anleitung zur Arbeit mit einer Organisation in **Encvoy ID**.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — Anleitung zur Arbeit mit einer Organisation in **Encvoy ID**.
 - [Benutzerregistrierung und Login](./docs-13-common-user-authentication.md) — Anweisungen zur Kontoerstellung, zum Login mit Benutzername/Passwort und zu externen Authentifizierungsdiensten.

@@ -1,35 +1,3 @@
----
-title: "Configuration du profil utilisateur Encvoy ID — Mot de passe et champs"
-description: "Découvrez comment configurer le profil utilisateur Encvoy ID : mot de passe, champs de base et supplémentaires, validation des données, confirmation par e-mail et téléphone."
-keywords:
-keywords:
-  - Encvoy ID user profile configuration
-  - Encvoy ID user profile
-  - Encvoy ID user settings
-  - Encvoy ID profile management
-  - Encvoy ID password policy
-  - password policy configuration
-  - password requirements
-  - user profile field validation
-  - Encvoy ID validation rules
-  - validation rules configuration
-  - validation regular expressions
-  - OAuth email confirmation
-  - OAuth phone confirmation
-  - email verification
-  - phone verification
-  - basic profile fields
-  - additional profile fields
-  - custom profile fields
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configuration du profil utilisateur"
-order: 5
----
-
 # Comment configurer le profil utilisateur Encvoy ID
 
 Dans ce guide, nous expliquerons comment configurer le profil utilisateur et la politique de mot de passe dans **Encvoy ID**. Vous apprendrez à gérer les champs de profil, la validation des champs et à configurer la confirmation de l'adresse e-mail et du numéro de téléphone.
@@ -48,7 +16,9 @@ Dans ce guide, nous expliquerons comment configurer le profil utilisateur et la 
 
 ---
 
-## Politique de mot de passe { #password-policy }
+<a name="password-policy"></a>
+
+## Politique de mot de passe
 
 La **politique de mot de passe dans Encvoy ID** est un ensemble de règles définissant les exigences de complexité et de sécurité des mots de passe des utilisateurs. Elle aide à protéger les comptes contre le piratage et les accès non autorisés.
 
@@ -99,7 +69,9 @@ Pour assurer une protection robuste des comptes, il est recommandé d'activer le
 
 ---
 
-## Champs de profil utilisateur de base { #basic-profile-fields }
+<a name="basic-profile-fields"></a>
+
+## Champs de profil utilisateur de base
 
 Les **champs de profil de base** sont des attributs système obligatoires créés automatiquement pour chaque utilisateur lors de l'inscription. Ils forment la structure de base du profil et assurent le bon fonctionnement des mécanismes d'authentification, d'identification et de communication inter-systèmes.
 
@@ -148,7 +120,9 @@ Dans l'interface, une vue rapide des paramètres de champ est disponible pour ch
 
 5. Enregistrez les modifications dans le formulaire d'édition.
 
-### Paramètres des champs de base { #basic-field-parameters }
+<a name="basic-field-parameters"></a>
+
+### Paramètres des champs de base
 
 | Nom                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -166,7 +140,9 @@ Dans l'interface, une vue rapide des paramètres de champ est disponible pour ch
 
 ---
 
-## Champs de profil utilisateur supplémentaires { #additional-profile-fields }
+<a name="additional-profile-fields"></a>
+
+## Champs de profil utilisateur supplémentaires
 
 Les **champs de profil supplémentaires** sont des attributs personnalisés qui peuvent être créés pour stocker des données spécifiques non incluses dans l'ensemble standard.
 
@@ -220,7 +196,9 @@ Dans l'interface, une vue rapide des paramètres de champ est disponible pour ch
 
 > ⚠️ **Note** : Lorsqu'un champ est supprimé, toutes les données utilisateur qui y sont stockées seront définitivement perdues.
 
-### Paramètres des champs supplémentaires { #additional-field-parameters }
+<a name="additional-field-parameters"></a>
+
+### Paramètres des champs supplémentaires
 
 | Nom                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -236,7 +214,9 @@ Dans l'interface, une vue rapide des paramètres de champ est disponible pour ch
 
 ---
 
-## Règles de validation des champs de profil et du mot de passe { #validation-rules }
+<a name="validation-rules"></a>
+
+## Règles de validation des champs de profil et du mot de passe
 
 Les **règles de validation de champ** sont un ensemble de vérifications par lesquelles le système évalue l'exactitude des données saisies par l'utilisateur.
 
@@ -332,7 +312,9 @@ Les modifications sont appliquées automatiquement.
 
 ---
 
-## Paramètres de confirmation d'e-mail { #email-confirmation-settings }
+<a name="email-confirmation-settings"></a>
+
+## Paramètres de confirmation d'e-mail
 
 La **confirmation d'e-mail dans Encvoy ID** est un mécanisme permettant de vérifier la validité de l'adresse fournie par l'utilisateur lors de l'inscription, de l'autorisation ou de la modification des données du profil.
 
@@ -404,7 +386,9 @@ Les paramètres de confirmation d'e-mail sont définis par l'administrateur et i
 
 ---
 
-## Paramètres de confirmation de numéro de téléphone { #phone-confirmation-settings }
+<a name="phone-confirmation-settings"></a>
+
+## Paramètres de confirmation de numéro de téléphone
 
 La **confirmation du numéro de téléphone dans Encvoy ID** est un mécanisme permettant de vérifier la validité du numéro de contact fourni par l'utilisateur lors de l'inscription, de la connexion ou de la modification du profil.
 
@@ -472,7 +456,9 @@ Dans la version actuelle de **Encvoy ID**, la confirmation du numéro est implé
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — guide sur la connexion et la configuration des services d'authentification externes.
 - [Gestion des applications](./docs-10-common-app-settings.md) — guide sur la création, la configuration et la gestion des applications OAuth 2.0 et OpenID Connect (OIDC).

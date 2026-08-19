@@ -1,28 +1,3 @@
----
-title: "TOTP Login — Connection and Configuration in Encvoy ID"
-description: "Learn how to enable TOTP login in Encvoy ID: create a login method, add it to the authorization widget, and ensure secure access for users."
-keywords:
-  # Main actions
-  - HOTP login
-  - HOTP authentication
-  - HOTP configuration
-  - HOTP connection
-  - login via HOTP
-  - HOTP two-factor authentication
-  - HOTP Encvoy ID
-  - login via HOTP Encvoy ID
-  - HOTP setup in Encvoy ID
-  - difference between HOTP and TOTP
-  - HOTP
-  - HMAC-based One-Time Password
-  - HMAC-based one-time password
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "TOTP Login"
----
-
 # How to Connect TOTP Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -70,7 +45,9 @@ The main difference between **TOTP** and **HOTP** is that the password generatio
 
 ---
 
-## Authentication Setup for Administrators { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentication Setup for Administrators
 
 ### Step 1. Creating a Login Method
 
@@ -113,7 +90,9 @@ For users to see the **TOTP** button on the authorization form, you need to acti
 
 ---
 
-## TOTP Binding for Users { #totp-user-binding }
+<a name="totp-user-binding"></a>
+
+## TOTP Binding for Users
 
 > 📌 This instruction is intended for users who need to log in to the system via **TOTP**.
 
@@ -163,5 +142,5 @@ The most popular options are:
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and widget setup.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

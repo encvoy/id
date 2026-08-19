@@ -1,37 +1,3 @@
----
-title: "Création d'une application dans Encvoy ID — OAuth/OIDC web et natif"
-description: "Apprenez à créer une application dans Encvoy ID : configuration du widget d'autorisation, méthodes de connexion, envoi d'invitations et gestion des utilisateurs."
-keywords: 
-keywords:
-  - création d'application Encvoy ID
-  - créer une application Encvoy ID
-  - configuration d'application OAuth/OIDC
-  - application web OAuth
-  - application native OAuth
-  - OAuth 2.0 Encvoy ID
-  - OpenID Connect Encvoy ID
-  - gestion d'application Encvoy ID
-  - invitations d'application
-  - accès par invitation
-  - widget de connexion Encvoy ID
-  - configuration du widget d'autorisation
-  - membres de l'application
-  - assigner un administrateur d'application
-  - paramètres d'application Encvoy ID
-  - supprimer une application
-  - terminer les sessions utilisateur
-  - bloquer un utilisateur dans l'application
-  - référence des paramètres OAuth
-  - application SSO
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Gestion des applications"
-order: 11
----
-
 # Comment créer et configurer une application dans Encvoy ID
 
 Dans ce guide, vous apprendrez à créer et configurer des applications OAuth 2.0 et OIDC dans **Encvoy ID**. Nous couvrirons en détail la création d'applications web et natives, la configuration du widget de connexion, ainsi que la gestion des utilisateurs et des accès.
@@ -50,7 +16,9 @@ Dans ce guide, vous apprendrez à créer et configurer des applications OAuth 2.
 
 ---
 
-## Création d'une application { #creating-application }
+<a name="creating-application"></a>
+
+## Création d'une application
 
 ### Création d'une application Web OAuth
 
@@ -109,9 +77,13 @@ Ensuite, configurez l'autorisation du côté de votre application :
 
 ---
 
-## Gestion des applications { #managing-applications }
+<a name="managing-applications"></a>
 
-### Consulter une application { #viewing-application }
+## Gestion des applications
+
+<a name="viewing-application"></a>
+
+### Consulter une application
 
 1. Allez dans le tableau de bord administrateur, d'organisation ou d'application.
 2. Ouvrez l'onglet **Applications**.
@@ -123,7 +95,9 @@ Ensuite, configurez l'autorisation du côté de votre application :
 
 <img src="./images/app-settings-03.webp" alt="Consultation d'une application OAuth dans Encvoy ID" style="max-width:600px; width:100%">
 
-### Modifier une application { #editing-application }
+<a name="editing-application"></a>
+
+### Modifier une application
 
 1. Allez dans le tableau de bord administrateur, d'organisation ou d'application.
 2. Ouvrez l'onglet **Applications**.
@@ -151,7 +125,9 @@ Après confirmation, l'application sera supprimée de **Encvoy ID**.
 
 ---
 
-## Invitations d'application { #application-invitations }
+<a name="application-invitations"></a>
+
+## Invitations d'application
 
 Le mécanisme d'invitation vous permet de restreindre l'accès à l'application et de ne l'accorder qu'à des utilisateurs présélectionnés. Ceci est utile si l'application est destinée à un **cercle restreint d'utilisateurs**.
 
@@ -225,7 +201,9 @@ Si vous devez révoquer une invitation envoyée :
 
 ---
 
-## Paramètres du widget de connexion de l'application { #app-login-widget-settings }
+<a name="app-login-widget-settings"></a>
+
+## Paramètres du widget de connexion de l'application
 
 Le **Widget de connexion** est le formulaire d'autorisation que les utilisateurs voient lorsqu'ils tentent de se connecter à **cette application spécifique**. Ses paramètres vous permettent d'adapter l'apparence et les méthodes de connexion à l'image de marque et aux besoins de votre service.
 
@@ -246,7 +224,9 @@ Ce qui peut être configuré :
 
 ---
 
-## Utilisateurs de l'application { #application-users }
+<a name="application-users"></a>
+
+## Utilisateurs de l'application
 
 Les **Utilisateurs de l'application** (membres) sont des utilisateurs du système **Encvoy ID** qui ont accordé à votre application la permission d'accéder à leurs données.
 
@@ -277,7 +257,9 @@ Les **Utilisateurs de l'application** (membres) sont des utilisateurs du systèm
 
 <img src="./images/app-settings-06.webp" alt="Profil utilisateur dans Encvoy ID" style="max-width:600px; width:100%">
 
-### Assigner un administrateur d'application { #assigning-app-administrator }
+<a name="assigning-app-administrator"></a>
+
+### Assigner un administrateur d'application
 
 **Quand est-ce nécessaire :** Pour déléguer les droits de gestion de l'application à des utilisateurs de confiance. Les administrateurs d'application peuvent gérer ses paramètres et ses utilisateurs.
 
@@ -390,7 +372,9 @@ Après confirmation, le statut de l'utilisateur passera à **Actif**.
 
 ---
 
-## Référence complète des paramètres { #full-parameters-reference }
+<a name="full-parameters-reference"></a>
+
+## Référence complète des paramètres
 
 ### Informations de base
 
@@ -515,8 +499,10 @@ Paramètres techniques affectant l'interaction de l'application avec **Encvoy ID
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
 
-- [Gérer les organisations](./docs-09-common-mini-widget-settings.md) — guide pour travailler avec les organisations du système **Encvoy ID**.
+## Voir aussi
+
+- [Gérer les organisations](./docs-11-common-org-settings.md) — guide pour travailler avec les organisations du système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — guide pour gérer votre profil personnel.
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — guide sur les méthodes de connexion et la configuration du widget de connexion.

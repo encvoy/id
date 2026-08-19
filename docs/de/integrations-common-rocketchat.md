@@ -1,33 +1,3 @@
----
-title: "Integration von Rocket.Chat mit Encvoy ID — Einrichten von Single Sign-On"
-description: "Erfahren Sie, wie Sie Single Sign-On in Rocket.Chat über Encvoy ID einrichten: einfache Konfiguration, Datenschutz und bequemer Zugriff für alle Unternehmensmitarbeiter."
-keywords:
-  - Integration Rocket.Chat mit Encvoy ID
-  - Rocket.Chat Encvoy ID
-  - RocketChat Encvoy ID
-  - Rocket Chat Encvoy ID
-  - SSO Login bei Rocket.Chat
-  - Single Sign-On bei Rocket.Chat
-  - Single Sign-On Rocket.Chat
-  - SSO Rocket.Chat
-  - OAuth Authentifizierung Rocket.Chat
-  - OAuth Rocket.Chat
-  - Authentifizierung in Rocket.Chat
-  - Login bei Rocket.Chat über Encvoy ID
-  - Konfiguration von Rocket.Chat mit Encvoy ID
-  - Verbindung von Rocket.Chat mit Encvoy ID
-  - Rocket.Chat Custom OAuth
-  - Rocket.Chat OAuth Provider
-  - Rocket.Chat SSO Setup
-  - Single Sign-On in Rocket Chat
-author: "Das Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration mit Rocket.Chat"
----
-
 # So konfigurieren Sie die Rocket.Chat-Integration mit Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie Single Sign-On (SSO) in **Rocket.Chat** über das **Encvoy ID**-System einrichten.
@@ -43,7 +13,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren wichtigen Ph
 
 ---
 
-## Schritt 1. Verbindung in Rocket.Chat erstellen { #step-1-create-rocketchat-connection }
+<a name="step-1-create-rocketchat-connection"></a>
+
+## Schritt 1. Verbindung in Rocket.Chat erstellen
 
 1. Melden Sie sich bei **Rocket.Chat** mit Administratorrechten an.
 2. Öffnen Sie das Menü und wählen Sie **Workspace**.
@@ -70,7 +42,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren wichtigen Ph
 
 ---
 
-## Schritt 2. Anwendung erstellen { #step-2-create-application }
+<a name="step-2-create-application"></a>
+
+## Schritt 2. Anwendung erstellen
 
 1. Melden Sie sich bei **Encvoy ID** an.
 2. Erstellen Sie eine neue Anwendung und geben Sie Folgendes an:
@@ -85,7 +59,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren wichtigen Ph
 
 ---
 
-## Schritt 3. Verbindung in Rocket.Chat konfigurieren { #step-3-configure-rocketchat }
+<a name="step-3-configure-rocketchat"></a>
+
+## Schritt 3. Verbindung in Rocket.Chat konfigurieren
 
 1. Kehren Sie zu **Rocket.Chat** zurück.
 2. Öffnen Sie die Einstellungen für die in Schritt 1 erstellte Verbindung.
@@ -109,7 +85,9 @@ Nach Abschluss aller Schritte erscheint eine Login-Schaltfläche für **Encvoy I
 
 ---
 
-## Schritt 4. Verbindung überprüfen { #step-4-verify-connection }
+<a name="step-4-verify-connection"></a>
+
+## Schritt 4. Verbindung überprüfen
 
 1. Öffnen Sie die **Rocket.Chat**-Login-Seite.
 2. Stellen Sie sicher, dass die Schaltfläche **Login with Encvoy ID** erschienen ist.

@@ -1,37 +1,3 @@
----
-title: "Erstellen einer Anwendung in Encvoy ID — Web und native OAuth/OIDC"
-description: "Erfahren Sie, wie Sie eine Anwendung in Encvoy ID erstellen: Konfiguration des Autorisierungs-Widgets, Login-Methoden, Versenden von Einladungen und Benutzerverwaltung."
-keywords: 
-keywords:
-  - Encvoy ID Anwendung erstellen
-  - Encvoy ID App erstellen
-  - OAuth/OIDC Anwendungs-Setup
-  - OAuth Web-Anwendung
-  - OAuth native Anwendung
-  - OAuth 2.0 Encvoy ID
-  - OpenID Connect Encvoy ID
-  - Encvoy ID Anwendungsverwaltung
-  - Anwendungseinladungen
-  - Einladungsbasierter Zugriff
-  - Encvoy ID Login-Widget
-  - Konfiguration Autorisierungs-Widget
-  - Anwendungsmitglieder
-  - Anwendungsadministrator zuweisen
-  - Encvoy ID Anwendungsparameter
-  - Anwendung löschen
-  - Benutzersitzungen beenden
-  - Benutzer in Anwendung sperren
-  - Referenz OAuth-Parameter
-  - SSO-Anwendung
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Anwendungsverwaltung"
-order: 11
----
-
 # So erstellen und konfigurieren Sie eine Anwendung in Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie OAuth 2.0- und OIDC-Anwendungen in **Encvoy ID** erstellen und konfigurieren. Wir behandeln im Detail die Erstellung von Web- und nativen Anwendungen, die Konfiguration des Login-Widgets sowie die Benutzer- und Zugriffsverwaltung.
@@ -50,7 +16,9 @@ In dieser Anleitung erfahren Sie, wie Sie OAuth 2.0- und OIDC-Anwendungen in **E
 
 ---
 
-## Erstellen einer Anwendung { #creating-application }
+<a name="creating-application"></a>
+
+## Erstellen einer Anwendung
 
 ### Erstellen einer OAuth-Webanwendung
 
@@ -109,9 +77,13 @@ Konfigurieren Sie anschließend die Autorisierung auf Seiten Ihrer Anwendung:
 
 ---
 
-## Verwalten von Anwendungen { #managing-applications }
+<a name="managing-applications"></a>
 
-### Anzeigen einer Anwendung { #viewing-application }
+## Verwalten von Anwendungen
+
+<a name="viewing-application"></a>
+
+### Anzeigen einer Anwendung
 
 1. Gehen Sie zum Administrator-, Organisations- oder Anwendungs-Dashboard.
 2. Öffnen Sie den Tab **Anwendungen**.
@@ -123,7 +95,9 @@ Konfigurieren Sie anschließend die Autorisierung auf Seiten Ihrer Anwendung:
 
 <img src="./images/app-settings-03.webp" alt="Anzeigen einer OAuth-Anwendung in Encvoy ID" style="max-width:600px; width:100%">
 
-### Bearbeiten einer Anwendung { #editing-application }
+<a name="editing-application"></a>
+
+### Bearbeiten einer Anwendung
 
 1. Gehen Sie zum Administrator-, Organisations- oder Anwendungs-Dashboard.
 2. Öffnen Sie den Tab **Anwendungen**.
@@ -151,7 +125,9 @@ Nach der Bestätigung wird die Anwendung aus **Encvoy ID** gelöscht.
 
 ---
 
-## Anwendungseinladungen { #application-invitations }
+<a name="application-invitations"></a>
+
+## Anwendungseinladungen
 
 Der Einladungsmechanismus ermöglicht es Ihnen, den Zugriff auf die Anwendung einzuschränken und ihn nur vorab ausgewählten Benutzern zu gewähren. Dies ist nützlich, wenn die Anwendung für einen **geschlossenen Benutzerkreis** bestimmt ist.
 
@@ -225,7 +201,9 @@ Wenn Sie eine gesendete Einladung widerrufen müssen:
 
 ---
 
-## Einstellungen für das Login-Widget der Anwendung { #app-login-widget-settings }
+<a name="app-login-widget-settings"></a>
+
+## Einstellungen für das Login-Widget der Anwendung
 
 Das **Login-Widget** ist das Autorisierungsformular, das Benutzer sehen, wenn sie versuchen, sich bei **dieser spezifischen Anwendung** anzumelden. Seine Einstellungen ermöglichen es Ihnen, das Erscheinungsbild und die Login-Methoden an die Marke und die Bedürfnisse Ihres Dienstes anzupassen.
 
@@ -246,7 +224,9 @@ Was konfiguriert werden kann:
 
 ---
 
-## Anwendungsbenutzer { #application-users }
+<a name="application-users"></a>
+
+## Anwendungsbenutzer
 
 **Anwendungsbenutzer** (Mitglieder) sind Benutzer des **Encvoy ID**-Systems, die Ihrer Anwendung die Erlaubnis erteilt haben, auf ihre Daten zuzugreifen.
 
@@ -277,7 +257,9 @@ Was konfiguriert werden kann:
 
 <img src="./images/app-settings-06.webp" alt="Benutzerprofil in Encvoy ID" style="max-width:600px; width:100%">
 
-### Zuweisen eines Anwendungsadministrators { #assigning-app-administrator }
+<a name="assigning-app-administrator"></a>
+
+### Zuweisen eines Anwendungsadministrators
 
 **Wann dies erforderlich ist:** Um Anwendungsverwaltungsrechte an vertrauenswürdige Benutzer zu delegieren. Anwendungsadministratoren können deren Einstellungen und Benutzer verwalten.
 
@@ -390,7 +372,9 @@ Nach der Bestätigung ändert sich der Status des Benutzers zu **Aktiv**.
 
 ---
 
-## Vollständige Parameterreferenz { #full-parameters-reference }
+<a name="full-parameters-reference"></a>
+
+## Vollständige Parameterreferenz
 
 ### Basisinformationen
 
@@ -515,8 +499,10 @@ Technische Parameter, die die Interaktion der Anwendung mit **Encvoy ID** beeinf
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
 
-- [Verwalten von Organisationen](./docs-09-common-mini-widget-settings.md) — Anleitung zur Arbeit mit Organisationen im **Encvoy ID**-System.
+## Siehe auch
+
+- [Verwalten von Organisationen](./docs-11-common-org-settings.md) — Anleitung zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — Anleitung zur Verwaltung Ihres persönlichen Profils.
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — Anleitung zu Login-Methoden und zur Konfiguration des Login-Widgets.

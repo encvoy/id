@@ -1,35 +1,3 @@
----
-title: "Configurazione del profilo utente Encvoy ID — Password e Campi"
-description: "Scopri come configurare il profilo utente Encvoy ID: password, campi base e aggiuntivi, validazione dei dati, conferma email e telefono."
-keywords:
-keywords:
-  - Encvoy ID user profile configuration
-  - Encvoy ID user profile
-  - Encvoy ID user settings
-  - Encvoy ID profile management
-  - Encvoy ID password policy
-  - password policy configuration
-  - password requirements
-  - user profile field validation
-  - Encvoy ID validation rules
-  - validation rules configuration
-  - validation regular expressions
-  - OAuth email confirmation
-  - OAuth phone confirmation
-  - email verification
-  - phone verification
-  - basic profile fields
-  - additional profile fields
-  - custom profile fields
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configurazione Profilo Utente"
-order: 5
----
-
 # Come configurare il profilo utente Encvoy ID
 
 In questa guida spiegheremo come configurare il profilo utente e la politica delle password in **Encvoy ID**. Imparerai a gestire i campi del profilo, la validazione dei campi e a impostare la conferma dell'indirizzo email e del numero di telefono.
@@ -48,7 +16,9 @@ In questa guida spiegheremo come configurare il profilo utente e la politica del
 
 ---
 
-## Politica delle Password { #password-policy }
+<a name="password-policy"></a>
+
+## Politica delle Password
 
 La **politica delle password in Encvoy ID** è un insieme di regole che definiscono i requisiti per la complessità e la sicurezza delle password degli utenti. Aiuta a proteggere gli account da hacking e accessi non autorizzati.
 
@@ -99,7 +69,9 @@ Per garantire una protezione robusta dell'account, si raccomanda di abilitare i 
 
 ---
 
-## Campi Base del Profilo Utente { #basic-profile-fields }
+<a name="basic-profile-fields"></a>
+
+## Campi Base del Profilo Utente
 
 I **campi base del profilo** sono attributi di sistema obbligatori creati automaticamente per ogni utente al momento della registrazione. Costituiscono la struttura di base del profilo e garantiscono il corretto funzionamento dei meccanismi di autenticazione, identificazione e comunicazione tra sistemi.
 
@@ -148,7 +120,9 @@ Nell'interfaccia è disponibile una visualizzazione rapida delle impostazioni pe
 
 5. Salva le modifiche nel modulo di modifica.
 
-### Parametri dei Campi Base { #basic-field-parameters }
+<a name="basic-field-parameters"></a>
+
+### Parametri dei Campi Base
 
 | Nome                                         | Descrizione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -166,7 +140,9 @@ Nell'interfaccia è disponibile una visualizzazione rapida delle impostazioni pe
 
 ---
 
-## Campi Aggiuntivi del Profilo Utente { #additional-profile-fields }
+<a name="additional-profile-fields"></a>
+
+## Campi Aggiuntivi del Profilo Utente
 
 I **campi aggiuntivi del profilo** sono attributi personalizzati che possono essere creati per memorizzare dati specifici non inclusi nel set standard.
 
@@ -220,7 +196,9 @@ Nell'interfaccia è disponibile una visualizzazione rapida delle impostazioni pe
 
 > ⚠️ **Nota**: Quando un campo viene eliminato, tutti i dati utente memorizzati in esso andranno persi permanentemente.
 
-### Parametri dei Campi Aggiuntivi { #additional-field-parameters }
+<a name="additional-field-parameters"></a>
+
+### Parametri dei Campi Aggiuntivi
 
 | Nome                      | Descrizione                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -236,7 +214,9 @@ Nell'interfaccia è disponibile una visualizzazione rapida delle impostazioni pe
 
 ---
 
-## Regole di Validazione dei Campi Profilo e Password { #validation-rules }
+<a name="validation-rules"></a>
+
+## Regole di Validazione dei Campi Profilo e Password
 
 Le **regole di validazione dei campi** sono un insieme di controlli con cui il sistema valuta la correttezza dei dati inseriti dall'utente.
 
@@ -332,7 +312,9 @@ Le modifiche vengono applicate automaticamente.
 
 ---
 
-## Impostazioni di Conferma Email { #email-confirmation-settings }
+<a name="email-confirmation-settings"></a>
+
+## Impostazioni di Conferma Email
 
 La **conferma email in Encvoy ID** è un meccanismo per verificare la validità dell'indirizzo fornito dall'utente durante la registrazione, l'autorizzazione o la modifica dei dati del profilo.
 
@@ -404,7 +386,9 @@ Le impostazioni di conferma email sono definite dall'amministratore e includono 
 
 ---
 
-## Impostazioni di Conferma Numero di Telefono { #phone-confirmation-settings }
+<a name="phone-confirmation-settings"></a>
+
+## Impostazioni di Conferma Numero di Telefono
 
 La **conferma del numero di telefono in Encvoy ID** è un meccanismo per verificare la validità del numero di contatto fornito dall'utente durante la registrazione, il login o la modifica del profilo.
 
@@ -472,7 +456,9 @@ Nella versione attuale di **Encvoy ID**, la conferma del numero è implementata 
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Metodi di Login e Configurazione Widget di Login](./docs-06-github-en-providers-settings.md) — guida sulla connessione e configurazione di servizi di autenticazione esterni.
 - [Gestione Applicazioni](./docs-10-common-app-settings.md) — guida sulla creazione, configurazione e gestione di applicazioni OAuth 2.0 e OpenID Connect (OIDC).

@@ -1,28 +1,3 @@
----
-title: "Integrazione di Moodle con Encvoy ID — Configurazione del Single Sign-On"
-description: "Scopri come configurare il Single Sign-On in Moodle tramite Encvoy ID: configurazione semplice, protezione dei dati e accesso fluido per tutti i dipendenti dell'azienda."
-keywords:
-  - integrazione Moodle con Encvoy ID
-  - Moodle Encvoy ID
-  - Moodle SSO
-  - Moodle single sign-on
-  - accesso SSO a Moodle
-  - single sign-on in Moodle
-  - autenticazione Moodle
-  - autorizzazione Moodle
-  - autenticazione OAuth Moodle
-  - OAuth Moodle
-  - configurazione Moodle con Encvoy ID
-  - collegare Moodle a Encvoy ID
-  - single sign-on in moodle
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integrazione con Moodle"
----
-
 # Come configurare l'integrazione di Moodle con Encvoy ID
 
 In questa guida imparerai come configurare il Single Sign-On (SSO) in **Moodle** utilizzando il sistema **Encvoy ID**.
@@ -37,7 +12,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diverse fasi ch
 
 ---
 
-## Passaggio 1. Creazione dell'applicazione { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Passaggio 1. Creazione dell'applicazione
 
 1. Accedi al sistema **Encvoy ID**.
 2. Crea un'applicazione con le seguenti impostazioni:
@@ -52,7 +29,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diverse fasi ch
 
 ---
 
-## Passaggio 2. Configurazione del sistema Moodle { #step-2-configure-moodle }
+<a name="step-2-configure-moodle"></a>
+
+## Passaggio 2. Configurazione del sistema Moodle
 
 > Per configurare l'autenticazione utente sono necessari i diritti di amministratore in **Moodle**.
 
@@ -124,7 +103,9 @@ Se l'LMS richiede l'invio di email agli utenti, è necessario configurare le imp
 
 ---
 
-## Passaggio 3. Verifica della connessione { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Passaggio 3. Verifica della connessione
 
 1. Torna all'elenco dei **Servizi OAuth 2** e assicurati che il provider creato sia attivo.
 

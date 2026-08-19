@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Organization — Management and Access Configuration"
-description: "Aprenda a configurar una organización en Encvoy ID: creación, personalización de marca, gestión de acceso, métodos de inicio de sesión y auditoría de actividad de usuarios."
-keywords:
-  - Encvoy ID organization
-  - Encvoy ID organization dashboard
-  - organization settings
-  - organization login methods
-  - organization access management
-  - organization branding
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Gestión de su Organización"
-order: 6
----
-
 # Gestión de una Organización en Encvoy ID
 
 En **Encvoy ID**, las organizaciones sirven como la unidad estructural principal para gestionar el acceso a las aplicaciones, dividir a los empleados por departamentos y mantener auditorías de la actividad de los usuarios. En esta guía, cubriremos cómo crear organizaciones y configurar los métodos de inicio de sesión.
@@ -31,7 +12,9 @@ En **Encvoy ID**, las organizaciones sirven como la unidad estructural principal
 
 ---
 
-## Conceptos Básicos de la Organización { #organization-basics }
+<a name="organization-basics"></a>
+
+## Conceptos Básicos de la Organización
 
 Una organización en **Encvoy ID** es una unidad estructural que le permite:
 
@@ -45,7 +28,9 @@ Una organización en **Encvoy ID** es una unidad estructural que le permite:
 
 ---
 
-## Acceso al Panel de Control de la Organización { #organization-panel-access }
+<a name="organization-panel-access"></a>
+
+## Acceso al Panel de Control de la Organización
 
 El panel de control de la organización está diseñado para gestionar la configuración de la organización, las aplicaciones y los usuarios.
 
@@ -72,7 +57,9 @@ Será redirigido al **Panel de Control de la Organización**.
 > 💡 Añada las aplicaciones utilizadas con frecuencia al mini-widget utilizando el ajuste **Mostrar en el mini-widget** para un acceso rápido. <br>
 > <img src="./images/org-settings-02.webp" alt="Configuración de la visualización de aplicaciones en el mini-widget de Encvoy ID" style="max-width:300px; width:100%">
 
-## Configuración del Nombre y Logo de la Organización { #organization-name-and-logo }
+<a name="organization-name-and-logo"></a>
+
+## Configuración del Nombre y Logo de la Organización
 
 El nombre y el logo se muestran en la interfaz del sistema **Encvoy ID**, así como en el mini-widget.
 
@@ -93,7 +80,9 @@ Para configurar el nombre y el logo:
 
 ---
 
-## Métodos de Inicio de Sesión de la Organización { #organization-login-methods }
+<a name="organization-login-methods"></a>
+
+## Métodos de Inicio de Sesión de la Organización
 
 Un **método de inicio de sesión** es un método de autenticación de usuario que les permite acceder a las aplicaciones.
 
@@ -112,7 +101,9 @@ Una organización puede utilizar tanto métodos de inicio de sesión públicos c
 
 ---
 
-## Ver También { #see-also }
+<a name="see-also"></a>
+
+## Ver También
 
 - [Configuración de Métodos de Inicio de Sesión y Widget de Inicio de Sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
 - [Gestión de Aplicaciones](./docs-10-common-app-settings.md) — una guía para crear, configurar y gestionar aplicaciones OAuth 2.0 y OpenID Connect (OIDC).

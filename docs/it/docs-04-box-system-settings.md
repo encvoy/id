@@ -1,30 +1,3 @@
----
-title: "Configurazione di Encvoy ID — sicurezza, interfaccia e accesso"
-description: "Scopri come configurare Encvoy ID: accesso utenti, interfaccia, template email e monitoraggio tramite Sentry. Configura il sistema ora!"
-keywords:
-  - configurazione Encvoy ID
-  - configurazione accesso Encvoy ID
-  - localizzazione
-  - lingua interfaccia
-  - template notifiche email
-  - configurazione logo
-  - tipi di applicazioni
-  - funzioni sperimentali
-  - impostazioni di accesso
-  - autenticazione a due fattori
-  - token di accesso
-  - restrizioni di accesso
-  - integrazione Sentry
-  - registro eventi
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configurazione del sistema (interfaccia, sicurezza e accesso)"
-order: 4
----
-
 # Come configurare Encvoy ID: sicurezza, interfaccia e accesso
 
 In questa guida imparerai come configurare l'interfaccia e la localizzazione di **Encvoy ID**, creare tipi di applicazioni, gestire l'accesso degli utenti, abilitare l'autenticazione a due fattori e integrare il servizio con Sentry per il monitoraggio degli eventi.
@@ -43,11 +16,15 @@ Questa sezione è destinata agli amministratori e agli specialisti della sicurez
 
 ---
 
-## Configurazione dell'interfaccia e della localizzazione { #interface-and-localization }
+<a name="interface-and-localization"></a>
+
+## Configurazione dell'interfaccia e della localizzazione
 
 > 💡 La configurazione di colori, font e aspetto degli elementi dell'interfaccia è disponibile nella variabile `CUSTOM_STYLES` nel file `.env`. Maggiori dettagli nella sezione [Variabili d'ambiente](./docs-03-box-system-configuration.md#interface-customization).
 
-### Configurazione del nome e del logo del sistema { #system-name-and-logo }
+<a name="system-name-and-logo"></a>
+
+### Configurazione del nome e del logo del sistema
 
 Il nome e il logo vengono visualizzati nell'interfaccia del sistema **Encvoy ID**, così come nel [mini-widget](./docs-09-common-mini-widget-settings.md) e nel [widget di accesso](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
@@ -101,7 +78,9 @@ Il cambio di lingua avverrà automaticamente, senza riavviare il servizio o aggi
 
 > 🚨 **Avvertenza:** Dopo aver cambiato la lingua, tutti i testi dell'interfaccia, inclusi i messaggi di sistema e le notifiche, verranno visualizzati nella lingua selezionata. Assicurati che i tuoi utenti comprendano la lingua scelta.
 
-### Configurazione dei template delle notifiche email { #email-notification-templates }
+<a name="email-notification-templates"></a>
+
+### Configurazione dei template delle notifiche email
 
 I **template email** sono modelli di messaggi elettronici che contengono formattazione ed elementi grafici predefiniti. Vengono utilizzati per creare notifiche automatiche, come email di registrazione, recupero password e altri eventi.
 
@@ -147,11 +126,17 @@ I **template email** sono modelli di messaggi elettronici che contengono formatt
 
 ---
 
-## Sicurezza e accesso { #security-and-access }
+<a name="security-and-access"></a>
 
-### Impostazioni di accesso { #access-settings }
+## Sicurezza e accesso
 
-#### Autenticazione a due fattori { #two-factor-authentication }
+<a name="access-settings"></a>
+
+### Impostazioni di accesso
+
+<a name="two-factor-authentication"></a>
+
+#### Autenticazione a due fattori
 
 L'autenticazione a due fattori (2FA) aggiunge un ulteriore livello di protezione durante l'accesso al sistema. Dopo aver inserito il primo fattore (login/password o altro metodo), l'utente deve confermare la propria identità con un secondo fattore (telefono, email, WebAuthn).
 
@@ -313,7 +298,9 @@ Limita l'accesso all'area personale solo agli utenti con ruoli amministrativi.
 | ------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Algoritmo di firma utilizzato per la creazione dell'ID Token firmato (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Indica l'algoritmo utilizzato per firmare l'ID token. </p> L'`ID token` è un JSON Web Token (JWT) che contiene asserzioni (claims) sull'autenticazione dell'utente |
 
-#### Tempo di autenticazione { #authentication-time }
+<a name="authentication-time"></a>
+
+#### Tempo di autenticazione
 
 | Nome                                                                       | Parametro           | Descrizione                                                                                           |
 | -------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -331,13 +318,17 @@ Limita l'accesso all'area personale solo agli utenti con ruoli amministrativi.
 | ------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Metodo di trasmissione dell'ID utente nel token di identificazione (subject_type)** | `subject_type` | Definisce come viene formato il `sub claim` nell'ID token: <p> - `public` — lo stesso identificatore per tutti i client <br> - `pairwise` — un identificatore unico per ogni client, aumenta la privacy </p> |
 
-#### Token di accesso { #access-token }
+<a name="access-token"></a>
+
+#### Token di accesso
 
 | Nome                                    | Parametro          | Descrizione                                   |
 | --------------------------------------- | ------------------ | --------------------------------------------- |
 | **Token di accesso (access_token_ttl)** | `access_token_ttl` | Tempo di vita dell' `access_token` in secondi |
 
-#### Token di aggiornamento { #refresh-token }
+<a name="refresh-token"></a>
+
+#### Token di aggiornamento
 
 | Nome                                           | Parametro           | Descrizione                                  |
 | ---------------------------------------------- | ------------------- | -------------------------------------------- |
@@ -404,7 +395,9 @@ Per ogni evento è disponibile la visualizzazione dei dettagli.
 
 ---
 
-## Tipi di applicazioni { #application-types }
+<a name="application-types"></a>
+
+## Tipi di applicazioni
 
 I **tipi di applicazioni** sono categorie per sistematizzare le applicazioni nel **[catalogo](./docs-12-common-personal-profile.md#application-catalog)**. Aiutano a organizzare la struttura e semplificare la navigazione degli utenti.
 
@@ -414,7 +407,9 @@ I **tipi di applicazioni** sono categorie per sistematizzare le applicazioni nel
 - Semplificano la ricerca delle applicazioni necessarie
 - Aiutano a organizzare la struttura del catalogo
 
-### Creazione di un tipo di applicazione { #creating-app-type }
+<a name="creating-app-type"></a>
+
+### Creazione di un tipo di applicazione
 
 1. Vai al pannello di amministrazione → scheda **Impostazioni**.
 2. Trova il blocco **Tipi di applicazioni** e clicca su **Configura**.
@@ -461,7 +456,9 @@ L'eliminazione avviene senza ulteriore conferma.
 
 ---
 
-## Funzioni sperimentali { #experimental-features }
+<a name="experimental-features"></a>
+
+## Funzioni sperimentali
 
 Le **funzioni sperimentali** sono nuove funzionalità del servizio **Encvoy ID** in fase di test e perfezionamento.
 
@@ -496,7 +493,9 @@ La sezione con le funzioni sperimentali è disponibile all'indirizzo: `https://I
 
 ---
 
-## Vedi anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi anche
 
 - [Configurazione della policy delle password e del profilo utente](./docs-05-box-userfields-settings.md) — guida alla configurazione dei profili utente.
 - [Metodi di accesso e configurazione del widget di accesso](./docs-06-github-en-providers-settings.md) — guida al collegamento e alla configurazione dei servizi di autenticazione esterni.

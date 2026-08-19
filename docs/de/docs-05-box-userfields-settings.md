@@ -1,35 +1,3 @@
----
-title: "Konfigurieren des Encvoy ID Benutzerprofils — Passwort und Felder"
-description: "Erfahren Sie, wie Sie das Encvoy ID Benutzerprofil konfigurieren: Passwort, Basis- und Zusatzfelder, Datenvalidierung, E-Mail- und Telefonbestätigung."
-keywords:
-keywords:
-  - Encvoy ID Benutzerprofil-Konfiguration
-  - Encvoy ID Benutzerprofil
-  - Encvoy ID Benutzereinstellungen
-  - Encvoy ID Profilverwaltung
-  - Encvoy ID Passwortrichtlinie
-  - Passwortrichtlinien-Konfiguration
-  - Passwortanforderungen
-  - Validierung von Benutzerprofilfeldern
-  - Encvoy ID Validierungsregeln
-  - Konfiguration von Validierungsregeln
-  - Reguläre Ausdrücke zur Validierung
-  - OAuth E-Mail-Bestätigung
-  - OAuth Telefonbestätigung
-  - E-Mail-Verifizierung
-  - Telefon-Verifizierung
-  - Basis-Profilfelder
-  - Zusätzliche Profilfelder
-  - Benutzerdefinierte Profilfelder
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Benutzerprofil-Konfiguration"
-order: 5
----
-
 # So konfigurieren Sie das Encvoy ID Benutzerprofil
 
 In dieser Anleitung erklären wir, wie Sie das Benutzerprofil und die Passwortrichtlinie in **Encvoy ID** konfigurieren. Sie erfahren, wie Sie Profilfelder und Feldvalidierungen verwalten sowie die Bestätigung von E-Mail-Adressen und Telefonnummern einrichten.
@@ -48,7 +16,9 @@ In dieser Anleitung erklären wir, wie Sie das Benutzerprofil und die Passwortri
 
 ---
 
-## Passwortrichtlinie { #password-policy }
+<a name="password-policy"></a>
+
+## Passwortrichtlinie
 
 Die **Passwortrichtlinie in Encvoy ID** ist ein Satz von Regeln, die Anforderungen an die Komplexität und Sicherheit von Benutzerpasswörtern definieren. Sie hilft dabei, Konten vor Hacking und unbefugtem Zugriff zu schützen.
 
@@ -99,7 +69,9 @@ Um einen robusten Kontoschutz zu gewährleisten, wird empfohlen, die folgenden P
 
 ---
 
-## Basis-Benutzerprofilfelder { #basic-profile-fields }
+<a name="basic-profile-fields"></a>
+
+## Basis-Benutzerprofilfelder
 
 **Basis-Profilfelder** sind obligatorische Systemattribute, die bei der Registrierung automatisch für jeden Benutzer erstellt werden. Sie bilden die Grundstruktur des Profils und gewährleisten das korrekte Funktionieren von Authentifizierungs-, Identifizierungs- und systemübergreifenden Kommunikationsmechanismen.
 
@@ -148,7 +120,9 @@ In der Benutzeroberfläche ist eine Schnellansicht der Feldeinstellungen für je
 
 5. Speichern Sie die Änderungen im Bearbeitungsformular.
 
-### Parameter der Basisfelder { #basic-field-parameters }
+<a name="basic-field-parameters"></a>
+
+### Parameter der Basisfelder
 
 | Name                                            | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -166,7 +140,9 @@ In der Benutzeroberfläche ist eine Schnellansicht der Feldeinstellungen für je
 
 ---
 
-## Zusätzliche Benutzerprofilfelder { #additional-profile-fields }
+<a name="additional-profile-fields"></a>
+
+## Zusätzliche Benutzerprofilfelder
 
 **Zusätzliche Profilfelder** sind benutzerdefinierte Attribute, die erstellt werden können, um spezifische Daten zu speichern, die nicht im Standardsatz enthalten sind.
 
@@ -220,7 +196,9 @@ In der Benutzeroberfläche ist eine Schnellansicht der Feldeinstellungen für je
 
 > ⚠️ **Hinweis**: Wenn ein Feld gelöscht wird, gehen alle darin gespeicherten Benutzerdaten unwiderruflich verloren.
 
-### Parameter der zusätzlichen Felder { #additional-field-parameters }
+<a name="additional-field-parameters"></a>
+
+### Parameter der zusätzlichen Felder
 
 | Name                   | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -236,7 +214,9 @@ In der Benutzeroberfläche ist eine Schnellansicht der Feldeinstellungen für je
 
 ---
 
-## Validierungsregeln für Profilfelder und Passwörter { #validation-rules }
+<a name="validation-rules"></a>
+
+## Validierungsregeln für Profilfelder und Passwörter
 
 **Feldvalidierungsregeln** sind ein Satz von Prüfungen, mit denen das System die Korrektheit der vom Benutzer eingegebenen Daten bewertet.
 
@@ -332,7 +312,9 @@ Um Validierungsregeln in einem Basis- oder Zusatzfeld zu konfigurieren:
 
 ---
 
-## Einstellungen zur E-Mail-Bestätigung { #email-confirmation-settings }
+<a name="email-confirmation-settings"></a>
+
+## Einstellungen zur E-Mail-Bestätigung
 
 Die **E-Mail-Bestätigung in Encvoy ID** ist ein Mechanismus zur Überprüfung der Gültigkeit der vom Benutzer bei der Registrierung, Autorisierung oder Änderung von Profildaten angegebenen Adresse.
 
@@ -404,7 +386,9 @@ Die Einstellungen zur E-Mail-Bestätigung werden vom Administrator festgelegt un
 
 ---
 
-## Einstellungen zur Telefonnummer-Bestätigung { #phone-confirmation-settings }
+<a name="phone-confirmation-settings"></a>
+
+## Einstellungen zur Telefonnummer-Bestätigung
 
 Die **Telefonnummer-Bestätigung in Encvoy ID** ist ein Mechanismus zur Überprüfung der Gültigkeit der vom Benutzer bei der Registrierung, Anmeldung oder Profiländerung angegebenen Kontaktnummer.
 
@@ -472,7 +456,9 @@ In der aktuellen Version von **Encvoy ID** ist die Nummernbestätigung über die
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — Anleitung zum Verbinden und Konfigurieren externer Authentifizierungsdienste.
 - [Anwendungsverwaltung](./docs-10-common-app-settings.md) — Anleitung zum Erstellen, Konfigurieren und Verwalten von OAuth 2.0- und OpenID Connect (OIDC)-Anwendungen.

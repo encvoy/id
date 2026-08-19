@@ -1,22 +1,3 @@
----
-title: "WebAuthn Login — Connecting in Encvoy ID"
-description: "Learn how to connect WebAuthn login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
-  - WebAuthn login
-  - WebAuthn authentication
-  - WebAuthn connection
-  - WebAuthn setup
-  - WebAuthn Encvoy ID
-  - login via WebAuthn Encvoy ID
-  - configuring WebAuthn in Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via WebAuthn"
----
-
 # How to Connect WebAuthn Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -32,7 +13,9 @@ In this guide, you will learn how to connect **WebAuthn** authentication to the 
 
 ---
 
-## General Information { #general-info }
+<a name="general-info"></a>
+
+## General Information
 
 **WebAuthn** (Web Authentication) is an authentication standard that allows users to log in without a password using secure verification methods:
 
@@ -63,7 +46,9 @@ In this guide, you will learn how to connect **WebAuthn** authentication to the 
 
 ---
 
-## Configuring WebAuthn Authentication for Administrators { #webauthn-admin-setup }
+<a name="webauthn-admin-setup"></a>
+
+## Configuring WebAuthn Authentication for Administrators
 
 ### Step 1. Creating a Login Method
 
@@ -101,7 +86,9 @@ To make the **WebAuthn** button visible to users on the authorization form, you 
 
 ---
 
-## Adding a Key for a User { #adding-key-for-user }
+<a name="adding-key-for-user"></a>
+
+## Adding a Key for a User
 
 ### Step 1. Adding a Key to the Device
 
@@ -130,8 +117,10 @@ After registering the key, the user needs to add the **WebAuthn** identifier to 
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

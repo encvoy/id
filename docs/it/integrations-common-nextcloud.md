@@ -1,34 +1,3 @@
----
-title: "Integrazione di Nextcloud con Encvoy ID — Configurazione del Single Sign-On"
-description: "Scopri come configurare il Single Sign-On in Nextcloud tramite Encvoy ID: configurazione semplice, protezione dei dati e accesso agevole per tutti i dipendenti dell'azienda."
-keywords:
-  - Integrazione Nextcloud con Encvoy ID
-  - Nextcloud Encvoy ID
-  - Nextcloud SSO
-  - Nextcloud single sign-on
-  - Accesso SSO a Nextcloud
-  - single sign-on in Nextcloud
-  - Autenticazione Nextcloud
-  - Autorizzazione Nextcloud
-  - Autenticazione OAuth Nextcloud
-  - OAuth Nextcloud
-  - OpenID Connect Nextcloud
-  - OIDC Nextcloud
-  - accesso a Nextcloud tramite Encvoy ID
-  - configurazione di Nextcloud con Encvoy ID
-  - connessione di Nextcloud a Encvoy ID
-  - Nextcloud Social Login
-  - plugin Social Login
-  - configurazione sso nextcloud
-  - single sign-on in nextcloud
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integrazione con Nextcloud"
----
-
 # Come configurare l'integrazione di Nextcloud con Encvoy ID
 
 In questa guida imparerai come configurare il Single Sign-On (SSO) in **Nextcloud** utilizzando il sistema **Encvoy ID**.
@@ -43,7 +12,9 @@ La configurazione dell'accesso con **Encvoy ID** si compone di due fasi chiave e
 
 ---
 
-## Passaggio 1. Creazione dell'applicazione { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Passaggio 1. Creazione dell'applicazione
 
 1. Accedi a **Encvoy ID**.
 2. Crea una nuova applicazione e specifica:
@@ -58,7 +29,9 @@ La configurazione dell'accesso con **Encvoy ID** si compone di due fasi chiave e
 
 ---
 
-## Passaggio 2. Configurazione di Nextcloud { #step-2-configure-nextcloud }
+<a name="step-2-configure-nextcloud"></a>
+
+## Passaggio 2. Configurazione di Nextcloud
 
 1. Accedi a **Nextcloud** con privilegi di amministratore.
 2. Installa l'applicazione **Social Login**. Questa app consente agli utenti di accedere al sistema **Nextcloud** utilizzando account di servizi di terze parti. Maggiori informazioni sull'app sono disponibili su [apps.nextcloud.com](https://apps.nextcloud.com/apps/sociallogin).
@@ -93,7 +66,9 @@ Al termine di tutti i passaggi, il pulsante di accesso per **Encvoy ID** verrà 
 
 ---
 
-## Passaggio 3. Verifica della connessione { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Passaggio 3. Verifica della connessione
 
 1. Apri la pagina di login di **Nextcloud**.
 2. Assicurati che sia apparso il pulsante **Accedi con Encvoy ID**.

@@ -1,27 +1,3 @@
----
-title: "Registration in Encvoy ID — login and password recovery"
-description: "Learn how to register in Encvoy ID, create an account, and recover your password. Follow the step-by-step guide and start using the service!"
-keywords:
-  - registration in Encvoy ID
-  - register in Encvoy ID
-  - account creation Encvoy ID
-  - login to Encvoy ID
-  - sign in to Encvoy ID
-  - password recovery Encvoy ID
-  - reset password Encvoy ID
-  - OAuth login to Encvoy ID
-  - social login Encvoy ID
-  - authentication Encvoy ID
-  - authorization Encvoy ID
-author: "The Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Registration and Login"
-order: 13
----
-
 # Registration, Login, and Password Recovery in Encvoy ID
 
 In this guide, you will learn how to create an account in **Encvoy ID**, log in using a username and password or via external services, and securely recover access to your profile if necessary.
@@ -37,7 +13,9 @@ In this guide, you will learn how to create an account in **Encvoy ID**, log in 
 
 ---
 
-## New Account Registration { #new-account-registration }
+<a name="new-account-registration"></a>
+
+## New Account Registration
 
 ### Where Registration is Available
 
@@ -77,7 +55,9 @@ After completing these steps, the account will be created, and you will be logge
 
 ---
 
-## Login with Username and Password { #login-with-password }
+<a name="login-with-password"></a>
+
+## Login with Username and Password
 
 You can authorize in the application using your **Encvoy ID** account.
 
@@ -117,7 +97,9 @@ To log in:
 
 ---
 
-## Login via External Services { #login-via-external-services }
+<a name="login-via-external-services"></a>
+
+## Login via External Services
 
 External identification services (or login methods) include social networks and external services.
 
@@ -132,7 +114,9 @@ To log in via an external service:
 
 ---
 
-## Quick Login for Authenticated Users { #quick-login-for-authenticated-users }
+<a name="quick-login-for-authenticated-users"></a>
+
+## Quick Login for Authenticated Users
 
 If you have already logged into **Encvoy ID** in your browser, re-authorization will not be required.
 
@@ -150,7 +134,9 @@ Additionally:
 
 ---
 
-## Password Recovery { #password-recovery }
+<a name="password-recovery"></a>
+
+## Password Recovery
 
 If you have forgotten the password for your **Encvoy ID** account, you can easily recover it.
 
@@ -176,6 +162,8 @@ After updating the password, login will be performed automatically.
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

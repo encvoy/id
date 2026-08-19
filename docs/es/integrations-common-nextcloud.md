@@ -1,34 +1,3 @@
----
-title: "Integración de Nextcloud con Encvoy ID — Configuración de Single Sign-On"
-description: "Aprenda a configurar el inicio de sesión único (Single Sign-On) en Nextcloud a través de Encvoy ID: configuración sencilla, protección de datos y acceso cómodo para todos los empleados de la empresa."
-keywords:
-  - integración de Nextcloud con Encvoy ID
-  - Nextcloud Encvoy ID
-  - Nextcloud SSO
-  - Nextcloud inicio de sesión único
-  - inicio de sesión SSO en Nextcloud
-  - single sign-on en Nextcloud
-  - autenticación de Nextcloud
-  - autorización de Nextcloud
-  - autenticación OAuth Nextcloud
-  - OAuth Nextcloud
-  - OpenID Connect Nextcloud
-  - OIDC Nextcloud
-  - iniciar sesión en Nextcloud a través de Encvoy ID
-  - configuración de Nextcloud con Encvoy ID
-  - conectar Nextcloud a Encvoy ID
-  - Nextcloud Social Login
-  - plugin Social Login
-  - configuración de sso en nextcloud
-  - inicio de sesión único en nextcloud
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integración con Nextcloud"
----
-
 # Cómo configurar la integración de Nextcloud con Encvoy ID
 
 En esta guía, aprenderá a configurar el inicio de sesión único (SSO) en **Nextcloud** utilizando el sistema **Encvoy ID**.
@@ -43,7 +12,9 @@ La configuración del inicio de sesión con **Encvoy ID** consta de dos etapas c
 
 ---
 
-## Paso 1. Crear la aplicación { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Paso 1. Crear la aplicación
 
 1. Inicie sesión en **Encvoy ID**.
 2. Cree una nueva aplicación y especifique:
@@ -58,7 +29,9 @@ La configuración del inicio de sesión con **Encvoy ID** consta de dos etapas c
 
 ---
 
-## Paso 2. Configurar Nextcloud { #step-2-configure-nextcloud }
+<a name="step-2-configure-nextcloud"></a>
+
+## Paso 2. Configurar Nextcloud
 
 1. Inicie sesión en **Nextcloud** con privilegios de administrador.
 2. Instale la aplicación **Social Login**. Esta aplicación permite a los usuarios iniciar sesión en el sistema **Nextcloud** utilizando cuentas de servicios de terceros. Lea más sobre la aplicación en [apps.nextcloud.com](https://apps.nextcloud.com/apps/sociallogin).
@@ -93,7 +66,9 @@ Después de completar todos los pasos, el botón de inicio de sesión para **Enc
 
 ---
 
-## Paso 3. Verificar la conexión { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Paso 3. Verificar la conexión
 
 1. Abra la página de inicio de sesión de **Nextcloud**.
 2. Asegúrese de que haya aparecido el botón **Login with Encvoy ID**.

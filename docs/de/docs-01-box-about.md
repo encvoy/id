@@ -1,33 +1,3 @@
----
-title: "Encvoy ID SSO-System für Unternehmensauthentifizierung"
-description: "Encvoy ID ist ein SSO-System für Unternehmen für Single Sign-On mit OAuth 2.0, OpenID Connect und 2FA. Erfahren Sie, wie Sie eine zentrale Authentifizierung implementieren."
-keywords:
-  - SSO-System
-  - SSO-System für Unternehmen
-  - Single Sign-On
-  - Einmalanmeldung
-  - Identity Provider (IdP)
-  - OAuth 2.0
-  - OpenID Connect (OIDC)
-  - OAuth 2.0 Provider
-  - OpenID Connect Provider
-  - zentrale Authentifizierung
-  - Unternehmensauthentifizierung
-  - Zwei-Faktor-Authentifizierung (2FA)
-  - Unternehmensanwendungen
-  - OIDC-Autorisierung
-  - OAuth-Autorisierung
-  - SSO-Integration
-  - vertrauenswürdige Provider
-author: "Encvoy ID Team"
-date: 2025-12-11
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Systemübersicht"
-order: 1
----
-
 # Übersicht über Encvoy ID — Single Sign-On (SSO) System
 
 **Encvoy ID** ist ein Single Sign-On (SSO) System für die zentrale Benutzerauthentifizierung und Zugriffsverwaltung für Unternehmensanwendungen.

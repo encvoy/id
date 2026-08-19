@@ -1,21 +1,3 @@
----
-title: "Connexion mTLS — Se connecter dans Encvoy ID"
-description: "Découvrez comment activer la connexion mTLS dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion mTLS
-  - authentification mTLS
-  - connexion mTLS
-  - configuration mTLS
-  - mTLS Encvoy ID
-  - connexion via mTLS Encvoy ID
-  - configurer mTLS dans Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Connexion via mTLS"
----
-
 # Comment configurer la connexion mTLS dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, consultez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -69,7 +51,9 @@ Pour que le **mTLS** fonctionne, vous devez :
 - créer et activer le fournisseur **mTLS** dans l'interface de **Encvoy ID** ;
 - installer les certificats clients sur les appareils des utilisateurs.
 
-### Étape 1. Configurer Nginx pour mTLS { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
+
+### Étape 1. Configurer Nginx pour mTLS
 
 Avant d'ajouter le fournisseur dans **Encvoy ID**, vous devez préparer la configuration **Nginx** :
 
@@ -141,7 +125,9 @@ Avant d'ajouter le fournisseur dans **Encvoy ID**, vous devez préparer la confi
 - Placez les certificats du serveur (`.pem` et clé) et la CA racine (`ca-bundle.crt`) dans un répertoire approprié, par exemple `certs/`.
 - Spécifiez le chemin vers les certificats dans la configuration **Nginx**.
 
-### Étape 2. Créer le fournisseur mTLS { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Étape 2. Créer le fournisseur mTLS
 
 1. Allez dans le Panneau d'administration → onglet **Paramètres**.
 
@@ -166,7 +152,9 @@ Avant d'ajouter le fournisseur dans **Encvoy ID**, vous devez préparer la confi
 
 Après une création réussie, la nouvelle méthode de connexion apparaîtra dans la liste générale des fournisseurs.
 
-### Étape 3. Ajouter le fournisseur mTLS au widget { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Étape 3. Ajouter le fournisseur mTLS au widget
 
 Pour que les utilisateurs voient le bouton **mTLS** sur le formulaire d'autorisation, vous devez activer cette fonctionnalité dans les paramètres du widget :
 
@@ -181,7 +169,9 @@ Pour que les utilisateurs voient le bouton **mTLS** sur le formulaire d'autorisa
 
 > 📌 Cette instruction est destinée aux utilisateurs qui doivent se connecter au système via **mTLS**.
 
-### Étape 1. Installer le certificat client dans le navigateur { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Étape 1. Installer le certificat client dans le navigateur
 
 Avant l'installation, assurez-vous d'avoir un fichier de certificat au format `.p12` ou `.pfx`.
 
@@ -227,7 +217,9 @@ Après une installation réussie, le certificat apparaîtra dans la liste de l'o
 
 > 💡 Après avoir installé le certificat, lors de la connexion via **mTLS**, le navigateur vous demandera automatiquement de sélectionner le certificat approprié pour l'authentification.
 
-### Étape 2. Ajouter l'identifiant au profil { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Étape 2. Ajouter l'identifiant au profil
 
 1. Allez dans votre **Profil**.
 2. Cliquez sur **Ajouter** dans le bloc **Identifiants**.
@@ -239,7 +231,9 @@ Après une installation réussie, le certificat apparaîtra dans la liste de l'o
 
 > 💡 **Conseil** : Si l'identifiant est déjà lié à un autre utilisateur, vous devez le supprimer du profil de cet utilisateur avant de le lier au nouveau compte.
 
-### Étape 3. Vérifier { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Étape 3. Vérifier
 
 1. Allez sur la page de connexion où la méthode de connexion **mTLS** est activée.
 2. Sélectionnez l'icône de la méthode de connexion **mTLS**.
@@ -251,5 +245,5 @@ Après une installation réussie, le certificat apparaîtra dans la liste de l'o
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md) — guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — guide sur la gestion de votre profil personnel.

@@ -1,21 +1,3 @@
----
-title: "mTLS Login — Connecting in Encvoy ID"
-description: "Learn how to enable mTLS login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
-  - mTLS login
-  - mTLS authentication
-  - mTLS connection
-  - mTLS configuration
-  - mTLS Encvoy ID
-  - login via mTLS Encvoy ID
-  - setting up mTLS in Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "mTLS Login"
----
-
 # How to Connect mTLS Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -69,7 +51,9 @@ For **mTLS** to work, you must:
 - create and activate the **mTLS** provider in the **Encvoy ID** interface;
 - install client certificates on user devices.
 
-### Step 1. Configure Nginx for mTLS { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
+
+### Step 1. Configure Nginx for mTLS
 
 Before adding the provider in **Encvoy ID**, you need to prepare the **Nginx** configuration:
 
@@ -141,7 +125,9 @@ Before adding the provider in **Encvoy ID**, you need to prepare the **Nginx** c
 - Place the server certificates (`.pem` and key) and the root CA (`ca-bundle.crt`) in a convenient directory, e.g., `certs/`.
 - Specify the path to the certificates in the **Nginx** configuration.
 
-### Step 2. Create mTLS Provider { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Step 2. Create mTLS Provider
 
 1. Go to the Admin Panel → **Settings** tab.
 
@@ -166,7 +152,9 @@ Before adding the provider in **Encvoy ID**, you need to prepare the **Nginx** c
 
 After successful creation, the new login method will appear in the general list of providers.
 
-### Step 3. Add mTLS Provider to Widget { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Step 3. Add mTLS Provider to Widget
 
 For users to see the **mTLS** button on the authorization form, you need to activate this feature in the widget settings:
 
@@ -181,7 +169,9 @@ For users to see the **mTLS** button on the authorization form, you need to acti
 
 > 📌 This instruction is intended for users who need to log in to the system via **mTLS**.
 
-### Step 1. Install Client Certificate in Browser { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Step 1. Install Client Certificate in Browser
 
 Before installation, ensure you have the certificate file in `.p12` or `.pfx` format.
 
@@ -227,7 +217,9 @@ After successful installation, the certificate will appear in the list on the **
 
 > 💡 After installing the certificate, when logging in via **mTLS**, the browser will automatically prompt you to select the appropriate certificate for authentication.
 
-### Step 2. Add Identifier to Profile { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Step 2. Add Identifier to Profile
 
 1. Go to your **Profile**.
 2. Click **Add** in the **Identifiers** block.
@@ -239,7 +231,9 @@ After successful installation, the certificate will appear in the list on the **
 
 > 💡 **Tip**: If the identifier is already linked to another user, you must remove it from that user's profile before linking it to the new account.
 
-### Step 3. Verify { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Step 3. Verify
 
 1. Go to the login page with the **mTLS** login method enabled.
 2. Select the **mTLS** login method icon.
@@ -251,5 +245,5 @@ After successful installation, the certificate will appear in the list on the **
 ## See Also
 
 - [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) — guide on login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — guide on working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — guide on working with organizations in the **Encvoy ID** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — guide on managing your personal profile.

@@ -1,21 +1,3 @@
----
-title: "Inicio de sesión por correo electrónico en Encvoy ID — Configuración de correo electrónico"
-description: "Aprenda a habilitar el inicio de sesión por correo electrónico en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
-keywords:
-  - inicio de sesión por correo electrónico en Encvoy ID
-  - configuración de correo electrónico
-  - autenticación por correo electrónico
-  - conectar correo electrónico
-  - Inicio de sesión por Email Encvoy ID
-  - OAuth por Email Encvoy ID
-author: Equipo de Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Inicio de sesión por Email"
----
-
 # Cómo conectar el inicio de sesión por correo electrónico en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, consulte la guía de [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
@@ -29,7 +11,9 @@ La configuración del inicio de sesión a través de **Email** consta de varios 
 
 ---
 
-## Paso 1. Creación de un método de inicio de sesión { #step-1-create-login-method }
+<a name="step-1-create-login-method"></a>
+
+## Paso 1. Creación de un método de inicio de sesión
 
 1. Vaya al Panel de Administración → pestaña **Configuración**.
 
@@ -62,7 +46,9 @@ Tras la creación exitosa, el nuevo método de inicio de sesión aparecerá en l
 
 ---
 
-## Paso 2. Adición al widget { #step-2-add-to-widget }
+<a name="step-2-add-to-widget"></a>
+
+## Paso 2. Adición al widget
 
 Para que el botón de **Inicio de sesión por Email** sea visible para los usuarios en el formulario de autorización, debe activar esta función en la configuración del widget:
 
@@ -76,5 +62,5 @@ Para que el botón de **Inicio de sesión por Email** sea visible para los usuar
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
-- [Gestión de la organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de la organización](./docs-11-common-org-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar el perfil personal.

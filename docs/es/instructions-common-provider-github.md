@@ -1,25 +1,3 @@
----
-title: "Inicio de sesión con GitHub — Conexión y configuración en Encvoy ID"
-description: "Aprenda cómo habilitar el inicio de sesión con GitHub en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
-keywords:
-  - GitHub login
-  - GitHub setup in Encvoy ID
-  - GitHub authentication
-  - GitHub connection
-  - GitHub login Encvoy ID
-  - GitHub OAuth Encvoy ID
-  - GitHub sign in
-  - GitHub authorization
-  - GitHub Encvoy ID
-  - login via GitHub Encvoy ID
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "Inicio de sesión con GitHub"
----
-
 # Cómo conectar el inicio de sesión con GitHub en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, lea la guía de [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
@@ -34,7 +12,9 @@ La configuración del inicio de sesión con **GitHub** consta de tres pasos clav
 
 ---
 
-## Paso 1. Configurar la aplicación de GitHub { #step-1-configure-github-app }
+<a name="step-1-configure-github-app"></a>
+
+## Paso 1. Configurar la aplicación de GitHub
 
 Antes de configurar el método de inicio de sesión en **Encvoy ID**, debe registrar su aplicación en la consola de desarrolladores de **GitHub** y obtener las claves de acceso:
 
@@ -60,7 +40,9 @@ Estos valores serán necesarios en el siguiente paso.
 
 ---
 
-## Paso 2. Crear el método de inicio de sesión { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Paso 2. Crear el método de inicio de sesión
 
 1. Vaya a la Consola de Administración → pestaña **Configuración**.
 
@@ -92,7 +74,9 @@ Tras la creación exitosa, el nuevo método de inicio de sesión aparecerá en l
 
 ---
 
-## Paso 3. Añadir al widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Paso 3. Añadir al widget
 
 Para que el botón **Iniciar sesión con GitHub** sea visible en el formulario de autorización, debe activar esta función en la configuración del widget:
 
@@ -133,5 +117,5 @@ Para que el botón **Iniciar sesión con GitHub** sea visible en el formulario d
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
-- [Gestión de Organizaciones](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de Organizaciones](./docs-11-common-org-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil Personal y Gestión de Permisos de Aplicación](./docs-12-common-personal-profile.md) — una guía para gestionar el perfil personal.

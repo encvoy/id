@@ -1,47 +1,25 @@
----
-title: "Registrazione in Encvoy ID — login e recupero password"
-description: "Scopri come registrarti in Encvoy ID, creare un account e recuperare la password. Segui la guida passo-passo e inizia a usare il servizio!"
-keywords:
-  - registrazione in Encvoy ID
-  - registrarsi in Encvoy ID
-  - creazione account Encvoy ID
-  - login a Encvoy ID
-  - accesso a Encvoy ID
-  - recupero password Encvoy ID
-  - reset password Encvoy ID
-  - login OAuth a Encvoy ID
-  - login social Encvoy ID
-  - autenticazione Encvoy ID
-  - autorizzazione Encvoy ID
-author: "Il Team di Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Registrazione e Login"
-order: 13
----
-
 # Registrazione, Login e Recupero Password in Encvoy ID
 
 In questa guida imparerai come creare un account in **Encvoy ID**, accedere utilizzando un nome utente e una password o tramite servizi esterni, e recuperare in sicurezza l'accesso al tuo profilo se necessario.
 
 **Sommario:**
 
-- [Registrazione, Login e Recupero Password in Encvoy ID](#registrazione-login-e-recupero-password-in-projectname)
-  - [Registrazione Nuovo Account { #new-account-registration }](#registrazione-nuovo-account--new-account-registration-)
+- [Registrazione, Login e Recupero Password in Encvoy ID](#registrazione-login-e-recupero-password-in-encvoy-id)
+  - [Registrazione Nuovo Account](#new-account-registration)
     - [Dove è Disponibile la Registrazione](#dove-è-disponibile-la-registrazione)
-    - [Come Creare un Account in Encvoy ID](#come-creare-un-account-in-projectname)
-  - [Login con Nome Utente e Password { #login-with-password }](#login-con-nome-utente-e-password--login-with-password-)
-  - [Login tramite Servizi Esterni { #login-via-external-services }](#login-tramite-servizi-esterni--login-via-external-services-)
-  - [Login Rapido per Utenti Autenticati { #quick-login-for-authenticated-users }](#login-rapido-per-utenti-autenticati--quick-login-for-authenticated-users-)
-  - [Recupero Password { #password-recovery }](#recupero-password--password-recovery-)
-    - [Come Recuperare una Password in Encvoy ID](#come-recuperare-una-password-in-projectname)
-  - [Vedi Anche { #see-also }](#vedi-anche--see-also-)
+    - [Come Creare un Account in Encvoy ID](#come-creare-un-account-in-encvoy-id)
+  - [Login con Nome Utente e Password](#login-with-password)
+  - [Login tramite Servizi Esterni](#login-via-external-services)
+  - [Login Rapido per Utenti Autenticati](#quick-login-for-authenticated-users)
+  - [Recupero Password](#password-recovery)
+    - [Come Recuperare una Password in Encvoy ID](#come-recuperare-una-password-in-encvoy-id)
+  - [Vedi Anche](#see-also)
 
 ---
 
-## Registrazione Nuovo Account { #new-account-registration }
+<a name="new-account-registration"></a>
+
+## Registrazione Nuovo Account
 
 ### Dove è Disponibile la Registrazione
 
@@ -81,7 +59,9 @@ Dopo aver completato questi passaggi, l'account sarà creato e sarai loggato nel
 
 ---
 
-## Login con Nome Utente e Password { #login-with-password }
+<a name="login-with-password"></a>
+
+## Login con Nome Utente e Password
 
 Puoi autenticarti nell'applicazione utilizzando il tuo account **Encvoy ID**.
 
@@ -121,7 +101,9 @@ Per accedere:
 
 ---
 
-## Login tramite Servizi Esterni { #login-via-external-services }
+<a name="login-via-external-services"></a>
+
+## Login tramite Servizi Esterni
 
 I servizi di identificazione esterna (o metodi di login) includono social network e servizi esterni.
 
@@ -136,7 +118,9 @@ Per accedere tramite un servizio esterno:
 
 ---
 
-## Login Rapido per Utenti Autenticati { #quick-login-for-authenticated-users }
+<a name="quick-login-for-authenticated-users"></a>
+
+## Login Rapido per Utenti Autenticati
 
 Se hai già effettuato l'accesso a **Encvoy ID** nel tuo browser, non sarà richiesta una nuova autorizzazione.
 
@@ -154,7 +138,9 @@ Inoltre:
 
 ---
 
-## Recupero Password { #password-recovery }
+<a name="password-recovery"></a>
+
+## Recupero Password
 
 Se hai dimenticato la password del tuo account **Encvoy ID**, puoi recuperarla facilmente.
 
@@ -180,6 +166,8 @@ Dopo aver aggiornato la password, il login verrà eseguito automaticamente.
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Profilo Personale e Gestione Permessi Applicazione](./docs-12-common-personal-profile.md) — una guida alla gestione del tuo profilo personale.

@@ -1,31 +1,3 @@
----
-title: "Integrazione di Sentry con Encvoy ID — Configurazione SSO"
-description: "Scopri come configurare il single sign-on per Sentry tramite Encvoy ID: configurazione semplice, protezione dei dati e accesso fluido per tutti i dipendenti dell'azienda."
-keywords: 
-keywords:
-  - integrazione Sentry con Encvoy ID
-  - Sentry Encvoy ID
-  - Sentry SSO
-  - Sentry single sign-on
-  - accesso SSO a Sentry
-  - single sign-on in Sentry
-  - autenticazione Sentry
-  - autorizzazione Sentry
-  - autenticazione OAuth Sentry
-  - OAuth Sentry
-  - accesso a Sentry tramite Encvoy ID
-  - configurazione Sentry con Encvoy ID
-  - collegare Sentry a Encvoy ID
-  - configurazione sentry sso
-  - single sign-on in sentry
-author: "Il Team di Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integrazione con Sentry"
----
-
 # Come Configurare l'Integrazione di Sentry con Encvoy ID
 
 In questa guida imparerai come configurare il Single Sign-On (SSO) per **Sentry** utilizzando il sistema **Encvoy ID**.
@@ -42,7 +14,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diversi passagg
 
 ---
 
-## Passaggio 1. Creare un'Applicazione { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Passaggio 1. Creare un'Applicazione
 
 1. Accedi o registrati su **Encvoy ID**.
 2. Crea un'applicazione con le seguenti impostazioni:
@@ -60,7 +34,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diversi passagg
 
 ---
 
-## Passaggio 2. Installare sentry-auth-oidc { #step-2-install-sentry-auth-oidc }
+<a name="step-2-install-sentry-auth-oidc"></a>
+
+## Passaggio 2. Installare sentry-auth-oidc
 
 1. Per installare il provider, esegui il comando da console:
 
@@ -105,7 +81,9 @@ Configura tutte le impostazioni necessarie e salva le modifiche. Dopo questo pas
 
 ---
 
-## Passaggio 3. Verificare la Connessione { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Passaggio 3. Verificare la Connessione
 
 1. Apri la pagina di login di **Sentry**.
 2. Assicurati che sia apparso il pulsante **Login via Encvoy ID**.

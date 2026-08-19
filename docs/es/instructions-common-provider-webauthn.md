@@ -1,22 +1,3 @@
----
-title: "Inicio de sesión con WebAuthn — Conexión en Encvoy ID"
-description: "Aprenda cómo conectar el inicio de sesión con WebAuthn en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctelo en solo unos pasos."
-keywords:
-  - inicio de sesión WebAuthn
-  - autenticación WebAuthn
-  - conexión WebAuthn
-  - configuración WebAuthn
-  - WebAuthn Encvoy ID
-  - iniciar sesión mediante WebAuthn Encvoy ID
-  - configurar WebAuthn en Encvoy ID
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Inicio de sesión mediante WebAuthn"
----
-
 # Cómo conectar el inicio de sesión con WebAuthn en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, lea la guía de [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
@@ -32,7 +13,9 @@ En esta guía, aprenderá cómo conectar la autenticación **WebAuthn** al siste
 
 ---
 
-## Información General { #general-info }
+<a name="general-info"></a>
+
+## Información General
 
 **WebAuthn** (Web Authentication) es un estándar de autenticación que permite a los usuarios iniciar sesión sin contraseña utilizando métodos de verificación seguros:
 
@@ -63,7 +46,9 @@ En esta guía, aprenderá cómo conectar la autenticación **WebAuthn** al siste
 
 ---
 
-## Configuración de la autenticación WebAuthn para administradores { #webauthn-admin-setup }
+<a name="webauthn-admin-setup"></a>
+
+## Configuración de la autenticación WebAuthn para administradores
 
 ### Paso 1. Creación de un método de inicio de sesión
 
@@ -101,7 +86,9 @@ Para que el botón de **WebAuthn** sea visible para los usuarios en el formulari
 
 ---
 
-## Añadir una llave para un usuario { #adding-key-for-user }
+<a name="adding-key-for-user"></a>
+
+## Añadir una llave para un usuario
 
 ### Paso 1. Añadir una llave al dispositivo
 
@@ -130,8 +117,10 @@ Después de registrar la llave, el usuario debe añadir el identificador **WebAu
 
 ---
 
-## Ver también { #see-also }
+<a name="see-also"></a>
+
+## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de acceso.
-- [Gestión de Organizaciones](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de Organizaciones](./docs-11-common-org-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil Personal y Gestión de Permisos de Aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar su perfil personal.

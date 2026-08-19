@@ -1,22 +1,3 @@
----
-title: "Connexion WebAuthn — Se connecter dans Encvoy ID"
-description: "Découvrez comment configurer la connexion WebAuthn dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion WebAuthn
-  - authentification WebAuthn
-  - connexion WebAuthn
-  - configuration WebAuthn
-  - WebAuthn Encvoy ID
-  - connexion via WebAuthn Encvoy ID
-  - configuration de WebAuthn dans Encvoy ID
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Connexion via WebAuthn"
----
-
 # Comment configurer la connexion WebAuthn dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, consultez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -32,7 +13,9 @@ Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn**
 
 ---
 
-## Informations générales { #general-info }
+<a name="general-info"></a>
+
+## Informations générales
 
 **WebAuthn** (Web Authentication) est un standard d'authentification qui permet aux utilisateurs de se connecter sans mot de passe en utilisant des méthodes de vérification sécurisées :
 
@@ -63,7 +46,9 @@ Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn**
 
 ---
 
-## Configuration de l'authentification WebAuthn pour les administrateurs { #webauthn-admin-setup }
+<a name="webauthn-admin-setup"></a>
+
+## Configuration de l'authentification WebAuthn pour les administrateurs
 
 ### Étape 1. Création d'une méthode de connexion
 
@@ -101,7 +86,9 @@ Pour rendre le bouton **WebAuthn** visible pour les utilisateurs sur le formulai
 
 ---
 
-## Ajout d'une clé pour un utilisateur { #adding-key-for-user }
+<a name="adding-key-for-user"></a>
+
+## Ajout d'une clé pour un utilisateur
 
 ### Étape 1. Ajout d'une clé à l'appareil
 
@@ -130,8 +117,10 @@ Après avoir enregistré la clé, l'utilisateur doit ajouter l'identifiant **Web
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

@@ -1,28 +1,3 @@
----
-title: "GitLab integration with Encvoy ID — setting up single sign-on"
-description: "Learn how to set up single sign-on for GitLab via Encvoy ID: simple configuration, data protection, and convenient access for all company employees."
-keywords:
-  - GitLab integration with Encvoy ID
-  - GitLab Encvoy ID
-  - GitLab SSO
-  - GitLab single sign-on
-  - SSO login to GitLab
-  - single sign-on in GitLab
-  - GitLab authentication
-  - GitLab authorization
-  - GitLab OAuth authentication
-  - login to GitLab via Encvoy ID
-  - configuring GitLab with Encvoy ID
-  - connecting GitLab to Encvoy ID
-  - single sign-on in gitlab
-author: "The Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration with GitLab"
----
-
 # How to configure GitLab integration with Encvoy ID
 
 In this guide, you will learn how to set up single sign-on (SSO) in **GitLab** via the **Encvoy ID** system.
@@ -37,7 +12,9 @@ Setting up login via **Encvoy ID** consists of several key stages performed in t
 
 ---
 
-## Step 1. Create application { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Step 1. Create application
 
 1. Log in to the **Encvoy ID** system.
 2. Create an application with the following settings:
@@ -52,7 +29,9 @@ Setting up login via **Encvoy ID** consists of several key stages performed in t
 
 ---
 
-## Step 2. Configure GitLab system { #step-2-configure-gitlab }
+<a name="step-2-configure-gitlab"></a>
+
+## Step 2. Configure GitLab system
 
 Configuring user authorization for the **GitLab** service via **Encvoy ID** is done in the **GitLab gitlab.rb** configuration file, located in the service configuration folder (/config).
 
@@ -101,7 +80,9 @@ Configuring user authorization for the **GitLab** service via **Encvoy ID** is d
 
 ---
 
-## Step 3. Verify integration { #step-3-verify-integration }
+<a name="step-3-verify-integration"></a>
+
+## Step 3. Verify integration
 
 1. Open the **GitLab** login page.
 2. Ensure that the **Login via Encvoy ID** button has appeared.

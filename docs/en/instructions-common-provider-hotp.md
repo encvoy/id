@@ -1,26 +1,3 @@
----
-title: "Login via HOTP — Connection and Configuration in Encvoy ID"
-description: "Learn how to enable HOTP login in Encvoy ID: create a login method, add it to the authorization widget, and ensure secure access for users."
-keywords:
-  - login via HOTP
-  - HOTP authentication
-  - HOTP configuration
-  - HOTP connection
-  - HOTP login
-  - HOTP two-factor authentication
-  - HOTP Encvoy ID
-  - login via HOTP Encvoy ID
-  - HOTP setup in Encvoy ID
-  - HOTP
-  - HMAC-based One-Time Password
-  - one-time password
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via HOTP"
----
-
 # How to Connect Login via HOTP in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -68,7 +45,9 @@ The main difference between **HOTP** and **TOTP** is that codes do not depend on
 
 ---
 
-## Authentication Setup for Administrators { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentication Setup for Administrators
 
 ### Step 1. Creating a Login Method
 
@@ -111,7 +90,9 @@ To make the **HOTP** button visible to users on the authorization form, you need
 
 ---
 
-## HOTP Binding for Users { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## HOTP Binding for Users
 
 > 📌 This instruction is intended for users who need to log in to the system via **HOTP**.
 
@@ -150,5 +131,5 @@ The most popular options are:
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

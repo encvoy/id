@@ -1,31 +1,3 @@
----
-title: "Integración de Sentry con Encvoy ID — Configuración de SSO"
-description: "Aprenda cómo configurar el inicio de sesión único para Sentry a través de Encvoy ID: configuración sencilla, protección de datos y acceso fluido para todos los empleados de la empresa."
-keywords: 
-keywords:
-  - integración de Sentry con Encvoy ID
-  - Sentry Encvoy ID
-  - Sentry SSO
-  - inicio de sesión único de Sentry
-  - inicio de sesión SSO en Sentry
-  - single sign-on en Sentry
-  - autenticación de Sentry
-  - autorización de Sentry
-  - autenticación OAuth Sentry
-  - OAuth Sentry
-  - iniciar sesión en Sentry a través de Encvoy ID
-  - configuración de Sentry con Encvoy ID
-  - conectar Sentry a Encvoy ID
-  - configuración de sso en sentry
-  - inicio de sesión único en sentry
-author: "El equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integración con Sentry"
----
-
 # Cómo configurar la integración de Sentry con Encvoy ID
 
 En esta guía, aprenderá cómo configurar el Inicio de Sesión Único (SSO) para **Sentry** utilizando el sistema **Encvoy ID**.
@@ -42,7 +14,9 @@ La configuración del inicio de sesión a través de **Encvoy ID** consta de var
 
 ---
 
-## Paso 1. Crear una aplicación { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Paso 1. Crear una aplicación
 
 1. Inicie sesión o regístrese en **Encvoy ID**.
 2. Cree una aplicación con los siguientes ajustes:
@@ -60,7 +34,9 @@ La configuración del inicio de sesión a través de **Encvoy ID** consta de var
 
 ---
 
-## Paso 2. Instalar sentry-auth-oidc { #step-2-install-sentry-auth-oidc }
+<a name="step-2-install-sentry-auth-oidc"></a>
+
+## Paso 2. Instalar sentry-auth-oidc
 
 1. Para instalar el proveedor, ejecute el comando de consola:
 
@@ -105,7 +81,9 @@ Configure todos los ajustes necesarios y guarde los cambios. Después de esto, s
 
 ---
 
-## Paso 3. Verificar la conexión { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Paso 3. Verificar la conexión
 
 1. Abra la página de inicio de sesión de **Sentry**.
 2. Asegúrese de que haya aparecido el botón **Login via Encvoy ID**.

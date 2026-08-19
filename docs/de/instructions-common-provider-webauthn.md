@@ -1,22 +1,3 @@
----
-title: "WebAuthn-Login — Verbindung in Encvoy ID"
-description: "Erfahren Sie, wie Sie den WebAuthn-Login in Encvoy ID verbinden: Erstellen Sie eine Anmeldemethode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - WebAuthn login
-  - WebAuthn Authentifizierung
-  - WebAuthn Verbindung
-  - WebAuthn Einrichtung
-  - WebAuthn Encvoy ID
-  - Login über WebAuthn Encvoy ID
-  - Konfiguration von WebAuthn in Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via WebAuthn"
----
-
 # So verbinden Sie den WebAuthn-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Anmeldemethoden. Weitere Details finden Sie im Leitfaden [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -32,7 +13,9 @@ In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit
 
 ---
 
-## Allgemeine Informationen { #general-info }
+<a name="general-info"></a>
+
+## Allgemeine Informationen
 
 **WebAuthn** (Web Authentication) ist ein Authentifizierungsstandard, der es Benutzern ermöglicht, sich ohne Passwort mit sicheren Verifizierungsmethoden anzumelden:
 
@@ -63,7 +46,9 @@ In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit
 
 ---
 
-## Konfiguration der WebAuthn-Authentifizierung für Administratoren { #webauthn-admin-setup }
+<a name="webauthn-admin-setup"></a>
+
+## Konfiguration der WebAuthn-Authentifizierung für Administratoren
 
 ### Schritt 1. Erstellen einer Anmeldemethode
 
@@ -101,7 +86,9 @@ Damit die **WebAuthn**-Schaltfläche für Benutzer im Autorisierungsformular sic
 
 ---
 
-## Hinzufügen eines Schlüssels für einen Benutzer { #adding-key-for-user }
+<a name="adding-key-for-user"></a>
+
+## Hinzufügen eines Schlüssels für einen Benutzer
 
 ### Schritt 1. Hinzufügen eines Schlüssels zum Gerät
 
@@ -130,8 +117,10 @@ Nach der Registrierung des Schlüssels muss der Benutzer den **WebAuthn**-Identi
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Anmeldemethoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

@@ -1,25 +1,3 @@
----
-title: "Login GitHub — Connessione e Configurazione in Encvoy ID"
-description: "Scopri come abilitare il login GitHub in Encvoy ID: crea un metodo di accesso e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - login GitHub
-  - configurazione GitHub in Encvoy ID
-  - autenticazione GitHub
-  - connessione GitHub
-  - login GitHub Encvoy ID
-  - GitHub OAuth Encvoy ID
-  - accesso GitHub
-  - autorizzazione GitHub
-  - GitHub Encvoy ID
-  - login tramite GitHub Encvoy ID
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [it]
-menu_title: "Login GitHub"
----
-
 # Come connettere il Login GitHub in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di accesso. Per maggiori dettagli, consulta la guida [Metodi di Accesso e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -34,7 +12,9 @@ La configurazione del login **GitHub** consiste in tre passaggi chiave eseguiti 
 
 ---
 
-## Passaggio 1. Configura l'App GitHub { #step-1-configure-github-app }
+<a name="step-1-configure-github-app"></a>
+
+## Passaggio 1. Configura l'App GitHub
 
 Prima di configurare il metodo di accesso in **Encvoy ID**, devi registrare la tua applicazione nella console sviluppatori di **GitHub** e ottenere le chiavi di accesso:
 
@@ -60,7 +40,9 @@ Questi valori saranno necessari nel passaggio successivo.
 
 ---
 
-## Passaggio 2. Crea il Metodo di Accesso { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Passaggio 2. Crea il Metodo di Accesso
 
 1. Vai alla Console di Amministrazione → scheda **Impostazioni**.
 
@@ -92,7 +74,9 @@ Dopo la creazione con successo, il nuovo metodo di accesso apparirà nell'elenco
 
 ---
 
-## Passaggio 3. Aggiungi al Widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Passaggio 3. Aggiungi al Widget
 
 Per rendere visibile il pulsante **Accedi con GitHub** nel modulo di autorizzazione, è necessario attivare questa funzione nelle impostazioni del widget:
 
@@ -133,5 +117,5 @@ Per rendere visibile il pulsante **Accedi con GitHub** nel modulo di autorizzazi
 ## Vedi Anche
 
 - [Metodi di Accesso e Configurazione del Widget di Accesso](./docs-06-github-en-providers-settings.md) — una guida ai metodi di accesso e alla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle Applicazioni](./docs-12-common-personal-profile.md) — una guida alla gestione del profilo personale.

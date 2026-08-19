@@ -1,31 +1,3 @@
----
-title: "Integration von Grafana mit Encvoy ID — Einrichten von Single Sign-On"
-description: "Erfahren Sie, wie Sie Single Sign-On in Grafana über Encvoy ID konfigurieren: einfache Einrichtung, Datenschutz und bequemer Zugriff für alle Unternehmensmitarbeiter."
-keywords:
-  # Основные термины и варианты
-  - Grafana integration mit Encvoy ID
-  - Grafana Encvoy ID
-  - Grafana SSO
-  - Grafana Single Sign-On
-  - SSO-Login bei Grafana
-  - Single Sign-On in Grafana
-  - Grafana Authentifizierung
-  - Grafana Autorisierung
-  - Grafana OAuth Authentifizierung
-  - Login bei Grafana über Encvoy ID
-  - Konfiguration von Grafana mit Encvoy ID
-  - Verbindung von Grafana mit Encvoy ID
-  - Grafana OAuth Provider
-  - Grafana SSO Konfiguration
-  - Single Sign-On in Grafana
-author: "Das Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration mit Grafana"
----
-
 # So konfigurieren Sie die Grafana-Integration mit Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie Single Sign-On (SSO) in **Grafana** unter Verwendung des **Encvoy ID**-Systems einrichten.
@@ -40,7 +12,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren wichtigen Sc
 
 ---
 
-## Schritt 1. Anwendung erstellen { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Schritt 1. Anwendung erstellen
 
 1. Melden Sie sich im **Encvoy ID**-System an.
 2. Erstellen Sie eine Anwendung mit den folgenden Einstellungen:
@@ -55,7 +29,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren wichtigen Sc
 
 ---
 
-## Schritt 2. Grafana-System konfigurieren { #step-2-configure-grafana }
+<a name="step-2-configure-grafana"></a>
+
+## Schritt 2. Grafana-System konfigurieren
 
 Die Autorisierungseinrichtung über **Encvoy ID** erfolgt in der Konfigurationsdatei **grafana.ini**, die sich unter Linux normalerweise unter `/etc/grafana/grafana.ini` befindet.
 
@@ -90,7 +66,9 @@ Die Autorisierungseinrichtung über **Encvoy ID** erfolgt in der Konfigurationsd
 
 ---
 
-## Schritt 3. Verbindung überprüfen { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Schritt 3. Verbindung überprüfen
 
 1. Öffnen Sie die **Grafana**-Login-Seite.
 2. Stellen Sie sicher, dass die Schaltfläche **Sign in with Encvoy ID** erschienen ist.

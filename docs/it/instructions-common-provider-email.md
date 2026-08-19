@@ -1,21 +1,3 @@
----
-title: "Login via Email in Encvoy ID — Configurazione Email"
-description: "Scopri come abilitare il login via email in Encvoy ID: crea un metodo di login e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - login email in Encvoy ID
-  - configurazione email
-  - autenticazione email
-  - connettere email
-  - Email login Encvoy ID
-  - Email OAuth Encvoy ID
-author: Team Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via Email"
----
-
 # Come connettere il Login via Email in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, leggi la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -29,7 +11,9 @@ La configurazione del login tramite **Email** consiste in diversi passaggi:
 
 ---
 
-## Passaggio 1. Creazione di un metodo di login { #step-1-create-login-method }
+<a name="step-1-create-login-method"></a>
+
+## Passaggio 1. Creazione di un metodo di login
 
 1. Vai al Pannello di Amministrazione → scheda **Impostazioni**.
 
@@ -62,7 +46,9 @@ Dopo la creazione riuscita, il nuovo metodo di login apparirà nell'elenco gener
 
 ---
 
-## Passaggio 2. Aggiunta al widget { #step-2-add-to-widget }
+<a name="step-2-add-to-widget"></a>
+
+## Passaggio 2. Aggiunta al widget
 
 Per rendere visibile agli utenti il pulsante **Login via Email** nel modulo di autorizzazione, è necessario attivare questa funzione nelle impostazioni del widget:
 
@@ -76,5 +62,5 @@ Per rendere visibile agli utenti il pulsante **Login via Email** nel modulo di a
 ## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget di Login](./docs-06-github-en-providers-settings.md) — una guida ai metodi di login e alla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida al lavoro con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida al lavoro con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle App](./docs-12-common-personal-profile.md) — una guida alla gestione del profilo personale.

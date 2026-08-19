@@ -1,21 +1,3 @@
----
-title: "Inicio de sesión mTLS — Conexión en Encvoy ID"
-description: "Aprenda a habilitar el inicio de sesión mTLS en Encvoy ID: cree un método de inicio de sesión y añádalo al widget de autorización. Conéctese en solo unos pasos."
-keywords:
-  - inicio de sesión mTLS
-  - autenticación mTLS
-  - conexión mTLS
-  - configuración mTLS
-  - mTLS Encvoy ID
-  - iniciar sesión mediante mTLS Encvoy ID
-  - configurar mTLS en Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Inicio de sesión mediante mTLS"
----
-
 # Cómo conectar el inicio de sesión mTLS en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, lea la guía de [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md).
@@ -69,7 +51,9 @@ Para que **mTLS** funcione, debe:
 - crear y activar el proveedor **mTLS** en la interfaz de **Encvoy ID**;
 - instalar certificados de cliente en los dispositivos de los usuarios.
 
-### Paso 1. Configurar Nginx para mTLS { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
+
+### Paso 1. Configurar Nginx para mTLS
 
 Antes de añadir el proveedor en **Encvoy ID**, debe preparar la configuración de **Nginx**:
 
@@ -141,7 +125,9 @@ Antes de añadir el proveedor en **Encvoy ID**, debe preparar la configuración 
 - Coloque los certificados del servidor (`.pem` y clave) y la CA raíz (`ca-bundle.crt`) en un directorio conveniente, por ejemplo, `certs/`.
 - Especifique la ruta a los certificados en la configuración de **Nginx**.
 
-### Paso 2. Crear el proveedor mTLS { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Paso 2. Crear el proveedor mTLS
 
 1. Vaya al Panel de Administración → pestaña **Configuración**.
 
@@ -166,7 +152,9 @@ Antes de añadir el proveedor en **Encvoy ID**, debe preparar la configuración 
 
 Tras la creación exitosa, el nuevo método de inicio de sesión aparecerá en la lista general de proveedores.
 
-### Paso 3. Añadir el proveedor mTLS al widget { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Paso 3. Añadir el proveedor mTLS al widget
 
 Para que los usuarios vean el botón **mTLS** en el formulario de autorización, debe activar esta función en la configuración del widget:
 
@@ -181,7 +169,9 @@ Para que los usuarios vean el botón **mTLS** en el formulario de autorización,
 
 > 📌 Esta instrucción está destinada a los usuarios que necesitan iniciar sesión en el sistema a través de **mTLS**.
 
-### Paso 1. Instalar el certificado de cliente en el navegador { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Paso 1. Instalar el certificado de cliente en el navegador
 
 Antes de la instalación, asegúrese de tener un archivo de certificado en formato `.p12` o `.pfx`.
 
@@ -227,7 +217,9 @@ Tras la instalación exitosa, el certificado aparecerá en la lista de la pesta�
 
 > 💡 Después de instalar el certificado, al iniciar sesión mediante **mTLS**, el navegador le pedirá automáticamente que seleccione el certificado adecuado para la autenticación.
 
-### Paso 2. Añadir el identificador al perfil { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Paso 2. Añadir el identificador al perfil
 
 1. Vaya a su **Perfil**.
 2. Haga clic en **Agregar** en el bloque **Identificadores**.
@@ -239,7 +231,9 @@ Tras la instalación exitosa, el certificado aparecerá en la lista de la pesta�
 
 > 💡 **Consejo**: Si el identificador ya está vinculado a otro usuario, debe eliminarlo del perfil de ese usuario antes de vincularlo a la nueva cuenta.
 
-### Paso 3. Verificar { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Paso 3. Verificar
 
 1. Vaya a la página de inicio de sesión con el método **mTLS** habilitado.
 2. Seleccione el icono del método de inicio de sesión **mTLS**.
@@ -251,5 +245,5 @@ Tras la instalación exitosa, el certificado aparecerá en la lista de la pesta�
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del widget](./docs-06-github-en-providers-settings.md) — guía sobre métodos de inicio de sesión y configuración del widget de acceso.
-- [Gestión de la organización](./docs-09-common-mini-widget-settings.md) — guía sobre el trabajo con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de la organización](./docs-11-common-org-settings.md) — guía sobre el trabajo con organizaciones en el sistema **Encvoy ID**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — guía sobre la gestión de su perfil personal.

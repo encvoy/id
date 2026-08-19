@@ -1,28 +1,3 @@
----
-title: "TOTP-Login — Verbindung und Konfiguration in Encvoy ID"
-description: "Erfahren Sie, wie Sie den TOTP-Login in Encvoy ID aktivieren: Erstellen Sie eine Anmeldemethode, fügen Sie diese zum Autorisierungs-Widget hinzu und gewährleisten Sie einen sicheren Zugriff für Benutzer."
-keywords:
-  # Main actions
-  - HOTP-Login
-  - HOTP-Authentifizierung
-  - HOTP-Konfiguration
-  - HOTP-Verbindung
-  - Anmeldung über HOTP
-  - HOTP Zwei-Faktor-Authentifizierung
-  - HOTP Encvoy ID
-  - Anmeldung über HOTP Encvoy ID
-  - HOTP-Einrichtung in Encvoy ID
-  - Unterschied zwischen HOTP und TOTP
-  - HOTP
-  - HMAC-basiertes Einmalpasswort
-  - HMAC-based One-Time Password
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "TOTP-Login"
----
-
 # So verbinden Sie den TOTP-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Anmeldemethoden. Weitere Details finden Sie im Leitfaden [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -70,7 +45,9 @@ Der Hauptunterschied zwischen **TOTP** und **HOTP** besteht darin, dass die Pass
 
 ---
 
-## Authentifizierungs-Setup für Administratoren { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentifizierungs-Setup für Administratoren
 
 ### Schritt 1. Erstellen einer Anmeldemethode
 
@@ -113,7 +90,9 @@ Damit Benutzer die **TOTP**-Schaltfläche auf dem Autorisierungsformular sehen, 
 
 ---
 
-## TOTP-Bindung für Benutzer { #totp-user-binding }
+<a name="totp-user-binding"></a>
+
+## TOTP-Bindung für Benutzer
 
 > 📌 Diese Anleitung richtet sich an Benutzer, die sich über **TOTP** am System anmelden müssen.
 
@@ -163,5 +142,5 @@ Die beliebtesten Optionen sind:
 ## Siehe auch
 
 - [Anmeldemethoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Anmeldemethoden und Widget-Einrichtung.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden für die Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden für die Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

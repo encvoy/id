@@ -1,27 +1,3 @@
----
-title: "Registrierung in Encvoy ID — Login und Passwortwiederherstellung"
-description: "Erfahren Sie, wie Sie sich in Encvoy ID registrieren, ein Konto erstellen und Ihr Passwort wiederherstellen. Folgen Sie der Schritt-für-Schritt-Anleitung und nutzen Sie den Service!"
-keywords:
-  - Registrierung in Encvoy ID
-  - registrieren in Encvoy ID
-  - Kontoerstellung Encvoy ID
-  - Login bei Encvoy ID
-  - anmelden bei Encvoy ID
-  - Passwortwiederherstellung Encvoy ID
-  - Passwort zurücksetzen Encvoy ID
-  - OAuth Login bei Encvoy ID
-  - Social Login Encvoy ID
-  - Authentifizierung Encvoy ID
-  - Autorisierung Encvoy ID
-author: "Das Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Registrierung und Login"
-order: 13
----
-
 # Registrierung, Login und Passwortwiederherstellung in Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie ein Konto in **Encvoy ID** erstellen, sich mit einem Benutzernamen und Passwort oder über externe Dienste anmelden und im Bedarfsfall sicher den Zugriff auf Ihr Profil wiederherstellen.
@@ -37,7 +13,9 @@ In dieser Anleitung erfahren Sie, wie Sie ein Konto in **Encvoy ID** erstellen, 
 
 ---
 
-## Registrierung eines neuen Kontos { #new-account-registration }
+<a name="new-account-registration"></a>
+
+## Registrierung eines neuen Kontos
 
 ### Wo die Registrierung verfügbar ist
 
@@ -77,7 +55,9 @@ Nach Abschluss dieser Schritte wird das Konto erstellt und Sie werden im System 
 
 ---
 
-## Login mit Benutzername und Passwort { #login-with-password }
+<a name="login-with-password"></a>
+
+## Login mit Benutzername und Passwort
 
 Sie können sich in der Anwendung mit Ihrem **Encvoy ID**-Konto autorisieren.
 
@@ -117,7 +97,9 @@ Um sich anzumelden:
 
 ---
 
-## Login über externe Dienste { #login-via-external-services }
+<a name="login-via-external-services"></a>
+
+## Login über externe Dienste
 
 Externe Identifikationsdienste (oder Login-Methoden) umfassen soziale Netzwerke und externe Dienste.
 
@@ -132,7 +114,9 @@ Um sich über einen externen Dienst anzumelden:
 
 ---
 
-## Schnell-Login für authentifizierte Benutzer { #quick-login-for-authenticated-users }
+<a name="quick-login-for-authenticated-users"></a>
+
+## Schnell-Login für authentifizierte Benutzer
 
 Wenn Sie sich bereits in Ihrem Browser bei **Encvoy ID** angemeldet haben, ist keine erneute Autorisierung erforderlich.
 
@@ -150,7 +134,9 @@ Zusätzlich:
 
 ---
 
-## Passwortwiederherstellung { #password-recovery }
+<a name="password-recovery"></a>
+
+## Passwortwiederherstellung
 
 Wenn Sie das Passwort für Ihr **Encvoy ID**-Konto vergessen haben, können Sie es einfach wiederherstellen.
 
@@ -176,6 +162,8 @@ Nach der Aktualisierung des Passworts wird der Login automatisch durchgeführt.
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

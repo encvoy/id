@@ -1,21 +1,3 @@
----
-title: "E-Mail-Login in Encvoy ID — E-Mail-Konfiguration"
-description: "Erfahren Sie, wie Sie den E-Mail-Login in Encvoy ID aktivieren: Erstellen Sie eine Login-Methode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - E-Mail-Login in Encvoy ID
-  - E-Mail-Konfiguration
-  - E-Mail-Authentifizierung
-  - E-Mail verbinden
-  - E-Mail-Login Encvoy ID
-  - E-Mail-OAuth Encvoy ID
-author: Encvoy ID Team
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via E-Mail"
----
-
 # So verbinden Sie den E-Mail-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Login-Methoden. Weitere Details finden Sie im Leitfaden [Login-Methoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -29,7 +11,9 @@ Die Einrichtung des Logins via **E-Mail** besteht aus mehreren Schritten:
 
 ---
 
-## Schritt 1. Erstellen einer Login-Methode { #step-1-create-login-method }
+<a name="step-1-create-login-method"></a>
+
+## Schritt 1. Erstellen einer Login-Methode
 
 1. Gehen Sie zum Admin-Panel → Tab **Einstellungen**.
 
@@ -62,7 +46,9 @@ Nach erfolgreicher Erstellung erscheint die neue Login-Methode in der allgemeine
 
 ---
 
-## Schritt 2. Hinzufügen zum Widget { #step-2-add-to-widget }
+<a name="step-2-add-to-widget"></a>
+
+## Schritt 2. Hinzufügen zum Widget
 
 Damit die Schaltfläche **Login via E-Mail** für Benutzer auf dem Autorisierungsformular sichtbar ist, müssen Sie diese Funktion in den Widget-Einstellungen aktivieren:
 
@@ -76,5 +62,5 @@ Damit die Schaltfläche **Login via E-Mail** für Benutzer auf dem Autorisierung
 ## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Login-Methoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung des persönlichen Profils.

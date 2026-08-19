@@ -1,25 +1,3 @@
----
-title: "Login Google — Connessione e Configurazione in Encvoy ID"
-description: "Scopri come connettere il login Google in Encvoy ID: crea un metodo di accesso e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - Google login
-  - configurazione Google in Encvoy ID
-  - autenticazione Google
-  - connettere Google
-  - Google login Encvoy ID
-  - Google OAuth Encvoy ID
-  - Google sign-in
-  - autorizzazione Google
-  - Google Encvoy ID
-  - login tramite Google Encvoy ID
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [it]
-menu_title: "Login Google"
----
-
 # Come Connettere il Login Google in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di accesso. Per maggiori dettagli, leggi la guida [Metodi di Accesso e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -36,7 +14,9 @@ La configurazione del login **Google** consiste in tre passaggi chiave eseguiti 
 
 ---
 
-## Passaggio 1. Configura l'Applicazione in Google { #step-1-configure-google-app }
+<a name="step-1-configure-google-app"></a>
+
+## Passaggio 1. Configura l'Applicazione in Google
 
 Prima di configurare il metodo di accesso in **Encvoy ID**, devi registrare la tua applicazione nella console per sviluppatori di **Google** e ottenere le chiavi di accesso:
 
@@ -90,7 +70,9 @@ Prima di configurare il metodo di accesso in **Encvoy ID**, devi registrare la t
 
 ---
 
-## Passaggio 2. Crea il Metodo di Accesso { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Passaggio 2. Crea il Metodo di Accesso
 
 Ora, con le chiavi ottenute da **Google**, creiamo il provider corrispondente nel sistema **Encvoy ID**.
 
@@ -124,7 +106,9 @@ Dopo la creazione con successo, il nuovo metodo di accesso apparirà nell'elenco
 
 ---
 
-## Passaggio 3. Aggiungi al Widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Passaggio 3. Aggiungi al Widget
 
 Per rendere visibile il pulsante **Accedi con Google** nel modulo di autorizzazione, è necessario attivare questa funzione nelle impostazioni del widget:
 
@@ -135,7 +119,9 @@ Per rendere visibile il pulsante **Accedi con Google** nel modulo di autorizzazi
 
 ---
 
-## Descrizione dei Parametri { #parameters-description }
+<a name="parameters-description"></a>
+
+## Descrizione dei Parametri
 
 ### Informazioni di Base
 
@@ -162,8 +148,10 @@ Per rendere visibile il pulsante **Accedi con Google** nel modulo di autorizzazi
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Metodi di Accesso e Configurazione del Widget di Login](./docs-06-github-en-providers-settings.md) — una guida ai metodi di accesso e alla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida al lavoro con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida al lavoro con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle Applicazioni](./docs-12-common-personal-profile.md) — una guida alla gestione del profilo personale.

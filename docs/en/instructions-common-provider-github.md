@@ -1,25 +1,3 @@
----
-title: "GitHub Login — Connection and Configuration in Encvoy ID"
-description: "Learn how to enable GitHub login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
-  - GitHub login
-  - GitHub setup in Encvoy ID
-  - GitHub authentication
-  - GitHub connection
-  - GitHub login Encvoy ID
-  - GitHub OAuth Encvoy ID
-  - GitHub sign in
-  - GitHub authorization
-  - GitHub Encvoy ID
-  - login via GitHub Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "GitHub Login"
----
-
 # How to Connect GitHub Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -34,7 +12,9 @@ Setting up GitHub login consists of three key steps performed in two different s
 
 ---
 
-## Step 1. Configure GitHub App { #step-1-configure-github-app }
+<a name="step-1-configure-github-app"></a>
+
+## Step 1. Configure GitHub App
 
 Before configuring the login method in **Encvoy ID**, you must register your application in the **GitHub** developer console and obtain access keys:
 
@@ -60,7 +40,9 @@ These values will be needed in the next step.
 
 ---
 
-## Step 2. Create Login Method { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Step 2. Create Login Method
 
 1. Go to the Admin Console → **Settings** tab.
 
@@ -92,7 +74,9 @@ After successful creation, the new login method will appear in the general list 
 
 ---
 
-## Step 3. Add to Widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Step 3. Add to Widget
 
 To make the **Sign in with GitHub** button visible on the authorization form, you need to activate this feature in the widget settings:
 
@@ -133,5 +117,5 @@ To make the **Sign in with GitHub** button visible on the authorization form, yo
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing the personal profile.

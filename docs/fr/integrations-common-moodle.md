@@ -1,28 +1,3 @@
----
-title: "Intégration de Moodle avec Encvoy ID — Configuration de l'authentification unique (SSO)"
-description: "Apprenez à configurer l'authentification unique (SSO) dans Moodle via Encvoy ID : configuration simple, protection des données et accès fluide pour tous les employés de l'entreprise."
-keywords:
-  - intégration Moodle avec Encvoy ID
-  - Moodle Encvoy ID
-  - Moodle SSO
-  - Moodle authentification unique
-  - connexion SSO à Moodle
-  - authentification unique dans Moodle
-  - authentification Moodle
-  - autorisation Moodle
-  - authentification OAuth Moodle
-  - OAuth Moodle
-  - configuration de Moodle avec Encvoy ID
-  - connexion de Moodle à Encvoy ID
-  - single sign-on dans moodle
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Intégration avec Moodle"
----
-
 # Comment configurer l'intégration de Moodle avec Encvoy ID
 
 Dans ce guide, vous apprendrez à configurer l'authentification unique (SSO) dans **Moodle** en utilisant le système **Encvoy ID**.
@@ -37,7 +12,9 @@ La configuration de la connexion via **Encvoy ID** se compose de plusieurs étap
 
 ---
 
-## Étape 1. Créer l'application { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Étape 1. Créer l'application
 
 1. Connectez-vous au système **Encvoy ID**.
 2. Créez une application avec les paramètres suivants :
@@ -52,7 +29,9 @@ La configuration de la connexion via **Encvoy ID** se compose de plusieurs étap
 
 ---
 
-## Étape 2. Configurer le système Moodle { #step-2-configure-moodle }
+<a name="step-2-configure-moodle"></a>
+
+## Étape 2. Configurer le système Moodle
 
 > Les droits d'administrateur dans **Moodle** sont requis pour configurer l'authentification des utilisateurs.
 
@@ -124,7 +103,9 @@ Si le LMS nécessite l'envoi d'e-mails aux utilisateurs, vous devez configurer l
 
 ---
 
-## Étape 3. Vérifier la connexion { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Étape 3. Vérifier la connexion
 
 1. Revenez à la liste des **Services OAuth 2** et assurez-vous que le fournisseur créé est actif.
 

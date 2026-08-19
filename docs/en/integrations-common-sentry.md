@@ -1,31 +1,3 @@
----
-title: "Sentry Integration with Encvoy ID — SSO Configuration"
-description: "Learn how to set up single sign-on for Sentry via Encvoy ID: simple configuration, data protection, and seamless access for all company employees."
-keywords: 
-keywords:
-  - Sentry integration with Encvoy ID
-  - Sentry Encvoy ID
-  - Sentry SSO
-  - Sentry single sign-on
-  - SSO login to Sentry
-  - single sign-on in Sentry
-  - Sentry authentication
-  - Sentry authorization
-  - OAuth authentication Sentry
-  - OAuth Sentry
-  - login to Sentry via Encvoy ID
-  - Sentry configuration with Encvoy ID
-  - connecting Sentry to Encvoy ID
-  - sentry sso setup
-  - single sign-on in sentry
-author: "The Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration with Sentry"
----
-
 # How to Configure Sentry Integration with Encvoy ID
 
 In this guide, you will learn how to set up Single Sign-On (SSO) for **Sentry** using the **Encvoy ID** system.
@@ -42,7 +14,9 @@ Setting up login via **Encvoy ID** consists of several key steps performed in tw
 
 ---
 
-## Step 1. Create an Application { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Step 1. Create an Application
 
 1. Log in or register with **Encvoy ID**.
 2. Create an application with the following settings:
@@ -60,7 +34,9 @@ Setting up login via **Encvoy ID** consists of several key steps performed in tw
 
 ---
 
-## Step 2. Install sentry-auth-oidc { #step-2-install-sentry-auth-oidc }
+<a name="step-2-install-sentry-auth-oidc"></a>
+
+## Step 2. Install sentry-auth-oidc
 
 1. To install the provider, run the console command:
 
@@ -105,7 +81,9 @@ Configure all necessary settings and save the changes. After this, authorization
 
 ---
 
-## Step 3. Verify Connection { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Step 3. Verify Connection
 
 1. Open the **Sentry** login page.
 2. Ensure that the **Login via Encvoy ID** button has appeared.

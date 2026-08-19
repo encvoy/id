@@ -1,33 +1,3 @@
----
-title: "Integración de Rocket.Chat con Encvoy ID — Configuración de Single Sign-On"
-description: "Aprenda a configurar el Inicio de Sesión Único (SSO) en Rocket.Chat a través de Encvoy ID: configuración sencilla, protección de datos y acceso conveniente para todos los empleados de la empresa."
-keywords:
-  - integración Rocket.Chat con Encvoy ID
-  - Rocket.Chat Encvoy ID
-  - RocketChat Encvoy ID
-  - Rocket Chat Encvoy ID
-  - SSO login to Rocket.Chat
-  - single sign-on to Rocket.Chat
-  - single sign-on Rocket.Chat
-  - SSO Rocket.Chat
-  - OAuth authentication Rocket.Chat
-  - OAuth Rocket.Chat
-  - authentication in Rocket.Chat
-  - login to Rocket.Chat via Encvoy ID
-  - configuring Rocket.Chat with Encvoy ID
-  - connecting Rocket.Chat to Encvoy ID
-  - Rocket.Chat Custom OAuth
-  - Rocket.Chat OAuth provider
-  - Rocket.Chat sso setup
-  - single sign-on in rocket chat
-author: "El equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integración con Rocket.Chat"
----
-
 # Cómo configurar la integración de Rocket.Chat con Encvoy ID
 
 En esta guía, aprenderá a configurar el Inicio de Sesión Único (SSO) en **Rocket.Chat** a través del sistema **Encvoy ID**.
@@ -43,7 +13,9 @@ La configuración del inicio de sesión a través de **Encvoy ID** consta de var
 
 ---
 
-## Paso 1. Crear una conexión en Rocket.Chat { #step-1-create-rocketchat-connection }
+<a name="step-1-create-rocketchat-connection"></a>
+
+## Paso 1. Crear una conexión en Rocket.Chat
 
 1. Inicie sesión en **Rocket.Chat** con derechos de administrador.
 2. Abra el menú y seleccione **Workspace**.
@@ -70,7 +42,9 @@ La configuración del inicio de sesión a través de **Encvoy ID** consta de var
 
 ---
 
-## Paso 2. Crear una aplicación { #step-2-create-application }
+<a name="step-2-create-application"></a>
+
+## Paso 2. Crear una aplicación
 
 1. Inicie sesión en **Encvoy ID**.
 2. Cree una nueva aplicación y especifique:
@@ -85,7 +59,9 @@ La configuración del inicio de sesión a través de **Encvoy ID** consta de var
 
 ---
 
-## Paso 3. Configurar la conexión en Rocket.Chat { #step-3-configure-rocketchat }
+<a name="step-3-configure-rocketchat"></a>
+
+## Paso 3. Configurar la conexión en Rocket.Chat
 
 1. Regrese a **Rocket.Chat**.
 2. Abra la configuración de la conexión creada en el Paso 1.
@@ -109,7 +85,9 @@ Después de completar todos los pasos, aparecerá un botón de inicio de sesión
 
 ---
 
-## Paso 4. Verificar la conexión { #step-4-verify-connection }
+<a name="step-4-verify-connection"></a>
+
+## Paso 4. Verificar la conexión
 
 1. Abra la página de inicio de sesión de **Rocket.Chat**.
 2. Asegúrese de que haya aparecido el botón **Login with Encvoy ID**.

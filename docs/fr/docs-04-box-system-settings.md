@@ -1,30 +1,3 @@
----
-title: "Configuration de Encvoy ID — sécurité, interface et accès"
-description: "Découvrez comment configurer Encvoy ID : accès utilisateur, interface, modèles d'e-mail et surveillance via Sentry. Configurez votre système dès maintenant !"
-keywords:
-  - configuration Encvoy ID
-  - configuration accès Encvoy ID
-  - localisation
-  - langue de l'interface
-  - modèles de notification par e-mail
-  - configuration du logo
-  - types d'applications
-  - fonctionnalités expérimentales
-  - paramètres d'accès
-  - authentification à deux facteurs
-  - jetons d'accès
-  - restrictions d'accès
-  - intégration Sentry
-  - journal d'événements
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configuration du système (Interface, Sécurité et Accès)"
-order: 4
----
-
 # Comment configurer Encvoy ID : Sécurité, Interface et Accès
 
 Dans ce guide, vous apprendrez à configurer l'interface et la localisation de **Encvoy ID**, à créer des types d'applications, à gérer l'accès des utilisateurs, à activer l'authentification à deux facteurs et à intégrer le service avec Sentry pour la surveillance des événements.
@@ -43,11 +16,15 @@ Cette section est destinée aux administrateurs et aux spécialistes de la sécu
 
 ---
 
-## Configuration de l'interface et de la localisation { #interface-and-localization }
+<a name="interface-and-localization"></a>
+
+## Configuration de l'interface et de la localisation
 
 > 💡 La personnalisation des couleurs, des polices et de l'apparence des éléments de l'interface est disponible via la variable `CUSTOM_STYLES` dans le fichier `.env`. Plus de détails dans la section [Variables d'environnement](./docs-03-box-system-configuration.md#interface-customization).
 
-### Configuration du nom du système et du logo { #system-name-and-logo }
+<a name="system-name-and-logo"></a>
+
+### Configuration du nom du système et du logo
 
 Le nom et le logo sont affichés dans l'interface de **Encvoy ID**, ainsi que dans le [mini-widget](./docs-09-common-mini-widget-settings.md) et le [widget de connexion](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
@@ -101,7 +78,9 @@ Le changement de langue s'effectuera automatiquement, sans redémarrer le servic
 
 > 🚨 **Attention :** Après avoir changé la langue, tous les textes de l'interface, y compris les messages système et les notifications, seront affichés dans la langue sélectionnée. Assurez-vous que vos utilisateurs comprennent la langue choisie.
 
-### Configuration des modèles de notification par e-mail { #email-notification-templates }
+<a name="email-notification-templates"></a>
+
+### Configuration des modèles de notification par e-mail
 
 Les **modèles d'e-mail** sont des préréglages d'e-mails contenant un formatage et des éléments de conception prédéfinis. Ils sont utilisés pour créer des notifications automatiques, telles que les e-mails d'inscription, la récupération de mot de passe et d'autres événements.
 
@@ -147,11 +126,17 @@ Les **modèles d'e-mail** sont des préréglages d'e-mails contenant un formatag
 
 ---
 
-## Sécurité et accès { #security-and-access }
+<a name="security-and-access"></a>
 
-### Paramètres d'accès { #access-settings }
+## Sécurité et accès
 
-#### Authentification à deux facteurs { #two-factor-authentication }
+<a name="access-settings"></a>
+
+### Paramètres d'accès
+
+<a name="two-factor-authentication"></a>
+
+#### Authentification à deux facteurs
 
 L'authentification à deux facteurs (2FA) ajoute une couche de protection supplémentaire lors de la connexion. Après avoir saisi le premier facteur (identifiant/mot de passe ou autre méthode d'authentification), l'utilisateur doit confirmer son identité avec un second facteur (téléphone, e-mail, WebAuthn).
 
@@ -313,7 +298,9 @@ Restreint la connexion au profil personnel uniquement aux utilisateurs ayant des
 | ---------------------------------------------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Algorithme de signature utilisé lors de la création d'un ID-token signé (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Spécifie l'algorithme utilisé pour signer le jeton ID. </p> Le `ID token` est un JSON Web Token (JWT) qui contient des revendications sur l'authentification de l'utilisateur |
 
-#### Temps d'authentification { #authentication-time }
+<a name="authentication-time"></a>
+
+#### Temps d'authentification
 
 | Nom                                                                               | Paramètre           | Description                                                                                              |
 | --------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -331,13 +318,17 @@ Restreint la connexion au profil personnel uniquement aux utilisateurs ayant des
 | --------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Méthode de transmission de l'ID utilisateur dans le jeton d'identification (subject_type)** | `subject_type` | Détermine comment la revendication `sub` est formée dans le jeton ID : <p> - `public` — le même identifiant pour tous les clients <br> - `pairwise` — un identifiant unique pour chaque client, améliorant la confidentialité </p> |
 
-#### Jeton d'accès { #access-token }
+<a name="access-token"></a>
+
+#### Jeton d'accès
 
 | Nom                                  | Paramètre          | Description                                  |
 | ------------------------------------ | ------------------ | -------------------------------------------- |
 | **Jeton d'accès (access_token_ttl)** | `access_token_ttl` | Durée de vie de l'`access_token` en secondes |
 
-#### Jeton de rafraîchissement { #refresh-token }
+<a name="refresh-token"></a>
+
+#### Jeton de rafraîchissement
 
 | Nom                                             | Paramètre           | Description                                 |
 | ----------------------------------------------- | ------------------- | ------------------------------------------- |
@@ -404,7 +395,9 @@ Des informations détaillées sont disponibles pour chaque événement.
 
 ---
 
-## Types d'applications { #application-types }
+<a name="application-types"></a>
+
+## Types d'applications
 
 Les **types d'applications** sont des catégories permettant de systématiser les applications dans le **[catalogue](./docs-12-common-personal-profile.md#application-catalog)**. Ils aident à organiser la structure et simplifient la navigation des utilisateurs.
 
@@ -414,7 +407,9 @@ Les **types d'applications** sont des catégories permettant de systématiser le
 - Simplifient la recherche des applications requises
 - Aident à organiser la structure du catalogue
 
-### Création d'un type d'application { #creating-app-type }
+<a name="creating-app-type"></a>
+
+### Création d'un type d'application
 
 1. Allez dans le panneau d'administration → onglet **Paramètres**.
 2. Trouvez le bloc **Types d'applications** et cliquez sur **Configurer**.
@@ -461,7 +456,9 @@ La suppression s'effectue sans confirmation supplémentaire.
 
 ---
 
-## Fonctionnalités expérimentales { #experimental-features }
+<a name="experimental-features"></a>
+
+## Fonctionnalités expérimentales
 
 Les **fonctionnalités expérimentales** sont de nouvelles capacités du service **Encvoy ID** qui sont en phase de test et d'amélioration.
 
@@ -496,7 +493,9 @@ La section des fonctionnalités expérimentales est disponible à l'adresse : `h
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Configuration de la politique de mot de passe et du profil utilisateur](./docs-05-box-userfields-settings.md) — guide pour la configuration des profils utilisateurs.
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — guide pour connecter et configurer les services d'authentification externes.

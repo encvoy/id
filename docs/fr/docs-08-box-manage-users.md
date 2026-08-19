@@ -1,26 +1,3 @@
----
-title: "Gestion des utilisateurs dans Encvoy ID — Guide de l'administrateur"
-description: "Apprenez à gérer les utilisateurs dans Encvoy ID : création et édition, blocage et suppression, contrôle d'accès et gestion de la confidentialité."
-keywords:
-  - gestion des utilisateurs Encvoy ID
-  - créer un utilisateur Encvoy ID
-  - modifier le profil utilisateur
-  - bloquer et débloquer un utilisateur
-  - attribuer des droits d'accès Encvoy ID
-  - exporter les données du profil
-  - mettre fin aux sessions utilisateur
-  - identifiants utilisateur
-  - supprimer un utilisateur Encvoy ID
-  - droits et rôles des utilisateurs
-author: "L'équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Gestion des utilisateurs"
-order: 9
----
-
 # Gestion des utilisateurs dans Encvoy ID
 
 Dans ce guide, vous apprendrez à créer et modifier des profils d'utilisateurs dans **Encvoy ID**, à attribuer des rôles et des droits d'accès, à bloquer et supprimer des comptes, à mettre fin aux sessions actives, à gérer la confidentialité et à exporter les données de profil.
@@ -36,7 +13,9 @@ Dans ce guide, vous apprendrez à créer et modifier des profils d'utilisateurs 
 
 ---
 
-## Aperçu et actions de base { #overview-and-basics }
+<a name="overview-and-basics"></a>
+
+## Aperçu et actions de base
 
 ### À propos de la section "Utilisateurs"
 
@@ -69,7 +48,7 @@ Dans cette instruction, nous verrons comment créer manuellement un utilisateur 
 
 5. Cliquez sur **Enregistrer**.
 
-   > 💡 Un profil utilisateur peut contenir des [champs supplémentaires](./docs-05-box-userfields-settings.md#password-policy).
+   > 💡 Un profil utilisateur peut contenir des [champs supplémentaires](./docs-05-box-userfields-settings.md#additional-profile-fields).
 
    > 📌 La validation des champs est effectuée selon des règles de validation. Pour plus de détails, consultez le guide [Règles de validation des champs](./docs-05-box-userfields-settings.md#validation-rules).
 
@@ -100,7 +79,9 @@ Pour apporter des modifications à un profil utilisateur :
 
 ---
 
-## Gestion des données du profil { #profile-data-management }
+<a name="profile-data-management"></a>
+
+## Gestion des données du profil
 
 ### Gestion des identifiants de profil
 
@@ -187,7 +168,9 @@ Le fichier exporté contient une liste complète des données utilisateur :
 
 ---
 
-## Accès et sécurité { #access-and-security }
+<a name="access-and-security"></a>
+
+## Accès et sécurité
 
 ### Fin des sessions utilisateur
 
@@ -257,7 +240,9 @@ L'utilisateur recevra le rôle sélectionné et les droits correspondants.
 
 ---
 
-## Statut du compte { #account-status }
+<a name="account-status"></a>
+
+## Statut du compte
 
 ### Blocage des utilisateurs dans Encvoy ID
 
@@ -303,7 +288,9 @@ Après confirmation de l'action, le statut de l'utilisateur passera à **Actif**
 
 ---
 
-## Suppression d'un utilisateur { #deleting-user }
+<a name="deleting-user"></a>
+
+## Suppression d'un utilisateur
 
 Un administrateur peut supprimer définitivement un utilisateur. Une fois la suppression confirmée, le compte et toutes les données disparaissent irrévocablement. L'utilisateur perdra l'accès à toutes les applications où son compte **Encvoy ID** était utilisé.
 
@@ -336,8 +323,10 @@ Après confirmation, l'utilisateur sera supprimé.
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.
 - [Gestion des applications](./docs-10-common-app-settings.md) — un guide pour créer, configurer et gérer les applications OAuth 2.0 et OpenID Connect (OIDC).
-- [Gestion de l'organisation](./docs-02-box-system-install.md) — un guide pour travailler avec les organisations dans **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide pour travailler avec les organisations dans **Encvoy ID**.

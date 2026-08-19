@@ -1,25 +1,3 @@
----
-title: "Google Login — Verbindung und Konfiguration in Encvoy ID"
-description: "Erfahren Sie, wie Sie den Google-Login in Encvoy ID verbinden: Erstellen Sie eine Login-Methode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - Google Login
-  - Google Einrichtung in Encvoy ID
-  - Google Authentifizierung
-  - Google verbinden
-  - Google Login Encvoy ID
-  - Google OAuth Encvoy ID
-  - Google Anmeldung
-  - Google Autorisierung
-  - Google Encvoy ID
-  - Login über Google Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "Google Login"
----
-
 # So verbinden Sie den Google-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Login-Methoden. Weitere Details finden Sie im Leitfaden [Login-Methoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -36,7 +14,9 @@ Die Einrichtung des **Google**-Logins besteht aus drei wesentlichen Schritten, d
 
 ---
 
-## Schritt 1. Konfiguration der Anwendung in Google { #step-1-configure-google-app }
+<a name="step-1-configure-google-app"></a>
+
+## Schritt 1. Konfiguration der Anwendung in Google
 
 Bevor Sie die Login-Methode in **Encvoy ID** konfigurieren, müssen Sie Ihre Anwendung in der **Google** Developer Console registrieren und Zugriffsschlüssel erhalten:
 
@@ -90,7 +70,9 @@ Bevor Sie die Login-Methode in **Encvoy ID** konfigurieren, müssen Sie Ihre Anw
 
 ---
 
-## Schritt 2. Erstellen der Login-Methode { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Schritt 2. Erstellen der Login-Methode
 
 Erstellen wir nun mit den Schlüsseln von **Google** den entsprechenden Provider im **Encvoy ID**-System.
 
@@ -124,7 +106,9 @@ Nach erfolgreicher Erstellung erscheint die neue Login-Methode in der allgemeine
 
 ---
 
-## Schritt 3. Zum Widget hinzufügen { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Schritt 3. Zum Widget hinzufügen
 
 Damit die Schaltfläche **Mit Google anmelden** auf dem Autorisierungsformular sichtbar ist, müssen Sie diese Funktion in den Widget-Einstellungen aktivieren:
 
@@ -135,7 +119,9 @@ Damit die Schaltfläche **Mit Google anmelden** auf dem Autorisierungsformular s
 
 ---
 
-## Beschreibung der Parameter { #parameters-description }
+<a name="parameters-description"></a>
+
+## Beschreibung der Parameter
 
 ### Basisinformationen
 
@@ -162,8 +148,10 @@ Damit die Schaltfläche **Mit Google anmelden** auf dem Autorisierungsformular s
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Login-Methoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung des persönlichen Profils.

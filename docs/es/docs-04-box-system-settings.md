@@ -1,30 +1,3 @@
----
-title: "Configuración de Encvoy ID — seguridad, interfaz y acceso"
-description: "Aprenda a configurar Encvoy ID: acceso de usuarios, interfaz, plantillas de correo electrónico y monitoreo a través de Sentry. ¡Configure su sistema ahora!"
-keywords:
-  - configuración de Encvoy ID
-  - configuración de acceso Encvoy ID
-  - localización
-  - idioma de la interfaz
-  - plantillas de notificación por correo electrónico
-  - configuración de logotipo
-  - tipos de aplicaciones
-  - funciones experimentales
-  - ajustes de acceso
-  - autenticación de dos factores
-  - tokens de acceso
-  - restricciones de acceso
-  - integración con Sentry
-  - registro de eventos
-author: "Equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configuración del sistema (Interfaz, Seguridad y Acceso)"
-order: 4
----
-
 # Cómo configurar Encvoy ID: Seguridad, Interfaz y Acceso
 
 En esta guía, aprenderá a configurar la interfaz y localización de **Encvoy ID**, crear tipos de aplicaciones, gestionar el acceso de usuarios, habilitar la autenticación de dos factores e integrar el servicio con Sentry para el monitoreo de eventos.
@@ -43,11 +16,15 @@ Esta sección está dirigida a administradores y especialistas en seguridad que 
 
 ---
 
-## Configuración de Interfaz y Localización { #interface-and-localization }
+<a name="interface-and-localization"></a>
+
+## Configuración de Interfaz y Localización
 
 > 💡 La personalización de colores, fuentes y la apariencia de los elementos de la interfaz está disponible a través de la variable `CUSTOM_STYLES` en el archivo `.env`. Más detalles en la sección de [Variables de Entorno](./docs-03-box-system-configuration.md#interface-customization).
 
-### Configuración del Nombre del Sistema y Logotipo { #system-name-and-logo }
+<a name="system-name-and-logo"></a>
+
+### Configuración del Nombre del Sistema y Logotipo
 
 El nombre y el logotipo se muestran en la interfaz de **Encvoy ID**, así como en el [mini-widget](./docs-09-common-mini-widget-settings.md) y el [widget de inicio de sesión](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
@@ -101,7 +78,9 @@ El cambio de idioma se producirá automáticamente, sin necesidad de reiniciar e
 
 > 🚨 **Advertencia:** Después de cambiar el idioma, todos los textos de la interfaz, incluidos los mensajes del sistema y las notificaciones, se mostrarán en el idioma seleccionado. Asegúrese de que sus usuarios comprendan el idioma elegido.
 
-### Configuración de Plantillas de Notificación por Correo Electrónico { #email-notification-templates }
+<a name="email-notification-templates"></a>
+
+### Configuración de Plantillas de Notificación por Correo Electrónico
 
 Las **plantillas de correo electrónico** son preajustes de correo que contienen elementos de diseño y formato predefinidos. Se utilizan para crear notificaciones automáticas, como correos de registro, recuperación de contraseña y otros eventos.
 
@@ -147,11 +126,17 @@ Las **plantillas de correo electrónico** son preajustes de correo que contienen
 
 ---
 
-## Seguridad y Acceso { #security-and-access }
+<a name="security-and-access"></a>
 
-### Ajustes de Acceso { #access-settings }
+## Seguridad y Acceso
 
-#### Autenticación de Dos Factores { #two-factor-authentication }
+<a name="access-settings"></a>
+
+### Ajustes de Acceso
+
+<a name="two-factor-authentication"></a>
+
+#### Autenticación de Dos Factores
 
 La autenticación de dos factores (2FA) añade una capa extra de protección durante el inicio de sesión. Después de ingresar el primer factor (usuario/contraseña u otro método de autenticación), el usuario debe confirmar su identidad con un segundo factor (teléfono, correo electrónico, WebAuthn).
 
@@ -313,7 +298,9 @@ Restringe el inicio de sesión al perfil personal solo a usuarios con roles admi
 | -------------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Algoritmo de firma utilizado al crear el ID Token firmado (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Especifica el algoritmo utilizado para firmar el token de ID. </p> `ID token` es un JSON Web Token (JWT) que contiene afirmaciones sobre la autenticación del usuario |
 
-#### Tiempo de Autenticación { #authentication-time }
+<a name="authentication-time"></a>
+
+#### Tiempo de Autenticación
 
 | Nombre                                                                           | Parámetro           | Descripción                                                                                              |
 | -------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -331,13 +318,17 @@ Restringe el inicio de sesión al perfil personal solo a usuarios con roles admi
 | ---------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Método de transmisión del ID de usuario en el token de identificación (subject_type)** | `subject_type` | Determina cómo se forma la `sub claim` en el token de ID: <p> - `public` — el mismo identificador para todos los clientes <br> - `pairwise` — un identificador único para cada cliente, mejorando la privacidad </p> |
 
-#### Token de Acceso { #access-token }
+<a name="access-token"></a>
+
+#### Token de Acceso
 
 | Nombre                                 | Parámetro          | Descripción                                  |
 | -------------------------------------- | ------------------ | -------------------------------------------- |
 | **Token de acceso (access_token_ttl)** | `access_token_ttl` | Tiempo de vida de `access_token` en segundos |
 
-#### Token de Refresco { #refresh-token }
+<a name="refresh-token"></a>
+
+#### Token de Refresco
 
 | Nombre                                         | Parámetro           | Descripción                                   |
 | ---------------------------------------------- | ------------------- | --------------------------------------------- |
@@ -404,7 +395,9 @@ Hay información detallada disponible para cada evento.
 
 ---
 
-## Tipos de Aplicaciones { #application-types }
+<a name="application-types"></a>
+
+## Tipos de Aplicaciones
 
 Los **tipos de aplicaciones** son categorías para sistematizar las aplicaciones en el **[catálogo](./docs-12-common-personal-profile.md#application-catalog)**. Ayudan a organizar la estructura y simplificar la navegación del usuario.
 
@@ -414,7 +407,9 @@ Los **tipos de aplicaciones** son categorías para sistematizar las aplicaciones
 - Simplifican la búsqueda de las aplicaciones requeridas
 - Ayudan a organizar la estructura del catálogo
 
-### Creación de un Tipo de Aplicación { #creating-app-type }
+<a name="creating-app-type"></a>
+
+### Creación de un Tipo de Aplicación
 
 1. Vaya al panel de administración → pestaña **Configuración**.
 2. Busque el bloque **Tipos de aplicaciones** y haga clic en **Configurar**.
@@ -461,7 +456,9 @@ La eliminación ocurre sin confirmación adicional.
 
 ---
 
-## Funciones Experimentales { #experimental-features }
+<a name="experimental-features"></a>
+
+## Funciones Experimentales
 
 Las **funciones experimentales** son nuevas capacidades del servicio **Encvoy ID** que se encuentran en etapa de prueba y refinamiento.
 
@@ -496,7 +493,9 @@ La sección de funciones experimentales está disponible en: `https://ID_HOST/ex
 
 ---
 
-## Ver también { #see-also }
+<a name="see-also"></a>
+
+## Ver también
 
 - [Configuración de la Política de Contraseñas y Perfil de Usuario](./docs-05-box-userfields-settings.md) — guía para configurar perfiles de usuario.
 - [Métodos de Inicio de Sesión y Configuración del Widget de Inicio de Sesión](./docs-06-github-en-providers-settings.md) — guía para conectar y configurar servicios de autenticación externos.

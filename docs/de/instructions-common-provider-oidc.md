@@ -1,25 +1,3 @@
----
-title: "OpenID Connect Login — Verbindung in Encvoy ID"
-description: "Erfahren Sie, wie Sie den OpenID Connect Login in Encvoy ID aktivieren: Erstellen Sie eine Login-Methode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - OpenID Connect login
-  - OpenID Connect
-  - OIDC
-  - oidc
-  - OpenID Connect Konfiguration
-  - OpenID Connect Verbindung
-  - OpenID Connect Autorisierung
-  - OpenID Connect Encvoy ID
-  - OpenID Connect in Encvoy ID konfigurieren
-  - OpenID Connect mit Encvoy ID verbinden
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "OIDC Login"
----
-
 # So verbinden Sie den OpenID Connect Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Login-Methoden. Weitere Details finden Sie im Leitfaden [Login-Methoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -36,14 +14,18 @@ Die Einrichtung des Logins über **OpenID Connect** besteht aus drei wesentliche
 
 ---
 
-## Schritt 1. Konfiguration auf Seiten des externen Systems { #step-1-configure-external-system }
+<a name="step-1-configure-external-system"></a>
+
+## Schritt 1. Konfiguration auf Seiten des externen Systems
 
 1. Erstellen Sie eine Anwendung im externen Identitätsdienst.
 2. Kopieren Sie die Werte der Felder **Application ID/Client ID** und **Secret/Client Secret**. Diese benötigen Sie beim Erstellen der Anwendung in **Encvoy ID**.
 
 ---
 
-## Schritt 2. Erstellen einer Login-Methode { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Schritt 2. Erstellen einer Login-Methode
 
 1. Gehen Sie zum Admin-Panel → Tab **Einstellungen**.
 
@@ -80,7 +62,9 @@ Nach erfolgreicher Erstellung erscheint die neue Login-Methode in der allgemeine
 
 ---
 
-## Schritt 3. Hinzufügen zum Widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Schritt 3. Hinzufügen zum Widget
 
 Damit die Schaltfläche **Mit OpenID Connect anmelden** auf dem Autorisierungsformular sichtbar ist, müssen Sie diese Funktion in den Widget-Einstellungen aktivieren:
 
@@ -91,7 +75,9 @@ Damit die Schaltfläche **Mit OpenID Connect anmelden** auf dem Autorisierungsfo
 
 ---
 
-## Beschreibung der Parameter { #parameters-description }
+<a name="parameters-description"></a>
+
+## Beschreibung der Parameter
 
 ### Basisinformationen
 
@@ -123,8 +109,10 @@ Damit die Schaltfläche **Mit OpenID Connect anmelden** auf dem Autorisierungsfo
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — Leitfaden zu Login-Methoden und zur Einrichtung des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — Leitfaden zur Verwaltung des persönlichen Profils.

@@ -1,25 +1,3 @@
----
-title: "Google Login — Connection and Configuration in Encvoy ID"
-description: "Learn how to connect Google login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
-  - Google login
-  - Google setup in Encvoy ID
-  - Google authentication
-  - connect Google
-  - Google login Encvoy ID
-  - Google OAuth Encvoy ID
-  - Google sign-in
-  - Google authorization
-  - Google Encvoy ID
-  - login via Google Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "Google Login"
----
-
 # How to Connect Google Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the guide [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md).
@@ -36,7 +14,9 @@ Setting up **Google** login consists of three key steps performed in two differe
 
 ---
 
-## Step 1. Configure the Application in Google { #step-1-configure-google-app }
+<a name="step-1-configure-google-app"></a>
+
+## Step 1. Configure the Application in Google
 
 Before configuring the login method in **Encvoy ID**, you must register your application in the **Google** developer console and obtain access keys:
 
@@ -90,7 +70,9 @@ Before configuring the login method in **Encvoy ID**, you must register your app
 
 ---
 
-## Step 2. Create the Login Method { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Step 2. Create the Login Method
 
 Now, with the keys from **Google**, let's create the corresponding provider in the **Encvoy ID** system.
 
@@ -124,7 +106,9 @@ After successful creation, the new login method will appear in the general list 
 
 ---
 
-## Step 3. Add to the Widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Step 3. Add to the Widget
 
 To make the **Sign in with Google** button visible on the authorization form, you need to activate this function in the widget settings:
 
@@ -135,7 +119,9 @@ To make the **Sign in with Google** button visible on the authorization form, yo
 
 ---
 
-## Parameters Description { #parameters-description }
+<a name="parameters-description"></a>
+
+## Parameters Description
 
 ### Basic Information
 
@@ -162,8 +148,10 @@ To make the **Sign in with Google** button visible on the authorization form, yo
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing the personal profile.

@@ -1,27 +1,3 @@
----
-title: "Inscription dans Encvoy ID — connexion et récupération de mot de passe"
-description: "Découvrez comment vous inscrire dans Encvoy ID, créer un compte et récupérer votre mot de passe. Suivez le guide étape par étape et commencez à utiliser le service !"
-keywords:
-  - inscription dans Encvoy ID
-  - s'inscrire dans Encvoy ID
-  - création de compte Encvoy ID
-  - connexion à Encvoy ID
-  - se connecter à Encvoy ID
-  - récupération de mot de passe Encvoy ID
-  - réinitialiser le mot de passe Encvoy ID
-  - connexion OAuth à Encvoy ID
-  - connexion sociale Encvoy ID
-  - authentification Encvoy ID
-  - autorisation Encvoy ID
-author: "L'équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Inscription et Connexion"
-order: 13
----
-
 # Inscription, Connexion et Récupération de mot de passe dans Encvoy ID
 
 Dans ce guide, vous apprendrez comment créer un compte dans **Encvoy ID**, vous connecter à l'aide d'un nom d'utilisateur et d'un mot de passe ou via des services externes, et récupérer l'accès à votre profil en toute sécurité si nécessaire.
@@ -37,7 +13,9 @@ Dans ce guide, vous apprendrez comment créer un compte dans **Encvoy ID**, vous
 
 ---
 
-## Inscription d'un nouveau compte { #new-account-registration }
+<a name="new-account-registration"></a>
+
+## Inscription d'un nouveau compte
 
 ### Où l'inscription est-elle disponible ?
 
@@ -77,7 +55,9 @@ Une fois ces étapes terminées, le compte sera créé et vous serez connecté a
 
 ---
 
-## Connexion avec nom d'utilisateur et mot de passe { #login-with-password }
+<a name="login-with-password"></a>
+
+## Connexion avec nom d'utilisateur et mot de passe
 
 Vous pouvez vous autoriser dans l'application en utilisant votre compte **Encvoy ID**.
 
@@ -117,7 +97,9 @@ Pour vous connecter :
 
 ---
 
-## Connexion via des services externes { #login-via-external-services }
+<a name="login-via-external-services"></a>
+
+## Connexion via des services externes
 
 Les services d'identification externes (ou méthodes de connexion) incluent les réseaux sociaux et les services tiers.
 
@@ -132,7 +114,9 @@ Pour vous connecter via un service externe :
 
 ---
 
-## Connexion rapide pour les utilisateurs authentifiés { #quick-login-for-authenticated-users }
+<a name="quick-login-for-authenticated-users"></a>
+
+## Connexion rapide pour les utilisateurs authentifiés
 
 Si vous vous êtes déjà connecté à **Encvoy ID** dans votre navigateur, une nouvelle autorisation ne sera pas nécessaire.
 
@@ -150,7 +134,9 @@ De plus :
 
 ---
 
-## Récupération de mot de passe { #password-recovery }
+<a name="password-recovery"></a>
+
+## Récupération de mot de passe
 
 Si vous avez oublié le mot de passe de votre compte **Encvoy ID**, vous pouvez facilement le récupérer.
 
@@ -176,6 +162,8 @@ Après la mise à jour du mot de passe, la connexion sera effectuée automatique
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

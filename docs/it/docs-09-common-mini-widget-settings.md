@@ -1,20 +1,3 @@
----
-title: "Encvoy ID Mini-widget — Configurazione e Personalizzazione"
-description: "Scopri come collegare e configurare il mini-widget Encvoy ID: pulsanti di login, profilo utente e stili personalizzati. Integra la soluzione nel tuo progetto."
-keywords:
-  - Encvoy ID mini-widget
-  - integrazione mini-widget
-  - personalizzazione mini-widget
-  - styling pulsante login
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-12
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Configurazione Mini-widget"
-order: 10
----
-
 # Come Configurare e Collegare il Mini-widget Encvoy ID
 
 In questa guida imparerai come collegare e configurare il mini-widget **Encvoy ID** sulla tua risorsa web. Imparerai a impostare i parametri di autenticazione, la visualizzazione del profilo utente, i pulsanti di login e i menu, oltre a personalizzare l'aspetto del widget per armonizzarlo con il design del tuo progetto.
@@ -32,7 +15,9 @@ In questa guida imparerai come collegare e configurare il mini-widget **Encvoy I
 
 ---
 
-## Cos'è un mini-widget? { #what-is-mini-widget }
+<a name="what-is-mini-widget"></a>
+
+## Cos'è un mini-widget?
 
 Un **mini-widget** è un menu contenente i dati dell'utente e le funzioni essenziali. Fornisce l'accesso al profilo, al pannello di amministrazione, alle organizzazioni o al piccolo ufficio e al logout dal sistema. Puoi anche inserire qui un'applicazione per un accesso rapido. Il widget si apre cliccando sull'avatar dell'utente nell'angolo in alto a destra dello schermo.
 
@@ -46,7 +31,9 @@ Esempi di widget:
 
 ---
 
-## Configurazione del Widget { #widget-configuration }
+<a name="widget-configuration"></a>
+
+## Configurazione del Widget
 
 ### Parametri Obbligatori
 
@@ -95,7 +82,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Impostazioni Visualizzazione Profilo { #profile-display-settings }
+<a name="profile-display-settings"></a>
+
+## Impostazioni Visualizzazione Profilo
 
 ### Parametri di Configurazione Profilo
 
@@ -125,7 +114,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Impostazioni Pulsante Login { #login-button-settings }
+<a name="login-button-settings"></a>
+
+## Impostazioni Pulsante Login
 
 Il pulsante di login viene visualizzato per gli utenti non autorizzati. Puoi personalizzarne il testo, l'icona e gli stili.
 
@@ -172,7 +163,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Parametri Pulsanti Menu { #menu-button-parameters }
+<a name="menu-button-parameters"></a>
+
+## Parametri Pulsanti Menu
 
 ### Parametri Obbligatori
 
@@ -209,7 +202,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Styling del Mini-widget { #mini-widget-styling }
+<a name="mini-widget-styling"></a>
+
+## Styling del Mini-widget
 
 Il widget supporta una personalizzazione dettagliata dell'aspetto tramite l'oggetto `customStyles`. Puoi controllare colori, raggi dei bordi, padding e allineamento per tutti gli elementi.
 
@@ -407,7 +402,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Styling Individuale dei Pulsanti Menu { #individual-menu-button-styling }
+<a name="individual-menu-button-styling"></a>
+
+## Styling Individuale dei Pulsanti Menu
 
 Per ogni pulsante in `menuButtons`, puoi impostare stili individuali tramite la proprietà `customStyles` di tipo `IComponentStyles`.
 
@@ -513,7 +510,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Gestione Applicazioni](./docs-10-common-app-settings.md) — guida per la creazione, configurazione e gestione di applicazioni OAuth 2.0 e OpenID Connect (OIDC).
 - [Gestione Organizzazioni](./docs-11-common-org-settings.md) — guida per lavorare con le organizzazioni in **Encvoy ID**.

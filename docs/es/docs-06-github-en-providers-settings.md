@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Métodos de inicio de sesión — Conexión y configuración"
-description: "Aprenda a configurar los métodos de inicio de sesión y el widget de autorización en Encvoy ID. Conexión rápida de proveedores OAuth, WebAuthn, mTLS, HOTP y TOTP con ejemplos."
-keywords:
-  - Encvoy ID login methods
-  - SSO authorization
-  - authorization widget
-  - OAuth 2.0 configuration
-  - authentication providers
-  - WebAuthn mTLS TOTP
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [en]
-menu_title: "Configuración de métodos de inicio de sesión"
-order: 7
----
-
 # Cómo configurar los métodos de inicio de sesión en Encvoy ID
 
 En esta guía, aprenderá a configurar los métodos de inicio de sesión en **Encvoy ID**, incluidos los proveedores OAuth estándar y los métodos de autenticación mejorados (WebAuthn, mTLS, TOTP). También explicaremos cómo configurar y dar estilo correctamente al widget de autorización para que el proceso de inicio de sesión sea seguro y fácil de usar.
@@ -30,7 +11,9 @@ En esta guía, aprenderá a configurar los métodos de inicio de sesión en **En
 
 ---
 
-## Descripción general de los métodos de inicio de sesión { #login-methods-overview }
+<a name="login-methods-overview"></a>
+
+## Descripción general de los métodos de inicio de sesión
 
 Un **método de inicio de sesión** es un método de autenticación para los usuarios que les permite autorizarse en la cuenta personal o en las aplicaciones conectadas. Es un elemento clave del sistema de Inicio de Sesión Único (SSO), que proporciona una identificación flexible y segura.
 
@@ -44,7 +27,9 @@ Un **método de inicio de sesión** es un método de autenticación para los usu
 
 Combine los métodos de inicio de sesión para aumentar la seguridad. Implemente la **autenticación de dos factores**, donde después de ingresar el primer factor (nombre de usuario, contraseña u otro método), el usuario debe confirmar su identidad utilizando un segundo factor (teléfono, correo electrónico o WebAuthn). [Cómo configurar la autenticación de dos factores →](./docs-04-box-system-settings.md#two-factor-authentication)
 
-### Niveles de gestión y publicidad de los métodos de inicio de sesión { #management-levels-and-publicity }
+<a name="management-levels-and-publicity"></a>
+
+### Niveles de gestión y publicidad de los métodos de inicio de sesión
 
 Los métodos de inicio de sesión se pueden crear en diferentes tipos de paneles de **Encvoy ID**:
 
@@ -62,7 +47,9 @@ Para los métodos de inicio de sesión creados a nivel de **servicio** u **organ
 
 ---
 
-## Gestión de métodos de inicio de sesión { #managing-login-methods }
+<a name="managing-login-methods"></a>
+
+## Gestión de métodos de inicio de sesión
 
 ### Creación de un nuevo método de inicio de sesión
 
@@ -151,7 +138,9 @@ El ajuste se aplica sin confirmación adicional.
 
 ---
 
-## Configuración del widget de inicio de sesión { #login-widget-settings }
+<a name="login-widget-settings"></a>
+
+## Configuración del widget de inicio de sesión
 
 ### ¿Qué es el widget de inicio de sesión?
 
@@ -232,8 +221,10 @@ Para configurar la visualización de un método de inicio de sesión en el widge
 
 ---
 
-## Ver también { #see-also }
+<a name="see-also"></a>
+
+## Ver también
 
 - [Gestión de aplicaciones](./docs-10-common-app-settings.md) — guía para crear, configurar y gestionar aplicaciones OAuth 2.0 y OpenID Connect (OIDC).
-- [Gestión de la organización](./docs-02-box-system-install.md) — guía para trabajar con una organización en **Encvoy ID**.
+- [Gestión de la organización](./docs-11-common-org-settings.md) — guía para trabajar con una organización en **Encvoy ID**.
 - [Registro e inicio de sesión de usuario](./docs-13-common-user-authentication.md) — instrucciones para crear una cuenta, iniciar sesión con nombre de usuario/contraseña y servicios de autenticación externos.

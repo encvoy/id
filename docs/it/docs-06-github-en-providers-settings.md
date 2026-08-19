@@ -1,22 +1,3 @@
----
-title: "Encvoy ID Metodi di Accesso — Connessione e Configurazione"
-description: "Scopri come configurare i metodi di accesso e il widget di autorizzazione in Encvoy ID. Connessione rapida di provider OAuth, WebAuthn, mTLS, HOTP e TOTP con esempi."
-keywords:
-  - Encvoy ID metodi di accesso
-  - autorizzazione SSO
-  - widget di autorizzazione
-  - configurazione OAuth 2.0
-  - provider di autenticazione
-  - WebAuthn mTLS TOTP
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [it]
-menu_title: "Configurazione Metodi di Accesso"
-order: 7
----
-
 # Come Configurare i Metodi di Accesso in Encvoy ID
 
 In questa guida imparerai come configurare i metodi di accesso in **Encvoy ID**, inclusi i provider OAuth standard e i metodi di autenticazione avanzati (WebAuthn, mTLS, TOTP). Spiegheremo inoltre come impostare e personalizzare correttamente il widget di autorizzazione per rendere il processo di login sicuro e intuitivo.
@@ -30,7 +11,9 @@ In questa guida imparerai come configurare i metodi di accesso in **Encvoy ID**,
 
 ---
 
-## Panoramica sui Metodi di Accesso { #login-methods-overview }
+<a name="login-methods-overview"></a>
+
+## Panoramica sui Metodi di Accesso
 
 Un **metodo di accesso** è una modalità di autenticazione per gli utenti che consente loro di autorizzarsi nell'account personale o nelle applicazioni collegate. È un elemento chiave del sistema Single Sign-On, che fornisce un'identificazione flessibile e sicura.
 
@@ -44,7 +27,9 @@ Un **metodo di accesso** è una modalità di autenticazione per gli utenti che c
 
 Combina i metodi di accesso per aumentare la sicurezza. Implementa l'**autenticazione a due fattori**, dove dopo aver inserito il primo fattore (login, password o altro metodo), l'utente deve confermare la propria identità utilizzando un secondo fattore (telefono, email o WebAuthn). [Come configurare l'autenticazione a due fattori →](./docs-04-box-system-settings.md#two-factor-authentication)
 
-### Livelli di Gestione e Pubblicità dei Metodi di Accesso { #management-levels-and-publicity }
+<a name="management-levels-and-publicity"></a>
+
+### Livelli di Gestione e Pubblicità dei Metodi di Accesso
 
 I metodi di accesso possono essere creati in diversi tipi di dashboard di **Encvoy ID**:
 
@@ -62,7 +47,9 @@ Per i metodi di accesso creati a livello di **servizio** o **organizzazione**, �
 
 ---
 
-## Gestione dei Metodi di Accesso { #managing-login-methods }
+<a name="managing-login-methods"></a>
+
+## Gestione dei Metodi di Accesso
 
 ### Creazione di un Nuovo Metodo di Accesso
 
@@ -151,7 +138,9 @@ L'impostazione viene applicata senza ulteriore conferma.
 
 ---
 
-## Impostazioni del Widget di Accesso { #login-widget-settings }
+<a name="login-widget-settings"></a>
+
+## Impostazioni del Widget di Accesso
 
 ### Cos'è il Widget di Accesso?
 
@@ -232,8 +221,10 @@ Per configurare la visualizzazione di un metodo di accesso nel widget:
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Gestione Applicazioni](./docs-10-common-app-settings.md) — guida per la creazione, configurazione e gestione di applicazioni OAuth 2.0 e OpenID Connect (OIDC).
-- [Gestione Organizzazione](./docs-02-box-system-install.md) — guida per lavorare con un'organizzazione in **Encvoy ID**.
+- [Gestione Organizzazione](./docs-11-common-org-settings.md) — guida per lavorare con un'organizzazione in **Encvoy ID**.
 - [Registrazione e Accesso Utente](./docs-13-common-user-authentication.md) — istruzioni per la creazione di un account, l'accesso con nome utente/password e servizi di autenticazione esterni.

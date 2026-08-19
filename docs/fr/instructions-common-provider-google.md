@@ -1,25 +1,3 @@
----
-title: "Connexion Google — Connexion et configuration dans Encvoy ID"
-description: "Découvrez comment connecter la connexion Google dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion Google
-  - configuration Google dans Encvoy ID
-  - authentification Google
-  - connecter Google
-  - connexion Google Encvoy ID
-  - Google OAuth Encvoy ID
-  - Google sign-in
-  - autorisation Google
-  - Google Encvoy ID
-  - connexion via Google Encvoy ID
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "Connexion Google"
----
-
 # Comment connecter la connexion Google dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -36,7 +14,9 @@ La configuration de la connexion **Google** se compose de trois étapes clés r�
 
 ---
 
-## Étape 1. Configurer l'application dans Google { #step-1-configure-google-app }
+<a name="step-1-configure-google-app"></a>
+
+## Étape 1. Configurer l'application dans Google
 
 Avant de configurer la méthode de connexion dans **Encvoy ID**, vous devez enregistrer votre application dans la console développeur **Google** et obtenir des clés d'accès :
 
@@ -90,7 +70,9 @@ Avant de configurer la méthode de connexion dans **Encvoy ID**, vous devez enre
 
 ---
 
-## Étape 2. Créer la méthode de connexion { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Étape 2. Créer la méthode de connexion
 
 Maintenant, avec les clés de **Google**, créons le fournisseur correspondant dans le système **Encvoy ID**.
 
@@ -124,7 +106,9 @@ Après une création réussie, la nouvelle méthode de connexion apparaîtra dan
 
 ---
 
-## Étape 3. Ajouter au widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Étape 3. Ajouter au widget
 
 Pour rendre le bouton **Se connecter avec Google** visible sur le formulaire d'autorisation, vous devez activer cette fonction dans les paramètres du widget :
 
@@ -135,7 +119,9 @@ Pour rendre le bouton **Se connecter avec Google** visible sur le formulaire d'a
 
 ---
 
-## Description des paramètres { #parameters-description }
+<a name="parameters-description"></a>
+
+## Description des paramètres
 
 ### Informations de base
 
@@ -162,8 +148,10 @@ Pour rendre le bouton **Se connecter avec Google** visible sur le formulaire d'a
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide sur la gestion du profil personnel.

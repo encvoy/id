@@ -1,25 +1,3 @@
----
-title: "GitHub Login — Verbindung und Konfiguration in Encvoy ID"
-description: "Erfahren Sie, wie Sie den GitHub-Login in Encvoy ID aktivieren: Erstellen Sie eine Login-Methode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - GitHub login
-  - GitHub setup in Encvoy ID
-  - GitHub authentication
-  - GitHub connection
-  - GitHub login Encvoy ID
-  - GitHub OAuth Encvoy ID
-  - GitHub sign in
-  - GitHub authorization
-  - GitHub Encvoy ID
-  - login via GitHub Encvoy ID
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [en]
-menu_title: "GitHub Login"
----
-
 # So verbinden Sie den GitHub-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Login-Methoden. Weitere Details finden Sie im Leitfaden [Login-Methoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -34,7 +12,9 @@ Die Einrichtung des **GitHub**-Logins besteht aus drei wesentlichen Schritten, d
 
 ---
 
-## Schritt 1. GitHub App konfigurieren { #step-1-configure-github-app }
+<a name="step-1-configure-github-app"></a>
+
+## Schritt 1. GitHub App konfigurieren
 
 Bevor Sie die Login-Methode in **Encvoy ID** konfigurieren, müssen Sie Ihre Anwendung in der **GitHub**-Entwicklerkonsole registrieren und Zugriffsschlüssel erhalten:
 
@@ -60,7 +40,9 @@ Diese Werte werden im nächsten Schritt benötigt.
 
 ---
 
-## Schritt 2. Login-Methode erstellen { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Schritt 2. Login-Methode erstellen
 
 1. Gehen Sie zur Admin-Konsole → Registerkarte **Einstellungen**.
 
@@ -92,7 +74,9 @@ Nach erfolgreicher Erstellung erscheint die neue Login-Methode in der allgemeine
 
 ---
 
-## Schritt 3. Zum Widget hinzufügen { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Schritt 3. Zum Widget hinzufügen
 
 Damit die Schaltfläche **Mit GitHub anmelden** auf dem Autorisierungsformular sichtbar ist, müssen Sie diese Funktion in den Widget-Einstellungen aktivieren:
 
@@ -133,5 +117,5 @@ Damit die Schaltfläche **Mit GitHub anmelden** auf dem Autorisierungsformular s
 ## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Login-Methoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung des persönlichen Profils.

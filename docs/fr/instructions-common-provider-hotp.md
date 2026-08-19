@@ -1,26 +1,3 @@
----
-title: "Connexion via HOTP — Connexion et configuration dans Encvoy ID"
-description: "Apprenez à activer la connexion HOTP dans Encvoy ID : créez une méthode de connexion, ajoutez-la au widget d'autorisation et assurez un accès sécurisé pour les utilisateurs."
-keywords:
-  - connexion via HOTP
-  - authentification HOTP
-  - configuration HOTP
-  - connexion HOTP
-  - login HOTP
-  - authentification à deux facteurs HOTP
-  - HOTP Encvoy ID
-  - connexion via HOTP Encvoy ID
-  - configuration HOTP dans Encvoy ID
-  - HOTP
-  - HMAC-based One-Time Password
-  - mot de passe à usage unique
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Connexion via HOTP"
----
-
 # Comment connecter la connexion via HOTP dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -68,7 +45,9 @@ La principale différence entre **HOTP** et **TOTP** est que les codes ne dépen
 
 ---
 
-## Configuration de l'authentification pour les administrateurs { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Configuration de l'authentification pour les administrateurs
 
 ### Étape 1. Création d'une méthode de connexion
 
@@ -111,7 +90,9 @@ Pour rendre le bouton **HOTP** visible pour les utilisateurs sur le formulaire d
 
 ---
 
-## Liaison HOTP pour les utilisateurs { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## Liaison HOTP pour les utilisateurs
 
 > 📌 Cette instruction est destinée aux utilisateurs qui ont besoin de se connecter au système via **HOTP**.
 
@@ -150,5 +131,5 @@ Les options les plus populaires sont :
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide pour travailler avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide pour travailler avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

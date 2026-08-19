@@ -1,28 +1,3 @@
----
-title: "Login TOTP — Connessione e Configurazione in Encvoy ID"
-description: "Scopri come abilitare il login TOTP in Encvoy ID: crea un metodo di accesso, aggiungilo al widget di autorizzazione e garantisci un accesso sicuro per gli utenti."
-keywords:
-  # Main actions
-  - login HOTP
-  - autenticazione HOTP
-  - configurazione HOTP
-  - connessione HOTP
-  - login tramite HOTP
-  - autenticazione a due fattori HOTP
-  - HOTP Encvoy ID
-  - login via HOTP Encvoy ID
-  - configurazione HOTP in Encvoy ID
-  - differenza tra HOTP e TOTP
-  - HOTP
-  - HMAC-based One-Time Password
-  - password monouso basata su HMAC
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login TOTP"
----
-
 # Come Connettere il Login TOTP in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, leggi la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -70,7 +45,9 @@ La differenza principale tra **TOTP** e **HOTP** è che la generazione della pas
 
 ---
 
-## Configurazione dell'Autenticazione per gli Amministratori { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Configurazione dell'Autenticazione per gli Amministratori
 
 ### Passaggio 1. Creazione di un Metodo di Login
 
@@ -113,7 +90,9 @@ Affinché gli utenti vedano il pulsante **TOTP** nel modulo di autorizzazione, �
 
 ---
 
-## Collegamento TOTP per gli Utenti { #totp-user-binding }
+<a name="totp-user-binding"></a>
+
+## Collegamento TOTP per gli Utenti
 
 > 📌 Questa istruzione è destinata agli utenti che devono accedere al sistema tramite **TOTP**.
 
@@ -163,5 +142,5 @@ Le opzioni più popolari sono:
 ## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget di Login](./docs-06-github-en-providers-settings.md) — una guida ai metodi di login e alla configurazione del widget.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle App](./docs-12-common-personal-profile.md) — una guida per gestire il tuo profilo personale.

@@ -1,29 +1,3 @@
----
-title: "Encvoy ID Profil Personnel — Gestion du Compte"
-description: "Découvrez comment configurer votre profil personnel Encvoy ID : modifier les données et la confidentialité, gérer l'accès aux applications et la sécurité du compte."
-keywords:
-  - Encvoy ID profil personnel
-  - Encvoy ID compte personnel
-  - modifier profil Encvoy ID
-  - Encvoy ID paramètres de profil
-  - Encvoy ID sécurité du compte
-  - changer mot de passe Encvoy ID
-  - autorisations d'application OAuth
-  - gestion de l'accès aux applications
-  - supprimer compte Encvoy ID
-  - retirer compte Encvoy ID
-  - Encvoy ID récupération de compte
-  - export des données de profil
-  - terminer toutes les sessions
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Profil Personnel"
-order: 12
----
-
 # Comment gérer votre profil personnel Encvoy ID
 
 **Le profil Encvoy ID** est votre centre de contrôle pour les données et la sécurité de votre compte.
@@ -41,7 +15,9 @@ Dans ce guide, vous apprendrez à gérer votre profil personnel dans **Encvoy ID
 
 ---
 
-## Gestion du profil personnel { #personal-profile-management }
+<a name="personal-profile-management"></a>
+
+## Gestion du profil personnel
 
 Votre profil contient des informations de base pour l'identification au sein du système. Selon la méthode d'inscription, certains champs peuvent ne pas être modifiables. Si vous devez les modifier, contactez l'administrateur du service.
 
@@ -139,13 +115,17 @@ Vous pouvez télécharger une photo depuis votre appareil ou utiliser un avatar 
 
 Après avoir changé le mot de passe, vous serez déconnecté. Pour continuer à travailler, vous devez vous reconnecter en utilisant le nouveau mot de passe.
 
-### Paramètres de confidentialité { #privacy-settings }
+<a name="privacy-settings"></a>
+
+### Paramètres de confidentialité
 
 Vous pouvez contrôler indépendamment quelles informations seront disponibles pour les autres utilisateurs ou les systèmes tiers. Cela se fait via les paramètres de confidentialité des champs.
 
 Ce paramètre vous permet de définir la confidentialité pour chaque champ dans les blocs **Informations principales**, **Informations complémentaires**, et **Identifiants**.
 
-#### Niveaux de confidentialité { #privacy-levels }
+<a name="privacy-levels"></a>
+
+#### Niveaux de confidentialité
 
 | Niveau                              | Icône                                                                                                  | Description                                                                                                                             |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -165,7 +145,9 @@ Selon la valeur sélectionnée, la valeur du champ dans le profil devient publiq
 
 Le paramètre est appliqué sans confirmation supplémentaire.
 
-### Gestion des identifiants de services externes { #external-service-identifiers }
+<a name="external-service-identifiers"></a>
+
+### Gestion des identifiants de services externes
 
 **Les identifiants** sont des services externes que vous avez ajoutés à votre profil ou par lesquels vous vous êtes déjà connecté à des applications ou au compte personnel.
 
@@ -249,7 +231,9 @@ END:VCARD
 
 Après avoir activé le paramètre, les données avec le niveau de confidentialité \"Disponible pour tout le monde\" ne deviennent disponibles que sur demande.
 
-### Carte de visite numérique du profil personnel { #digital-business-card }
+<a name="digital-business-card"></a>
+
+### Carte de visite numérique du profil personnel
 
 > 🔬 **Fonctionnalité expérimentale** : La disponibilité est régulée par l'administrateur système.
 
@@ -357,7 +341,9 @@ Pendant une certaine période après la suppression du compte, vous avez la poss
 
 ---
 
-## Autorisations d'application et accès OAuth { #app-permissions-and-oauth }
+<a name="app-permissions-and-oauth"></a>
+
+## Autorisations d'application et accès OAuth
 
 **Les autorisations** sont les droits que vous accordez aux applications externes pour accéder à des données spécifiques de votre profil **Encvoy ID**. Vous pouvez restreindre l'accès, terminer les sessions actives ou révoquer complètement les autorisations à tout moment.
 
@@ -403,7 +389,9 @@ Pour interdire complètement à une application d'accéder à vos données :
 
 ---
 
-## Invitations aux applications fermées { #closed-app-invitations }
+<a name="closed-app-invitations"></a>
+
+## Invitations aux applications fermées
 
 Une **invitation** est un moyen d'accéder à une application fermée. L'administrateur de l'application envoie une invitation à votre e-mail, après quoi vous pouvez vous connecter à l'application qui est indisponible pour les autres utilisateurs.
 
@@ -449,7 +437,9 @@ Si vous avez reçu une invitation mais n'êtes pas encore inscrit dans le systè
 
 ---
 
-## Catalogue d'applications { #application-catalog }
+<a name="application-catalog"></a>
+
+## Catalogue d'applications
 
 > 🔬 **Fonctionnalité expérimentale** : La disponibilité est régulée par l'administrateur système.
 
@@ -498,7 +488,9 @@ L'application sera supprimée des favoris et disparaîtra du menu latéral.
 
 ---
 
-## Journal d'activité et historique de connexion { #activity-log-and-login-history }
+<a name="activity-log-and-login-history"></a>
+
+## Journal d'activité et historique de connexion
 
 **Le journal d'activité** est un outil de sécurité qui vous permet de savoir où et depuis quels appareils vous vous êtes connecté à **Encvoy ID** ou à des applications.
 
@@ -522,6 +514,8 @@ Des informations détaillées sont disponibles pour chaque événement.
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Inscription et connexion de l'utilisateur](./docs-13-common-user-authentication.md) — instructions pour créer un compte, se connecter avec un nom d'utilisateur/mot de passe et services d'authentification externes.

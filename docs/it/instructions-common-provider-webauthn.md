@@ -1,22 +1,3 @@
----
-title: "Login WebAuthn — Connessione in Encvoy ID"
-description: "Scopri come connettere il login WebAuthn in Encvoy ID: crea un metodo di login e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - WebAuthn login
-  - autenticazione WebAuthn
-  - connessione WebAuthn
-  - configurazione WebAuthn
-  - WebAuthn Encvoy ID
-  - login tramite WebAuthn Encvoy ID
-  - configurazione WebAuthn in Encvoy ID
-author: "Team Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via WebAuthn"
----
-
 # Come connettere il login WebAuthn in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, consulta la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -32,7 +13,9 @@ In questa guida imparerai come connettere l'autenticazione **WebAuthn** al siste
 
 ---
 
-## Informazioni Generali { #general-info }
+<a name="general-info"></a>
+
+## Informazioni Generali
 
 **WebAuthn** (Web Authentication) è uno standard di autenticazione che consente agli utenti di accedere senza password utilizzando metodi di verifica sicuri:
 
@@ -63,7 +46,9 @@ In questa guida imparerai come connettere l'autenticazione **WebAuthn** al siste
 
 ---
 
-## Configurazione dell'autenticazione WebAuthn per gli Amministratori { #webauthn-admin-setup }
+<a name="webauthn-admin-setup"></a>
+
+## Configurazione dell'autenticazione WebAuthn per gli Amministratori
 
 ### Passaggio 1. Creazione di un metodo di login
 
@@ -101,7 +86,9 @@ Per rendere visibile agli utenti il pulsante **WebAuthn** nel modulo di autorizz
 
 ---
 
-## Aggiunta di una chiave per un utente { #adding-key-for-user }
+<a name="adding-key-for-user"></a>
+
+## Aggiunta di una chiave per un utente
 
 ### Passaggio 1. Aggiunta di una chiave al dispositivo
 
@@ -130,8 +117,10 @@ Dopo aver registrato la chiave, l'utente deve aggiungere l'identificatore **WebA
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md) — una guida ai metodi di login e alla configurazione del widget di accesso.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi App](./docs-12-common-personal-profile.md) — una guida alla gestione del proprio profilo personale.

@@ -1,28 +1,3 @@
----
-title: "Integrazione di GitLab con Encvoy ID — configurazione del single sign-on"
-description: "Scopri come configurare il single sign-on per GitLab tramite Encvoy ID: configurazione semplice, protezione dei dati e accesso agevole per tutti i dipendenti dell'azienda."
-keywords:
-  - Integrazione GitLab con Encvoy ID
-  - GitLab Encvoy ID
-  - GitLab SSO
-  - GitLab single sign-on
-  - accesso SSO a GitLab
-  - single sign-on in GitLab
-  - autenticazione GitLab
-  - autorizzazione GitLab
-  - autenticazione OAuth GitLab
-  - accesso a GitLab tramite Encvoy ID
-  - configurazione di GitLab con Encvoy ID
-  - connessione di GitLab a Encvoy ID
-  - single sign-on in gitlab
-author: "Il Team di Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integrazione con GitLab"
----
-
 # Come configurare l'integrazione di GitLab con Encvoy ID
 
 In questa guida imparerai come configurare il single sign-on (SSO) in **GitLab** tramite il sistema **Encvoy ID**.
@@ -37,7 +12,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diverse fasi ch
 
 ---
 
-## Passaggio 1. Creazione dell'applicazione { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Passaggio 1. Creazione dell'applicazione
 
 1. Accedi al sistema **Encvoy ID**.
 2. Crea un'applicazione con le seguenti impostazioni:
@@ -52,7 +29,9 @@ La configurazione dell'accesso tramite **Encvoy ID** consiste in diverse fasi ch
 
 ---
 
-## Passaggio 2. Configurazione del sistema GitLab { #step-2-configure-gitlab }
+<a name="step-2-configure-gitlab"></a>
+
+## Passaggio 2. Configurazione del sistema GitLab
 
 La configurazione dell'autorizzazione utente per il servizio **GitLab** tramite **Encvoy ID** viene eseguita nel file di configurazione **gitlab.rb** di GitLab, situato nella cartella di configurazione del servizio (/config).
 
@@ -101,7 +80,9 @@ La configurazione dell'autorizzazione utente per il servizio **GitLab** tramite 
 
 ---
 
-## Passaggio 3. Verifica dell'integrazione { #step-3-verify-integration }
+<a name="step-3-verify-integration"></a>
+
+## Passaggio 3. Verifica dell'integrazione
 
 1. Apri la pagina di login di **GitLab**.
 2. Assicurati che sia apparso il pulsante **Login via Encvoy ID**.

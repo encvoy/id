@@ -1,29 +1,3 @@
----
-title: "Encvoy ID Persönliches Profil — Kontoverwaltung"
-description: "Erfahren Sie, wie Sie Ihr persönliches Encvoy ID-Profil einrichten: Daten und Privatsphäre bearbeiten, App-Zugriffe verwalten und die Kontosicherheit gewährleisten."
-keywords:
-  - Encvoy ID persönliches Profil
-  - Encvoy ID persönliches Konto
-  - Encvoy ID Profil bearbeiten
-  - Encvoy ID Profileinstellungen
-  - Encvoy ID Kontosicherheit
-  - Encvoy ID Passwort ändern
-  - OAuth App-Berechtigungen
-  - App-Zugriffsverwaltung
-  - Encvoy ID Konto löschen
-  - Encvoy ID Konto entfernen
-  - Encvoy ID Kontowiederherstellung
-  - Profildaten-Export
-  - alle Sitzungen beenden
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Persönliches Profil"
-order: 12
----
-
 # So verwalten Sie Ihr persönliches Encvoy ID-Profil
 
 **Das Encvoy ID-Profil** ist Ihre Zentrale für Kontodaten und Sicherheit.
@@ -41,7 +15,9 @@ In dieser Anleitung erfahren Sie, wie Sie Ihr persönliches Profil in **Encvoy I
 
 ---
 
-## Verwaltung des persönlichen Profils { #personal-profile-management }
+<a name="personal-profile-management"></a>
+
+## Verwaltung des persönlichen Profils
 
 Ihr Profil enthält grundlegende Informationen zur Identifizierung innerhalb des Systems. Je nach Registrierungsmethode können einige Felder nicht bearbeitet werden. Wenn Sie diese bearbeiten müssen, wenden Sie sich an den Systemadministrator.
 
@@ -139,13 +115,17 @@ Sie können ein Foto von Ihrem Gerät hochladen oder einen Avatar von verknüpft
 
 Nach dem Ändern des Passworts werden Sie abgemeldet. Um weiterzuarbeiten, müssen Sie sich mit dem neuen Passwort erneut anmelden.
 
-### Privatsphäre-Einstellungen { #privacy-settings }
+<a name="privacy-settings"></a>
+
+### Privatsphäre-Einstellungen
 
 Sie können selbst steuern, welche Informationen für andere Benutzer oder Drittsysteme verfügbar sind. Dies geschieht über die Privatsphäre-Einstellungen der Felder.
 
 Diese Einstellung ermöglicht es Ihnen, die Privatsphäre für jedes Feld in den Blöcken **Basisinformationen**, **Zusätzliche Informationen** und **Identifikatoren** festzulegen.
 
-#### Privatsphäre-Stufen { #privacy-levels }
+<a name="privacy-levels"></a>
+
+#### Privatsphäre-Stufen
 
 | Stufe                     | Icon                                                                                                 | Beschreibung                                                                                                                                   |
 | ------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -165,7 +145,9 @@ Je nach gewähltem Wert wird der Feldwert im Profil öffentlich oder privat.
 
 Die Einstellung wird ohne zusätzliche Bestätigung übernommen.
 
-### Verwalten von Identifikatoren externer Dienste { #external-service-identifiers }
+<a name="external-service-identifiers"></a>
+
+### Verwalten von Identifikatoren externer Dienste
 
 **Identifikatoren** sind externe Dienste, die Sie Ihrem Profil hinzugefügt haben oder über die Sie sich jemals bei Anwendungen oder dem persönlichen Konto angemeldet haben.
 
@@ -249,7 +231,9 @@ END:VCARD
 
 Nach Aktivierung der Einstellung werden Daten mit der Privatsphäre-Stufe „Für jeden verfügbar“ nur noch auf Anfrage verfügbar.
 
-### Digitale Visitenkarte des persönlichen Profils { #digital-business-card }
+<a name="digital-business-card"></a>
+
+### Digitale Visitenkarte des persönlichen Profils
 
 > 🔬 **Experimentelles Feature**: Die Verfügbarkeit wird vom Systemadministrator geregelt.
 
@@ -357,7 +341,9 @@ Für einen bestimmten Zeitraum nach der Kontolöschung haben Sie die Möglichkei
 
 ---
 
-## App-Berechtigungen und OAuth-Zugriff { #app-permissions-and-oauth }
+<a name="app-permissions-and-oauth"></a>
+
+## App-Berechtigungen und OAuth-Zugriff
 
 **Berechtigungen** sind die Rechte, die Sie externen Anwendungen gewähren, um auf bestimmte Daten in Ihrem **Encvoy ID**-Profil zuzugreifen. Sie können den Zugriff einschränken, aktive Sitzungen beenden oder Berechtigungen jederzeit vollständig widerrufen.
 
@@ -403,7 +389,9 @@ Um einer Anwendung den Zugriff auf Ihre Daten vollständig zu untersagen:
 
 ---
 
-## Einladungen zu geschlossenen Apps { #closed-app-invitations }
+<a name="closed-app-invitations"></a>
+
+## Einladungen zu geschlossenen Apps
 
 Eine **Einladung** ist ein Weg, Zugriff auf eine geschlossene Anwendung zu erhalten. Der Anwendungsadministrator sendet eine Einladung an Ihre E-Mail, woraufhin Sie sich bei der Anwendung anmelden können, die für andere Benutzer nicht verfügbar ist.
 
@@ -449,7 +437,9 @@ Wenn Sie eine Einladung erhalten haben, aber noch nicht im **Encvoy ID**-System 
 
 ---
 
-## Anwendungskatalog { #application-catalog }
+<a name="application-catalog"></a>
+
+## Anwendungskatalog
 
 > 🔬 **Experimentelles Feature**: Die Verfügbarkeit wird vom Systemadministrator geregelt.
 
@@ -498,7 +488,9 @@ Die Anwendung wird aus den Favoriten entfernt und verschwindet aus dem Seitenmen
 
 ---
 
-## Aktivitätenprotokoll und Login-Verlauf { #activity-log-and-login-history }
+<a name="activity-log-and-login-history"></a>
+
+## Aktivitätenprotokoll und Login-Verlauf
 
 **Das Aktivitätenprotokoll** ist ein Sicherheitswerkzeug, mit dem Sie verfolgen können, wo und von welchen Geräten aus Sie sich bei **Encvoy ID** oder Anwendungen angemeldet haben.
 
@@ -522,6 +514,8 @@ Detaillierte Informationen sind für jedes Ereignis verfügbar.
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Benutzerregistrierung und Login](./docs-13-common-user-authentication.md) — Anleitungen zum Erstellen eines Kontos, zum Anmelden mit Benutzername/Passwort und zu externen Authentifizierungsdiensten.

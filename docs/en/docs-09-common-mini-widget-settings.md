@@ -1,20 +1,3 @@
----
-title: "Encvoy ID Mini-widget — Setup and Customization"
-description: "Learn how to connect and configure the Encvoy ID mini-widget: login buttons, user profile, and custom styles. Integrate the solution into your project."
-keywords:
-  - Encvoy ID mini-widget
-  - mini-widget integration
-  - mini-widget customization
-  - login button styling
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-12
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Mini-Widget Setup"
-order: 10
----
-
 # How to Configure and Connect the Encvoy ID Mini-widget
 
 In this guide, you will learn how to connect and configure the **Encvoy ID** mini-widget on your web resource. You will learn how to set up authentication parameters, user profile display, login buttons, and menus, as well as customize the widget's appearance to harmonize with your project's design.
@@ -32,7 +15,9 @@ In this guide, you will learn how to connect and configure the **Encvoy ID** min
 
 ---
 
-## What is a mini-widget? { #what-is-mini-widget }
+<a name="what-is-mini-widget"></a>
+
+## What is a mini-widget?
 
 A **mini-widget** is a menu containing user data and essential functions. It provides access to the profile, admin panel, organizations or small office, and system logout. You can also place an application here for quick access. The widget opens when clicking the user's avatar in the top right corner of the screen.
 
@@ -46,7 +31,9 @@ Widget examples:
 
 ---
 
-## Widget Configuration { #widget-configuration }
+<a name="widget-configuration"></a>
+
+## Widget Configuration
 
 ### Required Parameters
 
@@ -95,7 +82,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Profile Display Settings { #profile-display-settings }
+<a name="profile-display-settings"></a>
+
+## Profile Display Settings
 
 ### Profile Configuration Parameters
 
@@ -125,7 +114,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Login Button Settings { #login-button-settings }
+<a name="login-button-settings"></a>
+
+## Login Button Settings
 
 The login button is displayed for unauthorized users. You can customize its text, icon, and styles.
 
@@ -172,7 +163,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Menu Button Parameters { #menu-button-parameters }
+<a name="menu-button-parameters"></a>
+
+## Menu Button Parameters
 
 ### Required Parameters
 
@@ -209,7 +202,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Mini-widget Styling { #mini-widget-styling }
+<a name="mini-widget-styling"></a>
+
+## Mini-widget Styling
 
 The widget supports detailed appearance customization via the `customStyles` object. You can control colors, border radii, padding, and alignment for all elements.
 
@@ -407,7 +402,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Individual Menu Button Styling { #individual-menu-button-styling }
+<a name="individual-menu-button-styling"></a>
+
+## Individual Menu Button Styling
 
 For each button in `menuButtons`, you can set individual styles via the `customStyles` property of type `IComponentStyles`.
 
@@ -513,7 +510,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
+
+## See Also
 
 - [Application Management](./docs-10-common-app-settings.md) — guide for creating, configuring, and managing OAuth 2.0 and OpenID Connect (OIDC) applications.
 - [Organization Management](./docs-11-common-org-settings.md) — guide for working with organizations in **Encvoy ID**.

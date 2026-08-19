@@ -1,21 +1,3 @@
----
-title: "Email Login in Encvoy ID — Email Configuration"
-description: "Learn how to enable email login in Encvoy ID: create a login method and add it to the authorization widget. Connect in just a few steps."
-keywords:
-  - email login in Encvoy ID
-  - Email configuration
-  - Email authentication
-  - connect Email
-  - Email login Encvoy ID
-  - Email OAuth Encvoy ID
-author: Encvoy ID Team
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via Email"
----
-
 # How to Connect Email Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
@@ -29,7 +11,9 @@ Setting up login via **Email** consists of several steps:
 
 ---
 
-## Step 1. Creating a login method { #step-1-create-login-method }
+<a name="step-1-create-login-method"></a>
+
+## Step 1. Creating a login method
 
 1. Go to the Admin Panel → **Settings** tab.
 
@@ -62,7 +46,9 @@ After successful creation, the new login method will appear in the general list 
 
 ---
 
-## Step 2. Adding to the widget { #step-2-add-to-widget }
+<a name="step-2-add-to-widget"></a>
+
+## Step 2. Adding to the widget
 
 To make the **Login via Email** button visible to users on the authorization form, you need to activate this feature in the widget settings:
 
@@ -76,5 +62,5 @@ To make the **Login via Email** button visible to users on the authorization for
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — a guide to managing the personal profile.

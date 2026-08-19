@@ -1,30 +1,3 @@
----
-title: "Konfiguration von Encvoy ID — Sicherheit, Oberfläche und Zugriff"
-description: "Erfahren Sie, wie Sie Encvoy ID konfigurieren: Benutzerzugriff, Oberfläche, E-Mail-Vorlagen und Monitoring via Sentry. Richten Sie Ihr System jetzt ein!"
-keywords:
-  - Encvoy ID Konfiguration
-  - Encvoy ID Zugriffseinrichtung
-  - Lokalisierung
-  - Oberflächensprache
-  - E-Mail-Benachrichtigungsvorlagen
-  - Logo-Einrichtung
-  - Anwendungstypen
-  - experimentelle Funktionen
-  - Zugriffseinstellungen
-  - Zwei-Faktor-Authentifizierung
-  - Zugriffstoken
-  - Zugriffsbeschränkungen
-  - Sentry-Integration
-  - Ereignisprotokoll
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Systemkonfiguration (Oberfläche, Sicherheit und Zugriff)"
-order: 4
----
-
 # So konfigurieren Sie Encvoy ID: Sicherheit, Oberfläche und Zugriff
 
 In dieser Anleitung erfahren Sie, wie Sie die Oberfläche und Lokalisierung von **Encvoy ID** konfigurieren, Anwendungstypen erstellen, den Benutzerzugriff verwalten, die Zwei-Faktor-Authentifizierung aktivieren und den Dienst zur Ereignisüberwachung in Sentry integrieren.
@@ -43,11 +16,15 @@ Dieser Abschnitt richtet sich an Administratoren und Sicherheitsspezialisten, di
 
 ---
 
-## Einrichtung von Oberfläche und Lokalisierung { #interface-and-localization }
+<a name="interface-and-localization"></a>
+
+## Einrichtung von Oberfläche und Lokalisierung
 
 > 💡 Die Anpassung von Farben, Schriftarten und dem Erscheinungsbild von Oberflächenelementen ist über die Variable `CUSTOM_STYLES` in der Datei `.env` möglich. Weitere Details finden Sie im Abschnitt [Umgebungsvariablen](./docs-03-box-system-configuration.md#interface-customization).
 
-### Konfiguration von Systemname und Logo { #system-name-and-logo }
+<a name="system-name-and-logo"></a>
+
+### Konfiguration von Systemname und Logo
 
 Der Name und das Logo werden in der Oberfläche von **Encvoy ID** sowie im [Mini-Widget](./docs-09-common-mini-widget-settings.md) und im [Login-Widget](./docs-06-github-en-providers-settings.md#login-widget-settings) angezeigt.
 
@@ -101,7 +78,9 @@ Die Sprachänderung erfolgt automatisch, ohne dass der Dienst neu gestartet oder
 
 > 🚨 **Warnung:** Nach dem Ändern der Sprache werden alle Oberflächentexte, einschließlich Systemmeldungen und Benachrichtigungen, in der gewählten Sprache angezeigt. Stellen Sie sicher, dass Ihre Benutzer die gewählte Sprache verstehen.
 
-### Konfiguration von E-Mail-Benachrichtigungsvorlagen { #email-notification-templates }
+<a name="email-notification-templates"></a>
+
+### Konfiguration von E-Mail-Benachrichtigungsvorlagen
 
 **E-Mail-Vorlagen** sind E-Mail-Voreinstellungen, die vordefinierte Formatierungen und Designelemente enthalten. Sie werden verwendet, um automatische Benachrichtigungen zu erstellen, wie z. B. Registrierungs-E-Mails, Passwortwiederherstellung und andere Ereignisse.
 
@@ -147,11 +126,17 @@ Die Sprachänderung erfolgt automatisch, ohne dass der Dienst neu gestartet oder
 
 ---
 
-## Sicherheit und Zugriff { #security-and-access }
+<a name="security-and-access"></a>
 
-### Zugriffseinstellungen { #access-settings }
+## Sicherheit und Zugriff
 
-#### Zwei-Faktor-Authentifizierung { #two-factor-authentication }
+<a name="access-settings"></a>
+
+### Zugriffseinstellungen
+
+<a name="two-factor-authentication"></a>
+
+#### Zwei-Faktor-Authentifizierung
 
 Die Zwei-Faktor-Authentifizierung (2FA) fügt beim Login eine zusätzliche Schutzebene hinzu. Nach Eingabe des ersten Faktors (Login/Passwort oder eine andere Authentifizierungsmethode) muss der Benutzer seine Identität mit einem zweiten Faktor (Telefon, E-Mail, WebAuthn) bestätigen.
 
@@ -313,7 +298,9 @@ Beschränkt den Login in das persönliche Profil auf Benutzer mit Administratorr
 | ----------------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Signaturalgorithmus für das ID-Token (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Gibt den Algorithmus an, der zum Signieren des ID-Tokens verwendet wird. </p> `ID token` ist ein JSON Web Token (JWT), das Claims über die Authentifizierung des Benutzers enthält |
 
-#### Authentifizierungszeit { #authentication-time }
+<a name="authentication-time"></a>
+
+#### Authentifizierungszeit
 
 | Name                                                             | Parameter           | Beschreibung                                                                                                          |
 | ---------------------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -331,13 +318,17 @@ Beschränkt den Login in das persönliche Profil auf Benutzer mit Administratorr
 | -------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Art der Benutzer-ID-Übertragung im ID-Token (subject_type)** | `subject_type` | Bestimmt, wie der `sub claim` im ID-Token gebildet wird: <p> - `public` — derselbe Identifikator für alle Clients <br> - `pairwise` — ein eindeutiger Identifikator für jeden Client, was den Datenschutz erhöht </p> |
 
-#### Zugriffstoken (Access Token) { #access-token }
+<a name="access-token"></a>
+
+#### Zugriffstoken (Access Token)
 
 | Name                                | Parameter          | Beschreibung                               |
 | ----------------------------------- | ------------------ | ------------------------------------------ |
 | **Access Token (access_token_ttl)** | `access_token_ttl` | Lebensdauer des `access_token` in Sekunden |
 
-#### Refresh-Token { #refresh-token }
+<a name="refresh-token"></a>
+
+#### Refresh-Token
 
 | Name                                  | Parameter           | Beschreibung                                |
 | ------------------------------------- | ------------------- | ------------------------------------------- |
@@ -404,7 +395,9 @@ Detaillierte Informationen sind für jedes Ereignis verfügbar.
 
 ---
 
-## Anwendungstypen { #application-types }
+<a name="application-types"></a>
+
+## Anwendungstypen
 
 **Anwendungstypen** sind Kategorien zur Systematisierung von Anwendungen im **[Katalog](./docs-12-common-personal-profile.md#application-catalog)**. Sie helfen, die Struktur zu organisieren und die Benutzernavigation zu vereinfachen.
 
@@ -414,7 +407,9 @@ Detaillierte Informationen sind für jedes Ereignis verfügbar.
 - Vereinfachen die Suche nach benötigten Anwendungen
 - Helfen bei der Organisation der Katalogstruktur
 
-### Erstellen eines Anwendungstyps { #creating-app-type }
+<a name="creating-app-type"></a>
+
+### Erstellen eines Anwendungstyps
 
 1. Gehen Sie zum Admin-Panel → Tab **Einstellungen**.
 2. Suchen Sie den Block **Anwendungstypen** und klicken Sie auf **Konfigurieren**.
@@ -461,7 +456,9 @@ Das Löschen erfolgt ohne zusätzliche Bestätigung.
 
 ---
 
-## Experimentelle Funktionen { #experimental-features }
+<a name="experimental-features"></a>
+
+## Experimentelle Funktionen
 
 **Experimentelle Funktionen** sind neue Möglichkeiten des **Encvoy ID**-Dienstes, die sich in der Test- und Verfeinerungsphase befinden.
 
@@ -496,7 +493,9 @@ Der Abschnitt für experimentelle Funktionen ist verfügbar unter: `https://ID_H
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Konfiguration von Passwortrichtlinie und Benutzerprofil](./docs-05-box-userfields-settings.md) — Anleitung zur Konfiguration von Benutzerprofilen.
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — Anleitung zum Verbinden und Konfigurieren externer Authentifizierungsdienste.

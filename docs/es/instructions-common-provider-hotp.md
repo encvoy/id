@@ -1,26 +1,3 @@
----
-title: "Inicio de sesión mediante HOTP — Conexión y configuración en Encvoy ID"
-description: "Aprenda cómo habilitar el inicio de sesión HOTP en Encvoy ID: cree un método de inicio de sesión, agréguelo al widget de autorización y garantice un acceso seguro para los usuarios."
-keywords:
-  - inicio de sesión mediante HOTP
-  - autenticación HOTP
-  - configuración de HOTP
-  - conexión HOTP
-  - login HOTP
-  - autenticación de dos factores HOTP
-  - HOTP Encvoy ID
-  - inicio de sesión vía HOTP Encvoy ID
-  - configuración de HOTP en Encvoy ID
-  - HOTP
-  - HMAC-based One-Time Password
-  - contraseña de un solo uso
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Inicio de sesión mediante HOTP"
----
-
 # Cómo conectar el inicio de sesión mediante HOTP en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, consulte la guía de [Métodos de inicio de sesión y configuración del Widget](./docs-06-github-en-providers-settings.md).
@@ -68,7 +45,9 @@ La principal diferencia entre **HOTP** y **TOTP** es que los códigos no depende
 
 ---
 
-## Configuración de autenticación para administradores { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Configuración de autenticación para administradores
 
 ### Paso 1. Creación de un método de inicio de sesión
 
@@ -111,7 +90,9 @@ Para que el botón **HOTP** sea visible para los usuarios en el formulario de au
 
 ---
 
-## Vinculación de HOTP para usuarios { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## Vinculación de HOTP para usuarios
 
 > 📌 Esta instrucción está destinada a usuarios que necesitan iniciar sesión en el sistema a través de **HOTP**.
 
@@ -150,5 +131,5 @@ Las opciones más populares son:
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del Widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre los métodos de inicio de sesión y la configuración del widget de inicio de sesión.
-- [Gestión de la Organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
+- [Gestión de la Organización](./docs-11-common-org-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar su perfil personal.

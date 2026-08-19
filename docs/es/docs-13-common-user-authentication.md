@@ -1,27 +1,3 @@
----
-title: "Registro en Encvoy ID — inicio de sesión y recuperación de contraseña"
-description: "Aprenda cómo registrarse en Encvoy ID, crear una cuenta y recuperar su contraseña. ¡Siga la guía paso a paso y comience a usar el servicio!"
-keywords:
-  - registro en Encvoy ID
-  - registrarse en Encvoy ID
-  - creación de cuenta Encvoy ID
-  - iniciar sesión en Encvoy ID
-  - acceso a Encvoy ID
-  - recuperación de contraseña Encvoy ID
-  - restablecer contraseña Encvoy ID
-  - inicio de sesión OAuth en Encvoy ID
-  - inicio de sesión social Encvoy ID
-  - autenticación Encvoy ID
-  - autorización Encvoy ID
-author: "El equipo de Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Registro e Inicio de Sesión"
-order: 13
----
-
 # Registro, Inicio de Sesión y Recuperación de Contraseña en Encvoy ID
 
 En esta guía, aprenderá cómo crear una cuenta en **Encvoy ID**, iniciar sesión utilizando un nombre de usuario y contraseña o a través de servicios externos, y recuperar el acceso a su perfil de forma segura si es necesario.
@@ -37,7 +13,9 @@ En esta guía, aprenderá cómo crear una cuenta en **Encvoy ID**, iniciar sesi�
 
 ---
 
-## Registro de Nueva Cuenta { #new-account-registration }
+<a name="new-account-registration"></a>
+
+## Registro de Nueva Cuenta
 
 ### Dónde está disponible el registro
 
@@ -77,7 +55,9 @@ Después de completar estos pasos, la cuenta será creada y habrá iniciado sesi
 
 ---
 
-## Inicio de Sesión con Nombre de Usuario y Contraseña { #login-with-password }
+<a name="login-with-password"></a>
+
+## Inicio de Sesión con Nombre de Usuario y Contraseña
 
 Puede autorizarse en la aplicación utilizando su cuenta de **Encvoy ID**.
 
@@ -117,7 +97,9 @@ Para iniciar sesión:
 
 ---
 
-## Inicio de Sesión a través de Servicios Externos { #login-via-external-services }
+<a name="login-via-external-services"></a>
+
+## Inicio de Sesión a través de Servicios Externos
 
 Los servicios de identificación externa (o métodos de inicio de sesión) incluyen redes sociales y servicios externos.
 
@@ -132,7 +114,9 @@ Para iniciar sesión a través de un servicio externo:
 
 ---
 
-## Inicio de Sesión Rápido para Usuarios Autenticados { #quick-login-for-authenticated-users }
+<a name="quick-login-for-authenticated-users"></a>
+
+## Inicio de Sesión Rápido para Usuarios Autenticados
 
 Si ya ha iniciado sesión en **Encvoy ID** en su navegador, no será necesario volver a autorizarse.
 
@@ -150,7 +134,9 @@ Adicionalmente:
 
 ---
 
-## Recuperación de Contraseña { #password-recovery }
+<a name="password-recovery"></a>
+
+## Recuperación de Contraseña
 
 Si ha olvidado la contraseña de su cuenta de **Encvoy ID**, puede recuperarla fácilmente.
 
@@ -176,6 +162,8 @@ Después de actualizar la contraseña, el inicio de sesión se realizará autom�
 
 ---
 
-## Ver También { #see-also }
+<a name="see-also"></a>
+
+## Ver También
 
 - [Perfil Personal y Gestión de Permisos de Aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar su perfil personal.

@@ -1,21 +1,3 @@
----
-title: "Login mTLS — Connessione in Encvoy ID"
-description: "Scopri come abilitare il login mTLS in Encvoy ID: crea un metodo di login e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords:
-  - login mTLS
-  - autenticazione mTLS
-  - connessione mTLS
-  - configurazione mTLS
-  - mTLS Encvoy ID
-  - login via mTLS Encvoy ID
-  - impostazione mTLS in Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Login via mTLS"
----
-
 # Come connettere il login mTLS in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, consulta la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
@@ -69,7 +51,9 @@ Affinché **mTLS** funzioni, è necessario:
 - creare e attivare il provider **mTLS** nell'interfaccia di **Encvoy ID**;
 - installare i certificati client sui dispositivi degli utenti.
 
-### Passaggio 1. Configurare Nginx per mTLS { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
+
+### Passaggio 1. Configurare Nginx per mTLS
 
 Prima di aggiungere il provider in **Encvoy ID**, è necessario preparare la configurazione di **Nginx**:
 
@@ -141,7 +125,9 @@ Prima di aggiungere il provider in **Encvoy ID**, è necessario preparare la con
 - Posiziona i certificati del server (`.pem` e chiave) e la CA radice (`ca-bundle.crt`) in una directory comoda, ad es. `certs/`.
 - Specifica il percorso dei certificati nella configurazione di **Nginx**.
 
-### Passaggio 2. Creare il Provider mTLS { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Passaggio 2. Creare il Provider mTLS
 
 1. Vai al Pannello di Amministrazione → scheda **Impostazioni**.
 
@@ -166,7 +152,9 @@ Prima di aggiungere il provider in **Encvoy ID**, è necessario preparare la con
 
 Dopo la creazione riuscita, il nuovo metodo di login apparirà nell'elenco generale dei provider.
 
-### Passaggio 3. Aggiungere il Provider mTLS al Widget { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Passaggio 3. Aggiungere il Provider mTLS al Widget
 
 Affinché gli utenti vedano il pulsante **mTLS** nel modulo di autorizzazione, è necessario attivare questa funzione nelle impostazioni del widget:
 
@@ -181,7 +169,9 @@ Affinché gli utenti vedano il pulsante **mTLS** nel modulo di autorizzazione, �
 
 > 📌 Questa istruzione è destinata agli utenti che devono accedere al sistema tramite **mTLS**.
 
-### Passaggio 1. Installare il Certificato Client nel Browser { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Passaggio 1. Installare il Certificato Client nel Browser
 
 Prima dell'installazione, assicurati di avere un file di certificato in formato `.p12` o `.pfx`.
 
@@ -227,7 +217,9 @@ Dopo l'installazione riuscita, il certificato apparirà nell'elenco della scheda
 
 > 💡 Dopo aver installato il certificato, al momento del login via **mTLS**, il browser ti chiederà automaticamente di selezionare il certificato appropriato per l'autenticazione.
 
-### Passaggio 2. Aggiungere l'Identificatore al Profilo { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Passaggio 2. Aggiungere l'Identificatore al Profilo
 
 1. Vai al tuo **Profilo**.
 2. Clicca su **Aggiungi** nel blocco **Identificatori**.
@@ -239,7 +231,9 @@ Dopo l'installazione riuscita, il certificato apparirà nell'elenco della scheda
 
 > 💡 **Suggerimento**: Se l'identificatore è già collegato a un altro utente, devi rimuoverlo dal profilo di quell'utente prima di collegarlo al nuovo account.
 
-### Passaggio 3. Verificare { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Passaggio 3. Verificare
 
 1. Vai alla pagina di login con il metodo di login **mTLS** abilitato.
 2. Seleziona l'icona del metodo di login **mTLS**.
@@ -251,5 +245,5 @@ Dopo l'installazione riuscita, il certificato apparirà nell'elenco della scheda
 ## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md) — guida sui metodi di login e sulla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — guida sul lavoro con le organizzazioni nel sistema **Encvoy ID**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — guida sul lavoro con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi App](./docs-12-common-personal-profile.md) — guida sulla gestione del proprio profilo personale.

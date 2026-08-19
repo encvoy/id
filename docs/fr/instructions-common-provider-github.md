@@ -1,25 +1,3 @@
----
-title: "Connexion GitHub — Connexion et configuration dans Encvoy ID"
-description: "Apprenez à activer la connexion GitHub dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion GitHub
-  - configuration GitHub dans Encvoy ID
-  - authentification GitHub
-  - connexion GitHub
-  - connexion GitHub Encvoy ID
-  - GitHub OAuth Encvoy ID
-  - connexion GitHub
-  - autorisation GitHub
-  - GitHub Encvoy ID
-  - se connecter via GitHub Encvoy ID
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [fr]
-menu_title: "Connexion GitHub"
----
-
 # Comment connecter la connexion GitHub dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -34,7 +12,9 @@ La configuration de la connexion **GitHub** se compose de trois étapes clés ef
 
 ---
 
-## Étape 1. Configurer l'application GitHub { #step-1-configure-github-app }
+<a name="step-1-configure-github-app"></a>
+
+## Étape 1. Configurer l'application GitHub
 
 Avant de configurer la méthode de connexion dans **Encvoy ID**, vous devez enregistrer votre application dans la console développeur **GitHub** et obtenir des clés d'accès :
 
@@ -60,7 +40,9 @@ Ces valeurs seront nécessaires à l'étape suivante.
 
 ---
 
-## Étape 2. Créer la méthode de connexion { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Étape 2. Créer la méthode de connexion
 
 1. Allez dans la Console d'administration → onglet **Paramètres**.
 
@@ -92,7 +74,9 @@ Après une création réussie, la nouvelle méthode de connexion apparaîtra dan
 
 ---
 
-## Étape 3. Ajouter au widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Étape 3. Ajouter au widget
 
 Pour rendre le bouton **Se connecter avec GitHub** visible sur le formulaire d'autorisation, vous devez activer cette fonctionnalité dans les paramètres du widget :
 
@@ -133,5 +117,5 @@ Pour rendre le bouton **Se connecter avec GitHub** visible sur le formulaire d'a
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide sur la gestion du profil personnel.

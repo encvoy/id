@@ -1,23 +1,3 @@
----
-title: "Installation von Encvoy ID via Docker — SSO-Bereitstellung"
-description: "Installieren Sie Encvoy ID via Docker: Anforderungen, Konfiguration und erster Login. Schritt-für-Schritt-SSO-Bereitstellung für Administratoren und DevOps."
-keywords:
-  - Encvoy ID installieren
-  - Installation Encvoy ID
-  - SSO-System Bereitstellung
-  - Encvoy ID deployen
-  - Docker Installation Encvoy ID
-  - Docker Compose Encvoy ID
-  - Enterprise SSO-System
-author: "Encvoy ID Team"
-date: 2025-12-11
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Installation und erster Start"
-order: 2
----
-
 # So installieren Sie Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie das **Encvoy ID** SSO-System via Docker auf Ihrem Server installieren. Wir führen Sie durch den gesamten Prozess — von der Vorbereitung der Umgebung bis zum ersten Login des Administrators.
@@ -32,7 +12,9 @@ In dieser Anleitung erfahren Sie, wie Sie das **Encvoy ID** SSO-System via Docke
 
 ---
 
-## Installationsanforderungen { #installation-requirements }
+<a name="installation-requirements"></a>
+
+## Installationsanforderungen
 
 ### Systemanforderungen für den Server
 
@@ -86,7 +68,9 @@ Für eine erfolgreiche Installation und den korrekten Betrieb von **Encvoy ID** 
 
 ---
 
-## Installation von Docker und Docker Compose { #install-docker-and-docker-compose }
+<a name="install-docker-and-docker-compose"></a>
+
+## Installation von Docker und Docker Compose
 
 **Encvoy ID** wird als Satz von Docker-Containern bereitgestellt und kann als Enterprise OAuth 2.0 Authorization Server und OpenID Connect Provider (IdP) verwendet werden.
 
@@ -154,7 +138,9 @@ docker-compose --version
 
 ---
 
-## Installation des SSO-Systems { #install-sso-system }
+<a name="install-sso-system"></a>
+
+## Installation des SSO-Systems
 
 ### Schritt 1. Vorbereitung des Arbeitsverzeichnisses
 
@@ -255,7 +241,9 @@ docker compose up -d
 
 ---
 
-## Erster Login { #first-login }
+<a name="first-login"></a>
+
+## Erster Login
 
 ### Standard-Administrator-Zugangsdaten
 
@@ -276,7 +264,9 @@ Um auf die **Encvoy ID** Weboberfläche zuzugreifen, navigieren Sie zu: `https:/
 
 Nach der Autorisierung werden Sie zum [Profil](./docs-12-common-personal-profile.md) des Benutzers weitergeleitet.
 
-### Zugriff auf das Admin-Panel { #admin-panel-access }
+<a name="admin-panel-access"></a>
+
+### Zugriff auf das Admin-Panel
 
 Die Administrationseinstellungen befinden sich im Admin-Panel.
 
@@ -288,7 +278,9 @@ So greifen Sie auf das Panel zu:
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Encvoy ID Systembeschreibung](./docs-01-box-about.md) — Übersicht über die Funktionen von **Encvoy ID**.
 - [Encvoy ID Umgebungsvariablen](./docs-03-box-system-configuration.md) — Leitfaden zur Vorbereitung der Konfiguration vor dem Start.

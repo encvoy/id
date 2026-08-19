@@ -1,22 +1,3 @@
----
-title: "Méthodes de connexion Encvoy ID — Connexion et Configuration"
-description: "Apprenez à configurer les méthodes de connexion et le widget d'autorisation dans Encvoy ID. Connexion rapide des fournisseurs OAuth, WebAuthn, mTLS, HOTP et TOTP avec des exemples."
-keywords:
-  - Encvoy ID méthodes de connexion
-  - autorisation SSO
-  - widget d'autorisation
-  - configuration OAuth 2.0
-  - fournisseurs d'authentification
-  - WebAuthn mTLS TOTP
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [fr]
-menu_title: "Configuration des méthodes de connexion"
-order: 7
----
-
 # Comment configurer les méthodes de connexion dans Encvoy ID
 
 Dans ce guide, vous apprendrez à configurer les méthodes de connexion dans **Encvoy ID**, y compris les fournisseurs OAuth standard et les méthodes d'authentification avancées (WebAuthn, mTLS, TOTP). Nous expliquerons également comment configurer et styliser correctement le widget d'autorisation pour rendre le processus de connexion sécurisé et convivial.
@@ -30,7 +11,9 @@ Dans ce guide, vous apprendrez à configurer les méthodes de connexion dans **E
 
 ---
 
-## Aperçu des méthodes de connexion { #login-methods-overview }
+<a name="login-methods-overview"></a>
+
+## Aperçu des méthodes de connexion
 
 Une **méthode de connexion** est une méthode d'authentification pour les utilisateurs qui leur permet de s'autoriser dans le compte personnel ou les applications connectées. C'est un élément clé du système Single Sign-On (authentification unique), offrant une identification flexible et sécurisée.
 
@@ -44,7 +27,9 @@ Une **méthode de connexion** est une méthode d'authentification pour les utili
 
 Combinez les méthodes de connexion pour accroître la sécurité. Implémentez l'**authentification à deux facteurs**, où après avoir saisi le premier facteur (identifiant, mot de passe ou autre méthode), l'utilisateur doit confirmer son identité à l'aide d'un second facteur (téléphone, e-mail ou WebAuthn). [Comment configurer l'authentification à deux facteurs →](./docs-04-box-system-settings.md#two-factor-authentication)
 
-### Niveaux de gestion et publicité des méthodes de connexion { #management-levels-and-publicity }
+<a name="management-levels-and-publicity"></a>
+
+### Niveaux de gestion et publicité des méthodes de connexion
 
 Les méthodes de connexion peuvent être créées dans différents types de tableaux de bord **Encvoy ID** :
 
@@ -62,7 +47,9 @@ Pour les méthodes de connexion créées au niveau du **service** ou de l'**orga
 
 ---
 
-## Gestion des méthodes de connexion { #managing-login-methods }
+<a name="managing-login-methods"></a>
+
+## Gestion des méthodes de connexion
 
 ### Création d'une nouvelle méthode de connexion
 
@@ -151,7 +138,9 @@ Le paramètre est appliqué sans confirmation supplémentaire.
 
 ---
 
-## Paramètres du widget de connexion { #login-widget-settings }
+<a name="login-widget-settings"></a>
+
+## Paramètres du widget de connexion
 
 ### Qu'est-ce que le widget de connexion ?
 
@@ -232,8 +221,10 @@ Pour configurer l'affichage d'une méthode de connexion dans le widget :
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Gestion des applications](./docs-10-common-app-settings.md) — guide pour la création, la configuration et la gestion des applications OAuth 2.0 et OpenID Connect (OIDC).
-- [Gestion de l'organisation](./docs-02-box-system-install.md) — guide pour travailler avec une organisation dans **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — guide pour travailler avec une organisation dans **Encvoy ID**.
 - [Enregistrement et connexion de l'utilisateur](./docs-13-common-user-authentication.md) — instructions pour créer un compte, se connecter avec un identifiant/mot de passe et des services d'authentification externes.

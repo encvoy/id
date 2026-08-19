@@ -1,26 +1,3 @@
----
-title: "Benutzerverwaltung in Encvoy ID — Administrator-Handbuch"
-description: "Erfahren Sie, wie Sie Benutzer in Encvoy ID verwalten: Erstellung und Bearbeitung, Sperrung und Löschung, Zugriffskontrolle und Datenschutzverwaltung."
-keywords:
-  - Benutzerverwaltung Encvoy ID
-  - Benutzer erstellen Encvoy ID
-  - Benutzerprofil bearbeiten
-  - Benutzer sperren und entsperren
-  - Zugriffsrechte zuweisen Encvoy ID
-  - Profildaten exportieren
-  - Benutzersitzungen beenden
-  - Benutzerkennungen
-  - Benutzer löschen Encvoy ID
-  - Benutzerrechte und Rollen
-author: "Das Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Benutzerverwaltung"
-order: 9
----
-
 # Benutzerverwaltung in Encvoy ID
 
 In diesem Handbuch erfahren Sie, wie Sie Benutzerprofile in **Encvoy ID** erstellen und bearbeiten, Rollen und Zugriffsrechte zuweisen, Konten sperren und löschen, aktive Sitzungen beenden, den Datenschutz verwalten und Profildaten exportieren.
@@ -36,7 +13,9 @@ In diesem Handbuch erfahren Sie, wie Sie Benutzerprofile in **Encvoy ID** erstel
 
 ---
 
-## Übersicht und grundlegende Aktionen { #overview-and-basics }
+<a name="overview-and-basics"></a>
+
+## Übersicht und grundlegende Aktionen
 
 ### Über den Bereich „Benutzer“
 
@@ -69,7 +48,7 @@ In dieser Anleitung behandeln wir die manuelle Erstellung eines Benutzers:
 
 5. Klicken Sie auf **Speichern**.
 
-   > 💡 Ein Benutzerprofil kann [zusätzliche Felder](./docs-05-box-userfields-settings.md#password-policy) enthalten.
+   > 💡 Ein Benutzerprofil kann [zusätzliche Felder](./docs-05-box-userfields-settings.md#additional-profile-fields) enthalten.
 
    > 📌 Die Feldvalidierung erfolgt gemäß den Validierungsregeln. Weitere Details finden Sie im Handbuch [Feldvalidierungsregeln](./docs-05-box-userfields-settings.md#validation-rules).
 
@@ -100,7 +79,9 @@ Um Änderungen an einem Benutzerprofil vorzunehmen:
 
 ---
 
-## Verwaltung von Profildaten { #profile-data-management }
+<a name="profile-data-management"></a>
+
+## Verwaltung von Profildaten
 
 ### Verwaltung von Profilkennungen
 
@@ -187,7 +168,9 @@ Die exportierte Datei enthält eine vollständige Liste der Benutzerdaten:
 
 ---
 
-## Zugriff und Sicherheit { #access-and-security }
+<a name="access-and-security"></a>
+
+## Zugriff und Sicherheit
 
 ### Benutzersitzungen beenden
 
@@ -257,7 +240,9 @@ Der Benutzer erhält die ausgewählte Rolle und die entsprechenden Rechte.
 
 ---
 
-## Kontostatus { #account-status }
+<a name="account-status"></a>
+
+## Kontostatus
 
 ### Benutzer in Encvoy ID sperren
 
@@ -303,7 +288,9 @@ Nach der Bestätigung der Aktion ändert sich der Status des Benutzers zu **Akti
 
 ---
 
-## Einen Benutzer löschen { #deleting-user }
+<a name="deleting-user"></a>
+
+## Einen Benutzer löschen
 
 Ein Administrator kann einen Benutzer dauerhaft löschen. Sobald die Löschung bestätigt ist, verschwinden das Konto und alle Daten unwiderruflich. Der Benutzer verliert den Zugriff auf alle Anwendungen, in denen sein **Encvoy ID**-Konto verwendet wurde.
 
@@ -336,8 +323,10 @@ Nach der Bestätigung wird der Benutzer gelöscht.
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — ein Handbuch zur Verwaltung Ihres persönlichen Profils.
 - [Anwendungsverwaltung](./docs-10-common-app-settings.md) — ein Handbuch zum Erstellen, Konfigurieren und Verwalten von OAuth 2.0- und OpenID Connect (OIDC)-Anwendungen.
-- [Organisationsverwaltung](./docs-02-box-system-install.md) — ein Handbuch zur Arbeit mit Organisationen in **Encvoy ID**.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Handbuch zur Arbeit mit Organisationen in **Encvoy ID**.

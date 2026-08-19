@@ -1,20 +1,3 @@
----
-title: "Encvoy ID Mini-widget — Configuration et Personnalisation"
-description: "Apprenez à connecter et configurer le mini-widget Encvoy ID : boutons de connexion, profil utilisateur et styles personnalisés. Intégrez la solution dans votre projet."
-keywords:
-  - Encvoy ID mini-widget
-  - intégration mini-widget
-  - personnalisation mini-widget
-  - style bouton de connexion
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-12
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Configuration du Mini-widget"
-order: 10
----
-
 # Comment configurer et connecter le Mini-widget Encvoy ID
 
 Dans ce guide, vous apprendrez à connecter et configurer le mini-widget **Encvoy ID** sur votre ressource web. Vous découvrirez comment paramétrer l'authentification, l'affichage du profil utilisateur, les boutons de connexion et les menus, ainsi que la personnalisation de l'apparence du widget pour l'harmoniser avec le design de votre projet.
@@ -32,7 +15,9 @@ Dans ce guide, vous apprendrez à connecter et configurer le mini-widget **Encvo
 
 ---
 
-## Qu'est-ce qu'un mini-widget ? { #what-is-mini-widget }
+<a name="what-is-mini-widget"></a>
+
+## Qu'est-ce qu'un mini-widget ?
 
 Un **mini-widget** est un menu contenant les données de l'utilisateur et des fonctions essentielles. Il permet d'accéder au profil, au panneau d'administration, aux organisations ou au petit bureau, ainsi qu'à la déconnexion du système. Vous pouvez également y placer une application pour un accès rapide. Le widget s'ouvre en cliquant sur l'avatar de l'utilisateur dans le coin supérieur droit de l'écran.
 
@@ -46,7 +31,9 @@ Exemples de widgets :
 
 ---
 
-## Configuration du Widget { #widget-configuration }
+<a name="widget-configuration"></a>
+
+## Configuration du Widget
 
 ### Paramètres requis
 
@@ -95,7 +82,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres d'affichage du profil { #profile-display-settings }
+<a name="profile-display-settings"></a>
+
+## Paramètres d'affichage du profil
 
 ### Paramètres de configuration du profil
 
@@ -125,7 +114,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres du bouton de connexion { #login-button-settings }
+<a name="login-button-settings"></a>
+
+## Paramètres du bouton de connexion
 
 Le bouton de connexion est affiché pour les utilisateurs non autorisés. Vous pouvez personnaliser son texte, son icône et ses styles.
 
@@ -172,7 +163,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres des boutons de menu { #menu-button-parameters }
+<a name="menu-button-parameters"></a>
+
+## Paramètres des boutons de menu
 
 ### Paramètres requis
 
@@ -209,7 +202,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Style du Mini-widget { #mini-widget-styling }
+<a name="mini-widget-styling"></a>
+
+## Style du Mini-widget
 
 Le widget prend en charge une personnalisation détaillée de l'apparence via l'objet `customStyles`. Vous pouvez contrôler les couleurs, les rayons de bordure, les marges internes et l'alignement pour tous les éléments.
 
@@ -407,7 +402,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Style individuel des boutons de menu { #individual-menu-button-styling }
+<a name="individual-menu-button-styling"></a>
+
+## Style individuel des boutons de menu
 
 Pour chaque bouton dans `menuButtons`, vous pouvez définir des styles individuels via la propriété `customStyles` de type `IComponentStyles`.
 
@@ -513,7 +510,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Gestion des Applications](./docs-10-common-app-settings.md) — guide pour créer, configurer et gérer les applications OAuth 2.0 et OpenID Connect (OIDC).
 - [Gestion des Organisations](./docs-11-common-org-settings.md) — guide pour travailler avec les organisations dans **Encvoy ID**.

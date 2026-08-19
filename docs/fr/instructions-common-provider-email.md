@@ -1,21 +1,3 @@
----
-title: "Connexion par e-mail dans Encvoy ID — Configuration de l'e-mail"
-description: "Découvrez comment activer la connexion par e-mail dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion par e-mail dans Encvoy ID
-  - configuration e-mail
-  - authentification par e-mail
-  - connecter e-mail
-  - Connexion e-mail Encvoy ID
-  - OAuth e-mail Encvoy ID
-author: Équipe Encvoy ID
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Connexion via E-mail"
----
-
 # Comment connecter la connexion par e-mail dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -29,7 +11,9 @@ La configuration de la connexion via **E-mail** se compose de plusieurs étapes 
 
 ---
 
-## Étape 1. Création d'une méthode de connexion { #step-1-create-login-method }
+<a name="step-1-create-login-method"></a>
+
+## Étape 1. Création d'une méthode de connexion
 
 1. Allez dans le Panneau d'administration → onglet **Paramètres**.
 
@@ -62,7 +46,9 @@ Après une création réussie, la nouvelle méthode de connexion apparaîtra dan
 
 ---
 
-## Étape 2. Ajout au widget { #step-2-add-to-widget }
+<a name="step-2-add-to-widget"></a>
+
+## Étape 2. Ajout au widget
 
 Pour rendre le bouton **Connexion via E-mail** visible pour les utilisateurs sur le formulaire d'autorisation, vous devez activer cette fonctionnalité dans les paramètres du widget :
 
@@ -76,5 +62,5 @@ Pour rendre le bouton **Connexion via E-mail** visible pour les utilisateurs sur
 ## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide sur la gestion du profil personnel.

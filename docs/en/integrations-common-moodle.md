@@ -1,28 +1,3 @@
----
-title: "Moodle Integration with Encvoy ID — Setting up Single Sign-On"
-description: "Learn how to set up Single Sign-On in Moodle via Encvoy ID: simple configuration, data protection, and seamless access for all company employees."
-keywords:
-  - Moodle integration with Encvoy ID
-  - Moodle Encvoy ID
-  - Moodle SSO
-  - Moodle single sign-on
-  - SSO login to Moodle
-  - single sign-on in Moodle
-  - Moodle authentication
-  - Moodle authorization
-  - OAuth authentication Moodle
-  - OAuth Moodle
-  - configuring Moodle with Encvoy ID
-  - connecting Moodle to Encvoy ID
-  - single sign-on in moodle
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration with Moodle"
----
-
 # How to Configure Moodle Integration with Encvoy ID
 
 In this guide, you will learn how to set up Single Sign-On (SSO) in **Moodle** using the **Encvoy ID** system.
@@ -37,7 +12,9 @@ Setting up login via **Encvoy ID** consists of several key stages performed in t
 
 ---
 
-## Step 1. Create Application { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Step 1. Create Application
 
 1. Log in to the **Encvoy ID** system.
 2. Create an application with the following settings:
@@ -52,7 +29,9 @@ Setting up login via **Encvoy ID** consists of several key stages performed in t
 
 ---
 
-## Step 2. Configure Moodle System { #step-2-configure-moodle }
+<a name="step-2-configure-moodle"></a>
+
+## Step 2. Configure Moodle System
 
 > Administrator rights in **Moodle** are required to configure user authentication.
 
@@ -124,7 +103,9 @@ If the LMS requires sending emails to users, you must configure email settings (
 
 ---
 
-## Step 3. Verify Connection { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Step 3. Verify Connection
 
 1. Return to the **OAuth 2 services** list and ensure that the created provider is active.
 

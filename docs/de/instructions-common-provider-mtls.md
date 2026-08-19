@@ -1,21 +1,3 @@
----
-title: "mTLS-Login — Verbindung in Encvoy ID"
-description: "Erfahren Sie, wie Sie den mTLS-Login in Encvoy ID aktivieren: Erstellen Sie eine Anmeldemethode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords:
-  - mTLS-Login
-  - mTLS-Authentifizierung
-  - mTLS-Verbindung
-  - mTLS-Konfiguration
-  - mTLS Encvoy ID
-  - Login über mTLS Encvoy ID
-  - mTLS in Encvoy ID einrichten
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Login über mTLS"
----
-
 # So verbinden Sie den mTLS-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Anmeldemethoden. Weitere Details finden Sie im Leitfaden [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
@@ -69,7 +51,9 @@ Damit **mTLS** funktioniert, müssen Sie:
 - den **mTLS**-Provider in der **Encvoy ID**-Oberfläche erstellen und aktivieren;
 - Client-Zertifikate auf den Geräten der Benutzer installieren.
 
-### Schritt 1. Nginx für mTLS konfigurieren { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
+
+### Schritt 1. Nginx für mTLS konfigurieren
 
 Bevor Sie den Provider in **Encvoy ID** hinzufügen, müssen Sie die **Nginx**-Konfiguration vorbereiten:
 
@@ -141,7 +125,9 @@ Bevor Sie den Provider in **Encvoy ID** hinzufügen, müssen Sie die **Nginx**-K
 - Legen Sie Server-Zertifikate (`.pem` und Key) sowie die Root-CA (`ca-bundle.crt`) in einem geeigneten Verzeichnis ab, z. B. `certs/`.
 - Geben Sie den Pfad zu den Zertifikaten in der **Nginx**-Konfiguration an.
 
-### Schritt 2. mTLS-Provider erstellen { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Schritt 2. mTLS-Provider erstellen
 
 1. Gehen Sie zum Admin-Panel → Tab **Einstellungen**.
 
@@ -166,7 +152,9 @@ Bevor Sie den Provider in **Encvoy ID** hinzufügen, müssen Sie die **Nginx**-K
 
 Nach erfolgreicher Erstellung erscheint die neue Anmeldemethode in der allgemeinen Liste der Provider.
 
-### Schritt 3. mTLS-Provider zum Widget hinzufügen { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Schritt 3. mTLS-Provider zum Widget hinzufügen
 
 Damit Benutzer die **mTLS**-Schaltfläche auf dem Autorisierungsformular sehen, müssen Sie diese Funktion in den Widget-Einstellungen aktivieren:
 
@@ -181,7 +169,9 @@ Damit Benutzer die **mTLS**-Schaltfläche auf dem Autorisierungsformular sehen, 
 
 > 📌 Diese Anleitung richtet sich an Benutzer, die sich über **mTLS** am System anmelden müssen.
 
-### Schritt 1. Client-Zertifikat im Browser installieren { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Schritt 1. Client-Zertifikat im Browser installieren
 
 Stellen Sie vor der Installation sicher, dass Sie eine Zertifikatsdatei im Format `.p12` oder `.pfx` haben.
 
@@ -227,7 +217,9 @@ Nach erfolgreicher Installation erscheint das Zertifikat in der Liste auf dem Ta
 
 > 💡 Nach der Installation des Zertifikats wird der Browser Sie beim Login über **mTLS** automatisch auffordern, das entsprechende Zertifikat für die Authentifizierung auszuwählen.
 
-### Schritt 2. Identifikator zum Profil hinzufügen { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Schritt 2. Identifikator zum Profil hinzufügen
 
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Hinzufügen** im Block **Identifikatoren**.
@@ -239,7 +231,9 @@ Nach erfolgreicher Installation erscheint das Zertifikat in der Liste auf dem Ta
 
 > 💡 **Tipp**: Wenn der Identifikator bereits mit einem anderen Benutzer verknüpft ist, müssen Sie ihn aus dem Profil dieses Benutzers entfernen, bevor Sie ihn mit dem neuen Konto verknüpfen können.
 
-### Schritt 3. Überprüfung { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Schritt 3. Überprüfung
 
 1. Gehen Sie zur Anmeldeseite, auf der die **mTLS**-Anmeldemethode aktiviert ist.
 2. Wählen Sie das Icon der **mTLS**-Anmeldemethode.
@@ -251,5 +245,5 @@ Nach erfolgreicher Installation erscheint das Zertifikat in der Liste auf dem Ta
 ## Siehe auch
 
 - [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md) — Leitfaden zu Anmeldemethoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — Leitfaden zur Verwaltung Ihres persönlichen Profils.

@@ -1,28 +1,3 @@
----
-title: "Moodle-Integration mit Encvoy ID — Einrichten von Single Sign-On"
-description: "Erfahren Sie, wie Sie Single Sign-On in Moodle über Encvoy ID einrichten: einfache Konfiguration, Datenschutz und nahtloser Zugriff für alle Unternehmensmitarbeiter."
-keywords:
-  - Moodle-Integration mit Encvoy ID
-  - Moodle Encvoy ID
-  - Moodle SSO
-  - Moodle Single Sign-On
-  - SSO-Login bei Moodle
-  - Single Sign-On in Moodle
-  - Moodle-Authentifizierung
-  - Moodle-Autorisierung
-  - OAuth-Authentifizierung Moodle
-  - OAuth Moodle
-  - Moodle mit Encvoy ID konfigurieren
-  - Moodle mit Encvoy ID verbinden
-  - Single Sign-On in Moodle
-author: "Encvoy ID Team"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Integration mit Moodle"
----
-
 # So konfigurieren Sie die Moodle-Integration mit Encvoy ID
 
 In dieser Anleitung erfahren Sie, wie Sie Single Sign-On (SSO) in **Moodle** mithilfe des **Encvoy ID**-Systems einrichten.
@@ -37,7 +12,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren Schlüsselph
 
 ---
 
-## Schritt 1. Anwendung erstellen { #step-1-create-application }
+<a name="step-1-create-application"></a>
+
+## Schritt 1. Anwendung erstellen
 
 1. Melden Sie sich im **Encvoy ID**-System an.
 2. Erstellen Sie eine Anwendung mit den folgenden Einstellungen:
@@ -52,7 +29,9 @@ Die Einrichtung des Logins über **Encvoy ID** besteht aus mehreren Schlüsselph
 
 ---
 
-## Schritt 2. Moodle-System konfigurieren { #step-2-configure-moodle }
+<a name="step-2-configure-moodle"></a>
+
+## Schritt 2. Moodle-System konfigurieren
 
 > Für die Konfiguration der Benutzerauthentifizierung sind Administratorrechte in **Moodle** erforderlich.
 
@@ -124,7 +103,9 @@ Wenn das LMS den Versand von E-Mails an Benutzer erfordert, müssen Sie die E-Ma
 
 ---
 
-## Schritt 3. Verbindung überprüfen { #step-3-verify-connection }
+<a name="step-3-verify-connection"></a>
+
+## Schritt 3. Verbindung überprüfen
 
 1. Kehren Sie zur Liste der **OAuth 2-Services** zurück und stellen Sie sicher, dass der erstellte Provider aktiv ist.
 

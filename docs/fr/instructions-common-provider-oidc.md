@@ -1,25 +1,3 @@
----
-title: "Connexion OpenID Connect — Connexion dans Encvoy ID"
-description: "Apprenez à activer la connexion OpenID Connect dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords:
-  - connexion OpenID Connect
-  - OpenID Connect
-  - OIDC
-  - oidc
-  - configuration OpenID Connect
-  - connexion OpenID Connect
-  - autorisation OpenID Connect
-  - OpenID Connect Encvoy ID
-  - configurer OpenID Connect dans Encvoy ID
-  - connecter OpenID Connect à Encvoy ID
-author: "Équipe Encvoy ID"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Connexion OIDC"
----
-
 # Comment connecter la connexion OpenID Connect dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, lisez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
@@ -36,14 +14,18 @@ La configuration de la connexion via **OpenID Connect** se compose de trois éta
 
 ---
 
-## Étape 1. Configuration du côté du système externe { #step-1-configure-external-system }
+<a name="step-1-configure-external-system"></a>
+
+## Étape 1. Configuration du côté du système externe
 
 1. Créez une application dans le service d'identité externe.
 2. Copiez les valeurs des champs **ID de l'application/Client ID** et **Secret/Client Secret**. Vous en aurez besoin lors de la création de l'application dans **Encvoy ID**.
 
 ---
 
-## Étape 2. Création d'une méthode de connexion { #step-2-create-login-method }
+<a name="step-2-create-login-method"></a>
+
+## Étape 2. Création d'une méthode de connexion
 
 1. Allez dans le Panneau d'administration → onglet **Paramètres**.
 
@@ -80,7 +62,9 @@ Après une création réussie, la nouvelle méthode de connexion apparaîtra dan
 
 ---
 
-## Étape 3. Ajout au widget { #step-3-add-to-widget }
+<a name="step-3-add-to-widget"></a>
+
+## Étape 3. Ajout au widget
 
 Pour rendre le bouton **Se connecter avec OpenID Connect** visible sur le formulaire d'autorisation, vous devez activer cette fonctionnalité dans les paramètres du widget :
 
@@ -91,7 +75,9 @@ Pour rendre le bouton **Se connecter avec OpenID Connect** visible sur le formul
 
 ---
 
-## Description des paramètres { #parameters-description }
+<a name="parameters-description"></a>
+
+## Description des paramètres
 
 ### Informations de base
 
@@ -123,8 +109,10 @@ Pour rendre le bouton **Se connecter avec OpenID Connect** visible sur le formul
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Méthodes de connexion et configuration du widget de connexion](./docs-06-github-en-providers-settings.md) — guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — guide sur le travail avec les organisations dans le système **Encvoy ID**.
+- [Gestion de l'organisation](./docs-11-common-org-settings.md) — guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — guide sur la gestion du profil personnel.

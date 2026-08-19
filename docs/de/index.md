@@ -1,17 +1,3 @@
----
-title: "Encvoy ID Dokumentation"
-description: "Offizielle Dokumentation für die Arbeit mit Encvoy ID: Systemkonfiguration, Organisationsverwaltung, Hinzufügen von Login-Methoden und Anwendungen."
-keywords:
-  - SSO
-  - Single Sign-On
-  - Authentifizierung
-  - Zugriffsmanagement
-  - IAM
-  - Leitfaden
-  - Dokumentation
-author: "Encvoy ID Team"
----
-
 # Encvoy ID Dokumentation
 
 **Encvoy ID** ist ein Single Sign-On (SSO) System für die zentrale Benutzerauthentifizierung und das Zugriffsmanagement für Unternehmensanwendungen.
