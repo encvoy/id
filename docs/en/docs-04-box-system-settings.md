@@ -1,22 +1,22 @@
 ---
-title: "Configuring {{projectName}} — security, interface, and access"
-description: "Learn how to configure {{projectName}}: user access, interface, email templates, and monitoring via Sentry. Set up your system now!"
-keywords: 
-  - {{projectName}} configuration
-  - {{projectName}} access setup
-  - localization 
-  - interface language 
-  - email notification templates 
-  - logo setup 
-  - application types 
-  - experimental features 
-  - access settings 
-  - two-factor authentication 
-  - access tokens 
-  - access restrictions 
-  - Sentry integration 
+title: "Configuring Encvoy ID — security, interface, and access"
+description: "Learn how to configure Encvoy ID: user access, interface, email templates, and monitoring via Sentry. Set up your system now!"
+keywords:
+  - Encvoy ID configuration
+  - Encvoy ID access setup
+  - localization
+  - interface language
+  - email notification templates
+  - logo setup
+  - application types
+  - experimental features
+  - access settings
+  - two-factor authentication
+  - access tokens
+  - access restrictions
+  - Sentry integration
   - event log
-author: "{{projectName}} Team"
+author: "Encvoy ID Team"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github]
@@ -25,11 +25,11 @@ menu_title: "System Configuration (Interface, Security, and Access)"
 order: 4
 ---
 
-# How to Configure {{projectName}}: Security, Interface, and Access
+# How to Configure Encvoy ID: Security, Interface, and Access
 
-In this guide, you will learn how to configure the **{{projectName}}** interface and localization, create application types, manage user access, enable two-factor authentication, and integrate the service with Sentry for event monitoring.
+In this guide, you will learn how to configure the **Encvoy ID** interface and localization, create application types, manage user access, enable two-factor authentication, and integrate the service with Sentry for event monitoring.
 
-This section is intended for administrators and security specialists who want to effectively manage **{{projectName}}** settings, including OAuth 2.0 and OpenID Connect.
+This section is intended for administrators and security specialists who want to effectively manage **Encvoy ID** settings, including OAuth 2.0 and OpenID Connect.
 
 **Table of Contents:**
 
@@ -49,25 +49,25 @@ This section is intended for administrators and security specialists who want to
 
 ### Configuring System Name and Logo { #system-name-and-logo }
 
-The name and logo are displayed in the **{{projectName}}** interface, as well as in the [mini-widget](./docs-09-common-mini-widget-settings.md) and the [login widget](./docs-06-github-en-providers-settings.md#login-widget-settings).
+The name and logo are displayed in the **Encvoy ID** interface, as well as in the [mini-widget](./docs-09-common-mini-widget-settings.md) and the [login widget](./docs-06-github-en-providers-settings.md#login-widget-settings).
 
 To configure the name and logo:
 
 1. Go to the admin panel → **Settings** tab.
 2. Expand the **Main Information** block.
 
-    <img src="./images/settings-main-info-01.webp" alt="Configuring {{projectName}} name and logo" style="max-width:600px; width:100%">
+<img src="./images/settings-main-info-01.webp" alt="Configuring Encvoy ID name and logo" style="max-width:600px; width:100%">
 
 3. Enter the new name in the **Application Name** field.
 4. In the **Application Logo** block, click **Upload** and select the logo file.
 
-    <img src="./images/settings-main-info-02.webp" alt="Logo upload interface in {{projectName}}" style="max-width:400px; width:100%">
+   <img src="./images/settings-main-info-02.webp" alt="Logo upload interface in Encvoy ID" style="max-width:400px; width:100%">
 
-    > ⚡ Supported formats: JPG, GIF, PNG, WEBP; maximum size 1 MB.
+   > ⚡ Supported formats: JPG, GIF, PNG, WEBP; maximum size 1 MB.
 
 5. Configure the display and click **Apply**.
 
-    <img src="./images/settings-main-info-03.webp" alt="Configuring logo display in {{projectName}}" style="max-width:400px; width:100%">
+<img src="./images/settings-main-info-03.webp" alt="Configuring logo display in Encvoy ID" style="max-width:400px; width:100%">
 
 6. Click **Save**.
 
@@ -75,7 +75,7 @@ To configure the name and logo:
 
 ### Localization Setup
 
-**{{projectName}}** supports the interface in **six languages**:
+**Encvoy ID** supports the interface in **six languages**:
 
 - Russian (ru)
 - English (en)
@@ -84,7 +84,7 @@ To configure the name and logo:
 - German (de)
 - Italian (it)
 
-The selected language affects the text display across all **{{projectName}}** interfaces, including the [login widget](./docs-06-github-en-providers-settings.md#login-widget-settings) and the [mini-widget](./docs-09-common-mini-widget-settings.md).
+The selected language affects the text display across all **Encvoy ID** interfaces, including the [login widget](./docs-06-github-en-providers-settings.md#login-widget-settings) and the [mini-widget](./docs-09-common-mini-widget-settings.md).
 
 If you use [additional user profile fields](./docs-05-box-userfields-settings.md#additional-profile-fields) and [email templates](./docs-04-box-system-settings.md#email-notification-templates) — ensure they are displayed correctly.
 
@@ -93,7 +93,7 @@ If you use [additional user profile fields](./docs-05-box-userfields-settings.md
 1. Go to the admin panel → **Settings** tab.
 2. Expand the **Localization** block and select the required language from the list.
 
-    <img src="./images/settings-localization-01.webp" alt="Configuring {{projectName}} widget appearance" style="max-width:600px; width:100%">
+<img src="./images/settings-localization-01.webp" alt="Configuring Encvoy ID widget appearance" style="max-width:600px; width:100%">
 
 3. Click **Save**.
 
@@ -107,7 +107,7 @@ The language change will occur automatically, without restarting the service or 
 
 #### What is Mustache?
 
-**Mustache** is a simple template engine for inserting data into text templates. In **{{projectName}}**, it is used for:
+**Mustache** is a simple template engine for inserting data into text templates. In **Encvoy ID**, it is used for:
 
 - Inserting user data (`{{user.name}}`),
 - Dynamic link generation (`{{confirmation_link}}`),
@@ -117,14 +117,14 @@ The language change will occur automatically, without restarting the service or 
 
 #### Available Email Types
 
-| Email Type | Event | Purpose |
-|------------|------------|------------|
-| Registration | `account_create` | Welcome email for a new user |
-| Confirmation Code | `confirmation_code` | Email with a verification code |
-| Confirmation Link | `confirmation_link` | Email with a verification link |
-| Password Change | `password_change` | Password change notification |
-| Password Recovery Request | `password_recover` | Email with a verification code |
-| Invitation | `invite` | Application invitation email |
+| Email Type                | Event               | Purpose                        |
+| ------------------------- | ------------------- | ------------------------------ |
+| Registration              | `account_create`    | Welcome email for a new user   |
+| Confirmation Code         | `confirmation_code` | Email with a verification code |
+| Confirmation Link         | `confirmation_link` | Email with a verification link |
+| Password Change           | `password_change`   | Password change notification   |
+| Password Recovery Request | `password_recover`  | Email with a verification code |
+| Invitation                | `invite`            | Application invitation email   |
 
 #### How to Configure a Template
 
@@ -132,17 +132,16 @@ The language change will occur automatically, without restarting the service or 
 2. Find the **Email Templates** block and click **Configure**.
 3. Select the required template and click **Configure**.
 
-    <img src="./images/settings-letters-templates-01.webp" alt="Selecting an email template for editing in {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/settings-letters-templates-01.webp" alt="Selecting an email template for editing in Encvoy ID" style="max-width:600px; width:100%">
 
 4. In the editing form, specify:
+   - **Template name**,
+   - **Email subject**,
+   - **Email content**.
 
-    - **Template name**,
-    - **Email subject**,
-    - **Email content**.
+   > 💡 Use HTML markup and variables in the `{{variable_name}}` format. Ensure that the variables used match the available [user profile fields](./docs-05-box-userfields-settings.md#basic-profile-fields) to avoid errors when sending the email.
 
-    > 💡 Use HTML markup and variables in the `{{variable_name}}` format. Ensure that the variables used match the available [user profile fields](./docs-05-box-userfields-settings.md#basic-profile-fields) to avoid errors when sending the email.
-
-    <img src="./images/settings-letters-templates-02.webp" alt="Editing HTML email template in {{projectName}}" style="max-width:600px; width:100%">
+   <img src="./images/settings-letters-templates-02.webp" alt="Editing HTML email template in Encvoy ID" style="max-width:600px; width:100%">
 
 5. Click **Save**.
 
@@ -161,14 +160,13 @@ Two-factor authentication (2FA) adds an extra layer of protection during login. 
 1. Go to the admin panel → **Settings** tab.
 2. Expand the **Access Settings** block and click **Configure**.
 
-    <img src="./images/settings-access-01.webp" alt="2FA configuration interface in {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/settings-access-01.webp" alt="2FA configuration interface in Encvoy ID" style="max-width:600px; width:100%">
 
 3. Specify the first and second factor providers:
+   - **First factor** provider — the primary authentication method (login/password or another authentication method).
+   - **Second factor** provider — the identity confirmation method (phone, email, WebAuthn).
 
-    - **First factor** provider — the primary authentication method (login/password or another authentication method).
-    - **Second factor** provider — the identity confirmation method (phone, email, WebAuthn).
-
-    <img src="./images/settings-access-02.webp" alt="Configuring 2FA factor combinations in {{projectName}}" style="max-width:600px; width:100%">
+   <img src="./images/settings-access-02.webp" alt="Configuring 2FA factor combinations in Encvoy ID" style="max-width:600px; width:100%">
 
 4. Click **Save**.
 
@@ -176,7 +174,7 @@ Two-factor authentication (2FA) adds an extra layer of protection during login. 
 
 Some user profile fields (e.g., phone, email, etc.) may be marked as required in the personal profile.
 
-By default, when authorizing in applications, **{{projectName}}** checks for the presence of all required fields and may suspend login until the user fills in the missing data. The **Ignore required profile fields for applications** setting allows you to disable this check.
+By default, when authorizing in applications, **Encvoy ID** checks for the presence of all required fields and may suspend login until the user fills in the missing data. The **Ignore required profile fields for applications** setting allows you to disable this check.
 
 This can be useful if the organization uses external user data sources and does not require manual profile completion.
 
@@ -230,9 +228,8 @@ To configure registration prohibition:
 1. Go to the admin panel → **Settings** tab.
 2. Expand the **Access Settings** block.
 3. Select the required setting:
-
-    - **Registration prohibited** — completely blocks the creation of new accounts.
-    - **Registration allowed** (default) — standard operation mode, users can create accounts independently.
+   - **Registration prohibited** — completely blocks the creation of new accounts.
+   - **Registration allowed** (default) — standard operation mode, users can create accounts independently.
 
 4. Click **Save**.
 
@@ -247,11 +244,10 @@ To change parameters in the admin panel:
 1. Go to the admin panel → **Settings** tab.
 2. Expand the **Application Parameters** block.
 3. Configure the parameters:
-
-    - [Access Restriction](#access-restrictions)
-    - [Authentication Time](#authentication-time)
-    - [Access Token](#access-token)
-    - [Refresh Token](#refresh-token)
+   - [Access Restriction](#access-restrictions)
+   - [Authentication Time](#authentication-time)
+   - [Access Token](#access-token)
+   - [Refresh Token](#refresh-token)
 
 4. Click **Save**.
 
@@ -259,92 +255,92 @@ To change parameters in the admin panel:
 
 #### Main Identifiers
 
-| Name | Parameter | Description |
-|----------|----------|----------|
-| **Identifier (client_id)** | `client_id` | Unique application identifier |
-| **Secret Key (client_secret)** | `client_secret` | Confidential application key |
-| **Application Address** | - | Base URL of the **{{projectName}}** service in the format `protocol://domain_name:port` |
+| Name                           | Parameter       | Description                                                                       |
+| ------------------------------ | --------------- | --------------------------------------------------------------------------------- |
+| **Identifier (client_id)**     | `client_id`     | Unique application identifier                                                     |
+| **Secret Key (client_secret)** | `client_secret` | Confidential application key                                                      |
+| **Application Address**        | -               | Base URL of the **Encvoy ID** service in the format `protocol://domain_name:port` |
 
 #### Access Restriction
 
 Restricts login to the personal profile only to users with administrative roles.
 
-| Name | Description |
-|-------|----------|
+| Name                  | Description                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Restricted Access** | If enabled, access to the personal profile will be allowed only to users with **Administrator** rights |
 
 #### Redirect URL
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name               | Parameter      | Description                                                              |
+| ------------------ | -------------- | ------------------------------------------------------------------------ |
 | **Redirect URI #** | `Redirect_uri` | URL to which the user will be redirected after successful authentication |
 
 #### Logout URL
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                           | Parameter                  | Description                                                                                             |
+| ------------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------- |
 | **Post-Logout Redirect URI #** | `post_logout_redirect_uri` | URL to which the service will redirect the user after logout. If not specified, `Redirect_uri` is used. |
 
 #### Authentication Request URL
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                         | Parameter      | Description                                                                                                                                       |
+| -------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Authentication Request or Recovery URL #** | `request_uris` | List of URLs for hosting JWT authorization requests (`Request Object`). The server retrieves the JWT from the specified URL during authorization. |
 
 #### Response Types
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                | Parameter        | Description                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Response Types (response_types)** | `response_types` | <p> Determines which tokens and codes are returned by the authorization server:</p> <p> - `code` — authorization code only <br>- `id_token` — ID token only <br> - `code id_token` — code + ID token <br> - `code token` — code + access token <br> - `code id_token token` — code + ID token + access token <br> - `none` — authentication confirmation only </p> |
 
 #### Grant Types
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                          | Parameter     | Description                                                                                                                                                                                                                                       |
+| ----------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Grant Types (grant_types)** | `grant_types` | <p> Methods for obtaining authorization: </p> - `authorization code` — secure code via the client server (recommended); <br> - `implicit` — direct token acquisition (for public clients) <br> - `refresh_token` — token renewal without re-login |
 
 #### Client Authentication Method
 
 > 💡 The choice of method depends on security requirements and client capabilities. JWT methods provide enhanced security as they do not transmit the secret directly.
 
-| Name | Parameter | Description |
-| ---- | ---- | ---- |
+| Name                      | Parameter                                                                                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Client Authentication** | `token_endpoint_auth_method`, `introspection_endpoint_auth_method`, `revocation_endpoint_auth_method` | <p> Determines the client authentication method when accessing various endpoints (`token`, `introspection`, `revocation`). </p> Available methods: <br> - `none` — no credentials;<br> - `client_secret_post` — credentials in the request body;<br> - `client_secret_basic` — HTTP Basic Authentication;<br> - `client_secret_jwt` — JWT signed with the client secret;<br> - `private_key_jwt` — JWT signed with the client's private key.</p> |
 
 #### ID Token Signing Algorithm
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                                              | Parameter                      | Description                                                                                                                                        |
+| ----------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Signing Algorithm for ID Token (id_token_signed_response_alg)** | `id_token_signed_response_alg` | <p> Specifies the algorithm used to sign the ID token. </p> `ID token` is a JSON Web Token (JWT) containing claims about the user's authentication |
 
 #### Authentication Time { #authentication-time }
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                                | Parameter           | Description                                                                                   |
+| --------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
 | **Require Authentication Time (require_auth_time)** | `require_auth_time` | If enabled, `auth_time` (the time of the user's last authentication) is added to the ID token |
 
 #### Additional Security Parameters
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                                                                              | Parameter                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Parameter for ensuring data transmission security between the client and the authorization server | `require_signed_request_object` | <p>Specifies whether a signed `Request Object` is required when sending an authorization request.</p> `Request Object` is a way to securely transmit authorization parameters from the client to the authorization server, usually in the form of a JWT (JSON Web Token).</p> <p>When `require_signed_request_object` is enabled, the client must sign the `Request Object` using a pre-agreed signing algorithm specified in the client configuration.</p> |
 
 #### User Identifier Transfer Type
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                                       | Parameter      | Description                                                                                                                                                                                    |
+| ---------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **User ID Transmission Method in ID Token (subject_type)** | `subject_type` | Determines how the `sub claim` is formed in the ID token: <p> - `public` — the same identifier for all clients <br> - `pairwise` — a unique identifier for each client, enhancing privacy </p> |
 
 #### Access Token { #access-token }
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                | Parameter          | Description                        |
+| ----------------------------------- | ------------------ | ---------------------------------- |
 | **Access Token (access_token_ttl)** | `access_token_ttl` | `access_token` lifetime in seconds |
 
 #### Refresh Token { #refresh-token }
 
-| Name | Parameter | Description |
-|-------|----------|----------|
+| Name                                  | Parameter           | Description                         |
+| ------------------------------------- | ------------------- | ----------------------------------- |
 | **Refresh Token (refresh_token_ttl)** | `refresh_token_ttl` | `refresh_token` lifetime in seconds |
 
 ### Connecting Sentry
@@ -367,7 +363,7 @@ Connecting **Sentry** allows you to:
 2. Register or log in to your account.
 3. Create a new project.
 
-After creating the project, **Sentry** will provide a **DSN (Data Source Name)** — a unique identifier for connecting **{{projectName}}** to **Sentry**.
+After creating the project, **Sentry** will provide a **DSN (Data Source Name)** — a unique identifier for connecting **Encvoy ID** to **Sentry**.
 
 > 💡 **Tip**: Copy the **DSN (Data Source Name)** so you don't lose it when moving to the next step.
 
@@ -378,12 +374,11 @@ To connect **Sentry**:
 1. Go to the admin panel → **Settings** tab.
 2. Find the **Sentry** block and click **Configure**.
 3. In the connection form, specify:
+   - **DSN** — the unique identifier created in **Step 1**.
+   - **Active** — enable to start sending errors and traces to **Sentry**.
+   - **User ID** (if necessary) — specify if you need to track errors and events by specific users.
 
-    - **DSN** — the unique identifier created in **Step 1**.
-    - **Active** — enable to start sending errors and traces to **Sentry**.
-    - **User ID** (if necessary) — specify if you need to track errors and events by specific users.
-
-      <img src="./images/settings-sentry-01.webp" alt="Configuring Sentry connection in {{projectName}}" style="max-width:600px; width:100%">
+     <img src="./images/settings-sentry-01.webp" alt="Configuring Sentry connection in Encvoy ID" style="max-width:600px; width:100%">
 
 4. Click **Save**.
 
@@ -393,14 +388,14 @@ In the **Log**, you can see where and from which devices users accessed the pers
 
 Detailed information is available for each event.
 
-| Parameter | Content |
-|----------|--------------|
-| **Event Header** | Action category |
-| **Date and Time** | Exact timestamps |
-| **Application** | Application identifier (`client_id`) |
-| **User** | User identifier (`id`) |
-| **Device** | Device type and browser |
-| **Location** | IP address |
+| Parameter         | Content                              |
+| ----------------- | ------------------------------------ |
+| **Event Header**  | Action category                      |
+| **Date and Time** | Exact timestamps                     |
+| **Application**   | Application identifier (`client_id`) |
+| **User**          | User identifier (`id`)               |
+| **Device**        | Device type and browser              |
+| **Location**      | IP address                           |
 
 #### How to Access the Log
 
@@ -426,15 +421,15 @@ Detailed information is available for each event.
 3. In the window that appears, click the **Create** button ![Create Button](./images/button-create.webp "Create Button").
 4. The creation form will open.
 
-    <img src="./images/settings-app-type-01.webp" alt="Application type creation interface in {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/settings-app-type-01.webp" alt="Application type creation interface in Encvoy ID" style="max-width:600px; width:100%">
 
 5. Specify the type name.
 
-    > 💡 The type name must be unique within the system.
+   > 💡 The type name must be unique within the system.
 
 6. Click **Save**.
 
-    The created type will appear in the list.
+   The created type will appear in the list.
 
 > 💡 Type assignment is performed when [creating an application](./docs-10-common-app-settings.md#creating-application).
 
@@ -444,7 +439,7 @@ Detailed information is available for each event.
 2. Find the **Application Types** block and click **Configure**.
 3. A window with the list of types will open.
 
-    <img src="./images/settings-app-type-02.webp" alt="Application type creation dialog in {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/settings-app-type-02.webp" alt="Application type creation dialog in Encvoy ID" style="max-width:600px; width:100%">
 
 4. Click the **Configure** button on the panel of the type you want to edit.
 5. The editing form will open.
@@ -468,7 +463,7 @@ Deletion occurs without additional confirmation.
 
 ## Experimental Features { #experimental-features }
 
-**Experimental features** are new capabilities of the **{{projectName}}** service that are in the testing and refinement stage.
+**Experimental features** are new capabilities of the **Encvoy ID** service that are in the testing and refinement stage.
 
 **Main characteristics:**
 
@@ -484,22 +479,20 @@ The experimental features section is available at: `https://ID_HOST/experimental
 #### Available Features
 
 1. **User Business Card**
+   - Digital analog of a business card with contact details
+   - vCard format support for export
+   - Ability to share via link or QR code
 
-    - Digital analog of a business card with contact details
-    - vCard format support for export
-    - Ability to share via link or QR code
-
-    [More about the business card →](./docs-12-common-personal-profile.md#digital-business-card)
+   [More about the business card →](./docs-12-common-personal-profile.md#digital-business-card)
 
 2. **Application Catalog**
+   - Centralized platform for **Encvoy ID** system applications
+   - Features a convenient category system
+   - Ability to add applications to favorites
 
-    - Centralized platform for **{{projectName}}** system applications
-    - Features a convenient category system
-    - Ability to add applications to favorites
+   [More about the catalog →](./docs-12-common-personal-profile.md#application-catalog)
 
-    [More about the catalog →](./docs-12-common-personal-profile.md#application-catalog)
-
-    <img src="./images/personal-profile-22.webp" alt="Catalog interface in {{projectName}}" style="max-width:400px; width:100%">
+   <img src="./images/personal-profile-22.webp" alt="Catalog interface in Encvoy ID" style="max-width:400px; width:100%">
 
 ---
 

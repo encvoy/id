@@ -1,6 +1,6 @@
 ---
-title: "{{projectName}} SSO-System für Unternehmensauthentifizierung"
-description: "{{projectName}} ist ein SSO-System für Unternehmen für Single Sign-On mit OAuth 2.0, OpenID Connect und 2FA. Erfahren Sie, wie Sie eine zentrale Authentifizierung implementieren."
+title: "Encvoy ID SSO-System für Unternehmensauthentifizierung"
+description: "Encvoy ID ist ein SSO-System für Unternehmen für Single Sign-On mit OAuth 2.0, OpenID Connect und 2FA. Erfahren Sie, wie Sie eine zentrale Authentifizierung implementieren."
 keywords:
   - SSO-System
   - SSO-System für Unternehmen
@@ -19,7 +19,7 @@ keywords:
   - OAuth-Autorisierung
   - SSO-Integration
   - vertrauenswürdige Provider
-author: "{{projectName}} Team"
+author: "Encvoy ID Team"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -28,19 +28,19 @@ menu_title: "Systemübersicht"
 order: 1
 ---
 
-# Übersicht über {{projectName}} — Single Sign-On (SSO) System
+# Übersicht über Encvoy ID — Single Sign-On (SSO) System
 
-**{{projectName}}** ist ein Single Sign-On (SSO) System für die zentrale Benutzerauthentifizierung und Zugriffsverwaltung für Unternehmensanwendungen.
+**Encvoy ID** ist ein Single Sign-On (SSO) System für die zentrale Benutzerauthentifizierung und Zugriffsverwaltung für Unternehmensanwendungen.
 
 Das System bietet eine sichere zentrale Authentifizierung mit Unterstützung für SSO, OAuth 2.0, OpenID Connect und Zwei-Faktor-Authentifizierung.
 
 ---
 
-## Anwendungsfälle für {{projectName}}
+## Anwendungsfälle für Encvoy ID
 
-**{{projectName}}** ist ein System zur Organisation der zentralen Benutzeranmeldung bei Informationsressourcen des Unternehmens unter Verwendung eines einzigen Kontos.
+**Encvoy ID** ist ein System zur Organisation der zentralen Benutzeranmeldung bei Informationsressourcen des Unternehmens unter Verwendung eines einzigen Kontos.
 
-**{{projectName}}** richtet sich an Unternehmen, die Folgendes benötigen:
+**Encvoy ID** richtet sich an Unternehmen, die Folgendes benötigen:
 
 - **Ein zentrales Anmeldefenster** für interne und externe Dienste
 - **Zentrale Zugriffsverwaltung** für verschiedene Benutzerkategorien (Mitarbeiter, Auftragnehmer, Kunden)
@@ -50,7 +50,7 @@ Das System bietet eine sichere zentrale Authentifizierung mit Unterstützung fü
 
 ---
 
-## Hauptmerkmale von {{projectName}}
+## Hauptmerkmale von Encvoy ID
 
 ### 1. Authentifizierung und Anmeldung
 
@@ -69,7 +69,7 @@ Das System bietet eine zentrale Authentifizierung und unterstützt mehrere Proto
 
 #### Zwei-Faktor-Authentifizierung (2FA / MFA)
 
-**{{projectName}}** unterstützt Multi-Faktor-Authentifizierung (MFA), bei der der Zugriff erst nach erfolgreicher Überprüfung der Benutzeridentität durch mehrere unabhängige Faktoren (Wissen, Besitz, Biometrie) gewährt wird.
+**Encvoy ID** unterstützt Multi-Faktor-Authentifizierung (MFA), bei der der Zugriff erst nach erfolgreicher Überprüfung der Benutzeridentität durch mehrere unabhängige Faktoren (Wissen, Besitz, Biometrie) gewährt wird.
 
 ### 2. Anwendungs- und Benutzerverwaltung
 
@@ -90,14 +90,14 @@ Eine leichtgewichtige JavaScript-Komponente, die schnellen Zugriff auf Authentif
 
 Das System bietet ein flexibles rollenbasiertes Zugriffsmodell:
 
-| Rolle                                                           | Berechtigungen                                                            | Vorgesehen für                            |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------- |
-| **Service Administrator**    | Voller Zugriff auf alle Anwendungen, Benutzer und globale Einstellungen   | Systemadministratoren, Superuser          |
-| **Manager**             | Verwaltung von Anwendungen und Anmeldemethoden für ihre Organisation/Einheit | Abteilungsleiter, Projektmanager          |
-| **Application Administrator** | Verwaltung spezifischer Anwendungen und ihrer Benutzer                    | Entwickler, Anwendungsadministratoren     |
-| **Mitglied**              | Verwaltung des eigenen Profils und der Zugriffsberechtigungen für Daten   | Reguläre Benutzer, Mitarbeiter            |
+| Rolle                         | Berechtigungen                                                               | Vorgesehen für                        |
+| ----------------------------- | ---------------------------------------------------------------------------- | ------------------------------------- |
+| **Service Administrator**     | Voller Zugriff auf alle Anwendungen, Benutzer und globale Einstellungen      | Systemadministratoren, Superuser      |
+| **Manager**                   | Verwaltung von Anwendungen und Anmeldemethoden für ihre Organisation/Einheit | Abteilungsleiter, Projektmanager      |
+| **Application Administrator** | Verwaltung spezifischer Anwendungen und ihrer Benutzer                       | Entwickler, Anwendungsadministratoren |
+| **Mitglied**                  | Verwaltung des eigenen Profils und der Zugriffsberechtigungen für Daten      | Reguläre Benutzer, Mitarbeiter        |
 
-### {{projectName}} Systemmodule
+### Encvoy ID Systemmodule
 
 #### 1. Profil
 
@@ -105,7 +105,7 @@ Das Modul "Profil" ermöglicht die Verwaltung persönlicher Benutzerdaten und Zu
 
 #### 2. Admin-Dashboard
 
-Das Modul "Admin-Dashboard" ist für die zentrale Verwaltung des **{{projectName}}**-Systems konzipiert. Es umfasst Funktionen zur Konfiguration globaler Systemparameter, Authentifizierungsmethoden und des Erscheinungsbilds der Anmeldeseite. In diesem Modul können Sie Anwendungen und Benutzerkonten verwalten sowie deren Aktivitäten über ein einheitliches Ereignisprotokoll überwachen.
+Das Modul "Admin-Dashboard" ist für die zentrale Verwaltung des **Encvoy ID**-Systems konzipiert. Es umfasst Funktionen zur Konfiguration globaler Systemparameter, Authentifizierungsmethoden und des Erscheinungsbilds der Anmeldeseite. In diesem Modul können Sie Anwendungen und Benutzerkonten verwalten sowie deren Aktivitäten über ein einheitliches Ereignisprotokoll überwachen.
 
 #### 3. Organisations-Dashboard
 
@@ -117,25 +117,25 @@ Das Modul "Anwendungs-Dashboard" ist für die Administration einzelner Anwendung
 
 ---
 
-## Konzept und Funktionsprinzipien von {{projectName}}
+## Konzept und Funktionsprinzipien von Encvoy ID
 
 ### Allgemeines Interaktionsschema
 
-<img src="./images/interaction-scheme.drawio.png" alt="Allgemeines Interaktionsschema von {{projectName}} mit Unternehmenssystemen" style="max-width:700px; width:100%">
+<img src="./images/interaction-scheme.drawio.png" alt="Allgemeines Interaktionsschema von Encvoy ID mit Unternehmenssystemen" style="max-width:700px; width:100%">
 
 **Interaktionssequenz:**
 
 1. **Zugriffsanfrage** — der Benutzer greift auf das Informationssystem (IS) zu.
 2. **Prüfung in IS-DB** — das System prüft, ob der Benutzer existiert.
-3. **Weiterleitung zum Widget** — der Benutzer wird zu **{{projectName}}** geleitet.
+3. **Weiterleitung zum Widget** — der Benutzer wird zu **Encvoy ID** geleitet.
 4. **Authentifizierung** — der Benutzer durchläuft den Anmeldevorgang.
-5. **Prüfung in {{projectName}}-DB** — Validierung der Anmeldedaten.
+5. **Prüfung in Encvoy ID-DB** — Validierung der Anmeldedaten.
 6. **Profilbereitstellung** — Rückgabe der Benutzerdaten.
-7. **Mapping im IS** — Suche nach dem Benutzer basierend auf den Daten von **{{projectName}}**.
+7. **Mapping im IS** — Suche nach dem Benutzer basierend auf den Daten von **Encvoy ID**.
 8. **Rechteprüfung** — Autorisierung im Zielsystem.
 9. **Zugriff gewährt** — erfolgreiche Anmeldung im System.
 
-> 📌 **Integrationsanforderungen:** Um ein Informationssystem an **{{projectName}}** anzubinden, sind eine Benutzerdatenbank und ein Autorisierungsmodul erforderlich, das OpenID Connect oder OAuth 2.0 unterstützt.
+> 📌 **Integrationsanforderungen:** Um ein Informationssystem an **Encvoy ID** anzubinden, sind eine Benutzerdatenbank und ein Autorisierungsmodul erforderlich, das OpenID Connect oder OAuth 2.0 unterstützt.
 
 ### OpenID Connect Autorisierungsschema
 
@@ -145,14 +145,14 @@ Das Modul "Anwendungs-Dashboard" ist für die Administration einzelner Anwendung
 
 1. Benutzer greift auf das IS zu.
 2. IS (Client) generiert `code_verifier` und `code_challenge`.
-3. IS leitet den Benutzer zu `/authorize` in **{{projectName}}** weiter.
-4. Benutzer wird zum **{{projectName}}** Autorisierungs-Widget weitergeleitet.
+3. IS leitet den Benutzer zu `/authorize` in **Encvoy ID** weiter.
+4. Benutzer wird zum **Encvoy ID** Autorisierungs-Widget weitergeleitet.
 5. Benutzer gibt Login/Passwort ein und stimmt der Datenübertragung zu.
-6. Benutzerüberprüfung erfolgt in der **{{projectName}}** DB.
+6. Benutzerüberprüfung erfolgt in der **Encvoy ID** DB.
 7. Benutzer wird mit einem `Authorization code` zurück zum IS (Client) geleitet.
-8. IS sendet eine Anfrage an `/token` in **{{projectName}}**.
-9. Verifizierung von `code_challenge` und `code_verifier` in **{{projectName}}**.
-10. Bereitstellung des `id token` mit dem **{{projectName}}** Benutzerprofil und des `access token` (optional `refresh token`) an das IS.
+8. IS sendet eine Anfrage an `/token` in **Encvoy ID**.
+9. Verifizierung von `code_challenge` und `code_verifier` in **Encvoy ID**.
+10. Bereitstellung des `id token` mit dem **Encvoy ID** Benutzerprofil und des `access token` (optional `refresh token`) an das IS.
 11. IS-Benutzerauthentifizierung.
 12. Benutzer erhält Zugriff auf das IS.
 
@@ -163,16 +163,16 @@ Das Modul "Anwendungs-Dashboard" ist für die Administration einzelner Anwendung
 **Besonderheiten des OAuth 2.0 Flows:**
 
 1. Benutzer greift auf das IS zu.
-2. IS leitet den Benutzer zu `/authorize` in **{{projectName}}** weiter.
-3. Benutzer wird zum **{{projectName}}** Autorisierungs-Widget weitergeleitet.
+2. IS leitet den Benutzer zu `/authorize` in **Encvoy ID** weiter.
+3. Benutzer wird zum **Encvoy ID** Autorisierungs-Widget weitergeleitet.
 4. Benutzer gibt Login/Passwort ein und stimmt der Datenübertragung zu.
-5. Benutzerüberprüfung erfolgt in der **{{projectName}}** DB.
-6. **{{projectName}}** leitet den Benutzer mit einem `Authorization code` an die `Redirect_URI` des IS zurück.
+5. Benutzerüberprüfung erfolgt in der **Encvoy ID** DB.
+6. **Encvoy ID** leitet den Benutzer mit einem `Authorization code` an die `Redirect_URI` des IS zurück.
 7. IS sendet eine Anfrage für einen `token` unter Verwendung des `Authorization code`.
-8. **{{projectName}}** validiert die Anfrage.
-9. **{{projectName}}** gibt `id token` und `access token` zurück (optional `refresh token`).
+8. **Encvoy ID** validiert die Anfrage.
+9. **Encvoy ID** gibt `id token` und `access token` zurück (optional `refresh token`).
 10. IS fordert das Benutzerprofil an.
-11. **{{projectName}}** stellt das Benutzerprofil bereit.
+11. **Encvoy ID** stellt das Benutzerprofil bereit.
 12. IS validiert die Antworten und erstellt eine lokale Benutzersitzung.
 13. Benutzer erhält Zugriff auf das IS.
 
@@ -183,10 +183,10 @@ Das Modul "Anwendungs-Dashboard" ist für die Administration einzelner Anwendung
 **Typisches Szenario:**
 
 1. Zugriffsanfrage an IS1.
-2. Benutzerauthentifizierung in **{{projectName}}**.
-3. Bereitstellung des **{{projectName}}** Benutzerprofils an IS1.
+2. Benutzerauthentifizierung in **Encvoy ID**.
+3. Bereitstellung des **Encvoy ID** Benutzerprofils an IS1.
 4. Zugriffsanfrage an IS2.
-5. Bereitstellung des **{{projectName}}** Benutzerprofils an IS2, ohne den Authentifizierungsvorgang zu wiederholen.
+5. Bereitstellung des **Encvoy ID** Benutzerprofils an IS2, ohne den Authentifizierungsvorgang zu wiederholen.
 
 > 🚀 **Bereit zum Start?** Fahren Sie mit der [Installationsanleitung](./docs-02-box-system-install.md) fort.
 
@@ -194,6 +194,6 @@ Das Modul "Anwendungs-Dashboard" ist für die Administration einzelner Anwendung
 
 ## Siehe auch
 
-- [Installation des {{projectName}} Systems](./docs-02-box-system-install.md) — eine Anleitung zur Installation des Systems.
-- [{{projectName}} Umgebungsvariablen](./docs-03-box-system-configuration.md) — eine Anleitung zur Vorbereitung der Konfiguration vor dem Start.
+- [Installation des Encvoy ID Systems](./docs-02-box-system-install.md) — eine Anleitung zur Installation des Systems.
+- [Encvoy ID Umgebungsvariablen](./docs-03-box-system-configuration.md) — eine Anleitung zur Vorbereitung der Konfiguration vor dem Start.
 - [Systemkonfiguration](./docs-04-box-system-settings.md) — eine Anleitung zur Konfiguration der Benutzeroberfläche und des Benutzerzugriffs auf das System.

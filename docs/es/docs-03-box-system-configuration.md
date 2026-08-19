@@ -1,23 +1,23 @@
 ---
-title: "Variables de entorno {{projectName}} — Referencia del administrador"
-description: "Aprenda a configurar correctamente las variables de entorno de {{projectName}} y garantice un funcionamiento seguro del sistema. Una guía paso a paso para administradores."
+title: "Variables de entorno Encvoy ID — Referencia del administrador"
+description: "Aprenda a configurar correctamente las variables de entorno de Encvoy ID y garantice un funcionamiento seguro del sistema. Una guía paso a paso para administradores."
 keywords:
-  - variables de entorno {{projectName}}
-  - configurar env {{projectName}}
+  - variables de entorno Encvoy ID
+  - configurar env Encvoy ID
   - variables env OIDC
   - variables de entorno OpenID Connect
   - configuración de entorno OAuth 2.0
   - docker-compose env
-  - configuración PostgreSQL {{projectName}}
-  - configuración SMTP {{projectName}}
-  - personalización de interfaz {{projectName}}
-  - CUSTOM_STYLES {{projectName}}
+  - configuración PostgreSQL Encvoy ID
+  - configuración SMTP Encvoy ID
+  - personalización de interfaz Encvoy ID
+  - CUSTOM_STYLES Encvoy ID
   - seguridad de variables de entorno
-  - administrador {{projectName}}
-  - configuración del servidor {{projectName}}
-  - guía de configuración {{projectName}}
-  - métricas Google {{projectName}}
-author: "Equipo de {{projectName}}"
+  - administrador Encvoy ID
+  - configuración del servidor Encvoy ID
+  - guía de configuración Encvoy ID
+  - métricas Google Encvoy ID
+author: "Equipo de Encvoy ID"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -26,13 +26,13 @@ menu_title: "Configuración de variables de entorno"
 order: 3
 ---
 
-# Cómo configurar las variables de entorno de {{projectName}}
+# Cómo configurar las variables de entorno de Encvoy ID
 
-En esta guía, aprenderá a configurar las variables de entorno para **{{projectName}}** en su servidor. Desglosaremos todos los parámetros en detalle — desde la base de datos y OIDC hasta la caché, el correo y la interfaz — para asegurar que su sistema funcione correctamente desde el primer lanzamiento.
+En esta guía, aprenderá a configurar las variables de entorno para **Encvoy ID** en su servidor. Desglosaremos todos los parámetros en detalle — desde la base de datos y OIDC hasta la caché, el correo y la interfaz — para asegurar que su sistema funcione correctamente desde el primer lanzamiento.
 
 **Tabla de contenidos:**
 
-- [Cómo configurar las variables de entorno de {{projectName}}](#cómo-configurar-las-variables-de-entorno-de-projectname)
+- [Cómo configurar las variables de entorno de Encvoy ID](#cómo-configurar-las-variables-de-entorno-de-projectname)
   - [Variables de entorno comunes { #common-environment-variables }](#variables-de-entorno-comunes--common-environment-variables-)
   - [Variables de entorno de la base de datos (PostgreSQL) { #database-environment-variables }](#variables-de-entorno-de-la-base-de-datos-postgresql--database-environment-variables-)
   - [Redis, Sesiones y Cookies OIDC { #redis-sessions-and-oidc-cookies }](#redis-sesiones-y-cookies-oidc--redis-sessions-and-oidc-cookies-)
@@ -62,7 +62,7 @@ Estas variables definen el comportamiento básico e identificación del servicio
 | `CLIENT_SECRET`             | Secreto único de la aplicación (se recomienda UUID)                  | —                           |
 | `MANUAL_URL`                | Enlace a la documentación para los usuarios                          | `https://your-domain/docs/` |
 
-> ⚠️ Las variables `CLIENT_ID` y `CLIENT_SECRET` se utilizan para identificar a **{{projectName}}** como un cliente OAuth 2.0 / OpenID Connect y deben mantenerse en secreto.
+> ⚠️ Las variables `CLIENT_ID` y `CLIENT_SECRET` se utilizan para identificar a **Encvoy ID** como un cliente OAuth 2.0 / OpenID Connect y deben mantenerse en secreto.
 
 ---
 
@@ -120,7 +120,7 @@ Ajustes del servidor SMTP para el envío de correos electrónicos (confirmación
 
 La apariencia de los botones, enlaces y pestañas se configura mediante un objeto JSON en la variable `CUSTOM_STYLES`.
 
-La variable `CUSTOM_STYLES` le permite personalizar la interfaz de **{{projectName}}** sin cambiar el código.
+La variable `CUSTOM_STYLES` le permite personalizar la interfaz de **Encvoy ID** sin cambiar el código.
 
 ```env
 # Vaya a la carpeta del proyecto
@@ -176,5 +176,5 @@ Descripción de la variable `CUSTOM_STYLES`:
 
 ## Ver también { #see-also }
 
-- [Instalación del sistema {{projectName}}](./docs-02-box-system-install.md) — guía para la instalación del sistema.
+- [Instalación del sistema Encvoy ID](./docs-02-box-system-install.md) — guía para la instalación del sistema.
 - [Configuración del sistema](./docs-04-box-system-settings.md) — guía para configurar la interfaz y el acceso de los usuarios al sistema.

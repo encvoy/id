@@ -1,6 +1,6 @@
 ---
-title: "TOTP-Login — Verbindung und Konfiguration in {{projectName}}"
-description: "Erfahren Sie, wie Sie den TOTP-Login in {{projectName}} aktivieren: Erstellen Sie eine Anmeldemethode, fügen Sie diese zum Autorisierungs-Widget hinzu und gewährleisten Sie einen sicheren Zugriff für Benutzer."
+title: "TOTP-Login — Verbindung und Konfiguration in Encvoy ID"
+description: "Erfahren Sie, wie Sie den TOTP-Login in Encvoy ID aktivieren: Erstellen Sie eine Anmeldemethode, fügen Sie diese zum Autorisierungs-Widget hinzu und gewährleisten Sie einen sicheren Zugriff für Benutzer."
 keywords:
   # Main actions
   - HOTP-Login
@@ -9,9 +9,9 @@ keywords:
   - HOTP-Verbindung
   - Anmeldung über HOTP
   - HOTP Zwei-Faktor-Authentifizierung
-  - HOTP {{projectName}}
-  - Anmeldung über HOTP {{projectName}}
-  - HOTP-Einrichtung in {{projectName}}
+  - HOTP Encvoy ID
+  - Anmeldung über HOTP Encvoy ID
+  - HOTP-Einrichtung in Encvoy ID
   - Unterschied zwischen HOTP und TOTP
   - HOTP
   - HMAC-basiertes Einmalpasswort
@@ -23,11 +23,11 @@ region: [ru, en]
 menu_title: "TOTP-Login"
 ---
 
-# So verbinden Sie den TOTP-Login in {{projectName}}
+# So verbinden Sie den TOTP-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Anmeldemethoden. Weitere Details finden Sie im Leitfaden [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
 
-In dieser Anleitung erfahren Sie, wie Sie die **TOTP**-Einmalpasswort-Authentifizierung mit dem **{{projectName}}**-System verbinden.
+In dieser Anleitung erfahren Sie, wie Sie die **TOTP**-Einmalpasswort-Authentifizierung mit dem **Encvoy ID**-System verbinden.
 
 Für wen diese Anleitung gedacht ist:
 
@@ -132,12 +132,12 @@ Die beliebtesten Optionen sind:
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie im Block **Identifikatoren** auf **Hinzufügen**.
 
-<img src="./images/personal-profile-12.webp" alt="Identifier block in {{projectName}} user profile" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Identifier block in Encvoy ID user profile" style="max-width:600px; width:100%">
 
 3. Wählen Sie im sich öffnenden Fenster die **TOTP**-Anmeldemethode aus.
 4. Scannen Sie den QR-Code mit Ihrer Authenticator-App.
 
-<img src="./images/instructions-provider-totp-02.webp" alt="Dialog for adding a TOTP identifier in {{projectName}} user profile" style="max-width:400px; width:100%">
+<img src="./images/instructions-provider-totp-02.webp" alt="Dialog for adding a TOTP identifier in Encvoy ID user profile" style="max-width:400px; width:100%">
 
 5. Geben Sie den Code aus der App ein und bestätigen Sie.
 
@@ -150,7 +150,7 @@ Die beliebtesten Optionen sind:
 3. Ein Formular zur Eingabe des Codes wird geöffnet.
 4. Geben Sie Ihren Login ein.
 
-<img src="./images/instructions-provider-totp-03.webp" alt="Example of login widget for TOTP identifier in {{projectName}}" style="max-width:300px; width:100%">
+<img src="./images/instructions-provider-totp-03.webp" alt="Example of login widget for TOTP identifier in Encvoy ID" style="max-width:300px; width:100%">
 
 5. Öffnen Sie, ohne die Seite zu schließen, die Authenticator-App auf Ihrem Telefon. Kopieren Sie den 6-stelligen Code und fügen Sie ihn in das Formular ein.
 
@@ -163,5 +163,5 @@ Die beliebtesten Optionen sind:
 ## Siehe auch
 
 - [Anmeldemethoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Anmeldemethoden und Widget-Einrichtung.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden für die Arbeit mit Organisationen im **{{projectName}}**-System.
+- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden für die Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

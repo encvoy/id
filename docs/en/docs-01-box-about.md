@@ -1,6 +1,6 @@
 ---
-title: "{{projectName}} SSO System for Corporate Authentication"
-description: "{{projectName}} is a corporate SSO system for single sign-on with OAuth 2.0, OpenID Connect, and 2FA. Learn how to implement centralized authentication."
+title: "Encvoy ID SSO System for Corporate Authentication"
+description: "Encvoy ID is a corporate SSO system for single sign-on with OAuth 2.0, OpenID Connect, and 2FA. Learn how to implement centralized authentication."
 keywords:
   - SSO system
   - corporate SSO system
@@ -19,7 +19,7 @@ keywords:
   - OAuth authorization
   - SSO integration
   - trusted providers
-author: "{{projectName}} Team"
+author: "Encvoy ID Team"
 date: 2025-12-11
 updated: 2025-12-22
 product: [box, github]
@@ -28,19 +28,19 @@ menu_title: "System Overview"
 order: 1
 ---
 
-# Overview of {{projectName}} — Single Sign-On (SSO) System
+# Overview of Encvoy ID — Single Sign-On (SSO) System
 
-**{{projectName}}** is a Single Sign-On (SSO) system for centralized user authentication and access management for corporate applications.
+**Encvoy ID** is a Single Sign-On (SSO) system for centralized user authentication and access management for corporate applications.
 
 The system provides secure centralized authentication with support for SSO, OAuth 2.0, OpenID Connect, and two-factor authentication.
 
 ---
 
-## Use Cases for {{projectName}}
+## Use Cases for Encvoy ID
 
-**{{projectName}}** is a system designed to organize centralized user login to corporate information resources using a single account.
+**Encvoy ID** is a system designed to organize centralized user login to corporate information resources using a single account.
 
-**{{projectName}}** is aimed at companies that require:
+**Encvoy ID** is aimed at companies that require:
 
 - **Single sign-on window** for internal and external services
 - **Centralized access management** for different categories of users (employees, contractors, clients)
@@ -50,7 +50,7 @@ The system provides secure centralized authentication with support for SSO, OAut
 
 ---
 
-## Key Features of {{projectName}}
+## Key Features of Encvoy ID
 
 ### 1. Authentication and Login
 
@@ -69,7 +69,7 @@ The system provides centralized authentication and support for multiple protocol
 
 #### Two-Factor Authentication (2FA / MFA)
 
-**{{projectName}}** supports multi-factor authentication (MFA), where access is granted only after successful verification of the user's identity by several independent factors (knowledge, possession, biometrics).
+**Encvoy ID** supports multi-factor authentication (MFA), where access is granted only after successful verification of the user's identity by several independent factors (knowledge, possession, biometrics).
 
 ### 2. Application and User Management
 
@@ -90,14 +90,14 @@ A lightweight JavaScript component that provides quick access to authentication 
 
 The system provides a flexible role-based access model:
 
-| Role                                                            | Permissions                                                                | Target Audience                           |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------- |
-| **Service Administrator**    | Full access to all applications, users, and global settings               | System administrators, superusers         |
-| **Manager**             | Management of applications and login methods for their organization/unit  | Department heads, project managers        |
-| **Application Administrator** | Management of specific applications and their users                       | Developers, application administrators    |
-| **Member**              | Management of their own profile and personal data access permissions      | Regular users, employees                  |
+| Role                          | Permissions                                                              | Target Audience                        |
+| ----------------------------- | ------------------------------------------------------------------------ | -------------------------------------- |
+| **Service Administrator**     | Full access to all applications, users, and global settings              | System administrators, superusers      |
+| **Manager**                   | Management of applications and login methods for their organization/unit | Department heads, project managers     |
+| **Application Administrator** | Management of specific applications and their users                      | Developers, application administrators |
+| **Member**                    | Management of their own profile and personal data access permissions     | Regular users, employees               |
 
-### {{projectName}} System Modules
+### Encvoy ID System Modules
 
 #### 1. Profile
 
@@ -105,7 +105,7 @@ The "Profile" module provides management of user personal data and access settin
 
 #### 2. Admin Dashboard
 
-The "Admin Dashboard" module is designed for centralized management of the **{{projectName}}** system. It includes functions for configuring global system parameters, authentication methods, and the login page appearance. In this module, you can manage applications and user accounts, as well as monitor their activity through a unified event log.
+The "Admin Dashboard" module is designed for centralized management of the **Encvoy ID** system. It includes functions for configuring global system parameters, authentication methods, and the login page appearance. In this module, you can manage applications and user accounts, as well as monitor their activity through a unified event log.
 
 #### 3. Organization Dashboard
 
@@ -117,25 +117,25 @@ The "Application Dashboard" module is intended for the administration of individ
 
 ---
 
-## Concept and Operating Principles of {{projectName}}
+## Concept and Operating Principles of Encvoy ID
 
 ### General Interaction Scheme
 
-<img src="./images/interaction-scheme.drawio.png" alt="General interaction scheme of {{projectName}} with corporate systems" style="max-width:700px; width:100%">
+<img src="./images/interaction-scheme.drawio.png" alt="General interaction scheme of Encvoy ID with corporate systems" style="max-width:700px; width:100%">
 
 **Interaction Sequence:**
 
 1. **Access Request** — the user accesses the information system (IS).
 2. **Check in IS DB** — the system checks for the user's existence.
-3. **Redirect to Widget** — the user is directed to **{{projectName}}**.
+3. **Redirect to Widget** — the user is directed to **Encvoy ID**.
 4. **Authentication** — the user undergoes the login procedure.
-5. **Check in {{projectName}} DB** — validation of credentials.
+5. **Check in Encvoy ID DB** — validation of credentials.
 6. **Profile Provision** — return of user data.
-7. **Mapping in IS** — searching for the user based on data from **{{projectName}}**.
+7. **Mapping in IS** — searching for the user based on data from **Encvoy ID**.
 8. **Rights Check** — authorization in the target system.
 9. **Access Granted** — successful login to the system.
 
-> 📌 **Integration Requirements:** To connect an information system to **{{projectName}}**, a user database and an authorization module supporting OpenID Connect or OAuth 2.0 are required.
+> 📌 **Integration Requirements:** To connect an information system to **Encvoy ID**, a user database and an authorization module supporting OpenID Connect or OAuth 2.0 are required.
 
 ### OpenID Connect Authorization Scheme
 
@@ -145,14 +145,14 @@ The "Application Dashboard" module is intended for the administration of individ
 
 1. User accesses the IS.
 2. IS (client) generates `code_verifier` and `code_challenge`.
-3. IS redirects the user to `/authorize` in **{{projectName}}**.
-4. User is redirected to the **{{projectName}}** authorization widget.
+3. IS redirects the user to `/authorize` in **Encvoy ID**.
+4. User is redirected to the **Encvoy ID** authorization widget.
 5. User enters login/password and provides consent for data transfer.
-6. User verification is performed in the **{{projectName}}** DB.
+6. User verification is performed in the **Encvoy ID** DB.
 7. User is redirected back to the IS (client) with an `Authorization code`.
-8. IS sends a request to `/token` in **{{projectName}}**.
-9. Verification of `code_challenge` and `code_verifier` in **{{projectName}}**.
-10. Provision of `id token` containing the **{{projectName}}** user profile and `access token` (optionally `refresh token`) to the IS.
+8. IS sends a request to `/token` in **Encvoy ID**.
+9. Verification of `code_challenge` and `code_verifier` in **Encvoy ID**.
+10. Provision of `id token` containing the **Encvoy ID** user profile and `access token` (optionally `refresh token`) to the IS.
 11. IS user authentication.
 12. User gains access to the IS.
 
@@ -163,16 +163,16 @@ The "Application Dashboard" module is intended for the administration of individ
 **OAuth 2.0 Flow Features:**
 
 1. User accesses the IS.
-2. IS redirects the user to `/authorize` in **{{projectName}}**.
-3. User is redirected to the **{{projectName}}** authorization widget.
+2. IS redirects the user to `/authorize` in **Encvoy ID**.
+3. User is redirected to the **Encvoy ID** authorization widget.
 4. User enters login/password and provides consent for data transfer.
-5. User verification is performed in the **{{projectName}}** DB.
-6. **{{projectName}}** redirects the user back to the IS with an `Authorization code` to the `Redirect_URI`.
+5. User verification is performed in the **Encvoy ID** DB.
+6. **Encvoy ID** redirects the user back to the IS with an `Authorization code` to the `Redirect_URI`.
 7. IS sends a request for a `token` using the `Authorization code`.
-8. **{{projectName}}** validates the request.
-9. **{{projectName}}** returns `id token` and `access token` (optionally `refresh token`).
+8. **Encvoy ID** validates the request.
+9. **Encvoy ID** returns `id token` and `access token` (optionally `refresh token`).
 10. IS requests the user profile.
-11. **{{projectName}}** provides the user profile.
+11. **Encvoy ID** provides the user profile.
 12. IS validates responses and establishes a local user session.
 13. User gains access to the IS.
 
@@ -183,10 +183,10 @@ The "Application Dashboard" module is intended for the administration of individ
 **Typical Scenario:**
 
 1. Access request to IS1.
-2. User authentication in **{{projectName}}**.
-3. Provision of **{{projectName}}** user profile to IS1.
+2. User authentication in **Encvoy ID**.
+3. Provision of **Encvoy ID** user profile to IS1.
 4. Access request to IS2.
-5. Provision of **{{projectName}}** user profile to IS2 without repeating the user authentication procedure.
+5. Provision of **Encvoy ID** user profile to IS2 without repeating the user authentication procedure.
 
 > 🚀 **Ready to start?** Proceed to the [system installation guide](./docs-02-box-system-install.md).
 
@@ -194,6 +194,6 @@ The "Application Dashboard" module is intended for the administration of individ
 
 ## See Also
 
-- [{{projectName}} System Installation](./docs-02-box-system-install.md) — a guide to installing the system.
-- [{{projectName}} Environment Variables](./docs-03-box-system-configuration.md) — a guide to preparing the configuration before launch.
+- [Encvoy ID System Installation](./docs-02-box-system-install.md) — a guide to installing the system.
+- [Encvoy ID Environment Variables](./docs-03-box-system-configuration.md) — a guide to preparing the configuration before launch.
 - [System Configuration](./docs-04-box-system-settings.md) — a guide to configuring the interface and user access to the system.

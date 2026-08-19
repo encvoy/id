@@ -1,6 +1,6 @@
 ---
-title: "Documentation {{projectName}}"
-description: "Documentation officielle pour travailler avec {{projectName}} : configuration du système, gestion de l'organisation, ajout de méthodes de connexion et applications."
+title: "Documentation Encvoy ID"
+description: "Documentation officielle pour travailler avec Encvoy ID : configuration du système, gestion de l'organisation, ajout de méthodes de connexion et applications."
 keywords:
   - SSO
   - authentification unique
@@ -9,12 +9,12 @@ keywords:
   - IAM
   - guide
   - documentation
-author: "Équipe {{projectName}}"
+author: "Équipe Encvoy ID"
 ---
 
-# Documentation {{projectName}}
+# Documentation Encvoy ID
 
-**{{projectName}}** est un système d'authentification unique (SSO) pour l'authentification centralisée des utilisateurs et la gestion des accès aux applications d'entreprise.
+**Encvoy ID** est un système d'authentification unique (SSO) pour l'authentification centralisée des utilisateurs et la gestion des accès aux applications d'entreprise.
 
 Vous trouverez ici tout ce dont vous avez besoin pour travailler avec succès avec le système.
 

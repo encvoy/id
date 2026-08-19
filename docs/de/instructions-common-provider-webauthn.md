@@ -1,15 +1,15 @@
 ---
-title: "WebAuthn-Login — Verbindung in {{projectName}}"
-description: "Erfahren Sie, wie Sie den WebAuthn-Login in {{projectName}} verbinden: Erstellen Sie eine Anmeldemethode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
-keywords: 
+title: "WebAuthn-Login — Verbindung in Encvoy ID"
+description: "Erfahren Sie, wie Sie den WebAuthn-Login in Encvoy ID verbinden: Erstellen Sie eine Anmeldemethode und fügen Sie diese zum Autorisierungs-Widget hinzu. Verbindung in nur wenigen Schritten."
+keywords:
   - WebAuthn login
   - WebAuthn Authentifizierung
   - WebAuthn Verbindung
   - WebAuthn Einrichtung
-  - WebAuthn {{projectName}}
-  - Login über WebAuthn {{projectName}}
-  - Konfiguration von WebAuthn in {{projectName}}
-author: "{{projectName}} Team"
+  - WebAuthn Encvoy ID
+  - Login über WebAuthn Encvoy ID
+  - Konfiguration von WebAuthn in Encvoy ID
+author: "Encvoy ID Team"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -17,11 +17,11 @@ region: [ru, en]
 menu_title: "Login via WebAuthn"
 ---
 
-# So verbinden Sie den WebAuthn-Login in {{projectName}}
+# So verbinden Sie den WebAuthn-Login in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Anmeldemethoden. Weitere Details finden Sie im Leitfaden [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
 
-In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit dem **{{projectName}}**-System verbinden.
+In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit dem **Encvoy ID**-System verbinden.
 
 **Inhaltsverzeichnis:**
 
@@ -47,20 +47,17 @@ In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit
 ### Wie WebAuthn funktioniert
 
 1. **Benutzerregistrierung:**
-
    - Der Benutzer erstellt einen Authentifizierungsschlüssel.
    - Das Gerät generiert ein Schlüsselpaar: Der öffentliche Schlüssel wird im System gespeichert, während der private Schlüssel ausschließlich beim Benutzer verbleibt.
 
 2. **Einleitung des Logins:**
-
-    - Der Benutzer wählt die **WebAuthn**-Anmeldemethode auf der Webressource aus.
-    - Der Server sendet eine Abfrage (`challenge`), um die Identität zu überprüfen.
+   - Der Benutzer wählt die **WebAuthn**-Anmeldemethode auf der Webressource aus.
+   - Der Server sendet eine Abfrage (`challenge`), um die Identität zu überprüfen.
 
 3. **Benutzerauthentifizierung:**
-
-    - Das Gerät oder der Token signiert die `challenge` mit dem privaten Schlüssel.
-    - Der Server verifiziert die Signatur mithilfe des gespeicherten öffentlichen Schlüssels.
-    - Wenn die Signatur gültig ist, wird dem Benutzer Zugriff gewährt.
+   - Das Gerät oder der Token signiert die `challenge` mit dem privaten Schlüssel.
+   - Der Server verifiziert die Signatur mithilfe des gespeicherten öffentlichen Schlüssels.
+   - Wenn die Signatur gültig ist, wird dem Benutzer Zugriff gewährt.
 
 4. **Aufbau eines sicheren Kanals:** Nach erfolgreicher Authentifizierung meldet sich der Benutzer im System an, ohne dass ein Passwort über das Netzwerk übertragen wird.
 
@@ -80,16 +77,14 @@ In dieser Anleitung erfahren Sie, wie Sie die **WebAuthn**-Authentifizierung mit
 5. Wählen Sie die **WebAuthn**-Vorlage aus.
 6. Füllen Sie das Erstellungsformular aus:
 
-    **Basisinformationen**
+   **Basisinformationen**
+   - **Name** — Der Name, den die Benutzer sehen werden.
+   - **Beschreibung** (optional) — Eine kurze Beschreibung.
+   - **Logo** (optional) — Sie können ein eigenes Icon hochladen, andernfalls wird das Standard-Icon verwendet.
 
-    - **Name** — Der Name, den die Benutzer sehen werden.
-    - **Beschreibung** (optional) — Eine kurze Beschreibung.
-    - **Logo** (optional) — Sie können ein eigenes Icon hochladen, andernfalls wird das Standard-Icon verwendet.
-
-    **Zusätzliche Einstellungen**
-
-    - **Öffentliche Anmeldemethode** — Aktivieren Sie dies, damit die Anmeldemethode zum Benutzerprofil als [Identifikator eines externen Dienstes](./docs-12-common-personal-profile.md#external-service-identifiers) hinzugefügt werden kann.
-    - **Öffentlichkeit** — Legen Sie die Standard-Sichtbarkeitsstufe für den Identifikator des externen Dienstes im Benutzerprofil fest.
+   **Zusätzliche Einstellungen**
+   - **Öffentliche Anmeldemethode** — Aktivieren Sie dies, damit die Anmeldemethode zum Benutzerprofil als [Identifikator eines externen Dienstes](./docs-12-common-personal-profile.md#external-service-identifiers) hinzugefügt werden kann.
+   - **Öffentlichkeit** — Legen Sie die Standard-Sichtbarkeitsstufe für den Identifikator des externen Dienstes im Benutzerprofil fest.
 
 7. Klicken Sie auf **Erstellen**.
 
@@ -117,16 +112,16 @@ Um den **WebAuthn**-Login zu nutzen, muss der Benutzer zuerst einen Schlüssel r
 Während des Prozesses zum Hinzufügen des Schlüssels wird ein einzigartiges kryptografisches Paar erstellt – **öffentliche** und **private Schlüssel**.
 
 - Der private Schlüssel wird sicher auf dem Gerät des Benutzers gespeichert und niemals über das Netzwerk übertragen.
-- Der öffentliche Schlüssel wird auf dem **{{projectName}}**-Server gespeichert und für die spätere Authentifizierungsprüfung beim Login verwendet.
+- Der öffentliche Schlüssel wird auf dem **Encvoy ID**-Server gespeichert und für die spätere Authentifizierungsprüfung beim Login verwendet.
 
-Nach der Registrierung des Schlüssels muss der Benutzer den **WebAuthn**-Identifikator zu seinem **{{projectName}}**-Profil hinzufügen.
+Nach der Registrierung des Schlüssels muss der Benutzer den **WebAuthn**-Identifikator zu seinem **Encvoy ID**-Profil hinzufügen.
 
 ### Schritt 2. Hinzufügen des Identifikators zum Profil
 
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Hinzufügen** im Block **Identifikatoren**.
 
-    <img src="./images/personal-profile-12.webp" alt="Block Identifikatoren im Benutzerprofil" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Block Identifikatoren im Benutzerprofil" style="max-width:600px; width:100%">
 
 3. Wählen Sie im sich öffnenden Fenster die **WebAuthn**-Anmeldemethode aus.
 4. Geben Sie im Systemdialog den zuvor registrierten Schlüssel an.
@@ -138,5 +133,5 @@ Nach der Registrierung des Schlüssels muss der Benutzer den **WebAuthn**-Identi
 ## Siehe auch { #see-also }
 
 - [Anmeldemethoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Anmeldemethoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **{{projectName}}**-System.
+- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von App-Berechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

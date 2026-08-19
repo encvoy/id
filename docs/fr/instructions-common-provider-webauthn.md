@@ -1,15 +1,15 @@
 ---
-title: "Connexion WebAuthn — Se connecter dans {{projectName}}"
-description: "Découvrez comment configurer la connexion WebAuthn dans {{projectName}} : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
-keywords: 
+title: "Connexion WebAuthn — Se connecter dans Encvoy ID"
+description: "Découvrez comment configurer la connexion WebAuthn dans Encvoy ID : créez une méthode de connexion et ajoutez-la au widget d'autorisation. Connectez-vous en quelques étapes seulement."
+keywords:
   - connexion WebAuthn
   - authentification WebAuthn
   - connexion WebAuthn
   - configuration WebAuthn
-  - WebAuthn {{projectName}}
-  - connexion via WebAuthn {{projectName}}
-  - configuration de WebAuthn dans {{projectName}}
-author: "Équipe {{projectName}}"
+  - WebAuthn Encvoy ID
+  - connexion via WebAuthn Encvoy ID
+  - configuration de WebAuthn dans Encvoy ID
+author: "Équipe Encvoy ID"
 date: 2025-12-12
 updated: 2025-12-22
 product: [box, github, service]
@@ -17,11 +17,11 @@ region: [ru, en]
 menu_title: "Connexion via WebAuthn"
 ---
 
-# Comment configurer la connexion WebAuthn dans {{projectName}}
+# Comment configurer la connexion WebAuthn dans Encvoy ID
 
 > 📋 Cette instruction fait partie d'une série d'articles sur la configuration des méthodes de connexion. Pour plus de détails, consultez le guide [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md).
 
-Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn** au système **{{projectName}}**.
+Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn** au système **Encvoy ID**.
 
 **Table des matières :**
 
@@ -47,20 +47,17 @@ Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn**
 ### Fonctionnement de WebAuthn
 
 1. **Enregistrement de l'utilisateur :**
-
    - L'utilisateur crée une clé d'authentification.
    - L'appareil génère une paire de clés : la clé publique est stockée dans le système, tandis que la clé privée reste uniquement chez l'utilisateur.
 
 2. **Initiation de la connexion :**
-
-    - L'utilisateur sélectionne la méthode de connexion **WebAuthn** sur la ressource web.
-    - Le serveur envoie un défi (`challenge`) pour vérifier l'identité.
+   - L'utilisateur sélectionne la méthode de connexion **WebAuthn** sur la ressource web.
+   - Le serveur envoie un défi (`challenge`) pour vérifier l'identité.
 
 3. **Authentification de l'utilisateur :**
-
-    - L'appareil ou le jeton signe le `challenge` avec la clé privée.
-    - Le serveur vérifie la signature à l'aide de la clé publique stockée.
-    - Si la signature est valide, l'accès est accordé à l'utilisateur.
+   - L'appareil ou le jeton signe le `challenge` avec la clé privée.
+   - Le serveur vérifie la signature à l'aide de la clé publique stockée.
+   - Si la signature est valide, l'accès est accordé à l'utilisateur.
 
 4. **Établissement d'un canal sécurisé :** Après une authentification réussie, l'utilisateur se connecte au système sans transmettre de mot de passe sur le réseau.
 
@@ -80,16 +77,14 @@ Dans ce guide, vous apprendrez comment connecter l'authentification **WebAuthn**
 5. Sélectionnez le modèle **WebAuthn**.
 6. Remplissez le formulaire de création :
 
-    **Informations de base**
+   **Informations de base**
+   - **Nom** — Le nom que les utilisateurs verront.
+   - **Description** (facultatif) — Une brève description.
+   - **Logo** (facultatif) — Vous pouvez télécharger votre propre icône, sinon celle par défaut sera utilisée.
 
-    - **Nom** — Le nom que les utilisateurs verront.
-    - **Description** (facultatif) — Une brève description.
-    - **Logo** (facultatif) — Vous pouvez télécharger votre propre icône, sinon celle par défaut sera utilisée.
-
-    **Paramètres supplémentaires**
-
-    - **Méthode de connexion publique** — Activez cette option pour que la méthode de connexion puisse être ajoutée au profil utilisateur en tant qu'[identifiant de service externe](./docs-12-common-personal-profile.md#external-service-identifiers).
-    - **Publicité** — Définissez le niveau de publicité par défaut pour l'identifiant de service externe dans le profil utilisateur.
+   **Paramètres supplémentaires**
+   - **Méthode de connexion publique** — Activez cette option pour que la méthode de connexion puisse être ajoutée au profil utilisateur en tant qu'[identifiant de service externe](./docs-12-common-personal-profile.md#external-service-identifiers).
+   - **Publicité** — Définissez le niveau de publicité par défaut pour l'identifiant de service externe dans le profil utilisateur.
 
 7. Cliquez sur **Créer**.
 
@@ -117,16 +112,16 @@ Pour utiliser la connexion **WebAuthn**, l'utilisateur doit d'abord enregistrer 
 Pendant le processus d'ajout de clé, une paire cryptographique unique est créée — **clés publique** et **privée**.
 
 - La clé privée est stockée de manière sécurisée sur l'appareil de l'utilisateur et n'est jamais transmise sur le réseau.
-- La clé publique est stockée sur le serveur **{{projectName}}** et est utilisée pour la vérification ultérieure de l'authentification lors de la connexion.
+- La clé publique est stockée sur le serveur **Encvoy ID** et est utilisée pour la vérification ultérieure de l'authentification lors de la connexion.
 
-Après avoir enregistré la clé, l'utilisateur doit ajouter l'identifiant **WebAuthn** à son profil **{{projectName}}**.
+Après avoir enregistré la clé, l'utilisateur doit ajouter l'identifiant **WebAuthn** à son profil **Encvoy ID**.
 
 ### Étape 2. Ajout de l'identifiant au profil
 
 1. Allez dans votre **Profil**.
 2. Cliquez sur **Ajouter** dans le bloc **Identifiants**.
 
-    <img src="./images/personal-profile-12.webp" alt="Bloc Identifiants dans le profil utilisateur" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Bloc Identifiants dans le profil utilisateur" style="max-width:600px; width:100%">
 
 3. Dans la fenêtre qui s'ouvre, sélectionnez la méthode de connexion **WebAuthn**.
 4. Dans la boîte de dialogue du système, spécifiez la clé précédemment enregistrée.
@@ -138,5 +133,5 @@ Après avoir enregistré la clé, l'utilisateur doit ajouter l'identifiant **Web
 ## Voir aussi { #see-also }
 
 - [Méthodes de connexion et configuration du widget](./docs-06-github-en-providers-settings.md) — un guide sur les méthodes de connexion et la configuration du widget de connexion.
-- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **{{projectName}}**.
+- [Gestion de l'organisation](./docs-09-common-mini-widget-settings.md) — un guide sur le travail avec les organisations dans le système **Encvoy ID**.
 - [Profil personnel et gestion des permissions d'application](./docs-12-common-personal-profile.md) — un guide pour gérer votre profil personnel.

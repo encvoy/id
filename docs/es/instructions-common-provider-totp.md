@@ -1,6 +1,6 @@
 ---
-title: "Inicio de sesión TOTP — Conexión y configuración en {{projectName}}"
-description: "Aprenda cómo habilitar el inicio de sesión TOTP en {{projectName}}: cree un método de inicio de sesión, añádalo al widget de autorización y garantice un acceso seguro para los usuarios."
+title: "Inicio de sesión TOTP — Conexión y configuración en Encvoy ID"
+description: "Aprenda cómo habilitar el inicio de sesión TOTP en Encvoy ID: cree un método de inicio de sesión, añádalo al widget de autorización y garantice un acceso seguro para los usuarios."
 keywords:
   # Main actions
   - inicio de sesión HOTP
@@ -9,9 +9,9 @@ keywords:
   - conexión HOTP
   - iniciar sesión mediante HOTP
   - autenticación de dos factores HOTP
-  - HOTP {{projectName}}
-  - iniciar sesión mediante HOTP {{projectName}}
-  - configuración de HOTP en {{projectName}}
+  - HOTP Encvoy ID
+  - iniciar sesión mediante HOTP Encvoy ID
+  - configuración de HOTP en Encvoy ID
   - diferencia entre HOTP y TOTP
   - HOTP
   - Contraseña de un solo uso basada en HMAC
@@ -23,11 +23,11 @@ region: [ru, en]
 menu_title: "Inicio de sesión TOTP"
 ---
 
-# Cómo conectar el inicio de sesión TOTP en {{projectName}}
+# Cómo conectar el inicio de sesión TOTP en Encvoy ID
 
 > 📋 Esta instrucción es parte de una serie de artículos sobre la configuración de métodos de inicio de sesión. Para más detalles, lea la guía de [Métodos de inicio de sesión y configuración del Widget](./docs-06-github-en-providers-settings.md).
 
-En esta guía, aprenderá cómo conectar la autenticación por contraseña de un solo uso **TOTP** al sistema **{{projectName}}**.
+En esta guía, aprenderá cómo conectar la autenticación por contraseña de un solo uso **TOTP** al sistema **Encvoy ID**.
 
 A quién va dirigida esta instrucción:
 
@@ -132,12 +132,12 @@ Las opciones más populares son:
 1. Vaya a su **Perfil**.
 2. Haga clic en **Agregar** en el bloque **Identificadores**.
 
-<img src="./images/personal-profile-12.webp" alt="Bloque de identificadores en el perfil de usuario de {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Bloque de identificadores en el perfil de usuario de Encvoy ID" style="max-width:600px; width:100%">
 
 3. En la ventana que se abre, seleccione el método de inicio de sesión **TOTP**.
 4. Escanee el código QR utilizando su aplicación de autenticación.
 
-<img src="./images/instructions-provider-totp-02.webp" alt="Diálogo para añadir un identificador TOTP en el perfil de usuario de {{projectName}}" style="max-width:400px; width:100%">
+<img src="./images/instructions-provider-totp-02.webp" alt="Diálogo para añadir un identificador TOTP en el perfil de usuario de Encvoy ID" style="max-width:400px; width:100%">
 
 5. Introduzca el código de la aplicación y confirme.
 
@@ -150,7 +150,7 @@ Las opciones más populares son:
 3. Se abrirá un formulario para introducir el código.
 4. Introduzca su nombre de usuario.
 
-<img src="./images/instructions-provider-totp-03.webp" alt="Ejemplo de widget de inicio de sesión para identificador TOTP en {{projectName}}" style="max-width:300px; width:100%">
+<img src="./images/instructions-provider-totp-03.webp" alt="Ejemplo de widget de inicio de sesión para identificador TOTP en Encvoy ID" style="max-width:300px; width:100%">
 
 5. Sin cerrar la página, abra la aplicación de autenticación en su teléfono. Copie el código de 6 dígitos y péguelo en el formulario.
 
@@ -163,5 +163,5 @@ Las opciones más populares son:
 ## Ver también
 
 - [Métodos de inicio de sesión y configuración del Widget de inicio de sesión](./docs-06-github-en-providers-settings.md) — una guía sobre métodos de inicio de sesión y configuración del widget.
-- [Gestión de la Organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **{{projectName}}**.
+- [Gestión de la Organización](./docs-09-common-mini-widget-settings.md) — una guía para trabajar con organizaciones en el sistema **Encvoy ID**.
 - [Perfil personal y gestión de permisos de aplicaciones](./docs-12-common-personal-profile.md) — una guía para gestionar su perfil personal.
