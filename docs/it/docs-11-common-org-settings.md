@@ -1,25 +1,6 @@
----
-title: "Organizzazione {{projectName}} — Gestione e Configurazione degli Accessi"
-description: "Scopri come configurare un'organizzazione in {{projectName}}: creazione, branding, gestione degli accessi, metodi di login e auditing delle attività degli utenti."
-keywords:
-  - {{projectName}} organization
-  - {{projectName}} organization dashboard
-  - organization settings
-  - organization login methods
-  - organization access management
-  - organization branding
-author: "Team {{projectName}}"
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Gestione della tua Organizzazione"
-order: 6
----
+# Gestione di un'Organizzazione in Encvoy ID
 
-# Gestione di un'Organizzazione in {{projectName}}
-
-In **{{projectName}}**, le organizzazioni fungono da unità strutturale primaria per la gestione dell'accesso alle applicazioni, la suddivisione dei dipendenti per dipartimenti e il mantenimento degli audit sulle attività degli utenti. In questa guida vedremo come creare organizzazioni e configurare i metodi di login.
+In **Encvoy ID**, le organizzazioni fungono da unità strutturale primaria per la gestione dell'accesso alle applicazioni, la suddivisione dei dipendenti per dipartimenti e il mantenimento degli audit sulle attività degli utenti. In questa guida vedremo come creare organizzazioni e configurare i metodi di login.
 
 **Sommario:**
 
@@ -31,9 +12,11 @@ In **{{projectName}}**, le organizzazioni fungono da unità strutturale primaria
 
 ---
 
-## Basi dell'Organizzazione { #organization-basics }
+<a name="organization-basics"></a>
 
-Un'organizzazione in **{{projectName}}** è un'unità strutturale che consente di:
+## Basi dell'Organizzazione
+
+Un'organizzazione in **Encvoy ID** è un'unità strutturale che consente di:
 
 - **Segregare l'accesso** alle applicazioni tra dipartimenti o progetti,
 - **Configurare metodi di login aziendali**,
@@ -45,7 +28,9 @@ Un'organizzazione in **{{projectName}}** è un'unità strutturale che consente d
 
 ---
 
-## Accesso alla Dashboard dell'Organizzazione { #organization-panel-access }
+<a name="organization-panel-access"></a>
+
+## Accesso alla Dashboard dell'Organizzazione
 
 La dashboard dell'organizzazione è progettata per gestire le impostazioni dell'organizzazione, le applicazioni e gli utenti.
 
@@ -55,26 +40,28 @@ Nella dashboard dell'organizzazione sono disponibili le seguenti sezioni:
 - **Applicazioni** — gestione delle applicazioni dell'organizzazione.
 - **Log** — cronologia delle attività degli utenti dell'organizzazione.
 
-### Come accedere alla dashboard dell'organizzazione {{projectName}}
+### Come accedere alla dashboard dell'organizzazione Encvoy ID
 
 > ⚠️ Per accedere alla dashboard dell'organizzazione, è necessario disporre dei permessi di **Gestore**. Contatta l'amministratore del servizio per ottenerli.
 
 Per aprire la dashboard dell'organizzazione:
 
-1. Accedi al tuo account personale **{{projectName}}**.
+1. Accedi al tuo account personale **Encvoy ID**.
 2. Clicca sul tuo nome nell'angolo in alto a destra della finestra.
 3. Nella finestra del mini-widget che si apre, clicca sul nome della tua organizzazione.
 
-    <img src="./images/org-settings-01.webp" alt="Selezione di un'organizzazione nel mini-widget {{projectName}}" style="max-width:300px; width:100%">
+<img src="./images/org-settings-01.webp" alt="Selezione di un'organizzazione nel mini-widget Encvoy ID" style="max-width:300px; width:100%">
 
 Verrai reindirizzato alla **Dashboard dell'Organizzazione**.
 
 > 💡 Aggiungi le applicazioni utilizzate di frequente al mini-widget utilizzando l'impostazione **Mostra nel mini-widget** per un accesso rapido. <br>
-> <img src="./images/org-settings-02.webp" alt="Configurazione della visualizzazione dell'applicazione nel mini-widget {{projectName}}" style="max-width:300px; width:100%">
+> <img src="./images/org-settings-02.webp" alt="Configurazione della visualizzazione dell'applicazione nel mini-widget Encvoy ID" style="max-width:300px; width:100%">
 
-## Configurazione del Nome e del Logo dell'Organizzazione { #organization-name-and-logo }
+<a name="organization-name-and-logo"></a>
 
-Il nome e il logo vengono visualizzati nell'interfaccia di sistema di **{{projectName}}** e nel mini-widget.
+## Configurazione del Nome e del Logo dell'Organizzazione
+
+Il nome e il logo vengono visualizzati nell'interfaccia di sistema di **Encvoy ID** e nel mini-widget.
 
 Per configurare il nome e il logo:
 
@@ -83,17 +70,19 @@ Per configurare il nome e il logo:
 3. Specifica il nuovo nome nel campo **Nome dell'applicazione**.
 4. Nella sezione **Logo dell'applicazione**, clicca su **Carica** e seleziona il file del logo.
 
-    > ⚡ Formati supportati: JPG, GIF, PNG, WEBP; dimensione massima 1 MB.
+   > ⚡ Formati supportati: JPG, GIF, PNG, WEBP; dimensione massima 1 MB.
 
 5. Regola l'area di visualizzazione del logo.
 
-    <img src="./images/settings-main-info-02.webp" alt="Configurazione delle informazioni di base dell'organizzazione in {{projectName}}" style="max-width:400px; width:100%">
+<img src="./images/settings-main-info-02.webp" alt="Configurazione delle informazioni di base dell'organizzazione in Encvoy ID" style="max-width:400px; width:100%">
 
 6. Clicca su **Salva**.
 
 ---
 
-## Metodi di Login dell'Organizzazione { #organization-login-methods }
+<a name="organization-login-methods"></a>
+
+## Metodi di Login dell'Organizzazione
 
 Un **metodo di login** è una modalità di autenticazione dell'utente che gli consente di accedere alle applicazioni.
 
@@ -101,18 +90,20 @@ Un'organizzazione può utilizzare sia metodi di login pubblici che metodi di log
 
 **È possibile:**
 
-- Utilizzare **metodi di login pubblici** configurati dall'amministratore di **{{projectName}}**
+- Utilizzare **metodi di login pubblici** configurati dall'amministratore di **Encvoy ID**
 - Aggiungere i **propri metodi di login** esclusivamente per la propria organizzazione
 - Configurare la **pubblicità** — determinare dove saranno disponibili i propri metodi di login
 - Rendere gli identificatori **obbligatori** per gli utenti
 
-> ⚠️ **Restrizioni:** Solo gli amministratori di **{{projectName}}** possono modificare i metodi di login pubblici.
+> ⚠️ **Restrizioni:** Solo gli amministratori di **Encvoy ID** possono modificare i metodi di login pubblici.
 
-> 🔍 Istruzioni dettagliate per la creazione, modifica ed eliminazione dei metodi di login sono fornite nella guida principale: [Configurazione dei Metodi di Login](./docs-06-github-en-providers-settings.md#managing-login-methods).  
+> 🔍 Istruzioni dettagliate per la creazione, modifica ed eliminazione dei metodi di login sono fornite nella guida principale: [Configurazione dei Metodi di Login](./docs-06-github-en-providers-settings.md#managing-login-methods).
 
 ---
 
-## Vedi Anche { #see-also }
+<a name="see-also"></a>
+
+## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget di Login](./docs-06-github-en-providers-settings.md) — una guida ai metodi di login e alla configurazione del widget di login.
 - [Gestione delle Applicazioni](./docs-10-common-app-settings.md) — una guida alla creazione, configurazione e gestione delle applicazioni OAuth 2.0 e OpenID Connect (OIDC).

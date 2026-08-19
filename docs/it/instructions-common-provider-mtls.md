@@ -1,40 +1,20 @@
----
-title: "Login mTLS — Connessione in {{projectName}}"
-description: "Scopri come abilitare il login mTLS in {{projectName}}: crea un metodo di login e aggiungilo al widget di autorizzazione. Connettiti in pochi passaggi."
-keywords: 
-  - login mTLS
-  - autenticazione mTLS
-  - connessione mTLS
-  - configurazione mTLS
-  - mTLS {{projectName}}
-  - login via mTLS {{projectName}}
-  - impostazione mTLS in {{projectName}}
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Login via mTLS"
----
-
-# Come connettere il login mTLS in {{projectName}}
+# Come connettere il login mTLS in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, consulta la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
 
-In questa guida imparerai come connettere l'autenticazione **mTLS** al sistema **{{projectName}}**.
+In questa guida imparerai come connettere l'autenticazione **mTLS** al sistema **Encvoy ID**.
 
 L'impostazione del login tramite **mTLS** si compone di diverse fasi chiave:
 
-1. Configurazione dell'autenticazione mTLS per gli amministratori di **{{projectName}}**
+1. Configurazione dell'autenticazione mTLS per gli amministratori di **Encvoy ID**
+   - [Passaggio 1. Configurare Nginx per mTLS](#step-1-configure-nginx-for-mtls)
+   - [Passaggio 2. Creare il Provider mTLS](#step-2-create-mtls-provider)
+   - [Passaggio 3. Aggiungere il Provider mTLS al Widget](#step-3-add-mtls-to-widget)
 
-    - [Passaggio 1. Configurare Nginx per mTLS](#step-1-configure-nginx-for-mtls)
-    - [Passaggio 2. Creare il Provider mTLS](#step-2-create-mtls-provider)
-    - [Passaggio 3. Aggiungere il Provider mTLS al Widget](#step-3-add-mtls-to-widget)
-
-2. Collegamento di un certificato client per gli utenti di **{{projectName}}**
-
-    - [Passaggio 1. Installare il Certificato Client nel Browser](#step-1-install-client-certificate)
-    - [Passaggio 2. Aggiungere l'Identificatore al Profilo](#step-2-add-identifier-to-profile)
-    - [Passaggio 3. Verificare](#step-3-verify)
+2. Collegamento di un certificato client per gli utenti di **Encvoy ID**
+   - [Passaggio 1. Installare il Certificato Client nel Browser](#step-1-install-client-certificate)
+   - [Passaggio 2. Aggiungere l'Identificatore al Profilo](#step-2-add-identifier-to-profile)
+   - [Passaggio 3. Verificare](#step-3-verify)
 
 ---
 
@@ -48,16 +28,14 @@ Questo metodo garantisce un elevato livello di fiducia e sicurezza, poiché l'ac
 
 ### Flusso di lavoro mTLS
 
-1. **Inizio Connessione:** Il client invia una richiesta al server **{{projectName}}**.
+1. **Inizio Connessione:** Il client invia una richiesta al server **Encvoy ID**.
 2. **Richiesta Certificato Client:** Il server richiede la fornitura di un certificato client.
 3. **Invio Certificato Client:** Il client fornisce il proprio certificato firmato da una CA fidata.
 4. **Verifica del Certificato sul Server:**
-
    - Il server verifica il certificato rispetto alla CA radice.
    - Controlla la data di scadenza, la firma e la conformità ai requisiti di sicurezza.
 
 5. **Autenticazione Utente:**
-
    - Se il certificato è valido, il server lo associa all'account utente e concede l'accesso.
    - Se il certificato è invalido o mancante, l'accesso viene negato.
 
@@ -65,73 +43,75 @@ Questo metodo garantisce un elevato livello di fiducia e sicurezza, poiché l'ac
 
 ---
 
-## Configurazione dell'autenticazione mTLS per gli amministratori di {{projectName}}
+## Configurazione dell'autenticazione mTLS per gli amministratori di Encvoy ID
 
 Affinché **mTLS** funzioni, è necessario:
 
 - configurare il server web **Nginx** per accettare solo richieste firmate da un certificato fidato;
-- creare e attivare il provider **mTLS** nell'interfaccia di **{{projectName}}**;
+- creare e attivare il provider **mTLS** nell'interfaccia di **Encvoy ID**;
 - installare i certificati client sui dispositivi degli utenti.
 
-### Passaggio 1. Configurare Nginx per mTLS { #step-1-configure-nginx-for-mtls }
+<a name="step-1-configure-nginx-for-mtls"></a>
 
-Prima di aggiungere il provider in **{{projectName}}**, è necessario preparare la configurazione di **Nginx**:
+### Passaggio 1. Configurare Nginx per mTLS
+
+Prima di aggiungere il provider in **Encvoy ID**, è necessario preparare la configurazione di **Nginx**:
 
 1. Apri il file di configurazione `nginx.local.conf`.
 2. Aggiungi un nuovo blocco `server`:
 
-    **Esempio di Configurazione**:
+   **Esempio di Configurazione**:
 
-    ```nginx
-    server {
-       server_name local.trusted.com;
-       listen 3443 ssl;
+   ```nginx
+   server {
+      server_name local.trusted.com;
+      listen 3443 ssl;
 
-       # Certificati del server
-       ssl_certificate         certs/local.trusted.com.pem;
-       ssl_certificate_key     certs/local.trusted.com-key.pem;
+      # Certificati del server
+      ssl_certificate         certs/local.trusted.com.pem;
+      ssl_certificate_key     certs/local.trusted.com-key.pem;
 
-       # Certificato Root CA per la verifica del certificato client
-       ssl_client_certificate  certs/ca-bundle.crt;
-       ssl_verify_client on;
-       ssl_verify_depth 3;
+      # Certificato Root CA per la verifica del certificato client
+      ssl_client_certificate  certs/ca-bundle.crt;
+      ssl_verify_client on;
+      ssl_verify_depth 3;
 
-       # Impostazioni di sessione e protocollo
-       ssl_session_timeout 10m;
-       ssl_session_cache shared:SSL:10m;
-       ssl_protocols TLSv1.2 TLSv1.3;
+      # Impostazioni di sessione e protocollo
+      ssl_session_timeout 10m;
+      ssl_session_cache shared:SSL:10m;
+      ssl_protocols TLSv1.2 TLSv1.3;
 
-       # Limitazione accesso al percorso principale, mTLS consentito solo per /api/mtls
-       location / {
-           return 404 "mTLS endpoints only. Use port 443 for regular access.";
-       }
+      # Limitazione accesso al percorso principale, mTLS consentito solo per /api/mtls
+      location / {
+          return 404 "mTLS endpoints only. Use port 443 for regular access.";
+      }
 
-       # Impostazioni proxy per il backend
-       location /api/mtls {
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
+      # Impostazioni proxy per il backend
+      location /api/mtls {
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
 
-           # Passaggio informazioni certificato client
-           proxy_set_header X-SSL-Client-Verify $ssl_client_verify;
-           proxy_set_header X-SSL-Client-DN $ssl_client_s_dn;
-           proxy_set_header X-SSL-Client-Serial $ssl_client_serial;
-           proxy_set_header X-SSL-Client-Fingerprint $ssl_client_fingerprint;
-           proxy_set_header X-SSL-Client-Issuer $ssl_client_i_dn;
+          # Passaggio informazioni certificato client
+          proxy_set_header X-SSL-Client-Verify $ssl_client_verify;
+          proxy_set_header X-SSL-Client-DN $ssl_client_s_dn;
+          proxy_set_header X-SSL-Client-Serial $ssl_client_serial;
+          proxy_set_header X-SSL-Client-Fingerprint $ssl_client_fingerprint;
+          proxy_set_header X-SSL-Client-Issuer $ssl_client_i_dn;
 
-           # Proxy verso il backend
-           proxy_pass http://backend;
-           proxy_redirect off;
-       }
-    }
-    ```
+          # Proxy verso il backend
+          proxy_pass http://backend;
+          proxy_redirect off;
+      }
+   }
+   ```
 
 3. Riavvia **Nginx** dopo aver apportato le modifiche.
 
 #### Descrizione dei Parametri
 
-| Parametro                          | Scopo                                                      |
+| Parametro                         | Scopo                                                        |
 | --------------------------------- | ------------------------------------------------------------ |
 | `ssl_certificate`                 | Certificato del server utilizzato per HTTPS.                 |
 | `ssl_certificate_key`             | Chiave privata del server.                                   |
@@ -145,7 +125,9 @@ Prima di aggiungere il provider in **{{projectName}}**, è necessario preparare 
 - Posiziona i certificati del server (`.pem` e chiave) e la CA radice (`ca-bundle.crt`) in una directory comoda, ad es. `certs/`.
 - Specifica il percorso dei certificati nella configurazione di **Nginx**.
 
-### Passaggio 2. Creare il Provider mTLS { #step-2-create-mtls-provider }
+<a name="step-2-create-mtls-provider"></a>
+
+### Passaggio 2. Creare il Provider mTLS
 
 1. Vai al Pannello di Amministrazione → scheda **Impostazioni**.
 
@@ -157,22 +139,22 @@ Prima di aggiungere il provider in **{{projectName}}**, è necessario preparare 
 5. Seleziona il modello **mTLS**.
 6. Compila il modulo di creazione:
 
-    **Informazioni di Base**
+   **Informazioni di Base**
+   - **Nome** — Il nome che gli utenti vedranno.
+   - **Descrizione** (opzionale) — Una breve descrizione.
+   - **Logo** (opzionale) — Puoi caricare la tua icona, altrimenti verrà utilizzata quella predefinita.
 
-    - **Nome** — Il nome che gli utenti vedranno.
-    - **Descrizione** (opzionale) — Una breve descrizione.
-    - **Logo** (opzionale) — Puoi caricare la tua icona, altrimenti verrà utilizzata quella predefinita.
-
-    **Impostazioni Aggiuntive**
-
-    - **Metodo di accesso pubblico** — Abilita questa opzione affinché il metodo di login possa essere aggiunto al profilo utente come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers).
-    - **Pubblicità** — Imposta il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente.
+   **Impostazioni Aggiuntive**
+   - **Metodo di accesso pubblico** — Abilita questa opzione affinché il metodo di login possa essere aggiunto al profilo utente come [identificatore di servizio esterno](./docs-12-common-personal-profile.md#external-service-identifiers).
+   - **Pubblicità** — Imposta il livello di pubblicità predefinito per l'identificatore del servizio esterno nel profilo utente.
 
 7. Clicca su **Crea**.
 
 Dopo la creazione riuscita, il nuovo metodo di login apparirà nell'elenco generale dei provider.
 
-### Passaggio 3. Aggiungere il Provider mTLS al Widget { #step-3-add-mtls-to-widget }
+<a name="step-3-add-mtls-to-widget"></a>
+
+### Passaggio 3. Aggiungere il Provider mTLS al Widget
 
 Affinché gli utenti vedano il pulsante **mTLS** nel modulo di autorizzazione, è necessario attivare questa funzione nelle impostazioni del widget:
 
@@ -183,11 +165,13 @@ Affinché gli utenti vedano il pulsante **mTLS** nel modulo di autorizzazione, �
 
 ---
 
-## Collegamento di un certificato client per gli utenti di {{projectName}}
+## Collegamento di un certificato client per gli utenti di Encvoy ID
 
 > 📌 Questa istruzione è destinata agli utenti che devono accedere al sistema tramite **mTLS**.
 
-### Passaggio 1. Installare il Certificato Client nel Browser { #step-1-install-client-certificate }
+<a name="step-1-install-client-certificate"></a>
+
+### Passaggio 1. Installare il Certificato Client nel Browser
 
 Prima dell'installazione, assicurati di avere un file di certificato in formato `.p12` o `.pfx`.
 
@@ -233,23 +217,26 @@ Dopo l'installazione riuscita, il certificato apparirà nell'elenco della scheda
 
 > 💡 Dopo aver installato il certificato, al momento del login via **mTLS**, il browser ti chiederà automaticamente di selezionare il certificato appropriato per l'autenticazione.
 
-### Passaggio 2. Aggiungere l'Identificatore al Profilo { #step-2-add-identifier-to-profile }
+<a name="step-2-add-identifier-to-profile"></a>
+
+### Passaggio 2. Aggiungere l'Identificatore al Profilo
 
 1. Vai al tuo **Profilo**.
 2. Clicca su **Aggiungi** nel blocco **Identificatori**.
 
-    <img src="./images/personal-profile-12.webp" alt="Blocco identificatori nel profilo utente" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Blocco identificatori nel profilo utente" style="max-width:600px; width:100%">
 
 3. Nella finestra che si apre, seleziona il metodo di login **mTLS**.
 4. Seleziona il certificato installato nel passaggio precedente.
 
 > 💡 **Suggerimento**: Se l'identificatore è già collegato a un altro utente, devi rimuoverlo dal profilo di quell'utente prima di collegarlo al nuovo account.
 
-### Passaggio 3. Verificare { #step-3-verify }
+<a name="step-3-verify"></a>
+
+### Passaggio 3. Verificare
 
 1. Vai alla pagina di login con il metodo di login **mTLS** abilitato.
 2. Seleziona l'icona del metodo di login **mTLS**.
-
    - **Primo login**: il sistema potrebbe chiederti di selezionare un certificato client.
    - **Login successivi**: l'autenticazione viene eseguita automaticamente utilizzando il certificato selezionato in precedenza.
 
@@ -258,5 +245,5 @@ Dopo l'installazione riuscita, il certificato apparirà nell'elenco della scheda
 ## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md) — guida sui metodi di login e sulla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — guida sul lavoro con le organizzazioni nel sistema **{{projectName}}**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — guida sul lavoro con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi App](./docs-12-common-personal-profile.md) — guida sulla gestione del proprio profilo personale.

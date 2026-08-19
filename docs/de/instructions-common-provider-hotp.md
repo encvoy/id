@@ -1,31 +1,8 @@
----
-title: "Login via HOTP — Verbindung und Konfiguration in {{projectName}}"
-description: "Erfahren Sie, wie Sie den HOTP-Login in {{projectName}} aktivieren: Erstellen Sie eine Login-Methode, fügen Sie diese zum Autorisierungs-Widget hinzu und gewährleisten Sie einen sicheren Zugriff für Benutzer."
-keywords:
-  - Login via HOTP
-  - HOTP Authentifizierung
-  - HOTP Konfiguration
-  - HOTP Verbindung
-  - HOTP Login
-  - HOTP Zwei-Faktor-Authentifizierung
-  - HOTP {{projectName}}
-  - Login via HOTP {{projectName}}
-  - HOTP Einrichtung in {{projectName}}
-  - HOTP
-  - HMAC-basierte Einmalpasswörter
-  - Einmalpasswort
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via HOTP"
----
-
-# So verbinden Sie den Login via HOTP in {{projectName}}
+# So verbinden Sie den Login via HOTP in Encvoy ID
 
 > 📋 Diese Anleitung ist Teil einer Artikelserie zur Konfiguration von Login-Methoden. Weitere Details finden Sie im Leitfaden [Login-Methoden und Widget-Konfiguration](./docs-06-github-en-providers-settings.md).
 
-In dieser Anleitung erfahren Sie, wie Sie die **HOTP**-Einmalpasswort-Authentifizierung mit dem **{{projectName}}**-System verbinden.
+In dieser Anleitung erfahren Sie, wie Sie die **HOTP**-Einmalpasswort-Authentifizierung mit dem **Encvoy ID**-System verbinden.
 
 Für wen diese Anleitung gedacht ist:
 
@@ -68,7 +45,9 @@ Der Hauptunterschied zwischen **HOTP** und **TOTP** besteht darin, dass die Code
 
 ---
 
-## Authentifizierungs-Setup für Administratoren { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentifizierungs-Setup für Administratoren
 
 ### Schritt 1. Erstellen einer Login-Methode
 
@@ -111,7 +90,9 @@ Damit die **HOTP**-Schaltfläche für Benutzer im Autorisierungsformular sichtba
 
 ---
 
-## HOTP-Bindung für Benutzer { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## HOTP-Bindung für Benutzer
 
 > 📌 Diese Anleitung ist für Benutzer gedacht, die sich via **HOTP** am System anmelden müssen.
 
@@ -128,7 +109,7 @@ Die beliebtesten Optionen sind:
 1. Gehen Sie zu Ihrem **Profil**.
 2. Klicken Sie auf **Hinzufügen** im Block **Identifikatoren**.
 
-<img src="./images/personal-profile-12.webp" alt="Identifier block in the {{projectName}} user profile" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Identifier block in the Encvoy ID user profile" style="max-width:600px; width:100%">
 
 3. Wählen Sie im sich öffnenden Fenster die **HOTP**-Login-Methode aus.
 
@@ -142,7 +123,7 @@ Die beliebtesten Optionen sind:
 1. Gehen Sie zur Login-Seite, auf der die **HOTP**-Login-Methode aktiviert ist.
 2. Wählen Sie das Icon der **HOTP**-Login-Methode aus.
 3. Ein Formular zur Code-Eingabe öffnet sich. Öffnen Sie die Authenticator-App auf Ihrem Telefon, ohne die Seite zu schließen.
-4. Suchen Sie den Dienst, der **{{projectName}}** (oder dem Anwendungsnamen) entspricht, und geben Sie Ihren Login sowie den 6-stelligen Code in das Feld im Login-Formular ein.
+4. Suchen Sie den Dienst, der **Encvoy ID** (oder dem Anwendungsnamen) entspricht, und geben Sie Ihren Login sowie den 6-stelligen Code in das Feld im Login-Formular ein.
 5. Klicken Sie auf die Schaltfläche **Bestätigen**.
 
 ---
@@ -150,5 +131,5 @@ Die beliebtesten Optionen sind:
 ## Siehe auch
 
 - [Login-Methoden und Konfiguration des Login-Widgets](./docs-06-github-en-providers-settings.md) — ein Leitfaden zu Login-Methoden und zur Konfiguration des Login-Widgets.
-- [Organisationsverwaltung](./docs-09-common-mini-widget-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **{{projectName}}**-System.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — ein Leitfaden zur Arbeit mit Organisationen im **Encvoy ID**-System.
 - [Persönliches Profil und Verwaltung von Anwendungsberechtigungen](./docs-12-common-personal-profile.md) — ein Leitfaden zur Verwaltung Ihres persönlichen Profils.

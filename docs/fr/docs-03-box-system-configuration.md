@@ -1,53 +1,27 @@
----
-title: "Variables d'environnement {{projectName}} — Référence Administrateur"
-description: "Apprenez à configurer correctement les variables d'environnement de {{projectName}} et à assurer le fonctionnement sécurisé du système. Un guide étape par étape pour les administrateurs."
-keywords:
-  - variables d'environnement {{projectName}}
-  - configurer env {{projectName}}
-  - variables env OIDC
-  - variables d'environnement OpenID Connect
-  - configuration environnement OAuth 2.0
-  - docker-compose env
-  - configuration PostgreSQL {{projectName}}
-  - configuration SMTP {{projectName}}
-  - personnalisation interface {{projectName}}
-  - CUSTOM_STYLES {{projectName}}
-  - sécurité des variables d'environnement
-  - administrateur {{projectName}}
-  - configuration serveur {{projectName}}
-  - guide de configuration {{projectName}}
-  - métriques Google {{projectName}}
-author: "Équipe {{projectName}}"
-date: 2025-12-11
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Configuration des variables d'environnement"
-order: 3
----
+# Comment configurer les variables d'environnement de Encvoy ID
 
-# Comment configurer les variables d'environnement de {{projectName}}
-
-Dans ce guide, vous apprendrez à configurer les variables d'environnement pour **{{projectName}}** sur votre serveur. Nous détaillerons tous les paramètres — de la base de données et l'OIDC au cache, au courrier électronique et à l'interface — pour garantir que votre système fonctionne correctement dès le premier lancement.
+Dans ce guide, vous apprendrez à configurer les variables d'environnement pour **Encvoy ID** sur votre serveur. Nous détaillerons tous les paramètres — de la base de données et l'OIDC au cache, au courrier électronique et à l'interface — pour garantir que votre système fonctionne correctement dès le premier lancement.
 
 **Table des matières :**
 
-- [Comment configurer les variables d'environnement de {{projectName}}](#comment-configurer-les-variables-denvironnement-de-projectname)
-  - [Variables d'environnement communes { #common-environment-variables }](#variables-denvironnement-communes--common-environment-variables-)
-  - [Variables d'environnement de la base de données (PostgreSQL) { #database-environment-variables }](#variables-denvironnement-de-la-base-de-données-postgresql--database-environment-variables-)
-  - [Redis, Sessions et Cookies OIDC { #redis-sessions-and-oidc-cookies }](#redis-sessions-et-cookies-oidc--redis-sessions-and-oidc-cookies-)
-  - [Limitation de débit et Journalisation { #rate-limiting-and-logging }](#limitation-de-débit-et-journalisation--rate-limiting-and-logging-)
-  - [Courrier et Notifications { #mail-and-notifications }](#courrier-et-notifications--mail-and-notifications-)
-  - [Personnalisation de l'interface { #interface-customization }](#personnalisation-de-linterface--interface-customization-)
-  - [Droits d'auteur { #copyright }](#droits-dauteur--copyright-)
-  - [Métriques { #metrics }](#métriques--metrics-)
-  - [Voir aussi { #see-also }](#voir-aussi--see-also-)
+- [Comment configurer les variables d'environnement de Encvoy ID](#comment-configurer-les-variables-denvironnement-de-encvoy-id)
+  - [Variables d'environnement communes](#common-environment-variables)
+  - [Variables d'environnement de la base de données (PostgreSQL)](#database-environment-variables)
+  - [Redis, Sessions et Cookies OIDC](#redis-sessions-and-oidc-cookies)
+  - [Limitation de débit et Journalisation](#rate-limiting-and-logging)
+  - [Courrier et Notifications](#mail-and-notifications)
+  - [Personnalisation de l'interface](#interface-customization)
+  - [Droits d'auteur](#copyright)
+  - [Métriques](#metrics)
+  - [Voir aussi](#see-also)
 
 > 💡 Pour modifier les variables d'environnement, vous devez apporter des modifications au fichier **docker-compose.yml**.
 
 ---
 
-## Variables d'environnement communes { #common-environment-variables }
+<a name="common-environment-variables"></a>
+
+## Variables d'environnement communes
 
 Ces variables définissent le comportement de base et l'identification du service.
 
@@ -62,11 +36,13 @@ Ces variables définissent le comportement de base et l'identification du servic
 | `CLIENT_SECRET`             | Secret unique de l'application (UUID recommandé)                           | —                             |
 | `MANUAL_URL`                | Lien vers la documentation pour les utilisateurs                           | `https://votre-domaine/docs/` |
 
-> ⚠️ Les variables `CLIENT_ID` et `CLIENT_SECRET` sont utilisées pour identifier **{{projectName}}** en tant que client OAuth 2.0 / OpenID Connect et doivent rester secrètes.
+> ⚠️ Les variables `CLIENT_ID` et `CLIENT_SECRET` sont utilisées pour identifier **Encvoy ID** en tant que client OAuth 2.0 / OpenID Connect et doivent rester secrètes.
 
 ---
 
-## Variables d'environnement de la base de données (PostgreSQL) { #database-environment-variables }
+<a name="database-environment-variables"></a>
+
+## Variables d'environnement de la base de données (PostgreSQL)
 
 Paramètres de connexion à la base de données PostgreSQL.
 
@@ -81,7 +57,9 @@ Paramètres de connexion à la base de données PostgreSQL.
 
 ---
 
-## Redis, Sessions et Cookies OIDC { #redis-sessions-and-oidc-cookies }
+<a name="redis-sessions-and-oidc-cookies"></a>
+
+## Redis, Sessions et Cookies OIDC
 
 Paramètres pour le stockage des sessions, la mise en cache des données et la sécurité de l'authentification.
 
@@ -94,7 +72,9 @@ Paramètres pour le stockage des sessions, la mise en cache des données et la s
 
 ---
 
-## Limitation de débit et Journalisation { #rate-limiting-and-logging }
+<a name="rate-limiting-and-logging"></a>
+
+## Limitation de débit et Journalisation
 
 Paramètres de protection contre les abus et contrôle de la journalisation.
 
@@ -106,7 +86,9 @@ Paramètres de protection contre les abus et contrôle de la journalisation.
 
 ---
 
-## Courrier et Notifications { #mail-and-notifications }
+<a name="mail-and-notifications"></a>
+
+## Courrier et Notifications
 
 Paramètres du serveur SMTP pour l'envoi d'e-mails (confirmation d'inscription, réinitialisation de mot de passe, etc.).
 
@@ -116,11 +98,13 @@ Paramètres du serveur SMTP pour l'envoi d'e-mails (confirmation d'inscription, 
 
 ---
 
-## Personnalisation de l'interface { #interface-customization }
+<a name="interface-customization"></a>
+
+## Personnalisation de l'interface
 
 L'apparence des boutons, des liens et des onglets est configurée via un objet JSON dans la variable `CUSTOM_STYLES`.
 
-La variable `CUSTOM_STYLES` vous permet de personnaliser l'interface de **{{projectName}}** sans modifier le code.
+La variable `CUSTOM_STYLES` vous permet de personnaliser l'interface de **Encvoy ID** sans modifier le code.
 
 ```env
 # Aller dans le dossier du projet
@@ -158,7 +142,9 @@ Description de la variable `CUSTOM_STYLES` :
 
 ---
 
-## Droits d'auteur { #copyright }
+<a name="copyright"></a>
+
+## Droits d'auteur
 
 | Variable    | Description                              | Valeur par défaut     | Exemple                                |
 | ----------- | ---------------------------------------- | --------------------- | -------------------------------------- |
@@ -166,7 +152,9 @@ Description de la variable `CUSTOM_STYLES` :
 
 ---
 
-## Métriques { #metrics }
+<a name="metrics"></a>
+
+## Métriques
 
 | Variable            | Description                            |
 | ------------------- | -------------------------------------- |
@@ -174,7 +162,9 @@ Description de la variable `CUSTOM_STYLES` :
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
 
-- [Installation du système {{projectName}}](./docs-02-box-system-install.md) — guide pour l'installation du système.
+## Voir aussi
+
+- [Installation du système Encvoy ID](./docs-02-box-system-install.md) — guide pour l'installation du système.
 - [Configuration du système](./docs-04-box-system-settings.md) — guide pour configurer l'interface et l'accès des utilisateurs au système.

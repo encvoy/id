@@ -1,33 +1,8 @@
----
-title: "TOTP Login — Connection and Configuration in {{projectName}}"
-description: "Learn how to enable TOTP login in {{projectName}}: create a login method, add it to the authorization widget, and ensure secure access for users."
-keywords:
-  # Main actions
-  - HOTP login
-  - HOTP authentication
-  - HOTP configuration
-  - HOTP connection
-  - login via HOTP
-  - HOTP two-factor authentication
-  - HOTP {{projectName}}
-  - login via HOTP {{projectName}}
-  - HOTP setup in {{projectName}}
-  - difference between HOTP and TOTP
-  - HOTP
-  - HMAC-based One-Time Password
-  - HMAC-based one-time password
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "TOTP Login"
----
-
-# How to Connect TOTP Login in {{projectName}}
+# How to Connect TOTP Login in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
 
-In this guide, you will learn how to connect **TOTP** (Time-based One-Time Password) authentication to the **{{projectName}}** system.
+In this guide, you will learn how to connect **TOTP** (Time-based One-Time Password) authentication to the **Encvoy ID** system.
 
 Who this instruction is for:
 
@@ -70,7 +45,9 @@ The main difference between **TOTP** and **HOTP** is that the password generatio
 
 ---
 
-## Authentication Setup for Administrators { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentication Setup for Administrators
 
 ### Step 1. Creating a Login Method
 
@@ -113,7 +90,9 @@ For users to see the **TOTP** button on the authorization form, you need to acti
 
 ---
 
-## TOTP Binding for Users { #totp-user-binding }
+<a name="totp-user-binding"></a>
+
+## TOTP Binding for Users
 
 > 📌 This instruction is intended for users who need to log in to the system via **TOTP**.
 
@@ -132,12 +111,12 @@ The most popular options are:
 1. Go to your **Profile**.
 2. Click **Add** in the **Identifiers** block.
 
-<img src="./images/personal-profile-12.webp" alt="Identifier block in {{projectName}} user profile" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Identifier block in Encvoy ID user profile" style="max-width:600px; width:100%">
 
 3. In the window that opens, select the **TOTP** login method.
 4. Scan the QR code using your authenticator app.
 
-<img src="./images/instructions-provider-totp-02.webp" alt="Dialog for adding a TOTP identifier in {{projectName}} user profile" style="max-width:400px; width:100%">
+<img src="./images/instructions-provider-totp-02.webp" alt="Dialog for adding a TOTP identifier in Encvoy ID user profile" style="max-width:400px; width:100%">
 
 5. Enter the code from the app and confirm.
 
@@ -150,7 +129,7 @@ The most popular options are:
 3. A form for entering the code will open.
 4. Enter your login.
 
-<img src="./images/instructions-provider-totp-03.webp" alt="Example of login widget for TOTP identifier in {{projectName}}" style="max-width:300px; width:100%">
+<img src="./images/instructions-provider-totp-03.webp" alt="Example of login widget for TOTP identifier in Encvoy ID" style="max-width:300px; width:100%">
 
 5. Without closing the page, open the authenticator app on your phone. Copy the 6-digit code and paste it into the form.
 
@@ -163,5 +142,5 @@ The most popular options are:
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and widget setup.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **{{projectName}}** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and App Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

@@ -1,26 +1,6 @@
----
-title: "Installation von {{projectName}} via Docker — SSO-Bereitstellung"
-description: "Installieren Sie {{projectName}} via Docker: Anforderungen, Konfiguration und erster Login. Schritt-für-Schritt-SSO-Bereitstellung für Administratoren und DevOps."
-keywords:
-  - {{projectName}} installieren
-  - Installation {{projectName}}
-  - SSO-System Bereitstellung
-  - {{projectName}} deployen
-  - Docker Installation {{projectName}}
-  - Docker Compose {{projectName}}
-  - Enterprise SSO-System
-author: "{{projectName}} Team"
-date: 2025-12-11
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Installation und erster Start"
-order: 2
----
+# So installieren Sie Encvoy ID
 
-# So installieren Sie {{projectName}}
-
-In dieser Anleitung erfahren Sie, wie Sie das **{{projectName}}** SSO-System via Docker auf Ihrem Server installieren. Wir führen Sie durch den gesamten Prozess — von der Vorbereitung der Umgebung bis zum ersten Login des Administrators.
+In dieser Anleitung erfahren Sie, wie Sie das **Encvoy ID** SSO-System via Docker auf Ihrem Server installieren. Wir führen Sie durch den gesamten Prozess — von der Vorbereitung der Umgebung bis zum ersten Login des Administrators.
 
 **Inhalt:**
 
@@ -32,31 +12,33 @@ In dieser Anleitung erfahren Sie, wie Sie das **{{projectName}}** SSO-System via
 
 ---
 
-## Installationsanforderungen { #installation-requirements }
+<a name="installation-requirements"></a>
+
+## Installationsanforderungen
 
 ### Systemanforderungen für den Server
 
-Stellen Sie vor der Installation des **{{projectName}}** Systems sicher, dass Ihre Infrastruktur die Anforderungen erfüllt.
+Stellen Sie vor der Installation des **Encvoy ID** Systems sicher, dass Ihre Infrastruktur die Anforderungen erfüllt.
 
 Die Systemanforderungen hängen von der geplanten Last ab. Eine Minimalkonfiguration reicht für Testumgebungen aus, während für Produktionsumgebungen die empfohlenen Parameter verwendet werden sollten.
 
 #### Minimale Konfiguration
 
-| Komponente                   | Anforderungen |
-| ---------------------------- | ------------- |
-| **RAM**                      | 4 GB          |
-| **Festplattenspeicher**      | 50 GB SSD     |
-| **Prozessor (CPU)**          | 2 Kerne x86_64|
-| **Netzwerkschnittstelle**    | 1 Gbps        |
+| Komponente                | Anforderungen  |
+| ------------------------- | -------------- |
+| **RAM**                   | 4 GB           |
+| **Festplattenspeicher**   | 50 GB SSD      |
+| **Prozessor (CPU)**       | 2 Kerne x86_64 |
+| **Netzwerkschnittstelle** | 1 Gbps         |
 
 #### Empfohlene Konfiguration
 
-| Komponente                   | Anforderungen     |
-| ---------------------------- | ----------------- |
-| **RAM**                      | 8 GB oder mehr    |
-| **Festplattenspeicher**      | 100 GB SSD/NVMe   |
-| **Prozessor (CPU)**          | 4+ Kerne x86_64   |
-| **Netzwerkschnittstelle**    | 1 Gbps und höher  |
+| Komponente                | Anforderungen    |
+| ------------------------- | ---------------- |
+| **RAM**                   | 8 GB oder mehr   |
+| **Festplattenspeicher**   | 100 GB SSD/NVMe  |
+| **Prozessor (CPU)**       | 4+ Kerne x86_64  |
+| **Netzwerkschnittstelle** | 1 Gbps und höher |
 
 > 💡 **Tipp:** Für hochlastige Systeme mit Tausenden von Benutzern wird empfohlen: <br>
 >
@@ -68,16 +50,16 @@ Die Systemanforderungen hängen von der geplanten Last ab. Eine Minimalkonfigura
 
 #### Software
 
-| Komponente | Unterstützte Versionen | Zusätzliche Informationen |
-| --- | --- | --- |
+| Komponente         | Unterstützte Versionen                                                                          | Zusätzliche Informationen                        |
+| ------------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | **Betriebssystem** | Ubuntu 18.04 LTS (Bionic Beaver), <br> Ubuntu 20.04 LTS (Focal Fossa),<br> Debian 11 (Bullseye) | Jede Linux-Distribution mit Docker-Unterstützung |
-| **Docker Engine**        | 19.03+   | -  |
-| **Docker Compose**       | 1.27+ | - |
-| **Nginx/Apache**         | Jede moderne Version  | -  |
+| **Docker Engine**  | 19.03+                                                                                          | -                                                |
+| **Docker Compose** | 1.27+                                                                                           | -                                                |
+| **Nginx/Apache**   | Jede moderne Version                                                                            | -                                                |
 
 #### Allgemeine Anforderungen
 
-Für eine erfolgreiche Installation und den korrekten Betrieb von **{{projectName}}** müssen mehrere Bedingungen erfüllt sein:
+Für eine erfolgreiche Installation und den korrekten Betrieb von **Encvoy ID** müssen mehrere Bedingungen erfüllt sein:
 
 - Ein Server mit einer statischen IP-Adresse.
 - Zugriff auf alle Workstations über den Port, der für den Zugriff auf das System verwendet wird.
@@ -86,9 +68,11 @@ Für eine erfolgreiche Installation und den korrekten Betrieb von **{{projectNam
 
 ---
 
-## Installation von Docker und Docker Compose { #install-docker-and-docker-compose }
+<a name="install-docker-and-docker-compose"></a>
 
-**{{projectName}}** wird als Satz von Docker-Containern bereitgestellt und kann als Enterprise OAuth 2.0 Authorization Server und OpenID Connect Provider (IdP) verwendet werden.
+## Installation von Docker und Docker Compose
+
+**Encvoy ID** wird als Satz von Docker-Containern bereitgestellt und kann als Enterprise OAuth 2.0 Authorization Server und OpenID Connect Provider (IdP) verwendet werden.
 
 > 📚 [Docker Dokumentation](https://docs.docker.com/engine/install/)
 
@@ -154,7 +138,9 @@ docker-compose --version
 
 ---
 
-## Installation des SSO-Systems { #install-sso-system }
+<a name="install-sso-system"></a>
+
+## Installation des SSO-Systems
 
 ### Schritt 1. Vorbereitung des Arbeitsverzeichnisses
 
@@ -185,12 +171,12 @@ ls -la
 
 **Heruntergeladene Dateien:**
 
-| Datei                   | Zweck                             |
-| ----------------------- | --------------------------------- |
-| **docker-compose.yaml** | Docker-Container-Konfiguration    |
-| **nginx.conf**          | Nginx Webserver-Einstellungen     |
-| **build.sh**            | Setup- und Build-Skript           |
-| **.env**                | Umgebungsvariablen und Einstellungen|
+| Datei                   | Zweck                                |
+| ----------------------- | ------------------------------------ |
+| **docker-compose.yaml** | Docker-Container-Konfiguration       |
+| **nginx.conf**          | Nginx Webserver-Einstellungen        |
+| **build.sh**            | Setup- und Build-Skript              |
+| **.env**                | Umgebungsvariablen und Einstellungen |
 
 ### Schritt 3. Berechtigungen setzen
 
@@ -204,7 +190,7 @@ chmod +x ./build.sh
 ls -l build.sh
 ```
 
-> ⚙️ Nach der Installation wird empfohlen, eine Basiskonfiguration durchzuführen. Eine detaillierte Beschreibung aller Parameter finden Sie im Abschnitt [{{projectName}} Umgebungsvariablen](./docs-03-box-system-configuration.md).
+> ⚙️ Nach der Installation wird empfohlen, eine Basiskonfiguration durchzuführen. Eine detaillierte Beschreibung aller Parameter finden Sie im Abschnitt [Encvoy ID Umgebungsvariablen](./docs-03-box-system-configuration.md).
 
 ### Schritt 4. Konfiguration der Einstellungen
 
@@ -245,17 +231,19 @@ docker compose up -d
 
 ### Nützliche Docker Compose Befehle
 
-| Befehl             | Beschreibung                          | Anwendungsbeispiel       |
-| ------------------ | ------------------------------------- | ------------------------ |
-| **Logs anzeigen**  | Logs in Echtzeit überwachen           | `docker compose logs -f` |
-| **Stoppen**        | Alle Container stoppen                | `docker compose stop`    |
-| **Starten**        | Gestoppte Container starten           | `docker compose start`   |
-| **Neustarten**     | Alle Container neu starten            | `docker compose restart` |
-| **Status**         | Container-Status anzeigen             | `docker compose ps`      |
+| Befehl            | Beschreibung                | Anwendungsbeispiel       |
+| ----------------- | --------------------------- | ------------------------ |
+| **Logs anzeigen** | Logs in Echtzeit überwachen | `docker compose logs -f` |
+| **Stoppen**       | Alle Container stoppen      | `docker compose stop`    |
+| **Starten**       | Gestoppte Container starten | `docker compose start`   |
+| **Neustarten**    | Alle Container neu starten  | `docker compose restart` |
+| **Status**        | Container-Status anzeigen   | `docker compose ps`      |
 
 ---
 
-## Erster Login { #first-login }
+<a name="first-login"></a>
+
+## Erster Login
 
 ### Standard-Administrator-Zugangsdaten
 
@@ -269,27 +257,31 @@ Nach der Installation wird ein Administratorkonto mit **Administrator**-Rechten 
 
 ### Erster Login
 
-Um auf die **{{projectName}}** Weboberfläche zuzugreifen, navigieren Sie zu: `https://ID_HOST`.
+Um auf die **Encvoy ID** Weboberfläche zuzugreifen, navigieren Sie zu: `https://ID_HOST`.
 
 1. Geben Sie im ersten Schritt des Login-Widgets den Login ein und klicken Sie auf **Anmelden**.
 2. Geben Sie im zweiten Schritt das Passwort ein und klicken Sie auf **Anmelden**.
 
 Nach der Autorisierung werden Sie zum [Profil](./docs-12-common-personal-profile.md) des Benutzers weitergeleitet.
 
-### Zugriff auf das Admin-Panel { #admin-panel-access }
+<a name="admin-panel-access"></a>
+
+### Zugriff auf das Admin-Panel
 
 Die Administrationseinstellungen befinden sich im Admin-Panel.
 
 So greifen Sie auf das Panel zu:
 
 1. Klicken Sie auf Ihren Namen in der oberen rechten Ecke des Fensters.
-2. Klicken Sie im sich öffnenden Mini-Widget auf den Dienstnamen **{{projectName}}**.
+2. Klicken Sie im sich öffnenden Mini-Widget auf den Dienstnamen **Encvoy ID**.
 3. Sie werden zum **Admin-Panel** weitergeleitet.
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
 
-- [{{projectName}} Systembeschreibung](./docs-01-box-about.md) — Übersicht über die Funktionen von **{{projectName}}**.
-- [{{projectName}} Umgebungsvariablen](./docs-03-box-system-configuration.md) — Leitfaden zur Vorbereitung der Konfiguration vor dem Start.
+## Siehe auch
+
+- [Encvoy ID Systembeschreibung](./docs-01-box-about.md) — Übersicht über die Funktionen von **Encvoy ID**.
+- [Encvoy ID Umgebungsvariablen](./docs-03-box-system-configuration.md) — Leitfaden zur Vorbereitung der Konfiguration vor dem Start.
 - [Systemkonfiguration](./docs-04-box-system-settings.md) — Leitfaden zur Konfiguration der Benutzeroberfläche und des Benutzerzugriffs auf das System.

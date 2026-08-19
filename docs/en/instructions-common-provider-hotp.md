@@ -1,31 +1,8 @@
----
-title: "Login via HOTP — Connection and Configuration in {{projectName}}"
-description: "Learn how to enable HOTP login in {{projectName}}: create a login method, add it to the authorization widget, and ensure secure access for users."
-keywords:
-  - login via HOTP
-  - HOTP authentication
-  - HOTP configuration
-  - HOTP connection
-  - HOTP login
-  - HOTP two-factor authentication
-  - HOTP {{projectName}}
-  - login via HOTP {{projectName}}
-  - HOTP setup in {{projectName}}
-  - HOTP
-  - HMAC-based One-Time Password
-  - one-time password
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login via HOTP"
----
-
-# How to Connect Login via HOTP in {{projectName}}
+# How to Connect Login via HOTP in Encvoy ID
 
 > 📋 This instruction is part of a series of articles on configuring login methods. For more details, read the [Login Methods and Widget Configuration](./docs-06-github-en-providers-settings.md) guide.
 
-In this guide, you will learn how to connect **HOTP** one-time password authentication to the **{{projectName}}** system.
+In this guide, you will learn how to connect **HOTP** one-time password authentication to the **Encvoy ID** system.
 
 Who this guide is for:
 
@@ -68,7 +45,9 @@ The main difference between **HOTP** and **TOTP** is that codes do not depend on
 
 ---
 
-## Authentication Setup for Administrators { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Authentication Setup for Administrators
 
 ### Step 1. Creating a Login Method
 
@@ -111,7 +90,9 @@ To make the **HOTP** button visible to users on the authorization form, you need
 
 ---
 
-## HOTP Binding for Users { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## HOTP Binding for Users
 
 > 📌 This instruction is intended for users who need to log in to the system via **HOTP**.
 
@@ -128,7 +109,7 @@ The most popular options are:
 1. Go to your **Profile**.
 2. Click **Add** in the **Identifiers** block.
 
-<img src="./images/personal-profile-12.webp" alt="Identifier block in the {{projectName}} user profile" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Identifier block in the Encvoy ID user profile" style="max-width:600px; width:100%">
 
 3. In the window that opens, select the **HOTP** login method.
 
@@ -142,7 +123,7 @@ The most popular options are:
 1. Go to the login page where the **HOTP** login method is enabled.
 2. Select the **HOTP** login method icon.
 3. A form for entering the code will open. Without closing the page, open the authenticator app on your phone.
-4. Find the service corresponding to **{{projectName}}** (or the application name) and enter your login and the 6-digit code in the field on the login form.
+4. Find the service corresponding to **Encvoy ID** (or the application name) and enter your login and the 6-digit code in the field on the login form.
 5. Click the **Confirm** button.
 
 ---
@@ -150,5 +131,5 @@ The most popular options are:
 ## See Also
 
 - [Login Methods and Login Widget Configuration](./docs-06-github-en-providers-settings.md) — a guide to login methods and configuring the login widget.
-- [Organization Management](./docs-09-common-mini-widget-settings.md) — a guide to working with organizations in the **{{projectName}}** system.
+- [Organization Management](./docs-11-common-org-settings.md) — a guide to working with organizations in the **Encvoy ID** system.
 - [Personal Profile and Application Permission Management](./docs-12-common-personal-profile.md) — a guide to managing your personal profile.

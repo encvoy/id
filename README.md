@@ -1,6 +1,6 @@
 # Encvoy ID
 
-**English** | **[Español](/locale/README-es.md)** | **[Italiano](/locale/README-it.md)** | **[Français](/locale/README-fr.md)** | **[Deutsch](/locale/README-de.md)**
+**English** | **[Español](./locale/README-es.md)** | **[Italiano](./locale/README-it.md)** | **[Français](./locale/README-fr.md)** | **[Deutsch](./locale/README-de.md)**
 
 ---
 

@@ -1,31 +1,8 @@
----
-title: "Accesso tramite HOTP — Connessione e Configurazione in {{projectName}}"
-description: "Scopri come abilitare l'accesso HOTP in {{projectName}}: crea un metodo di login, aggiungilo al widget di autorizzazione e garantisci un accesso sicuro per gli utenti."
-keywords:
-  - accesso tramite HOTP
-  - autenticazione HOTP
-  - configurazione HOTP
-  - connessione HOTP
-  - login HOTP
-  - autenticazione a due fattori HOTP
-  - HOTP {{projectName}}
-  - accesso via HOTP {{projectName}}
-  - impostazione HOTP in {{projectName}}
-  - HOTP
-  - HMAC-based One-Time Password
-  - password monouso
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Accesso tramite HOTP"
----
-
-# Come Connettere l'Accesso tramite HOTP in {{projectName}}
+# Come Connettere l'Accesso tramite HOTP in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di accesso. Per maggiori dettagli, leggi la guida [Metodi di Accesso e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
 
-In questa guida imparerai come connettere l'autenticazione con password monouso **HOTP** al sistema **{{projectName}}**.
+In questa guida imparerai come connettere l'autenticazione con password monouso **HOTP** al sistema **Encvoy ID**.
 
 A chi è rivolta questa guida:
 
@@ -68,7 +45,9 @@ La differenza principale tra **HOTP** e **TOTP** è che i codici non dipendono d
 
 ---
 
-## Configurazione dell'Autenticazione per gli Amministratori { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Configurazione dell'Autenticazione per gli Amministratori
 
 ### Passaggio 1. Creazione di un Metodo di Accesso
 
@@ -111,7 +90,9 @@ Per rendere visibile agli utenti il pulsante **HOTP** sul modulo di autorizzazio
 
 ---
 
-## Collegamento HOTP per gli Utenti { #hotp-user-binding }
+<a name="hotp-user-binding"></a>
+
+## Collegamento HOTP per gli Utenti
 
 > 📌 Questa istruzione è destinata agli utenti che devono accedere al sistema tramite **HOTP**.
 
@@ -128,7 +109,7 @@ Le opzioni più popolari sono:
 1. Vai al tuo **Profilo**.
 2. Clicca su **Aggiungi** nel blocco **Identificatori**.
 
-<img src="./images/personal-profile-12.webp" alt="Blocco identificatore nel profilo utente {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Blocco identificatore nel profilo utente Encvoy ID" style="max-width:600px; width:100%">
 
 3. Nella finestra che si apre, seleziona il metodo di accesso **HOTP**.
 
@@ -142,7 +123,7 @@ Le opzioni più popolari sono:
 1. Vai alla pagina di accesso dove è abilitato il metodo di accesso **HOTP**.
 2. Seleziona l'icona del metodo di accesso **HOTP**.
 3. Si aprirà un modulo per l'inserimento del codice. Senza chiudere la pagina, apri l'app di autenticazione sul tuo telefono.
-4. Trova il servizio corrispondente a **{{projectName}}** (o al nome dell'applicazione) e inserisci il tuo login e il codice a 6 cifre nel campo del modulo di accesso.
+4. Trova il servizio corrispondente a **Encvoy ID** (o al nome dell'applicazione) e inserisci il tuo login e il codice a 6 cifre nel campo del modulo di accesso.
 5. Clicca sul pulsante **Conferma**.
 
 ---
@@ -150,5 +131,5 @@ Le opzioni più popolari sono:
 ## Vedi Anche
 
 - [Metodi di Accesso e Configurazione del Widget di Accesso](./docs-06-github-en-providers-settings.md) — una guida ai metodi di accesso e alla configurazione del widget di login.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida al lavoro con le organizzazioni nel sistema **{{projectName}}**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida al lavoro con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle Applicazioni](./docs-12-common-personal-profile.md) — una guida alla gestione del tuo profilo personale.

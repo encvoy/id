@@ -1,33 +1,8 @@
----
-title: "Login TOTP — Connessione e Configurazione in {{projectName}}"
-description: "Scopri come abilitare il login TOTP in {{projectName}}: crea un metodo di accesso, aggiungilo al widget di autorizzazione e garantisci un accesso sicuro per gli utenti."
-keywords:
-  # Main actions
-  - login HOTP
-  - autenticazione HOTP
-  - configurazione HOTP
-  - connessione HOTP
-  - login tramite HOTP
-  - autenticazione a due fattori HOTP
-  - HOTP {{projectName}}
-  - login via HOTP {{projectName}}
-  - configurazione HOTP in {{projectName}}
-  - differenza tra HOTP e TOTP
-  - HOTP
-  - HMAC-based One-Time Password
-  - password monouso basata su HMAC
-date: 2025-12-12
-updated: 2025-12-22
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Login TOTP"
----
-
-# Come Connettere il Login TOTP in {{projectName}}
+# Come Connettere il Login TOTP in Encvoy ID
 
 > 📋 Questa istruzione fa parte di una serie di articoli sulla configurazione dei metodi di login. Per maggiori dettagli, leggi la guida [Metodi di Login e Configurazione del Widget](./docs-06-github-en-providers-settings.md).
 
-In questa guida imparerai come connettere l'autenticazione con password monouso **TOTP** al sistema **{{projectName}}**.
+In questa guida imparerai come connettere l'autenticazione con password monouso **TOTP** al sistema **Encvoy ID**.
 
 A chi è rivolta questa istruzione:
 
@@ -70,7 +45,9 @@ La differenza principale tra **TOTP** e **HOTP** è che la generazione della pas
 
 ---
 
-## Configurazione dell'Autenticazione per gli Amministratori { #admin-authentication-setup }
+<a name="admin-authentication-setup"></a>
+
+## Configurazione dell'Autenticazione per gli Amministratori
 
 ### Passaggio 1. Creazione di un Metodo di Login
 
@@ -113,7 +90,9 @@ Affinché gli utenti vedano il pulsante **TOTP** nel modulo di autorizzazione, �
 
 ---
 
-## Collegamento TOTP per gli Utenti { #totp-user-binding }
+<a name="totp-user-binding"></a>
+
+## Collegamento TOTP per gli Utenti
 
 > 📌 Questa istruzione è destinata agli utenti che devono accedere al sistema tramite **TOTP**.
 
@@ -132,12 +111,12 @@ Le opzioni più popolari sono:
 1. Vai al tuo **Profilo**.
 2. Clicca su **Aggiungi** nel blocco **Identificatori**.
 
-<img src="./images/personal-profile-12.webp" alt="Blocco identificatore nel profilo utente {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/personal-profile-12.webp" alt="Blocco identificatore nel profilo utente Encvoy ID" style="max-width:600px; width:100%">
 
 3. Nella finestra che si apre, seleziona il metodo di login **TOTP**.
 4. Scansiona il codice QR utilizzando la tua app di autenticazione.
 
-<img src="./images/instructions-provider-totp-02.webp" alt="Finestra di dialogo per l'aggiunta di un identificatore TOTP nel profilo utente {{projectName}}" style="max-width:400px; width:100%">
+<img src="./images/instructions-provider-totp-02.webp" alt="Finestra di dialogo per l'aggiunta di un identificatore TOTP nel profilo utente Encvoy ID" style="max-width:400px; width:100%">
 
 5. Inserisci il codice dall'app e conferma.
 
@@ -150,7 +129,7 @@ Le opzioni più popolari sono:
 3. Si aprirà un modulo per l'inserimento del codice.
 4. Inserisci il tuo login.
 
-<img src="./images/instructions-provider-totp-03.webp" alt="Esempio di widget di login per identificatore TOTP in {{projectName}}" style="max-width:300px; width:100%">
+<img src="./images/instructions-provider-totp-03.webp" alt="Esempio di widget di login per identificatore TOTP in Encvoy ID" style="max-width:300px; width:100%">
 
 5. Senza chiudere la pagina, apri l'app di autenticazione sul telefono. Copia il codice a 6 cifre e incollalo nel modulo.
 
@@ -163,5 +142,5 @@ Le opzioni più popolari sono:
 ## Vedi Anche
 
 - [Metodi di Login e Configurazione del Widget di Login](./docs-06-github-en-providers-settings.md) — una guida ai metodi di login e alla configurazione del widget.
-- [Gestione dell'Organizzazione](./docs-09-common-mini-widget-settings.md) — una guida per lavorare con le organizzazioni nel sistema **{{projectName}}**.
+- [Gestione dell'Organizzazione](./docs-11-common-org-settings.md) — una guida per lavorare con le organizzazioni nel sistema **Encvoy ID**.
 - [Profilo Personale e Gestione dei Permessi delle App](./docs-12-common-personal-profile.md) — una guida per gestire il tuo profilo personale.

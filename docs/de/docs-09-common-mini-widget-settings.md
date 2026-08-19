@@ -1,23 +1,6 @@
----
-title: "{{projectName}} Mini-widget — Einrichtung und Anpassung"
-description: "Erfahren Sie, wie Sie das {{projectName}} Mini-Widget verbinden und konfigurieren: Login-Buttons, Benutzerprofil und benutzerdefinierte Stile. Integrieren Sie die Lösung in Ihr Projekt."
-keywords: 
-  - {{projectName}} mini-widget 
-  - mini-widget integration 
-  - mini-widget customization 
-  - login button styling
-author: "{{projectName}} Team"
-date: 2025-12-12
-updated: 2025-12-12
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Mini-Widget Einrichtung"
-order: 10
----
+# So konfigurieren und verbinden Sie das Encvoy ID Mini-Widget
 
-# So konfigurieren und verbinden Sie das {{projectName}} Mini-Widget
-
-In dieser Anleitung erfahren Sie, wie Sie das **{{projectName}}** Mini-Widget auf Ihrer Webressource verbinden und konfigurieren. Sie lernen, wie Sie Authentifizierungsparameter, die Anzeige des Benutzerprofils, Login-Buttons und Menüs einrichten sowie das Erscheinungsbild des Widgets an das Design Ihres Projekts anpassen.
+In dieser Anleitung erfahren Sie, wie Sie das **Encvoy ID** Mini-Widget auf Ihrer Webressource verbinden und konfigurieren. Sie lernen, wie Sie Authentifizierungsparameter, die Anzeige des Benutzerprofils, Login-Buttons und Menüs einrichten sowie das Erscheinungsbild des Widgets an das Design Ihres Projekts anpassen.
 
 **Inhaltsverzeichnis:**
 
@@ -32,27 +15,31 @@ In dieser Anleitung erfahren Sie, wie Sie das **{{projectName}}** Mini-Widget au
 
 ---
 
-## Was ist ein Mini-Widget? { #what-is-mini-widget }
+<a name="what-is-mini-widget"></a>
+
+## Was ist ein Mini-Widget?
 
 Ein **Mini-Widget** ist ein Menü, das Benutzerdaten und wesentliche Funktionen enthält. Es bietet Zugriff auf das Profil, das Admin-Panel, Organisationen oder das Small Office sowie den System-Logout. Sie können hier auch eine Anwendung für den Schnellzugriff platzieren. Das Widget öffnet sich beim Klicken auf den Avatar des Benutzers in der oberen rechten Ecke des Bildschirms.
 
-Das Mini-Widget ist eine leichtgewichtige JavaScript-Komponente für die Benutzerauthentifizierung im **{{projectName}}** Service. Es arbeitet auf Basis der OIDC/OAuth2- und PKCE-Standards und kann in beliebige Websites oder Schnittstellen eingebettet werden — von einfachem HTML bis hin zu SPAs auf React- oder Vue-Basis.
+Das Mini-Widget ist eine leichtgewichtige JavaScript-Komponente für die Benutzerauthentifizierung im **Encvoy ID** Service. Es arbeitet auf Basis der OIDC/OAuth2- und PKCE-Standards und kann in beliebige Websites oder Schnittstellen eingebettet werden — von einfachem HTML bis hin zu SPAs auf React- oder Vue-Basis.
 
 > 💡 Um eine Anwendung zum Mini-Widget hinzuzufügen, aktivieren Sie den Schalter **Im Mini-Widget anzeigen** in den [Anwendungseinstellungen](./docs-10-common-app-settings.md).
 
-Widget-Beispiele:  
+Widget-Beispiele:
 
-<img src="./images/mini-widget-01.webp" alt="Beispiel für das Mini-Widget-Design in {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/mini-widget-01.webp" alt="Beispiel für das Mini-Widget-Design in Encvoy ID" style="max-width:600px; width:100%">
 
 ---
 
-## Widget-Konfiguration { #widget-configuration }
+<a name="widget-configuration"></a>
+
+## Widget-Konfiguration
 
 ### Erforderliche Parameter
 
 Für den Basisbetrieb des Widgets müssen drei Schlüsselparameter angegeben werden:
 
-| Parameter     | Typ      | Beschreibung                                     | Beispiel                         |
+| Parameter     | Typ      | Beschreibung                                     | Beispiel                        |
 | ------------- | -------- | ------------------------------------------------ | ------------------------------- |
 | `appId`       | `string` | Eindeutige Anwendungs-ID in Trusted              | `"MTnOOTdx85FgNbOFy2nUsH"`      |
 | `backendUrl`  | `string` | Ihre Backend-API-URL                             | `"http://localhost:3001"`       |
@@ -62,17 +49,17 @@ Für den Basisbetrieb des Widgets müssen drei Schlüsselparameter angegeben wer
 
 Für die erweiterte Konfiguration stehen optionale Parameter zur Verfügung:
 
-| Parameter             | Typ                   | Beschreibung                               | Standardwert                  |
-| --------------------- | --------------------- | ------------------------------------------ | ----------------------------- |
-| `issuer`              | `string`              | Trusted SSO Server-URL                     | `"https://id.kloud.one"`      |
-| `withOutHomePage`     | `boolean`             | Automatische Weiterleitung zur Anmeldung   | `false`                       |
-| `getTokenEndPoint`    | `string`              | Endpunkt zum Abrufen eines Tokens          | `"/api/oidc/token"`           |
-| `getUserInfoEndPoint` | `string`              | Endpunkt zum Abrufen von Benutzerdaten     | `"/api/oidc/me"`              |
-| `scopes`              | `string[]`            | OAuth2-Berechtigungen                      | `["openid", "lk", "profile"]` |
-| `profile`             | `IProfileConfig`      | Benutzerprofil-Einstellungen               | Siehe Abschnitt unten         |
-| `loginButton`         | `ICustomMenuButton`   | Login-Button-Einstellungen                 | Siehe Abschnitt unten         |
-| `menuButtons`         | `ICustomMenuButton[]` | Array mit zusätzlichen Buttons             | Siehe Abschnitt unten         |
-| `customStyles`        | `ICustomStyles`       | Globale Widget-Stile                       | Siehe Abschnitt unten         |
+| Parameter             | Typ                   | Beschreibung                             | Standardwert                  |
+| --------------------- | --------------------- | ---------------------------------------- | ----------------------------- |
+| `issuer`              | `string`              | Trusted SSO Server-URL                   | `"https://id.kloud.one"`      |
+| `withOutHomePage`     | `boolean`             | Automatische Weiterleitung zur Anmeldung | `false`                       |
+| `getTokenEndPoint`    | `string`              | Endpunkt zum Abrufen eines Tokens        | `"/api/oidc/token"`           |
+| `getUserInfoEndPoint` | `string`              | Endpunkt zum Abrufen von Benutzerdaten   | `"/api/oidc/me"`              |
+| `scopes`              | `string[]`            | OAuth2-Berechtigungen                    | `["openid", "lk", "profile"]` |
+| `profile`             | `IProfileConfig`      | Benutzerprofil-Einstellungen             | Siehe Abschnitt unten         |
+| `loginButton`         | `ICustomMenuButton`   | Login-Button-Einstellungen               | Siehe Abschnitt unten         |
+| `menuButtons`         | `ICustomMenuButton[]` | Array mit zusätzlichen Buttons           | Siehe Abschnitt unten         |
+| `customStyles`        | `ICustomStyles`       | Globale Widget-Stile                     | Siehe Abschnitt unten         |
 
 ### Beispiel für eine Basisverbindung
 
@@ -95,17 +82,19 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Einstellungen für die Profilanzeige { #profile-display-settings }
+<a name="profile-display-settings"></a>
+
+## Einstellungen für die Profilanzeige
 
 ### Profil-Konfigurationsparameter
 
 Das **Benutzerprofil** ist eine Komponente, die den Avatar und den Benutzernamen enthält.
 
-| Parameter    | Typ                | Beschreibung                                     | Standardwert      |
-| ------------ | ------------------ | ------------------------------------------------ | ----------------- |
-| `isHideText` | `boolean`          | Benutzernamen ausblenden                         | `false`           |
-| `wrapper`    | `IComponentStyles` | Stile für den Profil-Container (nur Farben)      | Siehe Stil-Abschnitt |
-| `button`     | `IComponentStyles` | Stile für den Avatar-Button (nur Farben)         | Siehe Stil-Abschnitt |
+| Parameter    | Typ                | Beschreibung                                | Standardwert         |
+| ------------ | ------------------ | ------------------------------------------- | -------------------- |
+| `isHideText` | `boolean`          | Benutzernamen ausblenden                    | `false`              |
+| `wrapper`    | `IComponentStyles` | Stile für den Profil-Container (nur Farben) | Siehe Stil-Abschnitt |
+| `button`     | `IComponentStyles` | Stile für den Avatar-Button (nur Farben)    | Siehe Stil-Abschnitt |
 
 > ⚠️ **Wichtig:** Für die Profileinstellungen (`profile.wrapper` und `profile.button`) können nur Farben (`color.text`, `color.background`, `color.hover`) geändert und der Benutzername ausgeblendet werden (`isHideText`). Andere Styling-Parameter (wie `borderRadius`, `padding`, `position`) werden nicht auf das Profil angewendet.
 
@@ -125,18 +114,20 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Einstellungen für den Login-Button { #login-button-settings }
+<a name="login-button-settings"></a>
+
+## Einstellungen für den Login-Button
 
 Der Login-Button wird für nicht autorisierte Benutzer angezeigt. Sie können Text, Icon und Stile anpassen.
 
 ### Login-Button-Parameter
 
-| Parameter      | Typ                            | Beschreibung                            | Standardwert      |
-| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
-| `text`         | `string`                       | Text des Login-Buttons                  | `"Login"`         |
-| `type`         | `string`                       | Button-Typ                              | `"login"`         |
-| `icon`         | `string \| React.ReactElement` | Bild-Link oder React-Element            | `null`            |
-| `customStyles` | `IComponentStyles`             | Individuelle Stile für den Button       | Siehe Stil-Abschnitt |
+| Parameter      | Typ                            | Beschreibung                      | Standardwert         |
+| -------------- | ------------------------------ | --------------------------------- | -------------------- |
+| `text`         | `string`                       | Text des Login-Buttons            | `"Login"`            |
+| `type`         | `string`                       | Button-Typ                        | `"login"`            |
+| `icon`         | `string \| React.ReactElement` | Bild-Link oder React-Element      | `null`               |
+| `customStyles` | `IComponentStyles`             | Individuelle Stile für den Button | Siehe Stil-Abschnitt |
 
 ### Konfigurationsbeispiel
 
@@ -172,21 +163,23 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Parameter für Menü-Buttons { #menu-button-parameters }
+<a name="menu-button-parameters"></a>
+
+## Parameter für Menü-Buttons
 
 ### Erforderliche Parameter
 
-| Parameter | Typ      | Beschreibung                    | Beispiel              |
-| --------- | -------- | ------------------------------- | -------------------- |
-| `text`    | `string` | Angezeigter Button-Name         | `"TestService"`      |
-| `link`    | `string` | URL der Zielseite               | `"https://test.com"` |
+| Parameter | Typ      | Beschreibung            | Beispiel             |
+| --------- | -------- | ----------------------- | -------------------- |
+| `text`    | `string` | Angezeigter Button-Name | `"TestService"`      |
+| `link`    | `string` | URL der Zielseite       | `"https://test.com"` |
 
 ### Optionale Parameter
 
-| Parameter      | Typ                            | Beschreibung                            | Standardwert      |
-| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
-| `icon`         | `string \| React.ReactElement` | Bild-Link oder React-Element            | `null`            |
-| `customStyles` | `IComponentStyles`             | Individuelle Stile für den Button       | Siehe Stil-Abschnitt |
+| Parameter      | Typ                            | Beschreibung                      | Standardwert         |
+| -------------- | ------------------------------ | --------------------------------- | -------------------- |
+| `icon`         | `string \| React.ReactElement` | Bild-Link oder React-Element      | `null`               |
+| `customStyles` | `IComponentStyles`             | Individuelle Stile für den Button | Siehe Stil-Abschnitt |
 
 ### Konfigurationsbeispiel
 
@@ -209,7 +202,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Styling des Mini-Widgets { #mini-widget-styling }
+<a name="mini-widget-styling"></a>
+
+## Styling des Mini-Widgets
 
 Das Widget unterstützt eine detaillierte Anpassung des Erscheinungsbilds über das `customStyles`-Objekt. Sie können Farben, Eckenradien, Abstände und die Ausrichtung für alle Elemente steuern.
 
@@ -233,30 +228,30 @@ customStyles: {
 
 #### Globale Stile
 
-| Parameter             | Typ                | Beschreibung                        | Beispiel |
-| --------------------- | ------------------ | ----------------------------------- | -------- |
-| `global.borderRadius` | `string`           | Eckenradius für alle Elemente       | `"12px"` |
-| `global.color`        | `IComponentStyles` | Globale Farben                      | Siehe unten|
+| Parameter             | Typ                | Beschreibung                  | Beispiel    |
+| --------------------- | ------------------ | ----------------------------- | ----------- |
+| `global.borderRadius` | `string`           | Eckenradius für alle Elemente | `"12px"`    |
+| `global.color`        | `IComponentStyles` | Globale Farben                | Siehe unten |
 
 #### Komponenten-Stile
 
-| Parameter                    | Typ                | Beschreibung                | Zweck                     |
-| ---------------------------- | ------------------ | --------------------------- | ------------------------- |
-| `components.primaryButton`   | `IComponentStyles` | Stil für primäre Buttons    | "Login", "Profil" Button  |
-| `components.secondaryButton` | `IComponentStyles` | Stil für sekundäre Buttons  | "Logout" Button           |
-| `components.accountButton`   | `IComponentStyles` | Stil für Account-Menü-Buttons| Buttons im Dropdown-Menü  |
+| Parameter                    | Typ                | Beschreibung                  | Zweck                    |
+| ---------------------------- | ------------------ | ----------------------------- | ------------------------ |
+| `components.primaryButton`   | `IComponentStyles` | Stil für primäre Buttons      | "Login", "Profil" Button |
+| `components.secondaryButton` | `IComponentStyles` | Stil für sekundäre Buttons    | "Logout" Button          |
+| `components.accountButton`   | `IComponentStyles` | Stil für Account-Menü-Buttons | Buttons im Dropdown-Menü |
 
 #### IComponentStyles Parameter für Komponenten-Stile
 
-| Parameter          | Typ                  | Beschreibung                   | Beispiel      |
-| ------------------ | -------------------- | ------------------------------ | ------------ |
-| `color.text`       | `string`             | Text- und Icon-Farbe (HEX)     | `"#ffffff"`  |
-| `color.background` | `string`             | Hintergrundfarbe (HEX)         | `"#1976d2"`  |
-| `color.hover`      | `string`             | Hover-Hintergrundfarbe (HEX)   | `"#1565c0"`  |
-| `borderRadius`     | `string`             | Eckenradius des Elements       | `"8px"`      |
-| `padding`          | `string`             | Innenabstand                   | `"8px 16px"` |
-| `position`         | `"left" \| "center"` | Inhaltsausrichtung im Button   | `"center"`   |
-| `isHideIcon`       | `boolean`            | Icon im Button ausblenden      | `false`      |
+| Parameter          | Typ                  | Beschreibung                 | Beispiel     |
+| ------------------ | -------------------- | ---------------------------- | ------------ |
+| `color.text`       | `string`             | Text- und Icon-Farbe (HEX)   | `"#ffffff"`  |
+| `color.background` | `string`             | Hintergrundfarbe (HEX)       | `"#1976d2"`  |
+| `color.hover`      | `string`             | Hover-Hintergrundfarbe (HEX) | `"#1565c0"`  |
+| `borderRadius`     | `string`             | Eckenradius des Elements     | `"8px"`      |
+| `padding`          | `string`             | Innenabstand                 | `"8px 16px"` |
+| `position`         | `"left" \| "center"` | Inhaltsausrichtung im Button | `"center"`   |
+| `isHideIcon`       | `boolean`            | Icon im Button ausblenden    | `false`      |
 
 #### Stil-Vererbung
 
@@ -360,7 +355,6 @@ const config: TrustedWidgetConfig = {
 };
 ```
 
-
 #### Beispiel für eine vollständige Konfiguration mit globalen Stilen und Menü
 
 ```typescript
@@ -408,7 +402,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Individuelles Styling von Menü-Buttons { #individual-menu-button-styling }
+<a name="individual-menu-button-styling"></a>
+
+## Individuelles Styling von Menü-Buttons
 
 Für jeden Button in `menuButtons` können Sie individuelle Stile über die Eigenschaft `customStyles` vom Typ `IComponentStyles` festlegen.
 
@@ -499,23 +495,25 @@ const config: TrustedWidgetConfig = {
 
 ### Prinzipien des Mini-Widget-Stylings
 
-| Prinzip | Bedeutung | Anwendung |
-| :--- | :--- | :--- |
-| **Zentralisierte Verwaltung** | Alle Erscheinungsbild-Einstellungen werden über drei Hauptkonfigurationsobjekte definiert. | Konfigurieren Sie das allgemeine Aussehen in `customStyles`, das Profil in `profile` und den Login-Button in `loginButton`. |
-| **Flexible Profil-Einrichtung** | Das Aussehen des Blocks mit Name und Avatar des autorisierten Benutzers wird separat konfiguriert. | Verwenden Sie `profile.wrapper` für den Hintergrund und `profile.button` für den Avatar-Button. Beachten Sie, dass hier nur Farbeinstellungen funktionieren. |
-| **Login-Button-Einrichtung** | Stile für den Button, den nicht autorisierte Benutzer sehen, werden unabhängig konfiguriert. | Definieren Sie Text, Icon und Stile im `loginButton`-Objekt und dessen `customStyles`-Eigenschaft. |
-| **Farbstruktur** | Das Farbschema für jedes Element wird einheitlich beschrieben. | Verwenden Sie immer ein verschachteltes `color`-Objekt mit den Feldern `text`, `background` und `hover` (z.B. `color: {text: "#fff", background: "#1976d2"}`). |
-| **Anzeigeverwaltung** | Textbeschriftungen oder Icons können einfach ausgeblendet werden. | Verwenden Sie die Flags `isHideText` (Text ausblenden) und `isHideIcon` (Icon ausblenden) in den Komponentenstilen. |
-| **Flexible Ausrichtung** | Inhalte innerhalb von Buttons können linksbündig oder zentriert ausgerichtet werden. | Setzen Sie die Eigenschaft `position: "left"` oder `position: "center"` in den Stilen des gewünschten Buttons. |
-| **Intelligente Vererbung** | Das System füllt Konfigurationslücken mit logischen Standardwerten. | - Für `secondaryButton`: Falls keine Stile gesetzt sind, erbt er vom `primaryButton` mit zusätzlicher Transparenz.<br>- Für `hover`: Falls keine Farbe angegeben ist, wird `filter: brightness(90%)` auf den Hintergrund bei Hover angewendet. |
-| **Fallback-System** | Buttons im Dropdown-Menü verwenden allgemeine Stile, wenn keine individuellen gesetzt sind. | Wenn ein Button in `menuButtons` keine eigenen `customStyles` hat, werden automatisch die Stile von `accountButton` angewendet. |
-| **Globaler Eckenradius** | Ein einzelner Eckenradius-Wert kann für alle Widget-Elemente festgelegt werden. | Geben Sie `customStyles.global.borderRadius` an (z.B. `"8px"`), und dies wirkt sich auf Buttons und Modalfenster aus. |
-| **Individuelle Anpassung** | Jeder Button im Menü kann komplett einzigartig gestaltet werden. | Fügen Sie ein `customStyles`-Objekt für ein spezifisches Element im `menuButtons`-Array hinzu. |
+| Prinzip                         | Bedeutung                                                                                          | Anwendung                                                                                                                                                                                                                                      |
+| :------------------------------ | :------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Zentralisierte Verwaltung**   | Alle Erscheinungsbild-Einstellungen werden über drei Hauptkonfigurationsobjekte definiert.         | Konfigurieren Sie das allgemeine Aussehen in `customStyles`, das Profil in `profile` und den Login-Button in `loginButton`.                                                                                                                    |
+| **Flexible Profil-Einrichtung** | Das Aussehen des Blocks mit Name und Avatar des autorisierten Benutzers wird separat konfiguriert. | Verwenden Sie `profile.wrapper` für den Hintergrund und `profile.button` für den Avatar-Button. Beachten Sie, dass hier nur Farbeinstellungen funktionieren.                                                                                   |
+| **Login-Button-Einrichtung**    | Stile für den Button, den nicht autorisierte Benutzer sehen, werden unabhängig konfiguriert.       | Definieren Sie Text, Icon und Stile im `loginButton`-Objekt und dessen `customStyles`-Eigenschaft.                                                                                                                                             |
+| **Farbstruktur**                | Das Farbschema für jedes Element wird einheitlich beschrieben.                                     | Verwenden Sie immer ein verschachteltes `color`-Objekt mit den Feldern `text`, `background` und `hover` (z.B. `color: {text: "#fff", background: "#1976d2"}`).                                                                                 |
+| **Anzeigeverwaltung**           | Textbeschriftungen oder Icons können einfach ausgeblendet werden.                                  | Verwenden Sie die Flags `isHideText` (Text ausblenden) und `isHideIcon` (Icon ausblenden) in den Komponentenstilen.                                                                                                                            |
+| **Flexible Ausrichtung**        | Inhalte innerhalb von Buttons können linksbündig oder zentriert ausgerichtet werden.               | Setzen Sie die Eigenschaft `position: "left"` oder `position: "center"` in den Stilen des gewünschten Buttons.                                                                                                                                 |
+| **Intelligente Vererbung**      | Das System füllt Konfigurationslücken mit logischen Standardwerten.                                | - Für `secondaryButton`: Falls keine Stile gesetzt sind, erbt er vom `primaryButton` mit zusätzlicher Transparenz.<br>- Für `hover`: Falls keine Farbe angegeben ist, wird `filter: brightness(90%)` auf den Hintergrund bei Hover angewendet. |
+| **Fallback-System**             | Buttons im Dropdown-Menü verwenden allgemeine Stile, wenn keine individuellen gesetzt sind.        | Wenn ein Button in `menuButtons` keine eigenen `customStyles` hat, werden automatisch die Stile von `accountButton` angewendet.                                                                                                                |
+| **Globaler Eckenradius**        | Ein einzelner Eckenradius-Wert kann für alle Widget-Elemente festgelegt werden.                    | Geben Sie `customStyles.global.borderRadius` an (z.B. `"8px"`), und dies wirkt sich auf Buttons und Modalfenster aus.                                                                                                                          |
+| **Individuelle Anpassung**      | Jeder Button im Menü kann komplett einzigartig gestaltet werden.                                   | Fügen Sie ein `customStyles`-Objekt für ein spezifisches Element im `menuButtons`-Array hinzu.                                                                                                                                                 |
 
 ---
 
-## Siehe auch { #see-also }
+<a name="see-also"></a>
+
+## Siehe auch
 
 - [Anwendungsverwaltung](./docs-10-common-app-settings.md) — Leitfaden zum Erstellen, Konfigurieren und Verwalten von OAuth 2.0- und OpenID Connect (OIDC)-Anwendungen.
-- [Organisationsverwaltung](./docs-11-common-org-settings.md) — Leitfaden für die Arbeit mit Organisationen in **{{projectName}}**.
+- [Organisationsverwaltung](./docs-11-common-org-settings.md) — Leitfaden für die Arbeit mit Organisationen in **Encvoy ID**.
 - [Verwaltung des persönlichen Profils und der App-Berechtigungen](./docs-12-common-personal-profile.md) — Leitfaden zur Verwaltung Ihres persönlichen Profils.

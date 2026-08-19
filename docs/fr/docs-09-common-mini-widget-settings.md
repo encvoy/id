@@ -1,23 +1,6 @@
----
-title: "{{projectName}} Mini-widget — Configuration et Personnalisation"
-description: "Apprenez à connecter et configurer le mini-widget {{projectName}} : boutons de connexion, profil utilisateur et styles personnalisés. Intégrez la solution dans votre projet."
-keywords: 
-  - {{projectName}} mini-widget 
-  - intégration mini-widget 
-  - personnalisation mini-widget 
-  - style bouton de connexion
-author: "Équipe {{projectName}}"
-date: 2025-12-12
-updated: 2025-12-12
-product: [box, github, service]
-region: [ru, en]
-menu_title: "Configuration du Mini-widget"
-order: 10
----
+# Comment configurer et connecter le Mini-widget Encvoy ID
 
-# Comment configurer et connecter le Mini-widget {{projectName}}
-
-Dans ce guide, vous apprendrez à connecter et configurer le mini-widget **{{projectName}}** sur votre ressource web. Vous découvrirez comment paramétrer l'authentification, l'affichage du profil utilisateur, les boutons de connexion et les menus, ainsi que la personnalisation de l'apparence du widget pour l'harmoniser avec le design de votre projet.
+Dans ce guide, vous apprendrez à connecter et configurer le mini-widget **Encvoy ID** sur votre ressource web. Vous découvrirez comment paramétrer l'authentification, l'affichage du profil utilisateur, les boutons de connexion et les menus, ainsi que la personnalisation de l'apparence du widget pour l'harmoniser avec le design de votre projet.
 
 **Table des matières :**
 
@@ -32,21 +15,25 @@ Dans ce guide, vous apprendrez à connecter et configurer le mini-widget **{{pro
 
 ---
 
-## Qu'est-ce qu'un mini-widget ? { #what-is-mini-widget }
+<a name="what-is-mini-widget"></a>
+
+## Qu'est-ce qu'un mini-widget ?
 
 Un **mini-widget** est un menu contenant les données de l'utilisateur et des fonctions essentielles. Il permet d'accéder au profil, au panneau d'administration, aux organisations ou au petit bureau, ainsi qu'à la déconnexion du système. Vous pouvez également y placer une application pour un accès rapide. Le widget s'ouvre en cliquant sur l'avatar de l'utilisateur dans le coin supérieur droit de l'écran.
 
-Le mini-widget est un composant JavaScript léger pour l'authentification des utilisateurs dans le service **{{projectName}}**. Il fonctionne sur la base des standards OIDC/OAuth2 et PKCE et peut être intégré à n'importe quel site web ou interface — du simple HTML aux SPA sous React ou Vue.
+Le mini-widget est un composant JavaScript léger pour l'authentification des utilisateurs dans le service **Encvoy ID**. Il fonctionne sur la base des standards OIDC/OAuth2 et PKCE et peut être intégré à n'importe quel site web ou interface — du simple HTML aux SPA sous React ou Vue.
 
 > 💡 Pour ajouter une application au mini-widget, activez le commutateur **Afficher dans le mini-widget** dans les [paramètres de l'application](./docs-10-common-app-settings.md).
 
-Exemples de widgets :  
+Exemples de widgets :
 
-<img src="./images/mini-widget-01.webp" alt="Exemple de design de mini-widget dans {{projectName}}" style="max-width:600px; width:100%">
+<img src="./images/mini-widget-01.webp" alt="Exemple de design de mini-widget dans Encvoy ID" style="max-width:600px; width:100%">
 
 ---
 
-## Configuration du Widget { #widget-configuration }
+<a name="widget-configuration"></a>
+
+## Configuration du Widget
 
 ### Paramètres requis
 
@@ -62,17 +49,17 @@ Pour le fonctionnement de base du widget, trois paramètres clés doivent être 
 
 Des paramètres optionnels sont disponibles pour une configuration avancée :
 
-| Paramètre             | Type                  | Description                                | Valeur par défaut             |
-| --------------------- | --------------------- | ------------------------------------------ | ----------------------------- |
-| `issuer`              | `string`              | URL du serveur SSO Trusted                 | `"https://id.kloud.one"`      |
-| `withOutHomePage`     | `boolean`             | Redirection automatique vers l'autorisation| `false`                       |
-| `getTokenEndPoint`    | `string`              | Point de terminaison pour obtenir un jeton | `"/api/oidc/token"`           |
-| `getUserInfoEndPoint` | `string`              | Point de terminaison pour les données util.| `"/api/oidc/me"`              |
-| `scopes`              | `string[]`            | Autorisations OAuth2                       | `["openid", "lk", "profile"]` |
-| `profile`             | `IProfileConfig`      | Paramètres du profil utilisateur           | Voir section ci-dessous       |
-| `loginButton`         | `ICustomMenuButton`   | Paramètres du bouton de connexion          | Voir section ci-dessous       |
-| `menuButtons`         | `ICustomMenuButton[]` | Tableau de boutons supplémentaires         | Voir section ci-dessous       |
-| `customStyles`        | `ICustomStyles`       | Styles globaux du widget                   | Voir section ci-dessous       |
+| Paramètre             | Type                  | Description                                 | Valeur par défaut             |
+| --------------------- | --------------------- | ------------------------------------------- | ----------------------------- |
+| `issuer`              | `string`              | URL du serveur SSO Trusted                  | `"https://id.kloud.one"`      |
+| `withOutHomePage`     | `boolean`             | Redirection automatique vers l'autorisation | `false`                       |
+| `getTokenEndPoint`    | `string`              | Point de terminaison pour obtenir un jeton  | `"/api/oidc/token"`           |
+| `getUserInfoEndPoint` | `string`              | Point de terminaison pour les données util. | `"/api/oidc/me"`              |
+| `scopes`              | `string[]`            | Autorisations OAuth2                        | `["openid", "lk", "profile"]` |
+| `profile`             | `IProfileConfig`      | Paramètres du profil utilisateur            | Voir section ci-dessous       |
+| `loginButton`         | `ICustomMenuButton`   | Paramètres du bouton de connexion           | Voir section ci-dessous       |
+| `menuButtons`         | `ICustomMenuButton[]` | Tableau de boutons supplémentaires          | Voir section ci-dessous       |
+| `customStyles`        | `ICustomStyles`       | Styles globaux du widget                    | Voir section ci-dessous       |
 
 ### Exemple de connexion de base
 
@@ -95,17 +82,19 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres d'affichage du profil { #profile-display-settings }
+<a name="profile-display-settings"></a>
+
+## Paramètres d'affichage du profil
 
 ### Paramètres de configuration du profil
 
 Le **Profil Utilisateur** est un composant qui contient l'avatar et le nom d'utilisateur.
 
-| Paramètre    | Type               | Description                                      | Valeur par défaut |
-| ------------ | ------------------ | ------------------------------------------------ | ----------------- |
-| `isHideText` | `boolean`          | Masquer l'affichage du nom d'utilisateur         | `false`           |
-| `wrapper`    | `IComponentStyles` | Styles du conteneur de profil (couleurs uniq.)   | Voir section style|
-| `button`     | `IComponentStyles` | Styles du bouton d'avatar (couleurs uniq.)       | Voir section style|
+| Paramètre    | Type               | Description                                    | Valeur par défaut  |
+| ------------ | ------------------ | ---------------------------------------------- | ------------------ |
+| `isHideText` | `boolean`          | Masquer l'affichage du nom d'utilisateur       | `false`            |
+| `wrapper`    | `IComponentStyles` | Styles du conteneur de profil (couleurs uniq.) | Voir section style |
+| `button`     | `IComponentStyles` | Styles du bouton d'avatar (couleurs uniq.)     | Voir section style |
 
 > ⚠️ **Important :** Pour les paramètres de profil (`profile.wrapper` et `profile.button`), seules les couleurs (`color.text`, `color.background`, `color.hover`) peuvent être modifiées et le nom d'utilisateur peut être masqué (`isHideText`). Les autres paramètres de style (tels que `borderRadius`, `padding`, `position`) ne sont pas appliqués au profil.
 
@@ -125,18 +114,20 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres du bouton de connexion { #login-button-settings }
+<a name="login-button-settings"></a>
+
+## Paramètres du bouton de connexion
 
 Le bouton de connexion est affiché pour les utilisateurs non autorisés. Vous pouvez personnaliser son texte, son icône et ses styles.
 
 ### Paramètres du bouton de connexion
 
-| Paramètre      | Type                           | Description                             | Valeur par défaut |
-| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
-| `text`         | `string`                       | Texte du bouton de connexion            | `"Login"`         |
-| `type`         | `string`                       | Type de bouton                          | `"login"`         |
-| `icon`         | `string \| React.ReactElement` | Lien image ou élément React             | `null`            |
-| `customStyles` | `IComponentStyles`             | Styles individuels pour le bouton       | Voir section style|
+| Paramètre      | Type                           | Description                       | Valeur par défaut  |
+| -------------- | ------------------------------ | --------------------------------- | ------------------ |
+| `text`         | `string`                       | Texte du bouton de connexion      | `"Login"`          |
+| `type`         | `string`                       | Type de bouton                    | `"login"`          |
+| `icon`         | `string \| React.ReactElement` | Lien image ou élément React       | `null`             |
+| `customStyles` | `IComponentStyles`             | Styles individuels pour le bouton | Voir section style |
 
 ### Exemple de configuration
 
@@ -172,21 +163,23 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Paramètres des boutons de menu { #menu-button-parameters }
+<a name="menu-button-parameters"></a>
+
+## Paramètres des boutons de menu
 
 ### Paramètres requis
 
-| Paramètre | Type     | Description                     | Exemple              |
-| --------- | -------- | ------------------------------- | -------------------- |
-| `text`    | `string` | Nom du bouton affiché           | `"TestService"`      |
-| `link`    | `string` | URL de la page de destination   | `"https://test.com"` |
+| Paramètre | Type     | Description                   | Exemple              |
+| --------- | -------- | ----------------------------- | -------------------- |
+| `text`    | `string` | Nom du bouton affiché         | `"TestService"`      |
+| `link`    | `string` | URL de la page de destination | `"https://test.com"` |
 
 ### Paramètres optionnels
 
-| Paramètre      | Type                           | Description                             | Valeur par défaut |
-| -------------- | ------------------------------ | --------------------------------------- | ----------------- |
-| `icon`         | `string \| React.ReactElement` | Lien image ou élément React             | `null`            |
-| `customStyles` | `IComponentStyles`             | Styles individuels pour le bouton       | Voir section style|
+| Paramètre      | Type                           | Description                       | Valeur par défaut  |
+| -------------- | ------------------------------ | --------------------------------- | ------------------ |
+| `icon`         | `string \| React.ReactElement` | Lien image ou élément React       | `null`             |
+| `customStyles` | `IComponentStyles`             | Styles individuels pour le bouton | Voir section style |
 
 ### Exemple de configuration
 
@@ -209,7 +202,9 @@ const newConfig: TrustedWidgetConfig = {
 
 ---
 
-## Style du Mini-widget { #mini-widget-styling }
+<a name="mini-widget-styling"></a>
+
+## Style du Mini-widget
 
 Le widget prend en charge une personnalisation détaillée de l'apparence via l'objet `customStyles`. Vous pouvez contrôler les couleurs, les rayons de bordure, les marges internes et l'alignement pour tous les éléments.
 
@@ -233,18 +228,18 @@ customStyles: {
 
 #### Styles globaux
 
-| Paramètre             | Type               | Description                         | Exemple  |
-| --------------------- | ------------------ | ----------------------------------- | -------- |
-| `global.borderRadius` | `string`           | Rayon des coins pour tous les élém. | `"12px"` |
-| `global.color`        | `IComponentStyles` | Couleurs globales                   | Voir ci-dessous|
+| Paramètre             | Type               | Description                         | Exemple         |
+| --------------------- | ------------------ | ----------------------------------- | --------------- |
+| `global.borderRadius` | `string`           | Rayon des coins pour tous les élém. | `"12px"`        |
+| `global.color`        | `IComponentStyles` | Couleurs globales                   | Voir ci-dessous |
 
 #### Styles des composants
 
-| Paramètre                    | Type               | Description                 | Usage                     |
-| ---------------------------- | ------------------ | --------------------------- | ------------------------- |
-| `components.primaryButton`   | `IComponentStyles` | Style du bouton primaire    | Bouton "Connexion", "Profil" |
-| `components.secondaryButton` | `IComponentStyles` | Style du bouton secondaire  | Bouton "Déconnexion"      |
-| `components.accountButton`   | `IComponentStyles` | Style bouton menu compte    | Boutons du menu déroulant |
+| Paramètre                    | Type               | Description                | Usage                        |
+| ---------------------------- | ------------------ | -------------------------- | ---------------------------- |
+| `components.primaryButton`   | `IComponentStyles` | Style du bouton primaire   | Bouton "Connexion", "Profil" |
+| `components.secondaryButton` | `IComponentStyles` | Style du bouton secondaire | Bouton "Déconnexion"         |
+| `components.accountButton`   | `IComponentStyles` | Style bouton menu compte   | Boutons du menu déroulant    |
 
 #### Paramètres de style de composant IComponentStyles
 
@@ -360,7 +355,6 @@ const config: TrustedWidgetConfig = {
 };
 ```
 
-
 #### Exemple de configuration complète avec styles globaux et menu
 
 ```typescript
@@ -408,7 +402,9 @@ const config: TrustedWidgetConfig = {
 
 ---
 
-## Style individuel des boutons de menu { #individual-menu-button-styling }
+<a name="individual-menu-button-styling"></a>
+
+## Style individuel des boutons de menu
 
 Pour chaque bouton dans `menuButtons`, vous pouvez définir des styles individuels via la propriété `customStyles` de type `IComponentStyles`.
 
@@ -499,23 +495,25 @@ const config: TrustedWidgetConfig = {
 
 ### Principes de style du Mini-widget
 
-| Principe | Signification | Comment l'appliquer |
-| :--- | :--- | :--- |
-| **Gestion Centralisée** | Tous les paramètres d'apparence sont définis via trois objets de configuration clés. | Configurez l'aspect général dans `customStyles`, le profil dans `profile` et le bouton de connexion dans `loginButton`. |
-| **Configuration Flexible du Profil** | L'apparence du bloc avec le nom et l'avatar de l'utilisateur autorisé est configurée séparément. | Utilisez `profile.wrapper` pour l'arrière-plan et `profile.button` pour le bouton d'avatar. Notez que seuls les paramètres de couleur fonctionnent ici. |
-| **Configuration du Bouton de Connexion** | Les styles du bouton vu par les utilisateurs non autorisés sont configurés indépendamment. | Définissez le texte, l'icône et les styles dans l'objet `loginButton` et sa propriété `customStyles`. |
-| **Structure des Couleurs** | Le schéma de couleurs pour tout élément est décrit de manière uniforme. | Utilisez toujours un objet `color` imbriqué avec les champs `text`, `background` et `hover` (ex: `color: {text: "#fff", background: "#1976d2"}`). |
-| **Gestion de l'Affichage** | Les étiquettes de texte ou les icônes peuvent être facilement masquées. | Utilisez les drapeaux `isHideText` (masquer texte) et `isHideIcon` (masquer icône) dans les styles de composants. |
-| **Alignement Flexible** | Le contenu à l'intérieur des boutons peut être aligné à gauche ou au centre. | Définissez la propriété `position: "left"` ou `position: "center"` dans les styles du bouton souhaité. |
-| **Héritage Intelligent** | Le système comble les lacunes de configuration en utilisant des valeurs par défaut logiques. | - Pour `secondaryButton` : si non défini, il hérite de `primaryButton` avec une transparence ajoutée.<br>- Pour `hover` : si la couleur n'est pas spécifiée, `filter: brightness(90%)` est appliqué au fond au survol. |
-| **Système de Repli** | Les boutons du menu déroulant utilisent les styles généraux si les styles individuels ne sont pas définis. | Si un bouton dans `menuButtons` n'a pas ses propres `customStyles`, les styles de `accountButton` sont automatiquement appliqués. |
-| **Rayon de Bordure Global** | Une valeur unique de rayon de coin peut être définie pour tous les éléments du widget. | Spécifiez `customStyles.global.borderRadius` (ex: `"8px"`), et cela affectera les boutons et les fenêtres modales. |
-| **Personnalisation Individuelle** | N'importe quel bouton du menu peut être stylisé de manière totalement unique. | Ajoutez un objet `customStyles` pour un élément spécifique dans le tableau `menuButtons`. |
+| Principe                                 | Signification                                                                                              | Comment l'appliquer                                                                                                                                                                                                    |
+| :--------------------------------------- | :--------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gestion Centralisée**                  | Tous les paramètres d'apparence sont définis via trois objets de configuration clés.                       | Configurez l'aspect général dans `customStyles`, le profil dans `profile` et le bouton de connexion dans `loginButton`.                                                                                                |
+| **Configuration Flexible du Profil**     | L'apparence du bloc avec le nom et l'avatar de l'utilisateur autorisé est configurée séparément.           | Utilisez `profile.wrapper` pour l'arrière-plan et `profile.button` pour le bouton d'avatar. Notez que seuls les paramètres de couleur fonctionnent ici.                                                                |
+| **Configuration du Bouton de Connexion** | Les styles du bouton vu par les utilisateurs non autorisés sont configurés indépendamment.                 | Définissez le texte, l'icône et les styles dans l'objet `loginButton` et sa propriété `customStyles`.                                                                                                                  |
+| **Structure des Couleurs**               | Le schéma de couleurs pour tout élément est décrit de manière uniforme.                                    | Utilisez toujours un objet `color` imbriqué avec les champs `text`, `background` et `hover` (ex: `color: {text: "#fff", background: "#1976d2"}`).                                                                      |
+| **Gestion de l'Affichage**               | Les étiquettes de texte ou les icônes peuvent être facilement masquées.                                    | Utilisez les drapeaux `isHideText` (masquer texte) et `isHideIcon` (masquer icône) dans les styles de composants.                                                                                                      |
+| **Alignement Flexible**                  | Le contenu à l'intérieur des boutons peut être aligné à gauche ou au centre.                               | Définissez la propriété `position: "left"` ou `position: "center"` dans les styles du bouton souhaité.                                                                                                                 |
+| **Héritage Intelligent**                 | Le système comble les lacunes de configuration en utilisant des valeurs par défaut logiques.               | - Pour `secondaryButton` : si non défini, il hérite de `primaryButton` avec une transparence ajoutée.<br>- Pour `hover` : si la couleur n'est pas spécifiée, `filter: brightness(90%)` est appliqué au fond au survol. |
+| **Système de Repli**                     | Les boutons du menu déroulant utilisent les styles généraux si les styles individuels ne sont pas définis. | Si un bouton dans `menuButtons` n'a pas ses propres `customStyles`, les styles de `accountButton` sont automatiquement appliqués.                                                                                      |
+| **Rayon de Bordure Global**              | Une valeur unique de rayon de coin peut être définie pour tous les éléments du widget.                     | Spécifiez `customStyles.global.borderRadius` (ex: `"8px"`), et cela affectera les boutons et les fenêtres modales.                                                                                                     |
+| **Personnalisation Individuelle**        | N'importe quel bouton du menu peut être stylisé de manière totalement unique.                              | Ajoutez un objet `customStyles` pour un élément spécifique dans le tableau `menuButtons`.                                                                                                                              |
 
 ---
 
-## Voir aussi { #see-also }
+<a name="see-also"></a>
+
+## Voir aussi
 
 - [Gestion des Applications](./docs-10-common-app-settings.md) — guide pour créer, configurer et gérer les applications OAuth 2.0 et OpenID Connect (OIDC).
-- [Gestion des Organisations](./docs-11-common-org-settings.md) — guide pour travailler avec les organisations dans **{{projectName}}**.
+- [Gestion des Organisations](./docs-11-common-org-settings.md) — guide pour travailler avec les organisations dans **Encvoy ID**.
 - [Gestion du Profil Personnel et des Permissions d'App](./docs-12-common-personal-profile.md) — guide pour gérer votre profil personnel.

@@ -1,53 +1,27 @@
----
-title: "Environment Variables {{projectName}} — Administrator Reference"
-description: "Learn how to correctly configure {{projectName}} environment variables and ensure secure system operation. A step-by-step guide for administrators."
-keywords:
-  - environment variables {{projectName}}
-  - configure {{projectName}} env
-  - OIDC env variables
-  - OpenID Connect environment variables
-  - OAuth 2.0 environment configuration
-  - docker-compose env
-  - PostgreSQL configuration {{projectName}}
-  - SMTP configuration {{projectName}}
-  - interface customization {{projectName}}
-  - CUSTOM_STYLES {{projectName}}
-  - environment variable security
-  - administrator {{projectName}}
-  - server configuration {{projectName}}
-  - configuration guide {{projectName}}
-  - Google metrics {{projectName}}
-author: "{{projectName}} Team"
-date: 2025-12-11
-updated: 2025-12-22
-product: [box, github]
-region: [ru, en]
-menu_title: "Environment Variable Configuration"
-order: 3
----
+# How to Configure Encvoy ID Environment Variables
 
-# How to Configure {{projectName}} Environment Variables
-
-In this guide, you will learn how to configure the environment variables for **{{projectName}}** on your server. We will break down all parameters in detail — from the database and OIDC to cache, mail, and interface — to ensure your system works correctly from the first launch.
+In this guide, you will learn how to configure the environment variables for **Encvoy ID** on your server. We will break down all parameters in detail — from the database and OIDC to cache, mail, and interface — to ensure your system works correctly from the first launch.
 
 **Table of Contents:**
 
-- [How to Configure {{projectName}} Environment Variables](#how-to-configure-projectname-environment-variables)
-  - [Common Environment Variables { #common-environment-variables }](#common-environment-variables--common-environment-variables-)
-  - [Database Environment Variables (PostgreSQL) { #database-environment-variables }](#database-environment-variables-postgresql--database-environment-variables-)
-  - [Redis, Sessions, and OIDC Cookies { #redis-sessions-and-oidc-cookies }](#redis-sessions-and-oidc-cookies--redis-sessions-and-oidc-cookies-)
-  - [Rate Limiting and Logging { #rate-limiting-and-logging }](#rate-limiting-and-logging--rate-limiting-and-logging-)
-  - [Mail and Notifications { #mail-and-notifications }](#mail-and-notifications--mail-and-notifications-)
-  - [Interface Customization { #interface-customization }](#interface-customization--interface-customization-)
-  - [Copyright { #copyright }](#copyright--copyright-)
-  - [Metrics { #metrics }](#metrics--metrics-)
-  - [See Also { #see-also }](#see-also--see-also-)
+- [How to Configure Encvoy ID Environment Variables](#how-to-configure-encvoy-id-environment-variables)
+  - [Common Environment Variables](#common-environment-variables)
+  - [Database Environment Variables (PostgreSQL)](#database-environment-variables)
+  - [Redis, Sessions, and OIDC Cookies](#redis-sessions-and-oidc-cookies)
+  - [Rate Limiting and Logging](#rate-limiting-and-logging)
+  - [Mail and Notifications](#mail-and-notifications)
+  - [Interface Customization](#interface-customization)
+  - [Copyright](#copyright)
+  - [Metrics](#metrics)
+  - [See Also](#see-also)
 
 > 💡 To change environment variables, you need to make changes to the **docker-compose.yml** file.
 
 ---
 
-## Common Environment Variables { #common-environment-variables }
+<a name="common-environment-variables"></a>
+
+## Common Environment Variables
 
 These variables define the basic behavior and identification of the service.
 
@@ -62,11 +36,13 @@ These variables define the basic behavior and identification of the service.
 | `CLIENT_SECRET`             | Unique application secret (UUID recommended)                      | —                           |
 | `MANUAL_URL`                | Link to documentation for users                                   | `https://your-domain/docs/` |
 
-> ⚠️ The `CLIENT_ID` and `CLIENT_SECRET` variables are used to identify **{{projectName}}** as an OAuth 2.0 / OpenID Connect client and must be kept secret.
+> ⚠️ The `CLIENT_ID` and `CLIENT_SECRET` variables are used to identify **Encvoy ID** as an OAuth 2.0 / OpenID Connect client and must be kept secret.
 
 ---
 
-## Database Environment Variables (PostgreSQL) { #database-environment-variables }
+<a name="database-environment-variables"></a>
+
+## Database Environment Variables (PostgreSQL)
 
 Parameters for connecting to the PostgreSQL database.
 
@@ -81,7 +57,9 @@ Parameters for connecting to the PostgreSQL database.
 
 ---
 
-## Redis, Sessions, and OIDC Cookies { #redis-sessions-and-oidc-cookies }
+<a name="redis-sessions-and-oidc-cookies"></a>
+
+## Redis, Sessions, and OIDC Cookies
 
 Settings for session storage, data caching, and authentication security.
 
@@ -94,7 +72,9 @@ Settings for session storage, data caching, and authentication security.
 
 ---
 
-## Rate Limiting and Logging { #rate-limiting-and-logging }
+<a name="rate-limiting-and-logging"></a>
+
+## Rate Limiting and Logging
 
 Settings for protection against abuse and logging control.
 
@@ -106,7 +86,9 @@ Settings for protection against abuse and logging control.
 
 ---
 
-## Mail and Notifications { #mail-and-notifications }
+<a name="mail-and-notifications"></a>
+
+## Mail and Notifications
 
 SMTP server settings for sending emails (registration confirmation, password reset, etc.).
 
@@ -116,11 +98,13 @@ SMTP server settings for sending emails (registration confirmation, password res
 
 ---
 
-## Interface Customization { #interface-customization }
+<a name="interface-customization"></a>
+
+## Interface Customization
 
 The appearance of buttons, links, and tabs is configured via a JSON object in the `CUSTOM_STYLES` variable.
 
-The `CUSTOM_STYLES` variable allows you to customize the **{{projectName}}** interface without changing the code.
+The `CUSTOM_STYLES` variable allows you to customize the **Encvoy ID** interface without changing the code.
 
 ```env
 # Go to the project folder
@@ -158,15 +142,19 @@ Description of the `CUSTOM_STYLES` variable:
 
 ---
 
-## Copyright { #copyright }
+<a name="copyright"></a>
 
-| Variable    | Description                          | Default Value         | Example                                |
-| ----------- | ------------------------------------ | --------------------- | -------------------------------------- |
+## Copyright
+
+| Variable    | Description                          | Default Value         | Example                               |
+| ----------- | ------------------------------------ | --------------------- | ------------------------------------- |
 | `COPYRIGHT` | Copyright information in JSON format | `{"ru":" ","en":" "}` | `{"ru":"© Company","en":"© Company"}` |
 
 ---
 
-## Metrics { #metrics }
+<a name="metrics"></a>
+
+## Metrics
 
 | Variable            | Description                         |
 | ------------------- | ----------------------------------- |
@@ -174,7 +162,9 @@ Description of the `CUSTOM_STYLES` variable:
 
 ---
 
-## See Also { #see-also }
+<a name="see-also"></a>
 
-- [System Installation {{projectName}}](./docs-02-box-system-install.md) — guide for system installation.
+## See Also
+
+- [System Installation Encvoy ID](./docs-02-box-system-install.md) — guide for system installation.
 - [System Configuration](./docs-04-box-system-settings.md) — guide for configuring the interface and user access to the system.
